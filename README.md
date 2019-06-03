@@ -1,4 +1,4 @@
 # SJTU-JiaoJiao
 
 ## Tools
-- gitflow.sh: auto configure the git flow.
+- gitflow.sh: 自动配置gitflow.
