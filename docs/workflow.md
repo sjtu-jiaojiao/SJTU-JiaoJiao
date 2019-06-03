@@ -1,46 +1,44 @@
 # workflow
-You should follow these git workflow if you want to contribute to this project.
+本文档是工作流简介，我们使用git flow作为工作流，相关使用说明参考 [cheat sheet](http://danielkummer.github.io/git-flow-cheatsheet/) 。
 
-You can use `git-flow` to automatically manage the branch. See [cheat sheet](http://danielkummer.github.io/git-flow-cheatsheet/) for more information. 
+*nix系统可以使用根目录下的`gitflow.sh`自动初始化gitflow环境。
 
-You can also run `gitflow.sh` to auto configure the git flow.
+## 分支
+- master: 稳定分支. PR必须从`develop`分支合并且有4人通过review（目前为小组全体成员）
+- develop: 当前开发分支，可能存在bug或不稳定新特性. PR必须有至少1人review
+- feature_[name]: feature 分支
+- bug_[name]: bugfix 分支
+- hotfix_[name]: hotfix 分支
 
-## branch
-- master: last stable and deployed version. PR must be merged from `develop` branch and approved by 4 team members(currently all teammates).
-- develop: current develop version, may have bugs or incomplete features. PR must be approved by 1 team members.
-- feature_[name]: feature branch.
-- bug_[name]: bugfix branch.
-- hotfix_[name]: hotfix branch.
-- release_[name]: release branch.
-
-## start a feature
-This will create new feature branch and push it to remote.
+## 创建新feature
+使用下面的命令创建新特性并提交远程
     
     git flow feature start [name]
     git flow feature publish [name]
 
-example:
+示例:
 
     git flow feature start test
     git flow feature publish test
 
-## start your contribution
-First checkout your working branch:
+## 个人开发
+首先checkout个人工作分支:
 
-    git checkout -b [your_github_name] [based_on_branch]
+    git checkout -b [Github用户名] [base分支]
     
-When finished, but not complete the whole work:
+部分完成工作，提交远程:
 
-    // git add/commit or some operation to your branch.
-    git push -u origin [your_github_name]
+    // git add/commit.
+    git push -u origin [Github用户名]
 
-When finished the whole work, go github and submit a PR to [based_on_branch] with [your_github_name]. After being merged, your branch will be deleted.
-You can use
+当工作全部完成，请向[base分支]提交PR，**合并成功后你的分支会被自动删除。**
+
+你可以使用
 
     git pull -p
 
-or
+或
 
-    git branch -d [your_github_name]
+    git branch -d [Github用户名]
 
-to tidy up your local workspace.
+清理你的本地分支。
