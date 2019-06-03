@@ -1,1 +1,1 @@
-git flow init -d -p fea_ -b bug_ -r rel_ -x fix_
+git flow init -d -p feature_ -b bug_ -r release_ -x hotfix_
