@@ -1,0 +1,26 @@
+#root{
+    width: 100%;
+    height: 100%;
+}
+   nz-layout{
+    height: 100%;
+}
+      nz-header {
+        background: #fff;
+        padding: 0;
+      }
+
+      nz-content {
+        margin: 0 16px;
+      }
+
+      nz-footer {
+        text-align: center;
+      }
+      .logo {
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px;
+        color: white;
+        font-family: "Microsoft YaHei","微软雅黑";
+      }
