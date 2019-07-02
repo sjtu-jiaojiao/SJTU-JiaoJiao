@@ -1,39 +1,46 @@
 
-<nz-layout>
-  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" nzWidth="200px">
+<nz-layout id='out'>
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" nzWidth="15%">
 
     <div class="logo"></div>
     <ul  nz-menu [nzTheme]="'dark'" [nzMode]="'inline'"  [nzInlineCollapsed]="isCollapsed"> 
-      <li nz-menu-item><a routerLink="/dashboard"><i nz-icon type="dashboard" theme="outline"></i>
-        <span class="nav-text">导航</span></a></li>
-      <li nz-submenu>
+      <li nz-menu-item nzMatchRouter><a routerLink="/dashboard"><i nz-icon type="dashboard" theme="outline"></i>
+        <span class="nav-text">导航</span></a>
+      </li>
+      
+        <li nz-submenu>
           <span title><i nz-icon type="user"></i><span class="nav-text">管理</span></span>
         <ul>
           <li nz-menu-item nzMatchRouter> <a routerLink="/user"><i nz-icon type="user" theme="outline"></i>用户管理</a></li>
-          <li nz-menu-item> <a routerLink="/info"><i nz-icon type="profile" theme="outline"></i>交易管理</a></li>
+          <li nz-menu-item nzMatchRouter> <a routerLink="/info"><i nz-icon type="profile" theme="outline"></i>交易管理</a></li>
         </ul>
       </li>
+      
       <li nz-submenu>
-          <span title><i nz-icon type="user"></i><span class="nav-text">统计</span></span>
+          <span title><i nz-icon type="stock"></i><span class="nav-text">统计</span></span>
         <ul>
-      <li nz-menu-item> <a routerLink="/statistic"><i nz-icon type="profile" theme="outline"></i>用户画像</a></li>
-      <li nz-menu-item> <a routerLink="/statistic"><i nz-icon type="profile" theme="outline"></i>交易数据分析</a></li>
+      <li nz-menu-item nzMatchRouter> <a routerLink="/statistic/user"><i nz-icon type="audit" theme="outline"></i>用户画像</a></li>
+      <li nz-menu-item nzMatchRouter> <a routerLink="/statistic/info"><i nz-icon type="transaction" theme="outline"></i>交易数据分析</a></li>
     </ul>
     </li>
-      <li nz-menu-item> 
-      <a routerLink="/login">
-        <span><i nz-icon type="login" theme="outline"></i><span class="nav-text">登录</span></span>
-      </a>
+    
+    <li nz-menu-item nzMatchRouter><a routerLink="/activity"><i nz-icon type="contacts" theme="outline"></i>
+      <span class="nav-text">活动</span></a>
     </li>
+    
+    <li nz-menu-item nzMatchRouter><a routerLink="/website"><i nz-icon type="bulb" theme="outline"></i>
+      <span class="nav-text">站点</span></a>
+    </li>
+      <li nz-submenu>
+        <span title><i nz-icon type="control" theme="outline"></i><span class="nav-text">账号</span></span>
+      <ul>
+    <li nz-menu-item nzMatchRouter> <a routerLink="/login"><i nz-icon type="login" theme="outline"></i>登录</a></li>
+    <li nz-menu-item nzMatchRouter> <a routerLink="/userstatistic"><i nz-icon type="key" theme="outline"></i>修改密码</a></li>
+      </ul>
+      </li>
   </ul>
-
-
   </nz-sider>
-  <nz-layout>
-    <nz-header></nz-header>
-    <nz-content>
+  <nz-content>
       <router-outlet></router-outlet>
-    </nz-content>
-    <nz-footer>©2019 JOJO</nz-footer>
-  </nz-layout>
+  </nz-content>
 </nz-layout>
