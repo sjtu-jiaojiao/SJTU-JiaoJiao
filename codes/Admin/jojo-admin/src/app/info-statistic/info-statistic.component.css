@@ -1,0 +1,48 @@
+
+.outer-div{
+	border-radius: 7px;
+	border: 2px solid rgb(199, 199, 199);
+}
+#background{
+    background:black;
+}
+#top-div{
+    position: absolute;
+    bottom: 40%;
+	width: 85%;
+	height: 59%;	
+}
+#bot-div{
+    position: absolute;
+    top: 60%;
+	width: 85%;
+	height: 39%;	
+}
+
+#fdg{
+    position: absolute;
+    left: 0%;
+	width: 69%;
+	height: 100%;	
+}
+
+#cld{
+    position: absolute;
+    right: 0%;
+	width: 30%;
+	height: 100%;	
+}
+
+#ts{
+    position: absolute;
+    left: 0%;
+	width: 59%;
+	height: 100%;	
+}
+
+#detail{
+    position: absolute;
+    right: 0%;
+	width: 40%;
+	height: 100%;	
+}
