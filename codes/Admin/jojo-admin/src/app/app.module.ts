@@ -4,13 +4,12 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgZorroAntdModule, NZ_I18N, zh_CN } from 'ng-zorro-antd';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
-import { UserStatisticComponent } from './user-statistic/user-statistic.component';
 import { UserDetailComponent } from './userdetail/userdetail.component';
 import { UserComponent } from './user/user.component';
 import { InfoComponent } from './info/info.component';
@@ -21,13 +20,13 @@ import { WebsiteComponent } from './website/website.component';
 import { ActivityComponent } from './activity/activity.component';
 import { PasswordComponent } from './password/password.component';
 import { InfoStatisticComponent } from './info-statistic/info-statistic.component';
+import { ActivitydetailComponent } from './activitydetail/activitydetail.component';
 
 registerLocaleData(zh);
 
 @NgModule({
   declarations: [
     AppComponent,
-    UserStatisticComponent,
     UserDetailComponent,
     UserComponent,
     InfoComponent,
@@ -37,9 +36,11 @@ registerLocaleData(zh);
     WebsiteComponent,
     ActivityComponent,
     PasswordComponent,
-    InfoStatisticComponent
+    InfoStatisticComponent,
+    ActivitydetailComponent
   ],
   imports: [
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
     NgZorroAntdModule,

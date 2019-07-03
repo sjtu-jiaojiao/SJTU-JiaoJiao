@@ -6,7 +6,6 @@ import { UserComponent } from './user/user.component';
 import { LoginComponent } from './login/login.component';
 import { InfoComponent } from './info/info.component';
 import { InfoDetailComponent } from './infodetail/infodetail.component';
-import { UserStatisticComponent } from './user-statistic/user-statistic.component';
 import { WebsiteComponent } from './website/website.component';
 import { ActivityComponent } from './activity/activity.component';
 import { PasswordComponent } from './password/password.component';
@@ -20,8 +19,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'info', component:  InfoComponent},
   { path: 'info/:id', component:  InfoDetailComponent},
-  { path: 'statistic/user', component:  UserStatisticComponent},
-  { path: 'statistic/info', component:  InfoStatisticComponent},
+  { path: 'statistic', component:  InfoStatisticComponent},
   { path: 'website', component:  WebsiteComponent},
   { path: 'activity', component:  ActivityComponent},
   { path: 'password', component:  PasswordComponent},

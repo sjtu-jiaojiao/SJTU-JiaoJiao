@@ -1,16 +1,21 @@
-<div id='background'>
-    <div id='top-div'>
+
         <div class='outer-div' id='fdg'>
-          <div echarts [options]="fdgoption"></div>
+          <div echarts theme="dark"  [loading]="true" [options]="fdgoption"(chartInit)="onChartInit($event)"></div>
       </div>
+      <div class='outer-div' id='good'>
+        <div echarts theme="dark"  [loading]="true" [options]="goodoption" (chartInit)="onChartInit($event)"></div>
+    </div>
         <div class='outer-div' id='cld'>
-            <div echarts [options]="cldoption">
+            <div echarts theme="dark" [loading]="true" [options]="cldoption"(chartInit)="onChartInit($event)">
             </div>
         </div>
-        </div>
-        <div id= 'bot-div'>
-          <div class='outer-div' id='ts'></div>
-          <div class='outer-div' id='detail'>
+
+
+          <div class='outer-div' id='ts'>
+            <div echarts theme="dark"[loading]="true"  [options]="tsoption"></div>
           </div>
+
+        
+        <div class='outer-div' id='lq'>
+          <div echarts theme="dark" [loading]="true" [options]="lqoption"></div>
         </div>
-</div>

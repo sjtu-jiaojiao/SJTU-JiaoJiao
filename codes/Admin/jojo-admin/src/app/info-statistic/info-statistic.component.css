@@ -2,15 +2,13 @@
 .outer-div{
 	border-radius: 7px;
 	border: 2px solid rgb(199, 199, 199);
-}
-#background{
-    background:black;
+	background: rgba(255, 255, 255, 1);
 }
 #top-div{
     position: absolute;
     bottom: 40%;
 	width: 85%;
-	height: 59%;	
+	height: 400px;
 }
 #bot-div{
     position: absolute;
@@ -21,28 +19,45 @@
 
 #fdg{
     position: absolute;
-    left: 0%;
-	width: 69%;
-	height: 100%;	
+	top: 0%;
+	left: 15%;
+	width: 35%;
+	height: 59%;	
+	background: black;
+}
+
+#good{
+    position: absolute;
+	top: 0%;
+	left: 51%;
+	width: 29%;
+	height: 59%;	
+	background: black;
 }
 
 #cld{
-    position: absolute;
+	position: absolute;
+	top: 0%;
     right: 0%;
-	width: 30%;
-	height: 100%;	
+	width: 19%;
+	height: 59%;	
+	background: black;
 }
 
 #ts{
     position: absolute;
-    left: 0%;
-	width: 59%;
-	height: 100%;	
+	left: 15%;
+	bottom: 0%;
+	width: 50%;
+	height: 39%;	
+	background: black;
 }
 
-#detail{
+#lq{
     position: absolute;
-    right: 0%;
-	width: 40%;
-	height: 100%;	
+	right: 0%;
+	width: 34%;
+	bottom: 0%;
+	height: 39%;	
+	background: black;
 }
