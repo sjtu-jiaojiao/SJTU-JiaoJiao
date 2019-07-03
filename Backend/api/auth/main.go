@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/micro/go-micro/web"
 )
 
 func test(c *gin.Context) {
@@ -12,23 +11,23 @@ func test(c *gin.Context) {
 }
 
 func main() {
-	service := web.NewService(
-		web.Name("go.micro.api.greeter"),
-	)
+	// service := web.NewService(
+	// 	web.Name("go.micro.api.greeter"),
+	// )
 
-	service.Init()
+	// service.Init()
 
-	// setup Greeter Server Client
-	//cl = hello.NewSayService("go.micro.srv.greeter", client.DefaultClient)
+	// // setup Greeter Server Client
+	// //cl = hello.NewSayService("go.micro.srv.greeter", client.DefaultClient)
 
-	router := gin.Default()
-	router.GET("/greeter", test)
+	// router := gin.Default()
+	// router.GET("/greeter", test)
 
-	// Register Handler
-	service.Handle("/", router)
+	// // Register Handler
+	// service.Handle("/", router)
 
-	// Run server
-	if err := service.Run(); err != nil {
-		//log.Fatal(err)
-	}
+	// // Run server
+	// if err := service.Run(); err != nil {
+	// 	//log.Fatal(err)
+	// }
 }

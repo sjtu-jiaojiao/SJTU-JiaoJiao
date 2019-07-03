@@ -1,0 +1,13 @@
+{
+    "deploy": "develop",
+    "hosts": {
+        "consul-develop": {
+            "address": "127.0.0.1",
+            "port": 8500
+        },
+        "consul-product": {
+            "address": "127.0.0.1",
+            "port": 8500
+        }
+    }
+}
