@@ -5,6 +5,10 @@
 #out{
   width: 100%;
 }
+nz-content{
+  background: rgba(15, 15, 15, 0.9);
+  color: white;
+}
    nz-layout{
     height: 100%;
 }

@@ -6,3 +6,5 @@
 
 ## 后台Demo
 ![avatar](/codes/Admin/demo.JPG)
+
+![avatar](/codes/Admin/demo2.JPG)
