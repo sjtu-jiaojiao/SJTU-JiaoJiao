@@ -1,0 +1,41 @@
+settings:
+  files:
+    outputs:
+      status: false
+      path: ""
+      name: .r.outputs.log
+    logs:
+      status: false
+      path: ""
+      name: .r.logs.log
+    errors:
+      status: false
+      path: ""
+      name: .r.errors.log
+  legacy:
+    force: false
+    interval: 0s
+server:
+  status: true
+  open: false
+  port: 5002
+  host: localhost
+schema:
+- name: api-auth
+  path: api/auth
+  commands:
+    run:
+      status: true
+  args:
+  - --registry=consul
+  watcher:
+    extensions:
+    - go
+    paths:
+    - /
+    - ../../utils
+    ignore:
+      paths:
+      - .git
+      - .realize
+      - vendor

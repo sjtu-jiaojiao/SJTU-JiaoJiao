@@ -1,12 +1,17 @@
 [
-	{
-		"key": "srv_config",
-		"flags": 0,
-		"value": "ewogICAgIm5hbWVzcGFjZSI6ICJnby5taWNybyIKfQ=="
-	},
-	{
-		"key": "test",
-		"flags": 0,
-		"value": "ewogICAgInRlc3QiOiAiRG9fbm90X21vZGlmeV90aGlzIgp9"
-	}
+    {
+        "key": "api_config",
+        "flags": 0,
+        "value": "ewogICAgInZlcnNpb24iOiAidjEiCn0="
+    },
+    {
+        "key": "srv_config",
+        "flags": 0,
+        "value": "ewogICAgIm5hbWVzcGFjZSI6ICJnby5taWNyby5hcGkiCn0="
+    },
+    {
+        "key": "test",
+        "flags": 0,
+        "value": "ewogICAgInRlc3QiOiAiRG9fbm90X21vZGlmeV90aGlzIgp9"
+    }
 ]

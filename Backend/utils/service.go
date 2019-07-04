@@ -1,16 +1,29 @@
 package utils
 
-func RunService(name string) {
-	// service := web.NewService(
-	// 	web.Name(consulConf.Get("namespace")+".api.greeter"),
-	// )
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/micro/go-micro/web"
+)
 
-	// service.Init()
+// CreateAPIGroup create an API router group
+func CreateAPIGroup() (*gin.Engine, *gin.RouterGroup) {
+	router := gin.Default()
+	rg := router.Group("/" + GetConfig("api_config", "version"))
+	return router, rg
+}
 
-	// service.Handle("/", router)
+// RunService start a micro service
+func RunService(name string, router *gin.Engine) {
+	service := web.NewService(
+		web.Name(GetConfig("srv_config", "namespace") + "." +
+			GetConfig("api_config", "version") + "." + name),
+	)
 
-	// // Run server
-	// if err := service.Run(); err != nil {
-	// 	//log.Fatal(err)
-	// }
+	service.Init()
+	service.Handle("/", router)
+
+	err := service.Run()
+	if err != nil {
+		Error(err)
+	}
 }

@@ -1,33 +1,21 @@
 package main
 
 import (
+	"jiaojiao/utils"
+
 	"github.com/gin-gonic/gin"
 )
 
 func test(c *gin.Context) {
 	c.JSON(200, map[string]string{
-		"message": "Hi, this is the Greeter API",
+		"message": "Hi, this is the Greeter API1",
 	})
 }
 
 func main() {
-	// service := web.NewService(
-	// 	web.Name("go.micro.api.greeter"),
-	// )
+	router, rg := utils.CreateAPIGroup()
 
-	// service.Init()
+	rg.GET("/auth", test)
 
-	// // setup Greeter Server Client
-	// //cl = hello.NewSayService("go.micro.srv.greeter", client.DefaultClient)
-
-	// router := gin.Default()
-	// router.GET("/greeter", test)
-
-	// // Register Handler
-	// service.Handle("/", router)
-
-	// // Run server
-	// if err := service.Run(); err != nil {
-	// 	//log.Fatal(err)
-	// }
+	utils.RunService("auth", router)
 }
