@@ -10,6 +10,7 @@ import { WebsiteComponent } from './website/website.component';
 import { ActivityComponent } from './activity/activity.component';
 import { PasswordComponent } from './password/password.component';
 import { InfoStatisticComponent } from './info-statistic/info-statistic.component';
+import { ActivitydetailComponent } from './activitydetail/activitydetail.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'info', component:  InfoComponent},
   { path: 'info/:id', component:  InfoDetailComponent},
+  { path: 'activity/:id', component:  ActivitydetailComponent},
   { path: 'statistic', component:  InfoStatisticComponent},
   { path: 'website', component:  WebsiteComponent},
   { path: 'activity', component:  ActivityComponent},

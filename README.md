@@ -5,6 +5,13 @@
 
 
 ## 后台Demo
-![avatar](/codes/Admin/demo.JPG)
-
-![avatar](/codes/Admin/demo2.JPG)
+### 用户管理
+![avatar](/codes/Admin/demo/用户管理详情.JPG)
+### 交易管理
+![avatar](/codes/Admin/demo/交易管理详情.JPG)
+### 活动管理
+![avatar](/codes/Admin/demo/活动详情.JPG)
+### 首页
+![avatar](/codes/Admin/demo/首页.JPG)
+### 统计
+![avatar](/codes/Admin/demo/统计.JPG)
