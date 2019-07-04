@@ -1,3 +1,5 @@
+//+build !test
+
 package utils
 
 import (
@@ -19,15 +21,7 @@ func RunService(name string, router *gin.Engine) {
 			GetConfig("api_config", "version") + "." + name),
 	)
 
-	err := service.Init()
-	if err != nil {
-		panic(err)
-	}
-
+	LogPanic(service.Init())
 	service.Handle("/", router)
-
-	err = service.Run()
-	if err != nil {
-		panic(err)
-	}
+	LogPanic(service.Run())
 }
