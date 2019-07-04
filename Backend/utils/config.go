@@ -26,17 +26,9 @@ var consulConf config.Config
 func configLoad() {
 	var fileConf Config
 	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		panic("No caller information")
-	}
-	err := config.LoadFile(path.Dir(filename) + "/../config.json")
-	if err != nil {
-		panic(err)
-	}
-	err = config.Scan(&fileConf)
-	if err != nil {
-		panic(err)
-	}
+	LogPanic(ok, "No caller information")
+	LogPanic(config.LoadFile(path.Dir(filename) + "/../config.json"))
+	LogPanic(config.Scan(&fileConf))
 
 	consulConfig := fileConf.Hosts["consul-"+fileConf.Deploy]
 	consulSource := consul.NewSource(
@@ -45,10 +37,7 @@ func configLoad() {
 	)
 
 	consulConf = config.NewConfig()
-	err = consulConf.Load(consulSource)
-	if err != nil {
-		panic(err)
-	}
+	LogPanic(consulConf.Load(consulSource))
 }
 
 // GetConfig get config from consul

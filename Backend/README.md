@@ -19,16 +19,15 @@
 
 ## 其他依赖
 
+    go get -u -v github.com/micro/micro
+    go get -u -v github.com/smartystreets/goconvey
     go get -u -v github.com/oxequa/realize
-
+    npm install apidoc -g
+    
 ## 本地启动
-后台服务（只需运行一次）：
+一键启动：
 
     ./runsrv.sh
-
-API、微服务等：
-
-    realize start
 
 ## 本地默认地址
 - consul服务：`localhost:8500`
@@ -36,7 +35,8 @@ API、微服务等：
 - APIGateway：`localhost:8080`
 - goconvey：`localhost:8400`
 - realize热启动：`localhost:5002`
-- API地址：`/[version]/[service]/[router]`
+- API地址：`localhost:8080/[version]/[service]/[router]`
+- doc文档：`localhost:8080/[version]/doc`
 
 ## 目录结构
 
