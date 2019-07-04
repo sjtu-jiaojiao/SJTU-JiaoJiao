@@ -12,6 +12,6 @@
 ### 活动管理
 ![avatar](/codes/Admin/demo/活动详情.JPG)
 ### 首页
-![avatar](/codes/Admin/demo/首页.JPG))
+![avatar](/codes/Admin/demo/首页.JPG)
 ### 统计
 ![avatar](/codes/Admin/demo/统计.JPG)
