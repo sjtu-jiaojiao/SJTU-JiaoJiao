@@ -2,19 +2,7 @@
 .outer-div{
 	border-radius: 7px;
 	border: 2px solid rgb(199, 199, 199);
-	background: rgba(255, 255, 255, 1);
-}
-#top-div{
-    position: absolute;
-    bottom: 40%;
-	width: 85%;
-	height: 400px;
-}
-#bot-div{
-    position: absolute;
-    top: 60%;
-	width: 85%;
-	height: 39%;	
+	background: #01193d;
 }
 
 #fdg{
@@ -23,7 +11,7 @@
 	left: 15%;
 	width: 35%;
 	height: 59%;	
-	background: black;
+	background: #01193d;
 }
 
 #good{
@@ -32,7 +20,15 @@
 	left: 51%;
 	width: 29%;
 	height: 59%;	
-	background: black;
+	background: #01193d;
+}
+
+.tpc {
+	height: 420px;
+}
+
+.btc {
+	height: 250px;
 }
 
 #cld{
@@ -41,7 +37,7 @@
     right: 0%;
 	width: 19%;
 	height: 59%;	
-	background: black;
+	background: #01193d;
 }
 
 #ts{
@@ -50,7 +46,7 @@
 	bottom: 0%;
 	width: 50%;
 	height: 39%;	
-	background: black;
+	background: #01193d;
 }
 
 #lq{
@@ -59,5 +55,5 @@
 	width: 34%;
 	bottom: 0%;
 	height: 39%;	
-	background: black;
+	background: #01193d;
 }

@@ -18,9 +18,8 @@ input{
    border-radius: 4px 0 0 4px;
  }
  
- 
  .activityitem{
-   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+   font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
    position: relative;
    cursor: pointer;
    background-color: #EEE;

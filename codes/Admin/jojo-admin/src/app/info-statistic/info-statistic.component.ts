@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { EChartOption } from 'echarts';
-import * as $ from 'jquery';
+import { EChartOption} from 'echarts';
+import * as echarts from 'echarts/lib/echarts';
 const name = ['LJH', 'WXZ', 'ZWJ', 'KHQ', 'MZD', 'ZEL', 'JZM', 'HJT', 'TRUMP',
 'LJH2', 'WXZ2', 'ZWJ2', 'KHQ2', 'MZD2', 'ZEL2', 'JZM2', 'HJT2', 'TRUMP2',
 'LJH3', 'WXZ3', 'ZWJ3', 'KHQ3', 'MZD3', 'ZEL3', 'JZM3', 'HJT3', 'TRUMP3'];
@@ -23,9 +23,6 @@ export class InfoStatisticComponent implements OnInit {
     this.lq();
     this.good();
   }
-  onChartInit(ec) {
-      ec.resize({height: 620});
-    }
   good() {
     const jsdata1: any[][] = [['2019-01-01', 18.5, 3], ['2019-01-02', 12.5, 3], ['2019-01-01', 42.5, 5], ['2019-01-03', 65, 5],
     ['2019-01-05', 23.5, 5], ['2019-01-04', 18, 5], ['2019-01-02', 18, 4]];
@@ -43,6 +40,25 @@ export class InfoStatisticComponent implements OnInit {
     }
 };
     this.goodoption = {
+    dataZoom: [
+        {
+            show: true,
+            realtime: true,
+            start: 65,
+            end: 85
+        },
+        {
+            type: 'inside',
+            realtime: true,
+            start: 65,
+            end: 85
+        }
+    ],
+      xAxis :
+      {
+          type: 'category',
+      },
+        backgroundColor: '#01193d',
         title: {
             text: 'Price Trend',
         },
@@ -52,15 +68,16 @@ export class InfoStatisticComponent implements OnInit {
         tooltip: {
             trigger: 'axis',
             axisPointer: {
+                label: {
+                    show: true,
+                    backgroundColor: '#004E52'
+                },
                 type: 'cross'
             }
         },
         legend: {
             y: 'top',
             data: ['Book', 'Shoe', 'Mouse'],
-        },
-        xAxis: {
-            type: 'category',
         },
         yAxis: {
             type: 'value',
@@ -97,6 +114,7 @@ export class InfoStatisticComponent implements OnInit {
   }
   ts() {
     this.tsoption = {
+      backgroundColor: '#01193d',
       title: {
           text: 'Transaction Calendar'
       },
@@ -119,6 +137,16 @@ export class InfoStatisticComponent implements OnInit {
           },
           width: '80%',
           height: '80%',
+          dayLabel: {
+            textStyle: {
+                color: '#fff'
+            }
+          },
+          monthLabel: {
+            textStyle: {
+                color: '#fff'
+            }
+          },
           yearLabel: {
               formatter: '{start}',
               textStyle: {
@@ -159,6 +187,7 @@ export class InfoStatisticComponent implements OnInit {
   }
   cld() {
     this.cldoption = {
+    backgroundColor: '#01193d',
       title: {
       text: 'Label WordCloud'
   },
@@ -222,10 +251,13 @@ export class InfoStatisticComponent implements OnInit {
   draggable: true};
 });
     this.fdgoption = {
+    backgroundColor: '#01193d',
       title: {
           text: 'Transaction Network'
       },
       tooltip: {},
+      animationDurationUpdate: 1500,
+      animationEasingUpdate: 'quinticInOut',
       series : [
           {
               type: 'graph',
@@ -263,6 +295,7 @@ export class InfoStatisticComponent implements OnInit {
         return str.replace(' ', '\n'); }
         );
     this.lqoption = {
+    backgroundColor: '#01193d',
     title : {
         text: 'Transaction Trend',
         x: 'center',
@@ -270,15 +303,6 @@ export class InfoStatisticComponent implements OnInit {
     },
     grid: {
         bottom: 80
-    },
-    toolbox: {
-        feature: {
-            dataZoom: {
-                yAxisIndex: 'none'
-            },
-            restore: {},
-            saveAsImage: {}
-        }
     },
     tooltip : {
         trigger: 'axis',
@@ -334,7 +358,29 @@ export class InfoStatisticComponent implements OnInit {
             name: '购买',
             type: 'line',
             animation: false,
+            smooth: true,
+            showAllSymbol: true,
+            symbol: 'circle',
+            symbolSize: 6,
             areaStyle: {
+                normal: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: 'rgba(137, 189, 27, 0.9)'
+                    }, {
+                        offset: 0.8,
+                        color: 'rgba(137, 189, 27, 0)'
+                    }], false),
+                    shadowColor: 'rgba(0, 0, 0, 0.1)',
+                    shadowBlur: 10
+                }
+            },
+            itemStyle: {
+                normal: {
+                    color: 'rgb(137,189,27)',
+                    borderColor: 'rgba(137,189,2,0.27)',
+                    borderWidth: 12
+                }
             },
             lineStyle: {
                 width: 1
@@ -346,7 +392,29 @@ export class InfoStatisticComponent implements OnInit {
             type: 'line',
             yAxisIndex: 1,
             animation: false,
+            smooth: true,
+            showAllSymbol: true,
+            symbol: 'circle',
+            symbolSize: 6,
             areaStyle: {
+                normal: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: 'rgba(219, 50, 51, 0.9)'
+                    }, {
+                        offset: 0.8,
+                        color: 'rgba(219, 50, 51, 0)'
+                    }], false),
+                    shadowColor: 'rgba(0, 0, 0, 0.1)',
+                    shadowBlur: 10
+                }
+            },
+            itemStyle: {
+                normal: {
+                    color: 'rgb(219,50,51)',
+                    borderColor: 'rgba(219,50,51,0.2)',
+                    borderWidth: 12
+                }
             },
             lineStyle: {
                 width: 1

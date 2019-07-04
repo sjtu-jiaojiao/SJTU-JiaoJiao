@@ -6,7 +6,6 @@
         <nz-input-group>
           <input type="text" nz-input formControlName="name" placeholder="网站名">
         </nz-input-group>
-        <nz-form-explain *ngIf="validateForm.get('name').dirty && validateForm.get('name').errors">请输入网站名!</nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
@@ -14,7 +13,6 @@
         <nz-input-group>
           <input type="text" nz-input formControlName="copyright" placeholder="版权认证信息">
         </nz-input-group>
-        <nz-form-explain *ngIf="validateForm.get('copyright').dirty && validateForm.get('copyright').errors">请输入版权认证信息!</nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
