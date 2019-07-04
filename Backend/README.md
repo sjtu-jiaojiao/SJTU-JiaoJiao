@@ -25,13 +25,9 @@
     npm install apidoc -g
     
 ## 本地启动
-后台服务（只需运行一次）：
+一键启动：
 
     ./runsrv.sh
-
-API、微服务等热启动：
-
-    realize start
 
 ## 本地默认地址
 - consul服务：`localhost:8500`
