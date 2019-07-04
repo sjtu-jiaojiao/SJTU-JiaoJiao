@@ -19,11 +19,15 @@ func RunService(name string, router *gin.Engine) {
 			GetConfig("api_config", "version") + "." + name),
 	)
 
-	service.Init()
+	err := service.Init()
+	if err != nil {
+		panic(err)
+	}
+
 	service.Handle("/", router)
 
-	err := service.Run()
+	err = service.Run()
 	if err != nil {
-		Error(err)
+		panic(err)
 	}
 }
