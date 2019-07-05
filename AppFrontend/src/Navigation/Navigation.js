@@ -16,7 +16,7 @@ class Test extends Component {
         return (
             <View >
                 <Text>
-                    This is a test page!
+                    test page!
                 </Text>
             </View>
         )
@@ -55,3 +55,5 @@ const TabBar = createBottomTabNavigator({
 const AppContainer = createAppContainer(TabBar);
 
 export default AppContainer;
+
+export { Test };

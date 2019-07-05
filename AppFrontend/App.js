@@ -14,7 +14,8 @@ import HomeScreen from './src/Views/Home'
 import ContactScreen from './src/Views/Contact'
 import ReleaseScreen from './src/Views/Release'
 import UserScreen from './src/Views/User'
-import Test from './src/Navigation/Navigation'
+import AppContainer from './src/Navigation/Navigation'
+import { Test } from './src/Navigation/Navigation'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -27,7 +28,10 @@ type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <View style={styles.container}>
+        <View>
+            <AppContainer/>
+        </View>
+      /*<View style={styles.container}>
         <View>
           <Icon name={'home'} size={52} color={'blue'}/>
           <HomeScreen/>
@@ -48,7 +52,7 @@ export default class App extends Component<Props> {
           <UserScreen/>
           <Test/>
         </View>
-      </View>
+      </View>*/
     );
   }
 }
