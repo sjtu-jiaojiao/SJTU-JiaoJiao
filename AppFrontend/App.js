@@ -8,6 +8,12 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
+import Icon from 'react-native-vector-icons/AntDesign';
+
+import HomeScreen from './src/Views/Home'
+import ContactScreen from './src/Views/Contact'
+import ReleaseScreen from './src/Views/Release'
+import UserScreen from './src/Views/User'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -21,9 +27,25 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+        <View>
+          <Icon name={'home'} size={52} color={'blue'}/>
+          <HomeScreen/>
+        </View>
+        <View style={{width: 15}}/>
+        <View>
+          <Icon name={'form'} size={52} color={'red'}/>
+          <ReleaseScreen/>
+        </View>
+        <View style={{width: 15}}/>
+        <View>
+          <Icon name={'message1'} size={52} color={'green'}/>
+          <ContactScreen/>
+        </View>
+        <View style={{width: 15}}/>
+        <View>
+          <Icon name={'user'} size={52} color={'yellow'}/>
+          <UserScreen/>
+        </View>
       </View>
     );
   }
@@ -35,6 +57,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    flexDirection: 'row',
   },
   welcome: {
     fontSize: 20,
