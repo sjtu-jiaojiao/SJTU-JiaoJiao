@@ -5,6 +5,7 @@ import {
     createStackNavigator,
     createAppContainer
 } from "react-navigation";
+import Icon from 'react-native-vector-icons/AntDesign';
 
 import HomeScreen from '../Views/Home'
 import ReleaseScreen from '../Views/Release'
@@ -24,36 +25,64 @@ class Test extends Component {
 }
 
 const HomeStack = createStackNavigator({
-    Home: HomeScreen,
-    Test: Test,
+    Home: { screen: HomeScreen },
+    Test: { screen: Test},
 });
 
 const ReleaseStack = createStackNavigator({
-    Release: ReleaseScreen,
-    Test: Test,
+    Release: { screen: ReleaseScreen },
+    Test: { screen: Test},
 });
 
 const ContactStack = createStackNavigator({
-    Contact: ContactScreen,
-    Test: Test,
+    Contact: { screen: ContactScreen },
+    Test: { screen: Test},
 });
 
 const UserStack = createStackNavigator({
-    User: UserScreen,
-    Test: Test,
+    User: { screen: UserScreen },
+    Test: { screen: Test},
 });
 
 const TabBar = createBottomTabNavigator({
-    Home: HomeStack,
-    Release: ReleaseStack,
-    Contact: ContactStack,
-    User: UserStack,
+    Home: { screen: HomeStack },
+    Release: { screen: ReleaseStack },
+    Contact: { screen: ContactStack },
+    User: { screen: UserStack },
 },{
-    /* 目前没有其他配置先 */
+    defaultNavigationOptions: ({ navigation }) => ({
+        tabBarIcon: ({ focused, tintColor }) => {
+            const { routeName } = navigation.state;
+            let iconName;
+            if (routeName === 'Home') {
+                iconName = 'home'
+            }
+            else if (routeName === 'Release') {
+                iconName = 'form'
+            }
+            else if (routeName === 'Contact') {
+                iconName = 'message1'
+            }
+            else if (routeName === 'User') {
+                iconName = 'user'
+            }
+            return <Icon name={iconName} size={25} color={tintColor} />;
+        }
+    })
 });
 
-const AppContainer = createAppContainer(TabBar);
+const AppStack = createStackNavigator({
+    Tabs: TabBar,
+    TestPage: Test,
+}, {
+    defaultNavigationOptions: {
+        headerStyle: {
+            backgroundColor: '#ff9800',
+        },
+        headerTintColor: '#fff',
+    }
+});
 
-export default AppContainer;
+export default createAppContainer(TabBar);
 
 export { Test };
