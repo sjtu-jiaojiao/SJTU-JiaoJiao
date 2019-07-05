@@ -4,4 +4,5 @@ func init() {
 	configLoad()
 	logLoad()
 	ormLoad()
+	mongoLoad()
 }
