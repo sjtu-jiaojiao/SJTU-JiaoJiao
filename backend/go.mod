@@ -7,6 +7,7 @@ require (
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.4.0
+	github.com/golang/protobuf v1.3.1
 	github.com/gopherjs/gopherjs v0.0.0-20190430165422-3e4dfb77656c // indirect
 	github.com/micro/go-micro v1.7.0
 	github.com/nats-io/nats-server/v2 v2.0.0 // indirect

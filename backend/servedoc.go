@@ -9,5 +9,5 @@ func main() {
 
 	rg.Static("/doc", "./doc")
 
-	utils.RunService("doc", router)
+	utils.RunWebService("doc", router)
 }

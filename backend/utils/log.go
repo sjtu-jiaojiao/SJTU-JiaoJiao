@@ -6,7 +6,8 @@ import (
 	"github.com/astaxie/beego/logs"
 )
 
-func logLoad() {
+// LoadLog load log config
+func LoadLog() {
 	logs.SetLogger(logs.AdapterConsole, `{"level":7,"color":true}`)
 }
 
@@ -39,12 +40,38 @@ LogPanic(e)	// panic 123
 LogPanic(e,"123%d",4)	// panic 1234
 */
 func LogPanic(e interface{}, v ...interface{}) {
+	r, s := LogContinueS(e, Error, v...)
+	if r {
+		panic(s)
+	}
+}
+
+/*
+LogContinueS will log but not panic
+if e is nil or true, nothing happens, if v is empty, e will be logged when not nil.
+return true when trigger log with log info
+*/
+func LogContinueS(e interface{}, f func(f interface{}, v ...interface{}), v ...interface{}) (bool, string) {
 	if e != nil && e != true {
 		s := e
+		if e == false {
+			s = "false"
+		}
 		if v != nil {
 			s = fmt.Sprintf(v[0].(string), v[1:]...)
 		}
-		Error(s)
-		panic(s)
+		f(s)
+		return true, s.(string)
 	}
+	return false, ""
+}
+
+/*
+LogContinue will log but not panic
+if e is nil or true, nothing happens, if v is empty, e will be logged when not nil.
+return true when trigger log
+*/
+func LogContinue(e interface{}, f func(f interface{}, v ...interface{}), v ...interface{}) bool {
+	r, _ := LogContinueS(e, f, v...)
+	return r
 }

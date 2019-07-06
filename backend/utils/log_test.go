@@ -6,6 +6,12 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestLoadLog(t *testing.T) {
+	Convey("Load log test", t, func() {
+		So(LoadLog, ShouldNotPanic)
+	})
+}
+
 func TestError(t *testing.T) {
 	Convey("Error log test", t, func() {
 		Error("This is test error!")
@@ -26,25 +32,45 @@ func TestInfo(t *testing.T) {
 	})
 }
 
-func TestLogPanic(t *testing.T) {
-	Convey("LogPanic nil test", t, func() {
+func TestLog(t *testing.T) {
+	tf := func(e interface{}, f func(f interface{}, v ...interface{}), v ...interface{}) string {
+		_, s := LogContinueS(e, f, v...)
+		return s
+	}
+	Convey("Log nil test", t, func() {
 		var e interface{}
 		So(func() { LogPanic(e) }, ShouldNotPanic)
 		So(func() { LogPanic(e, "123%d", 4) }, ShouldNotPanic)
+		So(tf(e, Error), ShouldEqual, "")
+		So(tf(e, Error, "123%d", 4), ShouldEqual, "")
+		So(LogContinue(e, Error), ShouldEqual, false)
+		So(LogContinue(e, Error, "123%d", 4), ShouldEqual, false)
 	})
-	Convey("LogPanic true test", t, func() {
+	Convey("Log true test", t, func() {
 		e := true
 		So(func() { LogPanic(e) }, ShouldNotPanic)
 		So(func() { LogPanic(e, "123%d", 4) }, ShouldNotPanic)
+		So(tf(e, Error), ShouldEqual, "")
+		So(tf(e, Error, "123%d", 4), ShouldEqual, "")
+		So(LogContinue(e, Error), ShouldEqual, false)
+		So(LogContinue(e, Error, "123%d", 4), ShouldEqual, false)
 	})
-	Convey("LogPanic false test", t, func() {
+	Convey("Log false test", t, func() {
 		e := false
-		So(func() { LogPanic(e) }, ShouldPanicWith, false)
+		So(func() { LogPanic(e) }, ShouldPanicWith, "false")
 		So(func() { LogPanic(e, "123%d", 4) }, ShouldPanicWith, "1234")
+		So(tf(e, Error), ShouldEqual, "false")
+		So(tf(e, Error, "123%d", 4), ShouldEqual, "1234")
+		So(LogContinue(e, Error), ShouldEqual, true)
+		So(LogContinue(e, Error, "123%d", 4), ShouldEqual, true)
 	})
-	Convey("LogPanic text test", t, func() {
+	Convey("Log text test", t, func() {
 		e := "Panic test"
 		So(func() { LogPanic(e) }, ShouldPanicWith, e)
 		So(func() { LogPanic(e, "123%d", 4) }, ShouldPanicWith, "1234")
+		So(tf(e, Error), ShouldEqual, "Panic test")
+		So(tf(e, Error, "123%d", 4), ShouldEqual, "1234")
+		So(LogContinue(e, Error), ShouldEqual, true)
+		So(LogContinue(e, Error, "123%d", 4), ShouldEqual, true)
 	})
 }

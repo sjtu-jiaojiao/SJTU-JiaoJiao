@@ -3,44 +3,49 @@ package utils
 import (
 	"path"
 	"runtime"
-	"strconv"
 
 	"github.com/micro/go-micro/config"
 	"github.com/micro/go-micro/config/source/consul"
 )
 
-// Host map the config "hosts"
-type Host struct {
-	Address string `json:"address"`
-	Port    int    `json:"port"`
-}
-
 // Config map the main config
 type Config struct {
-	Deploy string          `json:"deploy"`
-	Hosts  map[string]Host `json:"hosts"`
+	Deploy    string            `json:"deploy"`
+	Hosts     map[string]string `json:"hosts"`
+	ConfigTTL int               `json:"config_ttl"`
+	Test      string            `json:"test"`
 }
 
+var localConf Config
 var consulConf config.Config
 
-func configLoad() {
-	var fileConf Config
+// LoadLocalConfig load config from local
+func LoadLocalConfig() {
 	_, filename, _, ok := runtime.Caller(0)
 	LogPanic(ok, "No caller information")
 	LogPanic(config.LoadFile(path.Dir(filename) + "/../config.json"))
-	LogPanic(config.Scan(&fileConf))
+	LogPanic(config.Scan(&localConf))
+}
 
-	consulConfig := fileConf.Hosts["consul-"+fileConf.Deploy]
+// GetDeployHost return current deployed host
+func GetDeployHost(name string) string {
+	return localConf.Hosts[name+"_"+localConf.Deploy]
+}
+
+// LoadConsulConfig load config from consul
+func LoadConsulConfig() {
 	consulSource := consul.NewSource(
-		consul.WithAddress(consulConfig.Address+":"+strconv.Itoa(consulConfig.Port)),
+		consul.WithAddress(GetDeployHost("consul")),
 		consul.WithPrefix(""),
 	)
 
-	consulConf = config.NewConfig()
-	LogPanic(consulConf.Load(consulSource))
+	// we need tmp var to prevent race
+	tmp := config.NewConfig()
+	LogPanic(tmp.Load(consulSource))
+	consulConf = tmp
 }
 
-// GetConfig get config from consul
-func GetConfig(path ...string) string {
+// GetStringConfig get string config from consul
+func GetStringConfig(path ...string) string {
 	return consulConf.Get(path...).String("")
 }

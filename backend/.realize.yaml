@@ -39,3 +39,22 @@ schema:
       type: after
       path: ../../
       output: true
+- name: srv-auth
+  path: srv/auth
+  args:
+  - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+    - proto
+    - go
+    paths:
+    - /
+    - ../../utils
+    scripts:
+    - command: bash generate.sh
+      type: before
+      path: ../../
+      output: true
