@@ -16,4 +16,6 @@ func init() {
 	}()
 
 	LoadLog()
+  ormLoad()
+	mongoLoad()
 }
