@@ -11,6 +11,10 @@ import HomeScreen from '../Views/Home'
 import ReleaseScreen from '../Views/Release'
 import ContactScreen from '../Views/Contact'
 import UserScreen from '../Views/User'
+import BuyInfoScreen from "../Views/BuyInfo";
+import SellInfoScreen from "../Views/SellInfo";
+import HistoryInfoScreen from "../Views/HistoryInfo";
+import UserInfoScreen from "../Views/UserInfo";
 
 class Test extends Component {
     render() {
@@ -41,7 +45,10 @@ const ContactStack = createStackNavigator({
 
 const UserStack = createStackNavigator({
     User: { screen: UserScreen },
-    Test: { screen: Test},
+    BuyInfo: { screen: BuyInfoScreen },
+    SellInfo: { screen: SellInfoScreen },
+    HistoryInfo: { screen: HistoryInfoScreen},
+    UserInfo: { screen: UserInfoScreen},
 });
 
 const TabBar = createBottomTabNavigator({
