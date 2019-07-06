@@ -33,6 +33,7 @@ export default class UserScreen extends Component {
                         titleStyle={{ color: 'black', fontSize: 25 }}
                         subtitle={this.state.email}
                         subtitleStyle={{ color: 'black', fontSize: 15 }}
+                        onPress={() => this.props.navigation.navigate('UserInfo')}
                     />
                 </View>
             )
@@ -46,10 +47,13 @@ export default class UserScreen extends Component {
                         bottomDivider
                         chevron
                         leftAvatar={<Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')} />}
-                        title={this.state.userName}
-                        titleStyle={{ color: 'black', fontSize: 25 }}
-                        subtitle={this.state.email}
-                        subtitleStyle={{ color: 'black', fontSize: 15 }}
+                        title={'请登录'}
+                        titleStyle={{ color: 'black', fontSize: 22 }}
+                        onPress={() => {
+                            alert('即将通过Jaccount登录！');
+                            this.setState(previousState => {
+                                return {isLogin: !previousState.isLogin};
+                            })}}
                     />
                 </View>
             )
