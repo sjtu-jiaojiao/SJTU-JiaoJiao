@@ -51,6 +51,19 @@ const TabBar = createBottomTabNavigator({
     User: { screen: UserStack },
 },{
     defaultNavigationOptions: ({ navigation }) => ({
+        tabBarLabel: ({ focusd, tintColor }) => {
+            const { routeName } = navigation.state;
+            switch (routeName) {
+                case 'Home':
+                    return <Text style={{color: tintColor, fontSize: 12, textAlign: 'center'}}>首页</Text>
+                case 'Release':
+                    return <Text style={{color: tintColor, fontSize: 12, textAlign: 'center'}}>发布</Text>
+                case 'Contact':
+                    return <Text style={{color: tintColor, fontSize: 12, textAlign: 'center'}}>消息</Text>
+                case 'User':
+                    return <Text style={{color: tintColor, fontSize: 12, textAlign: 'center'}}>个人</Text>
+            }
+        },
         tabBarIcon: ({ focused, tintColor }) => {
             const { routeName } = navigation.state;
             let iconName;
@@ -70,7 +83,7 @@ const TabBar = createBottomTabNavigator({
         }
     })
 });
-
+/*
 const AppStack = createStackNavigator({
     Tabs: TabBar,
     TestPage: Test,
@@ -81,7 +94,7 @@ const AppStack = createStackNavigator({
         },
         headerTintColor: '#fff',
     }
-});
+});*/
 
 export default createAppContainer(TabBar);
 
