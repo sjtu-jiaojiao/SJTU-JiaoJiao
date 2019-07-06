@@ -35,6 +35,29 @@ export default class UserScreen extends Component {
                         subtitleStyle={{ color: 'black', fontSize: 15 }}
                         onPress={() => this.props.navigation.navigate('UserInfo')}
                     />
+                    <View style={{height: 35}} />
+                    <ListItem
+                        topDivider
+                        bottomDivider
+                        chevron
+                        title={'我的出售信息'}
+                        titleStyle={{ color: 'black', fontSize: 17 }}
+                        onPress={() => this.props.navigation.navigate('SellInfo')}
+                    />
+                    <ListItem
+                        bottomDivider
+                        chevron
+                        title={'我的求购信息'}
+                        titleStyle={{ color: 'black', fontSize: 17 }}
+                        onPress={() => this.props.navigation.navigate('SellInfo')}
+                    />
+                    <ListItem
+                        bottomDivider
+                        chevron
+                        title={'我的历史交易记录'}
+                        titleStyle={{ color: 'black', fontSize: 17 }}
+                        onPress={() => this.props.navigation.navigate('HistoryInfo')}
+                    />
                 </View>
             )
         }
@@ -54,6 +77,29 @@ export default class UserScreen extends Component {
                             this.setState(previousState => {
                                 return {isLogin: !previousState.isLogin};
                             })}}
+                    />
+                    <View style={{height: 35}} />
+                    <ListItem
+                        topDivider
+                        bottomDivider
+                        chevron
+                        title={'我的出售信息'}
+                        titleStyle={{ color: 'black', fontSize: 17 }}
+                        onPress={() => alert('请先登录！')}
+                    />
+                    <ListItem
+                        bottomDivider
+                        chevron
+                        title={'我的求购信息'}
+                        titleStyle={{ color: 'black', fontSize: 17 }}
+                        onPress={() => alert('请先登录！')}
+                    />
+                    <ListItem
+                        bottomDivider
+                        chevron
+                        title={'我的历史交易记录'}
+                        titleStyle={{ color: 'black', fontSize: 17 }}
+                        onPress={() => alert('请先登录！')}
                     />
                 </View>
             )
