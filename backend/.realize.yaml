@@ -58,3 +58,7 @@ schema:
       type: before
       path: ../../
       output: true
+    - command: apidoc
+      type: after
+      path: ../../
+      output: true

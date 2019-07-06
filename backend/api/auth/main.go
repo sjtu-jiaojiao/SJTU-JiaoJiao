@@ -1,12 +1,23 @@
 package main
 
 import (
+	"context"
 	"jiaojiao/utils"
 	"net/url"
 	"os"
 
+	"jiaojiao/srv/auth/mock"
+	auth "jiaojiao/srv/auth/proto"
+
 	"github.com/gin-gonic/gin"
+	"github.com/micro/go-micro/client"
 )
+
+func setupRouter() *gin.Engine {
+	router, rg := utils.CreateAPIGroup()
+	rg.GET("/auth", getAuth)
+	return router
+}
 
 type authCode struct {
 	Code string `form:"code"`
@@ -22,8 +33,8 @@ type authCode struct {
  *
  * @apiParam {String} [code]  OAuth code callback, DO NOT call it by yourself.
  * @apiSuccess (No param - Redirect 301) {Redirect} url Redirect to OAuth url.
- * @apiSuccess (With param - Success 200) {Number} status 0 for success, 1 for invalid credential
- * @apiSuccess (With param - Success 200) {String} token jwt token, empty when status=1
+ * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth)
+ * @apiError (Error 500) AuthServiceDown Auth service down
  */
 func getAuth(c *gin.Context) {
 	var code authCode
@@ -45,15 +56,17 @@ func getAuth(c *gin.Context) {
 
 			c.Redirect(301, baseURL.String())
 		} else { // with param
-			c.String(200, "ok")
+			srv := utils.CallMicroService("auth", func(name string, c client.Client) interface{} { return auth.NewAuthService(name, c) },
+				func() interface{} { return mock.NewAuthService() }).(auth.AuthService)
+			rsp, err := srv.Auth(context.TODO(), &auth.AuthRequest{
+				Code: code.Code,
+			})
+			if err != nil {
+				c.JSON(500, err)
+			}
+			c.JSON(200, rsp)
 		}
 	}
-}
-
-func setupRouter() *gin.Engine {
-	router, rg := utils.CreateAPIGroup()
-	rg.GET("/auth", getAuth)
-	return router
 }
 
 func main() {

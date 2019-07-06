@@ -5,10 +5,10 @@ service Auth {
 }
 
 message AuthRequest {
-  string code = 1; // OAuth code
+  string code = 1;
 }
 
 message AuthResponse {
-  int32 status = 2; // 1 for ok, 2 for invalid
-  string token = 3; // non-empty for valid access token
+  int32 status = 2;
+  string token = 3;
 }
