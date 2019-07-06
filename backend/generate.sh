@@ -1,0 +1,1 @@
+./srv/auth/generate.sh
