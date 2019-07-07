@@ -1,0 +1,35 @@
+<h2>用户管理</h2>      
+<input [(ngModel)]="threshold" placeholder="阈值"/>
+<button nz-button  [nzType]="'primary'">封禁所有信用评价低于{{threshold}}的人</button>
+
+<nz-list [nzDataSource]="users" [nzRenderItem]="user" [nzGrid]="{gutter: 16, span: 6}">
+    <ng-template #user let-user>
+      <nz-list-item [nzContent]="nzContent">
+        <ng-template #nzContent>
+          <nz-card [nzTitle]="user.name">
+      <div>
+        <div class='useritem'>
+              <span class="badge">用户ID</span>{{user.id}}
+        </div>
+        <div class='useritem'>
+          <span class="badge">用户名</span>{{user.name}}
+      </div>
+      <div class='useritem'>
+          <span class="badge">封禁</span>{{user.forbid}}
+      </div>
+      <div class='useritem'>
+          <span class="badge">信用评价</span>{{user.score}}
+      </div>
+      <div class='useritem'>
+          <span class="badge">活跃度</span>{{user.count}}
+      </div>
+      </div>
+              <a routerLink="/user/{{user.id}}">
+              用户详情
+              <i nz-icon type="search"></i>
+               </a>
+          </nz-card>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+  </nz-list>
