@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
-import {SearchBar} from "react-native-elements";
+import {SearchBar, CheckBox  } from "react-native-elements";
 
 export default class SearchScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            search: '',
+            searchText: '',
+            searchType: 'Sell',
         }
     };
 
@@ -14,21 +15,19 @@ export default class SearchScreen extends Component {
         headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23}}></Text>)
     };
 
-    updateSearch = (search) => {
-        this.setState({ search });
+    updateSearch = (searchText) => {
+        this.setState({ searchText });
     };
 
     render() {
-        const { search } = this.state.search;
+        const { searchText } = this.state.searchText;
         return (
             <View>
-                <View>
-                    <SearchBar
-                        placeholder={'搜索'}
-                        onChangeText={ this.updateSearch }
-                        value={ this.state.search }
-                    />
-                </View>
+                <SearchBar
+                    placeholder={'搜索'}
+                    onChangeText={ this.updateSearch }
+                    value={ this.state.searchText }
+                />
             </View>
         )
     }
