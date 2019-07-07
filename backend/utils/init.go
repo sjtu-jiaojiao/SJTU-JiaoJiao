@@ -16,6 +16,6 @@ func init() {
 	}()
 
 	LoadLog()
-  ormLoad()
-	mongoLoad()
+	LoadORM()
+	LoadMongoDB()
 }

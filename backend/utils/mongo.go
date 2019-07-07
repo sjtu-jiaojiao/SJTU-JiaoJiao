@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -12,16 +13,15 @@ import (
 var mongoDatabase *mongo.Database
 var mongoContext context.Context
 
-func mongoLoad() {
+// LoadMongoDB init mongodb
+func LoadMongoDB() {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://"+os.Getenv("JJ_MONGODBUSER")+":"+os.Getenv("JJ_MONGODBPWD")+
+		"@"+GetStringConfig("sys_config", "mongo_uri")+"/"))
 
-	err = client.Ping(ctx, readpref.Primary())
-	if err != nil {
-		panic(err)
-	}
+	LogPanic(err)
+	LogPanic(client.Ping(ctx, readpref.Primary()))
 
-	mongoDatabase = client.Database("sjtujj")
-	ctx, _ = context.WithTimeout(context.Background(), 5*time.Second)
-
+	mongoDatabase = client.Database(GetStringConfig("sys_config", "mongo_dbname"))
+	mongoContext, _ = context.WithTimeout(context.Background(), 10*time.Second)
 }
