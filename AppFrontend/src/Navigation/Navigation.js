@@ -11,10 +11,13 @@ import HomeScreen from '../Views/Home'
 import ReleaseScreen from '../Views/Release'
 import ContactScreen from '../Views/Contact'
 import UserScreen from '../Views/User'
+import MyBuyInfoScreen from "../Views/MyBuyInfo";
+import MySellInfoScreen from "../Views/MySellInfo";
+import MyHistoryInfoScreen from "../Views/MyHistoryInfo";
+import UserInfoScreen from "../Views/UserInfo";
 import BuyInfoScreen from "../Views/BuyInfo";
 import SellInfoScreen from "../Views/SellInfo";
-import HistoryInfoScreen from "../Views/HistoryInfo";
-import UserInfoScreen from "../Views/UserInfo";
+import SearchScreen from "../Views/Search";
 
 class Test extends Component {
     render() {
@@ -30,7 +33,9 @@ class Test extends Component {
 
 const HomeStack = createStackNavigator({
     Home: { screen: HomeScreen },
-    Test: { screen: Test},
+    BuyInfo: { screen: BuyInfoScreen },
+    SellInfo: { screen: SellInfoScreen },
+    Search: { screen: SearchScreen },
 });
 
 const ReleaseStack = createStackNavigator({
@@ -45,9 +50,9 @@ const ContactStack = createStackNavigator({
 
 const UserStack = createStackNavigator({
     User: { screen: UserScreen },
-    BuyInfo: { screen: BuyInfoScreen },
-    SellInfo: { screen: SellInfoScreen },
-    HistoryInfo: { screen: HistoryInfoScreen},
+    MyBuyInfo: { screen: MyBuyInfoScreen },
+    MySellInfo: { screen: MySellInfoScreen },
+    MyHistoryInfo: { screen: MyHistoryInfoScreen},
     UserInfo: { screen: UserInfoScreen},
 });
 

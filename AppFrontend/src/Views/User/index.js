@@ -42,21 +42,21 @@ export default class UserScreen extends Component {
                         chevron
                         title={'我的出售信息'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
-                        onPress={() => this.props.navigation.navigate('SellInfo')}
+                        onPress={() => this.props.navigation.navigate('MySellInfo')}
                     />
                     <ListItem
                         bottomDivider
                         chevron
                         title={'我的求购信息'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
-                        onPress={() => this.props.navigation.navigate('SellInfo')}
+                        onPress={() => this.props.navigation.navigate('MySellInfo')}
                     />
                     <ListItem
                         bottomDivider
                         chevron
                         title={'我的历史交易记录'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
-                        onPress={() => this.props.navigation.navigate('HistoryInfo')}
+                        onPress={() => this.props.navigation.navigate('MyHistoryInfo')}
                     />
                 </View>
             )
