@@ -1,0 +1,26 @@
+<h2>活动管理</h2>      
+<nz-list [nzDataSource]="activitys" [nzRenderItem]="activity" [nzGrid]="{gutter: 16, span: 6}">
+    <ng-template #activity let-activity>
+      <nz-list-item [nzContent]="nzContent">
+        <ng-template #nzContent>
+          <nz-card [nzTitle]="activity.intro">
+      <div>
+        <div class='activityitem'>
+              <span class="badge">活动ID</span>{{activity.id}}
+        </div>
+        <div class='activityitem'>
+              <span class="badge">活动简介</span>{{activity.intro}}
+        </div>
+        <div class='activityitem'>
+            <span class="badge">活动状态 </span>{{activity.state}}          
+        </div>
+      </div>
+              <a routerLink="/activity/{{activity.id}}">
+              活动详情
+              <i nz-icon type="search"></i>
+               </a>
+          </nz-card>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+  </nz-list>
