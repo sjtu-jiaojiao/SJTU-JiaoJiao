@@ -5,10 +5,10 @@ doc文件不方便版本控制，先放这里稳定后再合并
 - [Effective Go](https://golang.org/doc/effective_go.html)
 
 ## 自动格式化
-请使用`goreturns`，默认配置即可。
+请使用`goimports`，默认配置即可。
 
 ## 自动代码检查
-请使用`golint`，默认配置即可。
+请使用`gofmt`，默认配置即可。
 
 ## 命名规范
 ### 文件名

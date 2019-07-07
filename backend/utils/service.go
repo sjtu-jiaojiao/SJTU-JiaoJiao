@@ -3,7 +3,6 @@
 package utils
 
 import (
-	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -26,8 +25,8 @@ func RunWebService(name string, router *gin.Engine) {
 		service := web.NewService(
 			web.Name(GetStringConfig("api_config", "namespace")+"."+
 				GetStringConfig("api_config", "version")+"."+name),
-			web.RegisterTTL(time.Second*time.Duration(consulConf.Get("srv_config", "ttl").Int(60))),
-			web.RegisterInterval(time.Second*time.Duration(consulConf.Get("srv_config", "interval").Int(60))),
+			web.RegisterTTL(time.Second*time.Duration(ConsulConf.Get("srv_config", "ttl").Int(60))),
+			web.RegisterInterval(time.Second*time.Duration(ConsulConf.Get("srv_config", "interval").Int(60))),
 		)
 
 		LogPanic(service.Init())
@@ -39,15 +38,17 @@ func RunWebService(name string, router *gin.Engine) {
 // RunMicroService run a micro service
 func RunMicroService(name string, f func(s server.Server, hdlr interface{},
 	opts ...server.HandlerOption) error, hdlr interface{}, opts ...server.HandlerOption) {
-	service := micro.NewService(
-		micro.Name(GetServiceName(name)),
-		micro.RegisterTTL(time.Second*time.Duration(consulConf.Get("srv_config", "ttl").Int(60))),
-		micro.RegisterInterval(time.Second*time.Duration(consulConf.Get("srv_config", "interval").Int(60))),
-	)
+	if !CheckInTest() {
+		service := micro.NewService(
+			micro.Name(GetServiceName(name)),
+			micro.RegisterTTL(time.Second*time.Duration(ConsulConf.Get("srv_config", "ttl").Int(60))),
+			micro.RegisterInterval(time.Second*time.Duration(ConsulConf.Get("srv_config", "interval").Int(60))),
+		)
 
-	service.Init()
-	LogPanic(f(service.Server(), hdlr, opts...))
-	LogPanic(service.Run())
+		service.Init()
+		LogPanic(f(service.Server(), hdlr, opts...))
+		LogPanic(service.Run())
+	}
 }
 
 // GetServiceName get micro service name
@@ -57,7 +58,6 @@ func GetServiceName(name string) string {
 
 // CallMicroService call a micro service
 func CallMicroService(name string, f func(name string, c client.Client) interface{}, m func() interface{}) interface{} {
-	Error(os.Args[0])
 	if CheckInTest() {
 		f(GetServiceName(name), client.DefaultClient) // just useless test
 		return m()
