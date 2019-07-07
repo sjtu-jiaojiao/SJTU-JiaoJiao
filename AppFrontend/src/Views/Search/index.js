@@ -11,7 +11,7 @@ export default class SearchScreen extends Component {
     };
 
     static navigationOptions = {
-        headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23}}>搜索你想要的</Text>)
+        headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23}}></Text>)
     };
 
     updateSearch = (search) => {
