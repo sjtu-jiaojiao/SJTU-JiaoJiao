@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import { Text, View, Button } from 'react-native';
+import { Text, View } from 'react-native';
+import { Button, Divider } from "react-native-elements";
+import Icon from 'react-native-vector-icons/AntDesign';
 
 export default class HomeScreen extends Component {
     static navigationOptions = {
@@ -9,14 +11,20 @@ export default class HomeScreen extends Component {
     render() {
         return (
             <View>
-                <Text>
-                    这是主页
-                </Text>
                 <Button
-                    title={'Go to test page'}
-                    onPress={() => this.props.navigation.navigate('Test')}
+                    icon={
+                        <Icon
+                            name="search1"
+                            size={22}
+                            color="black"
+                        />}
+                    title="  点我搜索"
+                    titleStyle={{color: 'black', fontSize: 17}}
+                    buttonStyle={{width: 100, backgroundColor: 'white'}}
+                    Type='clear'
+                    onPress={() => this.props.navigation.navigate('Search')}
                 />
             </View>
-        )
+        );
     }
 }
