@@ -8,7 +8,10 @@ import { Component, OnInit } from '@angular/core';
 export class InfoDetailComponent implements OnInit {
 
   d = [];
+<<<<<<< HEAD
   fnoption: any;
+=======
+>>>>>>> cbf88643b148d3696f6eaf12c3d034083aee3317
   now = new Date(1997, 9, 3);
   oneDay = 24 * 3600 * 1000;
   option: any;
