@@ -55,6 +55,10 @@
 **环境变量设置敏感信息，相关内容禁止提交到仓库**
 - `JJ_CLIENTID`：OAuth client_id
 - `JJ_CLIENTSECRET`：OAuth client_secret
+- `JJ_MARIADBUSER`：MariaDB用户名
+- `JJ_MARIADBPWD`：MariaDB密码
+- `JJ_MONGODBUSER`：MongoDB用户名
+- `JJ_MONGODBPWD`：MongoDB密码
 
 ## 目录结构
 

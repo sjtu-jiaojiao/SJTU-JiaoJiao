@@ -1,35 +1,30 @@
 package utils
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/astaxie/beego/orm"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestOrmLoad(t *testing.T) {
 	Convey("Load orm test", t, func() {
-		o := orm.NewOrm()
+		test := Test{TestName: "tester"}
 
-		user := User{UserName: "slene"}
-	
 		// insert
-		id, err := o.Insert(&user)
-		fmt.Printf("ID: %d, ERR: %v\n", id, err)
-	
+		_, err := db.Insert(&test)
+		So(err, ShouldEqual, nil)
+
 		// update
-		user.UserName = "astaxie"
-		num, err := o.Update(&user)
-		fmt.Printf("NUM: %d, ERR: %v\n", num, err)
-	
+		test.TestName = "jiang"
+		_, err = db.Update(&test)
+		So(err, ShouldEqual, nil)
+
 		// read one
-		u := User{Id: user.Id}
-		err = o.Read(&u)
-		fmt.Printf("ERR: %v\n", err)
-	
+		u := Test{ID: test.ID}
+		So(db.Read(&u), ShouldEqual, nil)
+
 		// delete
-		num, err = o.Delete(&u)
-		fmt.Printf("NUM: %d, ERR: %v\n", num, err)
+		_, err = db.Delete(&u)
+		So(err, ShouldEqual, nil)
 	})
 }
