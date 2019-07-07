@@ -27,9 +27,9 @@ type idToken struct {
  * @apiName auth.Auth.Auth
  * @apiDescription Check OAuth code.
  *
- * @apiParam {String} code OAuth code.
- * @apiSuccess {Number} status 1 for success, 2 for empty code, 3 for invalid code
- * @apiSuccess {String} token verified token when status=1
+ * @apiParam {string} code OAuth code.
+ * @apiSuccess {int32} status 1 for success <br> 2 for empty code <br> 3 for invalid code
+ * @apiSuccess {string} token verified token when status=1
  * @apiError (Error 500) OAuthServerDown can't connect to OAuth server
  */
 func (a *srv) Auth(ctx context.Context, req *auth.AuthRequest, rsp *auth.AuthResponse) error {

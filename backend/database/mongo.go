@@ -1,7 +1,8 @@
-package utils
+package db
 
 import (
 	"context"
+	"jiaojiao/utils"
 	"os"
 	"time"
 
@@ -17,11 +18,11 @@ var mongoContext context.Context
 func LoadMongoDB() {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://"+os.Getenv("JJ_MONGODBUSER")+":"+os.Getenv("JJ_MONGODBPWD")+
-		"@"+GetStringConfig("sys_config", "mongo_uri")+"/"))
+		"@"+utils.GetStringConfig("sys_config", "mongo_uri")+"/"))
 
-	LogPanic(err)
-	LogPanic(client.Ping(ctx, readpref.Primary()))
+	utils.LogPanic(err)
+	utils.LogPanic(client.Ping(ctx, readpref.Primary()))
 
-	mongoDatabase = client.Database(GetStringConfig("sys_config", "mongo_dbname"))
+	mongoDatabase = client.Database(utils.GetStringConfig("sys_config", "mongo_dbname"))
 	mongoContext, _ = context.WithTimeout(context.Background(), 10*time.Second)
 }

@@ -14,7 +14,7 @@ func JWTVerify(token string, secret string) (*jwt.Token, error) {
 		}
 		return []byte(secret), nil
 	})
-	if t.Valid {
+	if t != nil && t.Valid {
 		return t, err
 	}
 	return nil, err

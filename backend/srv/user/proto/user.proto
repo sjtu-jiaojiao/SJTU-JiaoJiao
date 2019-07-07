@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+service User {
+  rpc Create(UserCreateRequest) returns (UserCreateResponse) {}
+}
+
+message UserCreateRequest {
+  uint64 studentId = 1;
+  string studentName = 2;
+}
+
+message UserCreateResponse {
+  int32 status = 3;
+  int32 userId = 4;
+}

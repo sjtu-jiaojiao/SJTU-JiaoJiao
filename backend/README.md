@@ -1,4 +1,9 @@
 # 后端
+## 环境依赖
+- golang
+- consul
+- nodejs/npm
+
 ## 其他依赖
 
     go get github.com/micro/micro

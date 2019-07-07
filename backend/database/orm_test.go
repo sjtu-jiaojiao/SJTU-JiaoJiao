@@ -1,4 +1,4 @@
-package utils
+package db
 
 import (
 	"testing"
@@ -11,20 +11,20 @@ func TestOrmLoad(t *testing.T) {
 		test := Test{TestName: "tester"}
 
 		// insert
-		_, err := db.Insert(&test)
+		_, err := dbo.Insert(&test)
 		So(err, ShouldEqual, nil)
 
 		// update
 		test.TestName = "jiang"
-		_, err = db.Update(&test)
+		_, err = dbo.Update(&test)
 		So(err, ShouldEqual, nil)
 
 		// read one
-		u := Test{ID: test.ID}
-		So(db.Read(&u), ShouldEqual, nil)
+		u := Test{Id: test.Id}
+		So(dbo.Read(&u), ShouldEqual, nil)
 
 		// delete
-		_, err = db.Delete(&u)
+		_, err = dbo.Delete(&u)
 		So(err, ShouldEqual, nil)
 	})
 }

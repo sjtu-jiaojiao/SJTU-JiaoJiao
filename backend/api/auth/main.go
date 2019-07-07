@@ -31,7 +31,7 @@ type authCode struct {
  * @apiName GetAuth
  * @apiDescription Redirect to OAuth url.
  *
- * @apiParam {String} [code]  OAuth code callback, DO NOT call it by yourself.
+ * @apiParam {string} [code]  OAuth code callback, DO NOT call it by yourself.
  * @apiSuccess (No param - Redirect 301) {Redirect} url Redirect to OAuth url.
  * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth)
  * @apiError (Error 500) AuthServiceDown Auth service down
