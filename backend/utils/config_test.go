@@ -18,7 +18,7 @@ func TestGetStringConfig(t *testing.T) {
 func TestLoadLocalConfig(t *testing.T) {
 	Convey("Local config load test", t, func() {
 		So(LoadLocalConfig, ShouldNotPanic)
-		So(localConf.Test, ShouldEqual, "Do_not_modify_this")
+		So(LocalConf.Test, ShouldEqual, "Do_not_modify_this")
 	})
 }
 

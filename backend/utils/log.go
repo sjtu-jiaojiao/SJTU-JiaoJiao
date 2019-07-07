@@ -8,7 +8,7 @@ import (
 
 // LoadLog load log config
 func LoadLog() {
-	logs.SetLogger(logs.AdapterConsole, `{"level":7,"color":true}`)
+	_ = logs.SetLogger(logs.AdapterConsole, `{"level":7,"color":true}`)
 }
 
 // Error logs a message at error level.

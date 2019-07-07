@@ -11,8 +11,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-var mongoDatabase *mongo.Database
-var mongoContext context.Context
+var MongoDatabase *mongo.Database
+var MongoContext context.Context
 
 // LoadMongoDB init mongodb
 func LoadMongoDB() {
@@ -23,6 +23,6 @@ func LoadMongoDB() {
 	utils.LogPanic(err)
 	utils.LogPanic(client.Ping(ctx, readpref.Primary()))
 
-	mongoDatabase = client.Database(utils.GetStringConfig("sys_config", "mongo_dbname"))
-	mongoContext, _ = context.WithTimeout(context.Background(), 10*time.Second)
+	MongoDatabase = client.Database(utils.GetStringConfig("sys_config", "mongo_dbname"))
+	MongoContext, _ = context.WithTimeout(context.Background(), 10*time.Second)
 }

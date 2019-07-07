@@ -26,16 +26,16 @@ type srv struct{}
  *
  * @apiParam {uint64} studentId student id.
  * @apiParam {string} studentName student name.
- * @apiSuccess {number} status 1 for success <br> 2 for exist user <br> 3 for empty param
+ * @apiSuccess {number} status -1 for empty param <br> 1 for success <br> 2 for exist user
  * @apiSuccess {int32} userId created or existed userid
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user.UserCreateResponse) error {
 	if req.StudentId == 0 || req.StudentName == "" {
-		rsp.Status = 3
+		rsp.Status = -1
 	} else {
 		o := orm.NewOrm()
-		usr := db.User{StudentId: req.StudentId}
+		usr := db.User{StudentId: req.StudentId, StudentName: req.StudentName}
 		created, id, err := o.ReadOrCreate(&usr, "StudentId")
 		if err != nil {
 			return err

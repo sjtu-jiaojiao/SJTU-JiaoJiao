@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 
 	"github.com/micro/go-micro/server"
 )
@@ -28,7 +29,7 @@ type idToken struct {
  * @apiDescription Check OAuth code.
  *
  * @apiParam {string} code OAuth code.
- * @apiSuccess {int32} status 1 for success <br> 2 for empty code <br> 3 for invalid code
+ * @apiSuccess {int32} status -1 for empty param <br> 1 for success <br> 2 for invalid code
  * @apiSuccess {string} token verified token when status=1
  * @apiError (Error 500) OAuthServerDown can't connect to OAuth server
  */
@@ -60,18 +61,20 @@ func (a *srv) Auth(ctx context.Context, req *auth.AuthRequest, rsp *auth.AuthRes
 		}
 
 		if id.Error != "" { // invalid code
-			rsp.Status = 3
+			rsp.Status = 2
 		} else {
-			_, err = utils.JWTVerify(id.IDToken, os.Getenv("JJ_CLIENTSECRET"))
+			t, err := utils.JWTVerify(id.IDToken, os.Getenv("JJ_CLIENTSECRET"))
 			if err != nil {
-				rsp.Status = 3
+				rsp.Status = 2
 			} else {
 				rsp.Status = 1
 				rsp.Token = id.IDToken
+				rsp.StudentId, _ = strconv.ParseUint(utils.JWTParse(t, "code"), 10, 64)
+				rsp.StudentName = utils.JWTParse(t, "name")
 			}
 		}
 	} else {
-		rsp.Status = 2
+		rsp.Status = -1
 	}
 	return nil
 }

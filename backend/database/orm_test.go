@@ -11,20 +11,20 @@ func TestOrmLoad(t *testing.T) {
 		test := Test{TestName: "tester"}
 
 		// insert
-		_, err := dbo.Insert(&test)
+		_, err := Orm.Insert(&test)
 		So(err, ShouldEqual, nil)
 
 		// update
 		test.TestName = "jiang"
-		_, err = dbo.Update(&test)
+		_, err = Orm.Update(&test)
 		So(err, ShouldEqual, nil)
 
 		// read one
 		u := Test{Id: test.Id}
-		So(dbo.Read(&u), ShouldEqual, nil)
+		So(Orm.Read(&u), ShouldEqual, nil)
 
 		// delete
-		_, err = dbo.Delete(&u)
+		_, err = Orm.Delete(&u)
 		So(err, ShouldEqual, nil)
 	})
 }

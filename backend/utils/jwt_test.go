@@ -31,3 +31,13 @@ func TestJWTVerify(t *testing.T) {
 		So(tf("eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZXN0IjoidGVzdF9wYXlsb2FkIn0.rfsMIWo6HwV79Xiq53RnTeylFsukuXv0WF3JJ9_wBu-BEMbujaaQW2rvKfPthlVMQuubkcD2ENZdp7ZNIlAE3Q"), ShouldBeError, "Unexpected signing method: ES256")
 	})
 }
+
+func TestJWTParse(t *testing.T) {
+	Convey("JWTParse test", t, func() {
+		// valid
+		t, err := JWTVerify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZXN0IjoidGVzdF9wYXlsb2FkIiwiZXhwIjo0NzAxOTQ1NjAwfQ.5fZOk3TLL6h3vGD7W0i3foRZeGn5eaLJxsymUznp4zw", "test_secret")
+		So(err, ShouldEqual, nil)
+		So(JWTParse(t, "test"), ShouldEqual, "test_payload")
+		So(JWTParse(t, "test1"), ShouldEqual, "")
+	})
+}

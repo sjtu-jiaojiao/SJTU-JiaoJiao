@@ -16,20 +16,20 @@ type Config struct {
 	Test      string            `json:"test"`
 }
 
-var localConf Config
-var consulConf config.Config
+var LocalConf Config
+var ConsulConf config.Config
 
 // LoadLocalConfig load config from local
 func LoadLocalConfig() {
 	_, filename, _, ok := runtime.Caller(0)
 	LogPanic(ok, "No caller information")
 	LogPanic(config.LoadFile(path.Dir(filename) + "/../config.json"))
-	LogPanic(config.Scan(&localConf))
+	LogPanic(config.Scan(&LocalConf))
 }
 
 // GetDeployHost return current deployed host
 func GetDeployHost(name string) string {
-	return localConf.Hosts[name+"_"+localConf.Deploy]
+	return LocalConf.Hosts[name+"_"+LocalConf.Deploy]
 }
 
 // LoadConsulConfig load config from consul
@@ -42,10 +42,10 @@ func LoadConsulConfig() {
 	// we need tmp var to prevent race
 	tmp := config.NewConfig()
 	LogPanic(tmp.Load(consulSource))
-	consulConf = tmp
+	ConsulConf = tmp
 }
 
 // GetStringConfig get string config from consul
 func GetStringConfig(path ...string) string {
-	return consulConf.Get(path...).String("")
+	return ConsulConf.Get(path...).String("")
 }

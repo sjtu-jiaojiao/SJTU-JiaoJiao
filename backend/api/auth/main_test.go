@@ -23,11 +23,13 @@ func Test_getAuth(t *testing.T) {
 		So(r.Code, ShouldEqual, 301)
 
 		data := tf(200, "/auth?code=123456")
-		So(data["status"], ShouldEqual, 3)
+		So(data["status"], ShouldEqual, 2)
 
 		data = tf(200, "/auth?code=valid")
 		So(data["status"], ShouldEqual, 1)
 		So(data["token"], ShouldEqual, "test_token")
+		So(data["studentId"], ShouldEqual, 1234)
+		So(data["studentName"], ShouldEqual, "test")
 
 		tf(500, "/auth?code=down")
 	})

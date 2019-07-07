@@ -6,8 +6,10 @@ import (
 	"net/url"
 	"os"
 
-	"jiaojiao/srv/auth/mock"
+	mockauth "jiaojiao/srv/auth/mock"
 	auth "jiaojiao/srv/auth/proto"
+	mockuser "jiaojiao/srv/user/mock"
+	user "jiaojiao/srv/user/proto"
 
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/client"
@@ -33,7 +35,7 @@ type authCode struct {
  *
  * @apiParam {string} [code]  OAuth code callback, DO NOT call it by yourself.
  * @apiSuccess (No param - Redirect 301) {Redirect} url Redirect to OAuth url.
- * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth)
+ * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth), -1 is not allowd
  * @apiError (Error 500) AuthServiceDown Auth service down
  */
 func getAuth(c *gin.Context) {
@@ -57,12 +59,24 @@ func getAuth(c *gin.Context) {
 			c.Redirect(301, baseURL.String())
 		} else { // with param
 			srv := utils.CallMicroService("auth", func(name string, c client.Client) interface{} { return auth.NewAuthService(name, c) },
-				func() interface{} { return mock.NewAuthService() }).(auth.AuthService)
+				func() interface{} { return mockauth.NewAuthService() }).(auth.AuthService)
 			rsp, err := srv.Auth(context.TODO(), &auth.AuthRequest{
 				Code: code.Code,
 			})
 			if err != nil {
 				c.JSON(500, err)
+			}
+
+			if rsp.Status == 1 {
+				srv2 := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
+					func() interface{} { return mockuser.NewUserService() }).(user.UserService)
+				_, err = srv2.Create(context.TODO(), &user.UserCreateRequest{
+					StudentId:   rsp.StudentId,
+					StudentName: rsp.StudentName,
+				})
+				if err != nil {
+					c.JSON(500, err)
+				}
 			}
 			c.JSON(200, rsp)
 		}
