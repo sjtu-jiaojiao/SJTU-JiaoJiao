@@ -41,6 +41,13 @@ func main() {
 			fmt.Println("R: Restart realize auto-tool")
 			printFlag <- true
 		case 'P':
+			go startConsul()
+			time.Sleep(time.Duration(7) * time.Second)
+			go startMicroApi()
+			go startMicroWeb()
+			go startServeDoc()
+			go startGoConvey()
+			go startRealize()
 		case 'C':
 			go startConsul()
 		case 'A':
@@ -111,6 +118,7 @@ func startMicroApi() {
 		}
 	}
 }
+
 func startMicroWeb() {
 	for {
 		time.Sleep(time.Duration(1) * time.Second)
@@ -134,6 +142,7 @@ func startMicroWeb() {
 		}
 	}
 }
+
 func startServeDoc() {
 	for {
 		time.Sleep(time.Duration(1) * time.Second)
