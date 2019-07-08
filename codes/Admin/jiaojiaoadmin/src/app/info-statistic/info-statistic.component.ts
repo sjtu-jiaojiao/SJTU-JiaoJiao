@@ -246,7 +246,7 @@ export class InfoStatisticComponent implements OnInit {
   }, 0);
       return { name: node,
       itemStyle: {
-        color: '#60acfc'
+        color: v < 10 ?'#60acfc': '#ff7c7c'
       }, value : v, symbolSize: v,
   draggable: true};
 });
@@ -276,8 +276,10 @@ export class InfoStatisticComponent implements OnInit {
       focusNodeAdjacency: true,
       lineStyle: {
           normal: {
+              color :'source',
+              type : 'solid',
               width: 0.5,
-              curveness: 0.3,
+              curveness: 0,
               opacity: 0.7
           }
       }
@@ -398,7 +400,7 @@ export class InfoStatisticComponent implements OnInit {
             symbolSize: 6,
             areaStyle: {
                 normal: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    color: new echarts.graphic.LinearGradient(0, 1, 0,0 , [{
                         offset: 0,
                         color: 'rgba(219, 50, 51, 0.9)'
                     }, {

@@ -24,9 +24,9 @@ import { InfoStatisticComponent } from './info-statistic/info-statistic.componen
 import { ActivitydetailComponent } from './activitydetail/activitydetail.component';
 import { IconDefinition } from '@ant-design/icons-angular';
 import { DashboardOutline, UserOutline, LeftCircleOutline ,SaveOutline,  ProfileOutline, TransactionOutline, ContactsOutline,
-BulbOutline, LoginOutline, KeyOutline, DeleteOutline, SearchOutline, ControlOutline } from '@ant-design/icons-angular/icons'
+BulbOutline, LoginOutline, KeyOutline, DeleteOutline, SearchOutline, ControlOutline, LockOutline, LogoutOutline } from '@ant-design/icons-angular/icons'
 const icons: IconDefinition[] = [ControlOutline,LeftCircleOutline ,SaveOutline, DashboardOutline, UserOutline, ProfileOutline, TransactionOutline, ContactsOutline,
-  BulbOutline, LoginOutline, KeyOutline, DeleteOutline, SearchOutline ];
+  BulbOutline, LoginOutline, LockOutline, KeyOutline, DeleteOutline, SearchOutline ,LogoutOutline];
 registerLocaleData(zh);
 
 @NgModule({
@@ -47,7 +47,7 @@ registerLocaleData(zh);
   imports: [
     ReactiveFormsModule,
     BrowserModule,
-    AppRoutingModule,
+    AppRoutingModule,    
     NgZorroAntdModule,
     FormsModule,
     NgxEchartsModule,

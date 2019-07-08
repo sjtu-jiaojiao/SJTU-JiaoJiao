@@ -11,20 +11,21 @@ import { ActivityComponent } from './activity/activity.component';
 import { PasswordComponent } from './password/password.component';
 import { InfoStatisticComponent } from './info-statistic/info-statistic.component';
 import { ActivitydetailComponent } from './activitydetail/activitydetail.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'user/:id', component: UserDetailComponent },
-  { path: 'user', component: UserComponent},
+  { path: 'dashboard', component: DashboardComponent,canActivate: [AuthGuard] },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full',canActivate: [AuthGuard] },
+  { path: 'user/:id', component: UserDetailComponent ,canActivate: [AuthGuard]},
+  { path: 'user', component: UserComponent,canActivate: [AuthGuard]},
   { path: 'login', component: LoginComponent},
-  { path: 'info', component:  InfoComponent},
-  { path: 'info/:id', component:  InfoDetailComponent},
-  { path: 'activity/:id', component:  ActivitydetailComponent},
-  { path: 'statistic', component:  InfoStatisticComponent},
-  { path: 'website', component:  WebsiteComponent},
-  { path: 'activity', component:  ActivityComponent},
-  { path: 'password', component:  PasswordComponent},
+  { path: 'info', component:  InfoComponent,canActivate: [AuthGuard]},
+  { path: 'info/:id', component:  InfoDetailComponent,canActivate: [AuthGuard]},
+  { path: 'activity/:id', component:  ActivitydetailComponent,canActivate: [AuthGuard]},
+  { path: 'statistic', component:  InfoStatisticComponent,canActivate: [AuthGuard]},
+  { path: 'website', component:  WebsiteComponent,canActivate: [AuthGuard]},
+  { path: 'activity', component:  ActivityComponent,canActivate: [AuthGuard]},
+  { path: 'password', component:  PasswordComponent,canActivate: [AuthGuard]},
 ];
 
 @NgModule({

@@ -11,6 +11,10 @@ import { filter } from 'rxjs/operators';
 export class InfoComponent implements OnInit {
   searchTag: string[]=[];
   infos: Info[];
+  current : number;
+  curinfos: Info[];
+  size :number;
+  count : number;
   Tthreshold: number;
   Ythreshold: number;
   threshold: number;
@@ -26,6 +30,9 @@ export class InfoComponent implements OnInit {
       this.infos = infos;
       tags.forEach( e => {
         this.infos = this.infos.filter( arr => arr.tags.indexOf(e) >= 0 );
+        this.count = this.infos.length; 
+        this.current=1;
+        this.switchPage(this.current, this.size);
       });
     });
   }
@@ -47,15 +54,35 @@ export class InfoComponent implements OnInit {
     this.infos.filter(h => new Date().getTime() - new Date(h.time).getTime() /1000/60/60/24 > this.Tthreshold && h.count < this.Ythreshold)
     .map(h => { h.state=4 ; return h;}).forEach(element => 
       this.infoService.updateInfo(element).subscribe());
-  }
+  }	
   getinfos(): void {
     this.infoService.getInfos()
-    .subscribe(infos => this.infos = infos);
+    .subscribe(infos => {
+      this.infos = infos; 
+      this.count = this.infos.length; 
+      this.current=1;
+      this.size=4;
+      this.switchPage(this.current, this.size);
+    });
   }
-
+  switchPage(page, size) {
+    if(page* size< this.count)
+    this.curinfos = this.infos.slice( (page-1)*size, page* size)
+    else 
+    this.curinfos = this.infos.slice( (page-1)*size );
+  }
+  pageChange(page){
+    this.switchPage(page,this.size);
+  }
+  sizeChange(size){
+    this.switchPage(this.current,size);
+  }
   delete(info: Info): void {
     this.infos = this.infos.filter(h => h !== info);
-    this.infoService.deleteInfo(info).subscribe();
+    this.infoService.deleteInfo(info).subscribe(_ =>{
+      this.count = this.infos.length; 
+      this.switchPage(this.current, this.size);
+    });
   }
 
   add(id: string): void {

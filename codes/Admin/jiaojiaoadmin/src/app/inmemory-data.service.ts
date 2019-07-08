@@ -19,7 +19,25 @@ export class InMemoryDataService implements InMemoryDbService {
     {id: '2396', source: '213', type: 0, price: 23, tags: ['塑料','垃圾袋'], time: '2019-01-01', state: 0, count: 2, intro: '100抽塑料垃圾袋'},
     {id: '195', source: '123', type: 0, price: 15, tags:['C++','中文','书籍'],time: '2019-6-01', state: 1, count: 10, intro: 'Effective中文版'},
     {id: '42296', source: '14', type: 1,price: 52,  time: '2019-02-11',tags:['黑色','保温杯'],state: 2, count: 2, intro: '黑色保温杯'},
-    {id: '4196', source: '4', type: 1,price: 20,  time: '2019-05-10', tags:['小排量','电动','自行车'], state: 3, count: 0, intro: '小排量电动自行车'}];
+    {id: '4196', source: '4', type: 1,price: 20,  time: '2019-05-10', tags:['小排量','电动','自行车'], state: 3, count: 0, intro: '小排量电动自行车'},
+
+    {id: '42396', source:'4396', type: 0, price: 100, tags: ['黑色','塑料','垃圾桶'], time: '2019-01-01', state: 0, count: 2, intro: '黑色塑料分类垃圾桶'},
+    {id: '1296', source: '123', type: 0, price: 35, tags:['C++','精装','中文','书籍'],time: '2019-07-01', state: 1, count: 10, intro: '深度探索C++对象模型中文精装本'},
+    {id: '4223396', source: '1234', type: 1,price: 52,  time: '2019-02-11',tags:['不锈钢','保温杯'],state: 2, count: 2, intro: '虎牌不锈钢保温杯'},
+    {id: '42343396', source: '4396', type: 1,price: 200,  time: '2019-05-10', tags:['凤凰牌','自行车'], state: 3, count: 0, intro: '凤凰牌使用1年的自行车'},
+    {id: '25396', source: '213', type: 0, price: 23, tags: ['塑料','垃圾袋'], time: '2019-01-01', state: 0, count: 2, intro: '100抽塑料垃圾袋'},
+    {id: '1956', source: '123', type: 0, price: 15, tags:['C++','中文','书籍'],time: '2019-6-01', state: 1, count: 10, intro: 'Effective中文版'},
+    {id: '424296', source: '14', type: 1,price: 52,  time: '2019-02-11',tags:['黑色','保温杯'],state: 2, count: 2, intro: '黑色保温杯'},
+    {id: '41916', source: '4', type: 1,price: 20,  time: '2019-05-10', tags:['小排量','电动','自行车'], state: 3, count: 0, intro: '小排量电动自行车'},
+
+    {id: '4393216', source:'4396', type: 0, price: 100, tags: ['黑色','塑料','垃圾桶'], time: '2019-01-01', state: 0, count: 2, intro: '黑色塑料分类垃圾桶'},
+    {id: '14396', source: '123', type: 0, price: 35, tags:['C++','精装','中文','书籍'],time: '2019-07-01', state: 1, count: 10, intro: '深度探索C++对象模型中文精装本'},
+    {id: '42323496', source: '1234', type: 1,price: 52,  time: '2019-02-11',tags:['不锈钢','保温杯'],state: 2, count: 2, intro: '虎牌不锈钢保温杯'},
+    {id: '43324396', source: '4396', type: 1,price: 200,  time: '2019-05-10', tags:['凤凰牌','自行车'], state: 3, count: 0, intro: '凤凰牌使用1年的自行车'},
+    {id: '23396', source: '213', type: 0, price: 23, tags: ['塑料','垃圾袋'], time: '2019-01-01', state: 0, count: 2, intro: '100抽塑料垃圾袋'},
+    {id: '19685', source: '123', type: 0, price: 15, tags:['C++','中文','书籍'],time: '2019-6-01', state: 1, count: 10, intro: 'Effective中文版'},
+    {id: '4298296', source: '14', type: 1,price: 52,  time: '2019-02-11',tags:['黑色','保温杯'],state: 2, count: 2, intro: '黑色保温杯'},
+    {id: '41096', source: '4', type: 1,price: 20,  time: '2019-05-10', tags:['小排量','电动','自行车'], state: 3, count: 0, intro: '小排量电动自行车'}];
 
     return {users , infos};
   }

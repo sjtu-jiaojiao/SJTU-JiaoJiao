@@ -8,7 +8,7 @@
 ></nz-input-number>
 <button nz-button (click)="forbid()" [nzType]="'primary'">封禁所有信用评价低于{{threshold}}的人</button>
 
-<nz-list [nzDataSource]="users" [nzRenderItem]="user" [nzGrid]="{gutter: 16, span: 6}">
+<nz-list [nzDataSource]="curusers" [nzRenderItem]="user" [nzGrid]="{gutter: 16, span: 6}">
     <ng-template #user let-user>
       <nz-list-item [nzContent]="nzContent">
         <ng-template #nzContent>
@@ -41,3 +41,14 @@
       </nz-list-item>
     </ng-template>
   </nz-list>
+
+  
+  <nz-pagination
+  [(nzPageIndex)]="current"
+  [(nzPageSize)]="size"
+  [nzPageSizeOptions]="[4,8,12,16,20,24,28,32]"	
+  [nzTotal]="count"
+  (nzPageIndexChange)	="pageChange($event)"
+  (nzPageSizeChange)= "sizeChange($event)"
+  nzShowSizeChanger
+></nz-pagination>
