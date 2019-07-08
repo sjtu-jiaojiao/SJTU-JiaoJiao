@@ -6,7 +6,7 @@ service SellInfo {
 }
 
 service Content {
-    rpc Create (SellInfoCreateRequest) returns (SellInfoCreateResponse);
+    rpc Create (ContentCreateRequest) returns (ContentCreateResponse);
 }
 //
 //message SellInfoQueryRequest {
@@ -36,7 +36,7 @@ message SellInfoCreateRequest {
 message SellInfoCreateResponse {
     enum Status {
         UNKNOWN = 0;
-        EMPTY_PARAM = -1;
+        INVALID_PARAM = -1;
         SUCCESS = 1;
         INVALID_TOKEN = 2;
     }
@@ -59,7 +59,7 @@ message ContentCreateRequest {
 message ContentCreateResponse {
     enum Status {
         UNKNOWN = 0;
-        EMPTY_PARAM = -1;
+        INVALID_PARAM = -1;
         SUCCESS = 1;
         INVALID_TOKEN = 2;
     }
