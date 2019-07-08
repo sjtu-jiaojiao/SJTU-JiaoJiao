@@ -1,6 +1,12 @@
 <h2>用户管理</h2>      
-<input [(ngModel)]="threshold" placeholder="阈值"/>
-<button nz-button  [nzType]="'primary'">封禁所有信用评价低于{{threshold}}的人</button>
+<nz-input-number
+  [(ngModel)]="threshold"
+  [nzMin]="1"
+  [nzMax]="5"
+  [nzStep]="0.1"
+  [nzPlaceHolder]="'阈值'"
+></nz-input-number>
+<button nz-button (click)="forbid()" [nzType]="'primary'">封禁所有信用评价低于{{threshold}}的人</button>
 
 <nz-list [nzDataSource]="users" [nzRenderItem]="user" [nzGrid]="{gutter: 16, span: 6}">
     <ng-template #user let-user>
@@ -15,19 +21,21 @@
           <span class="badge">用户名</span>{{user.name}}
       </div>
       <div class='useritem'>
-          <span class="badge">封禁</span>{{user.forbid}}
+          <span class="badge">封禁</span>{{user.forbid?'是':'否'}}
       </div>
       <div class='useritem'>
           <span class="badge">信用评价</span>{{user.score}}
       </div>
       <div class='useritem'>
-          <span class="badge">活跃度</span>{{user.count}}
+          <span class="badge">活跃度</span>{{user.active}}
       </div>
       </div>
               <a routerLink="/user/{{user.id}}">
               用户详情
               <i nz-icon type="search"></i>
                </a>
+          <button class="delete" title="delete book" nz-button nzType="danger" nzShape="circle"  nzSize="small"
+          (click)="delete(user)"><i nz-icon type="delete" theme="outline"></i></button>
           </nz-card>
         </ng-template>
       </nz-list-item>

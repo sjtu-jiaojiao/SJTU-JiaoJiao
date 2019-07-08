@@ -4,25 +4,27 @@
       <div nz-col [nzSpan]="8">
         <nz-card nzTitle="用户状态">
             <div class='useritem'>
-                  <span class="badge">用户ID</span>4377
+                  <span class="badge">用户ID</span>{{user.id}}
             </div>
             <div class='useritem'>
-              <span class="badge">用户名</span>王牌测试员
+              <span class="badge">用户名</span><input [(ngModel)]="user.name" placeholder="name"/>
           </div>
           <div class='useritem'>
-              <span class="badge">封禁</span>否
+              <span class="badge">封禁</span><label nz-checkbox [(ngModel)]="user.forbid"></label>
+
           </div>
           <div class='useritem'>
-              <span class="badge">信用评价</span>4.2
+              <span class="badge">信用评价</span>{{user.score}}
           </div>
           <div class='useritem'>
-              <span class="badge">活跃度</span>20
+              <span class="badge">活跃度</span>{{user.active}}
           </div>
         </nz-card>
-        <nz-card nzType="inner" nzTitle="用户简介">
-            <p>此地有图</p>
-            <p>我是出道两年的偶像练习生，cxk</p>
+        <nz-card nzType="inner" nzTitle="用户简介">     
+           <textarea nz-input placeholder="intro" [(ngModel)]="user.intro" nzAutosize></textarea>
           </nz-card>
+  <button (click)="goBack()" nz-button nzType="dashed"><i nz-icon type="left-circle" theme="outline"></i>返回</button>
+  <button (click)="save()" nz-button nzType="primary"><i nz-icon type="save" theme="outline"></i>保存</button>
       </div>
       <div nz-col [nzSpan]="16">
         <nz-card nzType="inner" nzTitle="用户活跃度">            

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Info } from '../entity/info';
+import { InfoService } from '../info.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-info',
@@ -6,17 +9,62 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./info.component.css']
 })
 export class InfoComponent implements OnInit {
-
-  infos: any;
+  searchTag: string[]=[];
+  infos: Info[];
   Tthreshold: number;
   Ythreshold: number;
-  constructor() { }
+  threshold: number;
+  constructor(private infoService: InfoService) { }
 
   ngOnInit() {
-    this.infos = [ {id: 4396, source: 4396, type: '买', time: '2019-01-01', state: '预约中', count: 2, intro: '想要买分类垃圾桶'},
-    {id: 196, source: 123, type: '买', time: '2019-10-01', state: '交易完成', count: 10, intro: '求女朋友'},
-    {id: 42396, source: 1234, type: '卖', time: '2019-02-11', state: '待评价', count: 2, intro: '卖前男友尸体'},
-    {id: 43396, source: 4396, type: '卖', time: '2019-05-10', state: '可预约', count: 0, intro: '爱情不是你想买'}];
+    this.getinfos();
+  }
+
+  selectTag(tags: string[]) :void {
+    this.infoService.getInfos()
+    .subscribe(infos => {
+      this.infos = infos;
+      tags.forEach( e => {
+        this.infos = this.infos.filter( arr => arr.tags.indexOf(e) >= 0 );
+      });
+    });
+  }
+  getstate(statecode: number): string {
+      switch (statecode){
+        case 0:
+          return '可预约';
+        case 1: 
+          return '预约中';
+        case 2:
+          return '已完成';
+        case 3:
+          return '待评价';
+        case 4: 
+          return '强制结束';
+      }
+  }
+  end():void {
+    this.infos.filter(h => new Date().getTime() - new Date(h.time).getTime() /1000/60/60/24 > this.Tthreshold && h.count < this.Ythreshold)
+    .map(h => { h.state=4 ; return h;}).forEach(element => 
+      this.infoService.updateInfo(element).subscribe());
+  }
+  getinfos(): void {
+    this.infoService.getInfos()
+    .subscribe(infos => this.infos = infos);
+  }
+
+  delete(info: Info): void {
+    this.infos = this.infos.filter(h => h !== info);
+    this.infoService.deleteInfo(info).subscribe();
+  }
+
+  add(id: string): void {
+    id = id.trim();
+    if (!id) { return; }
+    this.infoService.addInfo({ id } as Info)
+      .subscribe(info => {
+        this.infos.push(info);
+      });
   }
 
 }

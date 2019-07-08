@@ -18,28 +18,57 @@
         </ng-template>
         </nz-card>
         <nz-card nzType="inner" nzTitle="交易简介">
-            <div class='infoitem'>
-                  <span class="badge">交易ID</span>123132
-            </div>
-            <div class='infoitem'>
-                  <span class="badge">交易类型</span>买
-            </div>
-            <div class='infoitem'>
-                  <span class="badge">交易简介</span>Gundam MK2 1:1模型
-            </div>
-            <div class='infoitem'>
-              <span class="badge">交易发起人</span>阿姆罗
+          <div class='infoitem'>
+                <span class="badge">交易ID</span>{{info.id}}
           </div>
           <div class='infoitem'>
-              <span class="badge">发起时间</span>2019-01-01
+                <span class="badge">交易类型</span>{{info.type? '买':'卖'}}
           </div>
           <div class='infoitem'>
-              <span class="badge">状态</span>评价完成
-          </div>
-          <div class='infoitem'>
-              <span class="badge">当前预约数</span>0
-          </div>
-          </nz-card>
+            <span class="badge">交易发起人</span>{{info.source}}
+        </div>
+        <div class='infoitem'>
+            <span class="badge">发起时间</span>{{info.time}}
+        </div>
+        <div class='infoitem'>
+            <span class="badge">状态</span>
+            <nz-select
+            id='state'
+              nzShowSearch 
+              nzPlaceHolder="Select a state"
+              [(ngModel)]="info.state"
+            >
+              <nz-option nzLabel="可预约" [nzValue]="0" ></nz-option>
+              <nz-option nzLabel="预约中" [nzValue]="1"></nz-option>
+              <nz-option nzLabel="已完成" [nzValue]="2"></nz-option>
+              <nz-option nzLabel="待评价" [nzValue]="3"></nz-option>
+              <nz-option nzLabel="强制结束" [nzValue]="4"></nz-option>
+            </nz-select>
+        </div>
+        <div class='infoitem'>
+              <span class="badge">交易价格</span>
+              <nz-input-number
+                [(ngModel)]="info.price"
+                [nzMin]="0"
+                [nzStep]="0.1"
+                [nzPlaceHolder]="'价格'"
+              ></nz-input-number>
+        </div>
+        <div class='infoitem'>
+            <span class="badge">当前预约数</span>{{info.count}}
+        </div></nz-card>
+        <nz-card nzType="inner" nzTitle="交易简介">    
+                <nz-select
+                  nzMode="tags"
+                  [nzTokenSeparators]="[',']"
+                  [(ngModel)]="info.tags"
+                  nzPlaceHolder="Tags">
+                  <nz-option *ngFor="let option of info.tags" [nzLabel]="option" [nzValue]="option"> </nz-option>
+                </nz-select>
+          <textarea nz-input placeholder="intro" [(ngModel)]="info.intro" nzAutosize></textarea>
+        </nz-card>
+          <button (click)="goBack()" nz-button nzType="dashed"><i nz-icon type="left-circle" theme="outline"></i>返回</button>
+          <button (click)="save()" nz-button nzType="primary"><i nz-icon type="save" theme="outline"></i>保存</button>
       </div>
       <div nz-col [nzSpan]="16">
         <nz-card nzType="inner" nzTitle="交易价格曲线">            
