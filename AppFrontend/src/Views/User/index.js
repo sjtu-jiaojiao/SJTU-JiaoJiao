@@ -76,11 +76,7 @@ export default class UserScreen extends Component {
                         leftAvatar={<Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')} />}
                         title={'请登录'}
                         titleStyle={{ color: 'black', fontSize: 22 }}
-                        onPress={() => {
-                            alert('即将通过Jaccount登录！');
-                            this.setState(previousState => {
-                                return {isLogin: !previousState.isLogin};
-                            })}}
+                        onPress={() => this.props.navigation.navigate('Login')}
                     />
                     <View style={{height: 35, backgroundColor: '#EFEFF5'}} />
                     <ListItem
