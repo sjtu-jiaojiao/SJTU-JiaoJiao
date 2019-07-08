@@ -95,7 +95,7 @@ func (h *sellInfoHandler) Create(ctx context.Context, in *SellInfoCreateRequest,
 // Client API for Content service
 
 type ContentService interface {
-	Create(ctx context.Context, in *SellInfoCreateRequest, opts ...client.CallOption) (*SellInfoCreateResponse, error)
+	Create(ctx context.Context, in *ContentCreateRequest, opts ...client.CallOption) (*ContentCreateResponse, error)
 }
 
 type contentService struct {
@@ -116,9 +116,9 @@ func NewContentService(name string, c client.Client) ContentService {
 	}
 }
 
-func (c *contentService) Create(ctx context.Context, in *SellInfoCreateRequest, opts ...client.CallOption) (*SellInfoCreateResponse, error) {
+func (c *contentService) Create(ctx context.Context, in *ContentCreateRequest, opts ...client.CallOption) (*ContentCreateResponse, error) {
 	req := c.c.NewRequest(c.name, "Content.Create", in)
-	out := new(SellInfoCreateResponse)
+	out := new(ContentCreateResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -129,12 +129,12 @@ func (c *contentService) Create(ctx context.Context, in *SellInfoCreateRequest, 
 // Server API for Content service
 
 type ContentHandler interface {
-	Create(context.Context, *SellInfoCreateRequest, *SellInfoCreateResponse) error
+	Create(context.Context, *ContentCreateRequest, *ContentCreateResponse) error
 }
 
 func RegisterContentHandler(s server.Server, hdlr ContentHandler, opts ...server.HandlerOption) error {
 	type content interface {
-		Create(ctx context.Context, in *SellInfoCreateRequest, out *SellInfoCreateResponse) error
+		Create(ctx context.Context, in *ContentCreateRequest, out *ContentCreateResponse) error
 	}
 	type Content struct {
 		content
@@ -147,6 +147,6 @@ type contentHandler struct {
 	ContentHandler
 }
 
-func (h *contentHandler) Create(ctx context.Context, in *SellInfoCreateRequest, out *SellInfoCreateResponse) error {
+func (h *contentHandler) Create(ctx context.Context, in *ContentCreateRequest, out *ContentCreateResponse) error {
 	return h.ContentHandler.Create(ctx, in, out)
 }
