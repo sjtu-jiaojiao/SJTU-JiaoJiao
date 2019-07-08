@@ -1,6 +1,7 @@
 import React, { Component } from 'React';
 import { Text, View, FlatList } from 'react-native';
 import { ListItem, Avatar } from "react-native-elements";
+import Icon from "react-native-vector-icons/AntDesign";
 
 export default class UserScreen extends Component {
     constructor(props) {
@@ -22,53 +23,56 @@ export default class UserScreen extends Component {
     render() {
         if (this.state.isLogin) {
             return (
-                <View>
-                    <View style={{height: 20}} />
+                <View style={{backgroundColor: '#EFEFF5'}}>
+                    <View style={{height: 20, backgroundColor: '#EFEFF5'}} />
                     <ListItem
                         topDivider
                         bottomDivider
-                        chevron
                         leftAvatar={<Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')} />}
+                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
                         title={this.state.userName}
                         titleStyle={{ color: 'black', fontSize: 25 }}
                         subtitle={this.state.email}
                         subtitleStyle={{ color: 'black', fontSize: 15 }}
                         onPress={() => this.props.navigation.navigate('UserInfo')}
                     />
-                    <View style={{height: 35}} />
+                    <View style={{height: 35, backgroundColor: '#EFEFF5'}} />
                     <ListItem
                         topDivider
                         bottomDivider
-                        chevron
+                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
                         title={'我的出售信息'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
                         onPress={() => this.props.navigation.navigate('MySellInfo')}
                     />
                     <ListItem
                         bottomDivider
-                        chevron
+                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
                         title={'我的求购信息'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
-                        onPress={() => this.props.navigation.navigate('MySellInfo')}
+                        onPress={() => this.props.navigation.navigate('MyBuyInfo')}
                     />
                     <ListItem
                         bottomDivider
-                        chevron
+                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
                         title={'我的历史交易记录'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
                         onPress={() => this.props.navigation.navigate('MyHistoryInfo')}
+                    />
+                    <ListItem
+                        containerStyle={{height: 1000, backgroundColor: '#EFEFF5'}}
                     />
                 </View>
             )
         }
         else {
             return (
-                <View>
-                    <View style={{height: 20}} />
+                <View style={{backgroundColor: '#EFEFF5'}}>
+                    <View style={{height: 20, backgroundColor: '#EFEFF5'}} />
                     <ListItem
                         topDivider
                         bottomDivider
-                        chevron
+                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
                         leftAvatar={<Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')} />}
                         title={'请登录'}
                         titleStyle={{ color: 'black', fontSize: 22 }}
@@ -78,28 +82,31 @@ export default class UserScreen extends Component {
                                 return {isLogin: !previousState.isLogin};
                             })}}
                     />
-                    <View style={{height: 35}} />
+                    <View style={{height: 35, backgroundColor: '#EFEFF5'}} />
                     <ListItem
                         topDivider
                         bottomDivider
-                        chevron
+                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
                         title={'我的出售信息'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
                         onPress={() => alert('请先登录！')}
                     />
                     <ListItem
                         bottomDivider
-                        chevron
+                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
                         title={'我的求购信息'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
                         onPress={() => alert('请先登录！')}
                     />
                     <ListItem
                         bottomDivider
-                        chevron
+                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
                         title={'我的历史交易记录'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
                         onPress={() => alert('请先登录！')}
+                    />
+                    <ListItem
+                        containerStyle={{height: 1000, backgroundColor: '#EFEFF5'}}
                     />
                 </View>
             )
