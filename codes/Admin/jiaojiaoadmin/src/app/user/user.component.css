@@ -18,6 +18,9 @@
     border-radius: 4px 0 0 4px;
   }
   
+  .delete {
+    float: right;
+  }
   
  h2{
   color: white;

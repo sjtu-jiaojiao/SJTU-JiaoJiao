@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Info } from '../entity/info';
+import { Location } from '@angular/common';
+import { InfoService } from '../info.service';
+
 
 @Component({
   selector: 'app-infodetail',
@@ -9,10 +14,17 @@ export class InfoDetailComponent implements OnInit {
 
   d = [];
   fnoption: any;
+  state: number =0;
   now = new Date(1997, 9, 3);
   oneDay = 24 * 3600 * 1000;
   option: any;
   value = Math.random() * 1000;
+  @Input() info: Info ;
+  constructor(
+  private route: ActivatedRoute,
+  private infoService: InfoService,
+  private location: Location
+) {}
   randomData() {
     this.now = new Date(+this.now + this.oneDay);
     this.value = this.value + Math.random() * 21 - 10;
@@ -25,9 +37,25 @@ export class InfoDetailComponent implements OnInit {
     };
 }
 
-  constructor() { }
-
   ngOnInit() {
+      this.graph();
+      this.getinfo();
+  }
+    goBack(): void {
+    this.location.back();
+  }
+    getinfo(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.infoService.getInfo(id)
+      .subscribe(info => this.info = info);
+  }
+    save(): void {
+    this.infoService.updateInfo(this.info)
+      .subscribe(() => this.goBack());
+  }
+
+  graph() {
+      
     for (let i = 0; i < 1000; i++) {
         this.d.push(this.randomData());
 }
@@ -168,5 +196,4 @@ export class InfoDetailComponent implements OnInit {
   };
 }, 1000);
   }
-
 }

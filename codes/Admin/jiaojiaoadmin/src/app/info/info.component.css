@@ -24,6 +24,10 @@ input{
   border-radius: 4px 0 0 4px;
 }
 
+#tag {
+  float:right;
+  width: 10%;
+}
  .infoitem{
    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
    position: relative;
@@ -35,6 +39,10 @@ input{
    border-radius: 4px;
  }
  
+  
+ .delete {
+  float: right;
+}
  .infoitem:hover {
    color: #607D8B;
    background-color: rgba(221, 221, 221, 0.548);

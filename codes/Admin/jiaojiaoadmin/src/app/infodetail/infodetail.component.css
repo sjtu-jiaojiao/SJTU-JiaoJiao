@@ -15,7 +15,9 @@
     margin-right: .8em;
     border-radius: 4px 0 0 4px;
   }
-  
+  #state{
+    width: 50%;
+  }
    .infoitem{
      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
      position: relative;

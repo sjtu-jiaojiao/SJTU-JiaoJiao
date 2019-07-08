@@ -1,8 +1,31 @@
 <h2>交易信息管理</h2>      
-<input [(ngModel)]="Tthreshold" placeholder="时间阈值"/>
-<input [(ngModel)]="Ythreshold" placeholder="预约阈值"/>
-<button nz-button  [nzType]="'primary'">清除所有等待时间超过{{Tthreshold}}天且预约数小于{{Ythreshold}}的交易信息</button>
+<nz-input-number
+  [(ngModel)]="Tthreshold"
+  [nzMin]="1"
+  [nzStep]="1"
+  [nzPlaceHolder]="'时间阈值'"
+></nz-input-number>
+<nz-input-number
+  [(ngModel)]="Ythreshold"
+  [nzMin]="1"
+  [nzStep]="1"
+  [nzPlaceHolder]="'预约阈值'"
+></nz-input-number>
+<button nz-button (click)='end()' [nzType]="'primary'">结束所有等待时间超过{{Tthreshold}}天且预约数小于{{Ythreshold}}的交易信息</button>
 
+
+<nz-select
+id = 'tag'
+nzMode="tags"
+[nzShowArrow]="false"
+[nzOpen]="false"	
+(ngModelChange)	="selectTag($event)"
+[nzTokenSeparators]="[',']"
+[(ngModel)]="searchTag"
+nzPlaceHolder="TagFilter">
+
+<nz-option *ngFor="let option of searchTag" [nzLabel]="option" [nzValue]="option"> </nz-option>
+</nz-select>
 <nz-list [nzDataSource]="infos" [nzRenderItem]="info" [nzGrid]="{gutter: 16, span: 6}">
     <ng-template #info let-info>
       <nz-list-item [nzContent]="nzContent">
@@ -13,10 +36,7 @@
               <span class="badge">交易ID</span>{{info.id}}
         </div>
         <div class='infoitem'>
-              <span class="badge">交易类型</span>{{info.type}}
-        </div>
-        <div class='infoitem'>
-              <span class="badge">交易简介</span>{{info.intro}}
+              <span class="badge">交易类型</span>{{info.type? '买':'卖'}}
         </div>
         <div class='infoitem'>
           <span class="badge">交易发起人</span>{{info.source}}
@@ -25,16 +45,23 @@
           <span class="badge">发起时间</span>{{info.time}}
       </div>
       <div class='infoitem'>
-          <span class="badge">状态</span>{{info.state}}
+          <span class="badge">状态</span>{{getstate(info.state)}}
       </div>
       <div class='infoitem'>
           <span class="badge">当前预约数</span>{{info.count}}
       </div>
+      <nz-tag
+        *ngFor="let tag of info.tags"
+      >
+        {{ tag }}
+      </nz-tag>
       </div>
               <a routerLink="/info/{{info.id}}">
               交易详情
               <i nz-icon type="search"></i>
                </a>
+               <button class="delete" title="delete info" nz-button nzType="danger" nzShape="circle"  nzSize="small"
+               (click)="delete(user)"><i nz-icon type="delete" theme="outline"></i></button>
           </nz-card>
         </ng-template>
       </nz-list-item>

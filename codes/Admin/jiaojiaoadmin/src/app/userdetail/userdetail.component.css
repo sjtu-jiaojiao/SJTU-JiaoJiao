@@ -9,7 +9,6 @@
     height: 3em;
     border-radius: 4px;
   }
-  
   .useritem:hover {
     color: #607D8B;
     background-color: rgba(221, 221, 221, 0.548);
