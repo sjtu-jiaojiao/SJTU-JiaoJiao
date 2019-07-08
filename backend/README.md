@@ -16,7 +16,7 @@
 ## 本地启动
 一键启动：
 
-    ./runsrv.sh
+    go run run.go
 
 ## 本地默认地址
 - consul服务：`localhost:8500`
@@ -72,16 +72,14 @@
 ## 目录结构
 
     api             RESTAPI入口
-        auth        认证服务API
     srv             微服务组件
-        auth        认证服务
+    database        数据库模块
     utils           通用模块
     apidoc.json     apidoc配置文件
     config.json     总配置文件
     consul.json     项目配置文件
     go.mod          go mod文件
-    runsrv.sh       本地服务启动脚本
-    servedoc.go     doc文档服务
+    run.go          本地服务启动程序
     generate.sh     proto文件生成脚本
 
 ## JWT Token
