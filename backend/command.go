@@ -31,6 +31,7 @@ func main() {
 		text, _ := reader.ReadString('\n')
 		switch text[0] {
 		case 'H':
+		case 'h':
 			fmt.Println("H: Print help information")
 			fmt.Println("P: Restart the whole project")
 			fmt.Println("C: Restart consul")
@@ -41,6 +42,7 @@ func main() {
 			fmt.Println("R: Restart realize auto-tool")
 			printFlag <- true
 		case 'P':
+		case 'p':
 			go startConsul()
 			time.Sleep(time.Duration(7) * time.Second)
 			go startMicroApi()
@@ -49,22 +51,34 @@ func main() {
 			go startGoConvey()
 			go startRealize()
 		case 'C':
+		case 'c':
 			go startConsul()
 		case 'A':
+		case 'a':
 			go startMicroApi()
 		case 'W':
+		case 'w':
 			go startMicroWeb()
 		case 'D':
+		case 'd':
 			go startServeDoc()
 		case 'G':
+		case 'g':
 			go startGoConvey()
 		case 'R':
+		case 'r':
 			go startRealize()
 		}
 	}
 }
 
 func startConsul() {
+	if status.Consul {
+		fmt.Println("\nDon't Restart Module being running.")
+		printFlag <- true
+		return
+	}
+
 	for {
 		time.Sleep(time.Duration(1) * time.Second)
 
@@ -96,6 +110,12 @@ func startConsul() {
 }
 
 func startMicroApi() {
+	if status.MicroApi {
+		fmt.Println("\nDon't Restart Module being running.")
+		printFlag <- true
+		return
+	}
+
 	for {
 		time.Sleep(time.Duration(1) * time.Second)
 
@@ -120,6 +140,12 @@ func startMicroApi() {
 }
 
 func startMicroWeb() {
+	if status.MicroWeb {
+		fmt.Println("\nDon't Restart Module being running.")
+		printFlag <- true
+		return
+	}
+
 	for {
 		time.Sleep(time.Duration(1) * time.Second)
 
@@ -144,6 +170,12 @@ func startMicroWeb() {
 }
 
 func startServeDoc() {
+	if status.Document {
+		fmt.Println("\nDon't Restart Module being running.")
+		printFlag <- true
+		return
+	}
+
 	for {
 		time.Sleep(time.Duration(1) * time.Second)
 
@@ -168,6 +200,12 @@ func startServeDoc() {
 }
 
 func startGoConvey() {
+	if status.Goconvey {
+		fmt.Println("\nDon't Restart Module being running.")
+		printFlag <- true
+		return
+	}
+
 	for {
 		time.Sleep(time.Duration(1) * time.Second)
 
@@ -192,6 +230,12 @@ func startGoConvey() {
 }
 
 func startRealize() {
+	if status.Realize {
+		fmt.Println("\nDon't Restart Module being running.")
+		printFlag <- true
+		return
+	}
+
 	for {
 		time.Sleep(time.Duration(1) * time.Second)
 
