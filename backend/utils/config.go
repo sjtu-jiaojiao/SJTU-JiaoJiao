@@ -25,6 +25,7 @@ func LoadLocalConfig() {
 	LogPanic(ok, "No caller information")
 	LogPanic(config.LoadFile(path.Dir(filename) + "/../config.json"))
 	LogPanic(config.Scan(&LocalConf))
+	Info("Local config loaded")
 }
 
 // GetDeployHost return current deployed host
@@ -43,6 +44,7 @@ func LoadConsulConfig() {
 	tmp := config.NewConfig()
 	LogPanic(tmp.Load(consulSource))
 	ConsulConf = tmp
+	Info("Consul config loaded")
 }
 
 // GetStringConfig get string config from consul

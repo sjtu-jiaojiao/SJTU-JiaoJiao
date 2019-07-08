@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/client"
-	"github.com/micro/go-micro/server"
 	"github.com/micro/go-micro/web"
 )
 
@@ -31,22 +30,28 @@ func RunWebService(name string, router *gin.Engine) {
 
 		LogPanic(service.Init())
 		service.Handle("/", router)
+		Info("Running web service \"%s\"", name)
 		LogPanic(service.Run())
 	}
 }
 
-// RunMicroService run a micro service
-func RunMicroService(name string, f func(s server.Server, hdlr interface{},
-	opts ...server.HandlerOption) error, hdlr interface{}, opts ...server.HandlerOption) {
+func InitMicroService(name string) micro.Service {
 	if !CheckInTest() {
 		service := micro.NewService(
 			micro.Name(GetServiceName(name)),
 			micro.RegisterTTL(time.Second*time.Duration(ConsulConf.Get("srv_config", "ttl").Int(60))),
 			micro.RegisterInterval(time.Second*time.Duration(ConsulConf.Get("srv_config", "interval").Int(60))),
 		)
-
 		service.Init()
-		LogPanic(f(service.Server(), hdlr, opts...))
+		return service
+	}
+	return micro.NewService()
+}
+
+// RunMicroService run a micro service
+func RunMicroService(service micro.Service) {
+	if !CheckInTest() {
+		Info("Running micro service \"%s\"", service.String())
 		LogPanic(service.Run())
 	}
 }
@@ -62,5 +67,6 @@ func CallMicroService(name string, f func(name string, c client.Client) interfac
 		f(GetServiceName(name), client.DefaultClient) // just useless test
 		return m()
 	}
+	Info("Calling micro service \"%s\"", name)
 	return f(GetServiceName(name), client.DefaultClient)
 }

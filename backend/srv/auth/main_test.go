@@ -14,12 +14,12 @@ func TestAuth(t *testing.T) {
 	var rsp auth.AuthResponse
 	Convey("Test Auth", t, func() {
 		So(s.Auth(context.TODO(), &req, &rsp), ShouldEqual, nil)
-		So(rsp.Status, ShouldEqual, -1)
+		So(rsp.Status, ShouldEqual, auth.AuthResponse_EMPTY_PARAM)
 		So(rsp.Token, ShouldEqual, "")
 
 		req.Code = "123456"
 		So(s.Auth(context.TODO(), &req, &rsp), ShouldEqual, nil)
-		So(rsp.Status, ShouldEqual, 2)
+		So(rsp.Status, ShouldEqual, auth.AuthResponse_INVALID_CODE)
 		So(rsp.Token, ShouldEqual, "")
 
 		// No test for valid code

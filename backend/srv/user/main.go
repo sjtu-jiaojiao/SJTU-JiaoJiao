@@ -7,7 +7,6 @@ import (
 	"jiaojiao/utils"
 
 	"github.com/astaxie/beego/orm"
-	"github.com/micro/go-micro/server"
 )
 
 type srv struct{}
@@ -24,26 +23,30 @@ type srv struct{}
  * @apiName user.User.Create
  * @apiDescription Create new user.
  *
- * @apiParam {uint64} studentId student id.
+ * @apiParam {string} studentId student id.
  * @apiParam {string} studentName student name.
  * @apiSuccess {number} status -1 for empty param <br> 1 for success <br> 2 for exist user
  * @apiSuccess {int32} userId created or existed userid
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user.UserCreateResponse) error {
-	if req.StudentId == 0 || req.StudentName == "" {
-		rsp.Status = -1
+	if req.StudentId == "" || req.StudentName == "" {
+		rsp.Status = user.UserCreateResponse_EMPTY_PARAM
 	} else {
 		o := orm.NewOrm()
-		usr := db.User{StudentId: req.StudentId, StudentName: req.StudentName}
+		usr := db.User{
+			UserName:    req.StudentName,
+			StudentId:   req.StudentId,
+			StudentName: req.StudentName,
+		}
 		created, id, err := o.ReadOrCreate(&usr, "StudentId")
-		if err != nil {
+		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
 		if created {
-			rsp.Status = 1
+			rsp.Status = user.UserCreateResponse_SUCCESS
 		} else {
-			rsp.Status = 2
+			rsp.Status = user.UserCreateResponse_USER_EXIST
 		}
 		rsp.UserId = int32(id)
 	}
@@ -51,8 +54,7 @@ func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user
 }
 
 func main() {
-	utils.RunMicroService("user", func(s server.Server, hdlr interface{},
-		opts ...server.HandlerOption) error {
-		return user.RegisterUserHandler(s, hdlr.(user.UserHandler), opts...)
-	}, new(srv))
+	service := utils.InitMicroService("user")
+	utils.LogPanic(user.RegisterUserHandler(service.Server(), new(srv)))
+	utils.RunMicroService(service)
 }

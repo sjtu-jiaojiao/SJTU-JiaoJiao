@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"os"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -39,5 +40,14 @@ func TestJWTParse(t *testing.T) {
 		So(err, ShouldEqual, nil)
 		So(JWTParse(t, "test"), ShouldEqual, "test_payload")
 		So(JWTParse(t, "test1"), ShouldEqual, "")
+	})
+}
+
+func TestJWTSign(t *testing.T) {
+	Convey("JWTSign test", t, func() {
+		t, err := JWTVerify(JWTSign(1926, 1), os.Getenv("JJ_JWTSECRET"))
+		So(err, ShouldEqual, nil)
+		So(JWTParse(t, "id"), ShouldEqual, 1926)
+		So(JWTParse(t, "role"), ShouldEqual, 1)
 	})
 }

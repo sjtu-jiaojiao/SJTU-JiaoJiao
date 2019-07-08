@@ -12,16 +12,16 @@ type mockSrv struct{}
 
 func (a *mockSrv) Create(ctx context.Context, req *user.UserCreateRequest, opts ...client.CallOption) (*user.UserCreateResponse, error) {
 	var ret user.UserCreateResponse
-	if req.StudentId == 0 || req.StudentName == "" {
-		ret.Status = -1
+	if req.StudentId == "" || req.StudentName == "" {
+		ret.Status = user.UserCreateResponse_EMPTY_PARAM
 	} else {
-		if req.StudentId == 1234 {
-			ret.Status = 1
+		if req.StudentId == "1234" {
+			ret.Status = user.UserCreateResponse_SUCCESS
 			ret.UserId = 1
-		} else if req.StudentId == 2345 {
+		} else if req.StudentId == "2345" {
 			return &ret, errors.New("")
 		} else {
-			ret.Status = 2
+			ret.Status = user.UserCreateResponse_USER_EXIST
 			ret.UserId = 1
 		}
 	}

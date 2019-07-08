@@ -13,17 +13,23 @@ type mockSrv struct{}
 func (a *mockSrv) Auth(ctx context.Context, req *auth.AuthRequest, opts ...client.CallOption) (*auth.AuthResponse, error) {
 	var ret auth.AuthResponse
 	if req.Code == "" {
-		ret.Status = -1
+		ret.Status = auth.AuthResponse_EMPTY_PARAM
 	} else {
 		if req.Code == "valid" {
-			ret.Status = 1
+			ret.Status = auth.AuthResponse_SUCCESS
 			ret.Token = "test_token"
-			ret.StudentId = 1234
+			ret.StudentId = "1234"
 			ret.StudentName = "test"
 		} else if req.Code == "down" {
 			return &ret, errors.New("")
+
+		} else if req.Code == "userdown" {
+			ret.Status = auth.AuthResponse_SUCCESS
+			ret.Token = "test_token"
+			ret.StudentId = "2345"
+			ret.StudentName = "down"
 		} else {
-			ret.Status = 2
+			ret.Status = auth.AuthResponse_INVALID_CODE
 		}
 	}
 	return &ret, nil

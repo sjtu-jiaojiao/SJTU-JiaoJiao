@@ -1,6 +1,10 @@
 package db
 
-import "github.com/astaxie/beego/orm"
+import (
+	"time"
+
+	"github.com/astaxie/beego/orm"
+)
 
 // Test is db test table map
 type Test struct {
@@ -10,11 +14,32 @@ type Test struct {
 
 // User is db user table map
 type User struct {
-	Id          int `orm:"auto;pk;column(user_id)"`
-	StudentId   uint64
-	StudentName string `orm:"size(100)"`
+	Id          int    `orm:"auto;pk;column(user_id)"`
+	UserName    string `orm:"size(32)"`
+	AvatarId    string `orm:"type(char);size(24)"`
+	Telephone   string `orm:"type(char);size(11);null"`
+	StudentId   string `orm:"size(32);index"`
+	StudentName string `orm:"size(32)"`
+}
+
+// SellInfo is db release table map
+type SellInfo struct {
+	Id          int `orm:"auto;pk;column(sell_info_id)"`
+	Status      int
+	ReleaseTime time.Time `orm:"auto_now_add;type(datetime)"`
+	ValidDate   time.Time `orm:"type(datetime)"`
+	Good        *Good     `orm:"rel(one);on_delete(cascade)"`
+}
+
+// Good is db good table map
+type Good struct {
+	Id          int       `orm:"auto;pk;column(good_id)"`
+	GoodName    string    `orm:"size(128)"`
+	Description string    `orm:"type(text);null"`
+	ContentId   string    `orm:"type(char);size(24)"`
+	SellInfo    *SellInfo `orm:"reverse(one)"`
 }
 
 func RegisterDB() {
-	orm.RegisterModel(new(Test), new(User))
+	orm.RegisterModel(new(Test), new(User), new(SellInfo), new(Good))
 }
