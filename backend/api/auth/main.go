@@ -31,11 +31,11 @@ type authCode struct {
  * @apiGroup Auth
  * @apiPermission none
  * @apiName GetAuth
- * @apiDescription Redirect to OAuth url.
+ * @apiDescription Redirect to OAuth url
  *
- * @apiParam {string} [code]  OAuth code callback, DO NOT call it by yourself.
- * @apiSuccess (No param - Redirect 301) {Redirect} url Redirect to OAuth url.
- * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth), -1 is not allowd
+ * @apiParam {string} [code]  OAuth code callback, DO NOT call it by yourself
+ * @apiSuccess (No param - Redirect 301) {Redirect} url Redirect to OAuth url
+ * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth), -1 is not allowed
  * @apiError (Error 500) AuthServiceDown Auth service down
  */
 func getAuth(c *gin.Context) {
@@ -64,21 +64,34 @@ func getAuth(c *gin.Context) {
 				Code: code.Code,
 			})
 			if err != nil {
+				utils.Warning("Auth service error: " + err.Error())
 				c.JSON(500, err)
+				return
 			}
 
-			if rsp.Status == 1 {
+			if rsp.Status == auth.AuthResponse_SUCCESS {
 				srv2 := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 					func() interface{} { return mockuser.NewUserService() }).(user.UserService)
-				_, err = srv2.Create(context.TODO(), &user.UserCreateRequest{
+				rsp2, err := srv2.Create(context.TODO(), &user.UserCreateRequest{
 					StudentId:   rsp.StudentId,
 					StudentName: rsp.StudentName,
 				})
 				if err != nil {
+					utils.Warning("User service error: " + err.Error())
 					c.JSON(500, err)
+					return
 				}
+
+				// sign token
+				c.JSON(200, gin.H{
+					"status": 1,
+					"token":  utils.JWTSign(int(rsp2.UserId), 0),
+				})
+			} else {
+				c.JSON(200, gin.H{
+					"status": rsp.Status,
+				})
 			}
-			c.JSON(200, rsp)
 		}
 	}
 }

@@ -34,6 +34,7 @@
 
 ### 配置文件
 `config.json` 配置：
+
 - `deploy`：部署设置，`develop` 为开发模式，`product` 为生产模式
 - `hosts`：服务地址配置
   - `consul_*`：consul服务地址
@@ -43,6 +44,7 @@
 - `test`：测试配置，请勿修改
 
 `consul.json` 配置：
+
 - `test`：测试配置，请勿修改
 - `srv_config`：微服务配置
   - `namespace`：Service的namespace
@@ -58,12 +60,14 @@
 
 ### 环境变量
 **环境变量设置敏感信息，相关内容禁止提交到仓库**
+
 - `JJ_CLIENTID`：OAuth client_id
 - `JJ_CLIENTSECRET`：OAuth client_secret
 - `JJ_MARIADBUSER`：MariaDB用户名
 - `JJ_MARIADBPWD`：MariaDB密码
 - `JJ_MONGODBUSER`：MongoDB用户名
 - `JJ_MONGODBPWD`：MongoDB密码
+- `JJ_JWTSECRET`：JWT secretkey
 
 ## 目录结构
 
@@ -80,3 +84,11 @@
     servedoc.go     doc文档服务
     generate.sh     proto文件生成脚本
 
+## JWT Token
+token存在三个字段：
+
+- `id`：唯一id
+- `role`：用户身份
+  - 0：用户
+  - 1：系统管理员
+- `exp`：过期时间，默认30分钟

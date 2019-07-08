@@ -5,11 +5,17 @@ service User {
 }
 
 message UserCreateRequest {
-    uint64 studentId = 1;
+    string studentId = 1;
     string studentName = 2;
 }
 
 message UserCreateResponse {
-    int32 status = 3;
-    int32 userId = 4;
+    enum Status {
+        UNKNOWN = 0;
+        EMPTY_PARAM = -1;
+        SUCCESS = 1;
+        USER_EXIST = 2;
+    }
+    Status status = 1;
+    int32 userId = 2;
 }

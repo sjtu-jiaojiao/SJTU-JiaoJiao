@@ -2,6 +2,8 @@ package utils
 
 import (
 	"fmt"
+	"os"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -20,12 +22,21 @@ func JWTVerify(token string, secret string) (*jwt.Token, error) {
 	return nil, err
 }
 
-func JWTParse(token *jwt.Token, param string) string {
-	if !token.Valid {
-		return ""
-	}
+func JWTParse(token *jwt.Token, param string) interface{} {
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && claims[param] != nil {
-		return claims[param].(string)
+		return claims[param]
 	}
 	return ""
+}
+
+func JWTSign(id int, role int) string {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":   id,
+		"role": role,
+		"exp":  time.Now().Unix() + 1800,
+	})
+
+	t, err := token.SignedString([]byte(os.Getenv("JJ_JWTSECRET")))
+	LogContinue(err, Warning)
+	return t
 }

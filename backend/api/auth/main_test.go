@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"jiaojiao/utils"
+	"os"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -13,7 +14,7 @@ func Test_getAuth(t *testing.T) {
 		var data map[string]interface{}
 		r := utils.StartTestServer(setupRouter, "GET", path, nil)
 		So(r.Code, ShouldEqual, code)
-		if r.Body.String() != "{}{}" {
+		if r.Body.String() != "{}" {
 			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
 		}
 		return data
@@ -27,11 +28,13 @@ func Test_getAuth(t *testing.T) {
 
 		data = tf(200, "/auth?code=valid")
 		So(data["status"], ShouldEqual, 1)
-		So(data["token"], ShouldEqual, "test_token")
-		So(data["studentId"], ShouldEqual, 1234)
-		So(data["studentName"], ShouldEqual, "test")
+		t, err := utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
+		So(err, ShouldEqual, nil)
+		So(utils.JWTParse(t, "id"), ShouldEqual, 1)
+		So(utils.JWTParse(t, "role"), ShouldEqual, 0)
 
 		tf(500, "/auth?code=down")
+		tf(500, "/auth?code=userdown")
 	})
 }
 

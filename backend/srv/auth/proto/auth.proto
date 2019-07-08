@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 service Auth {
-    rpc Auth(AuthRequest) returns (AuthResponse) {}
+    rpc Auth (AuthRequest) returns (AuthResponse);
 }
 
 message AuthRequest {
@@ -9,8 +9,14 @@ message AuthRequest {
 }
 
 message AuthResponse {
-    int32 status = 2;
-    string token = 3;
-    uint64 studentId = 4;
-    string studentName = 5;
+    enum Status {
+        UNKNOWN = 0;
+        EMPTY_PARAM = -1;
+        SUCCESS = 1;
+        INVALID_CODE = 2;
+    }
+    Status status = 1;
+    string token = 2;
+    string studentId = 3;
+    string studentName = 4;
 }

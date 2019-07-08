@@ -9,9 +9,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
-
-	"github.com/micro/go-micro/server"
 )
 
 type srv struct{}
@@ -61,27 +58,26 @@ func (a *srv) Auth(ctx context.Context, req *auth.AuthRequest, rsp *auth.AuthRes
 		}
 
 		if id.Error != "" { // invalid code
-			rsp.Status = 2
+			rsp.Status = auth.AuthResponse_INVALID_CODE
 		} else {
 			t, err := utils.JWTVerify(id.IDToken, os.Getenv("JJ_CLIENTSECRET"))
 			if err != nil {
-				rsp.Status = 2
+				rsp.Status = auth.AuthResponse_INVALID_CODE
 			} else {
-				rsp.Status = 1
+				rsp.Status = auth.AuthResponse_SUCCESS
 				rsp.Token = id.IDToken
-				rsp.StudentId, _ = strconv.ParseUint(utils.JWTParse(t, "code"), 10, 64)
-				rsp.StudentName = utils.JWTParse(t, "name")
+				rsp.StudentId = utils.JWTParse(t, "code").(string)
+				rsp.StudentName = utils.JWTParse(t, "name").(string)
 			}
 		}
 	} else {
-		rsp.Status = -1
+		rsp.Status = auth.AuthResponse_EMPTY_PARAM
 	}
 	return nil
 }
 
 func main() {
-	utils.RunMicroService("auth", func(s server.Server, hdlr interface{},
-		opts ...server.HandlerOption) error {
-		return auth.RegisterAuthHandler(s, hdlr.(auth.AuthHandler), opts...)
-	}, new(srv))
+	service := utils.InitMicroService("auth")
+	utils.LogPanic(auth.RegisterAuthHandler(service.Server(), new(srv)))
+	utils.RunMicroService(service)
 }
