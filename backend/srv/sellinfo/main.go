@@ -1,7 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"github.com/satori/go.uuid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
+	"jiaojiao/database"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
 	"jiaojiao/utils"
 )
@@ -56,6 +62,83 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
  * @apiUse DBServerDown
  */
 func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequest, rsp *sellinfo.ContentCreateResponse) error {
+	if req.Content == nil || req.Type == 0 {
+		rsp.Status = sellinfo.ContentCreateResponse_INVALID_PARAM
+	} else if req.ContentId == "" && req.ContentToken == "" {
+		//create new info
+		bucket, err := gridfs.NewBucket(db.MongoDatabase)
+		if err != nil {
+			utils.Error("Failed to create bucket: %v", err)
+		}
+
+		objId, err := bucket.UploadFromStream("filename", bytes.NewReader(req.Content))
+		if err != nil {
+			utils.Error("Failed to upload stream: %v", err)
+		}
+
+		token := uuid.NewV4().String()
+		collection := db.MongoDatabase.Collection("release")
+		res, err := collection.InsertOne(db.MongoContext, bson.M{
+			"token": token,
+			"files": bson.A{
+				bson.M{
+					"fileId": objId.String(),
+					"type":   req.Type.String(),
+				}},
+		})
+		if err != nil {
+			utils.Error("Failed to create collection: %v", err)
+		}
+
+		rsp.ContentId = res.InsertedID.(string)
+		rsp.ContentToken = token
+		rsp.Status = sellinfo.ContentCreateResponse_SUCCESS
+	} else if req.ContentId != "" && req.ContentToken != "" {
+		//check token
+		collection := db.MongoDatabase.Collection("release")
+		cur, err := collection.Find(db.MongoContext, bson.D{
+			{"_id", primitive.ObjectIDFromHex(req.ContentId)},
+			{"token", req.ContentToken},
+		})
+		if err != nil {
+			utils.Error("Failed to find: %v", err)
+		}
+
+		if !cur.Next(db.MongoContext) {
+			rsp.Status = sellinfo.ContentCreateResponse_INVALID_TOKEN
+		} else {
+			bucket, err := gridfs.NewBucket(db.MongoDatabase)
+			if err != nil {
+				utils.Error("Failed to create bucket: %v", err)
+			}
+
+			objId, err := bucket.UploadFromStream("filename", bytes.NewReader(req.Content))
+			if err != nil {
+				utils.Error("Failed to upload stream: %v", err)
+			}
+
+			res, err := collection.UpdateOne(db.MongoContext, bson.D{
+				{"_id", primitive.ObjectIDFromHex(req.ContentId)},
+				{"token", req.ContentToken},
+			},
+				bson.D{
+					{"$push", bson.D{
+						{"files", bson.D{
+							{"fileId", objId.String()},
+							{"type", req.Type.String()},
+						}},
+					}},
+				})
+			if err != nil {
+				utils.Error("Failed to update: %v", err)
+			}
+			rsp.ContentId = res.UpsertedID.(string)
+			rsp.ContentToken = req.ContentToken
+			rsp.Status = sellinfo.ContentCreateResponse_SUCCESS
+		}
+	} else {
+		rsp.Status = sellinfo.ContentCreateResponse_INVALID_TOKEN
+	}
 	return nil
 }
 
