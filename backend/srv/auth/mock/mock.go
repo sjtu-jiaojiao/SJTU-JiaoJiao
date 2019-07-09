@@ -13,7 +13,7 @@ type mockSrv struct{}
 func (a *mockSrv) Auth(ctx context.Context, req *auth.AuthRequest, opts ...client.CallOption) (*auth.AuthResponse, error) {
 	var ret auth.AuthResponse
 	if req.Code == "" {
-		ret.Status = auth.AuthResponse_EMPTY_PARAM
+		ret.Status = auth.AuthResponse_INVALID_PARAM
 	} else {
 		if req.Code == "valid" {
 			ret.Status = auth.AuthResponse_SUCCESS

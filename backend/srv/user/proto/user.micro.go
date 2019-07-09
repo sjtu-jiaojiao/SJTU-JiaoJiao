@@ -35,6 +35,8 @@ var _ server.Option
 
 type UserService interface {
 	Create(ctx context.Context, in *UserCreateRequest, opts ...client.CallOption) (*UserCreateResponse, error)
+	Query(ctx context.Context, in *UserQueryRequest, opts ...client.CallOption) (*UserInfo, error)
+	Find(ctx context.Context, in *UserFindRequest, opts ...client.CallOption) (*UserFindResponse, error)
 }
 
 type userService struct {
@@ -65,15 +67,39 @@ func (c *userService) Create(ctx context.Context, in *UserCreateRequest, opts ..
 	return out, nil
 }
 
+func (c *userService) Query(ctx context.Context, in *UserQueryRequest, opts ...client.CallOption) (*UserInfo, error) {
+	req := c.c.NewRequest(c.name, "User.Query", in)
+	out := new(UserInfo)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userService) Find(ctx context.Context, in *UserFindRequest, opts ...client.CallOption) (*UserFindResponse, error) {
+	req := c.c.NewRequest(c.name, "User.Find", in)
+	out := new(UserFindResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
 	Create(context.Context, *UserCreateRequest, *UserCreateResponse) error
+	Query(context.Context, *UserQueryRequest, *UserInfo) error
+	Find(context.Context, *UserFindRequest, *UserFindResponse) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) error {
 	type user interface {
 		Create(ctx context.Context, in *UserCreateRequest, out *UserCreateResponse) error
+		Query(ctx context.Context, in *UserQueryRequest, out *UserInfo) error
+		Find(ctx context.Context, in *UserFindRequest, out *UserFindResponse) error
 	}
 	type User struct {
 		user
@@ -88,4 +114,12 @@ type userHandler struct {
 
 func (h *userHandler) Create(ctx context.Context, in *UserCreateRequest, out *UserCreateResponse) error {
 	return h.UserHandler.Create(ctx, in, out)
+}
+
+func (h *userHandler) Query(ctx context.Context, in *UserQueryRequest, out *UserInfo) error {
+	return h.UserHandler.Query(ctx, in, out)
+}
+
+func (h *userHandler) Find(ctx context.Context, in *UserFindRequest, out *UserFindResponse) error {
+	return h.UserHandler.Find(ctx, in, out)
 }

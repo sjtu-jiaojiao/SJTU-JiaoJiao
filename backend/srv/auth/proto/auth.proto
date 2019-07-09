@@ -11,7 +11,7 @@ message AuthRequest {
 message AuthResponse {
     enum Status {
         UNKNOWN = 0;
-        EMPTY_PARAM = -1;
+        INVALID_PARAM = -1;
         SUCCESS = 1;
         INVALID_CODE = 2;
     }

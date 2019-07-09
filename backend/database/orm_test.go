@@ -6,25 +6,26 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestOrmLoad(t *testing.T) {
+func TestOrm(t *testing.T) {
+	o := InitORM(new(Test))
 	Convey("Load orm test", t, func() {
 		test := Test{TestName: "tester"}
 
 		// insert
-		_, err := Orm.Insert(&test)
+		_, err := o.Insert(&test)
 		So(err, ShouldEqual, nil)
 
 		// update
 		test.TestName = "jiang"
-		_, err = Orm.Update(&test)
+		_, err = o.Update(&test)
 		So(err, ShouldEqual, nil)
 
 		// read one
 		u := Test{Id: test.Id}
-		So(Orm.Read(&u), ShouldEqual, nil)
+		So(o.Read(&u), ShouldEqual, nil)
 
 		// delete
-		_, err = Orm.Delete(&u)
+		_, err = o.Delete(&u)
 		So(err, ShouldEqual, nil)
 	})
 }

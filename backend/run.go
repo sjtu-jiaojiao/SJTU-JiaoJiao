@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"strconv"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/fatih/color"
@@ -38,6 +39,8 @@ var arg = [srvCount][]string{
 
 var fun [srvCount]func()
 
+var isExit bool
+
 var mutex sync.Mutex
 
 func initService() {
@@ -68,6 +71,12 @@ func main() {
 				fmt.Printf("%v: Restart %v\n", i, n)
 			}
 		case "e":
+			isExit = true
+			for _, v := range command {
+				if v != nil {
+					_ = syscall.Kill(-v.Process.Pid, syscall.SIGKILL)
+				}
+			}
 			os.Exit(0)
 		case "r":
 			go start(0, fun[0], arg[0]...)
@@ -90,13 +99,15 @@ func main() {
 
 func start(i int, f func(), arg ...string) {
 	if status[i] != 0 {
-		_ = command[i].Process.Kill()
+		_ = syscall.Kill(-command[i].Process.Pid, syscall.SIGKILL)
 		return
 	}
 
 	for {
 		fmt.Println("\rRestarting", srvName[i]+"...")
 		command[i] = exec.Command(arg[0], arg[1:]...)
+		command[i].SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+
 		err := command[i].Start()
 		if err != nil {
 			fmt.Println("\r\n" + err.Error())
@@ -116,6 +127,9 @@ func start(i int, f func(), arg ...string) {
 		status[i] = 1
 		if err != nil {
 			fmt.Print("\r\n"+srvName[i], " terminated!")
+		}
+		if isExit {
+			break
 		}
 	}
 }

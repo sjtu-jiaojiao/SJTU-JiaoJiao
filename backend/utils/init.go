@@ -10,8 +10,8 @@ func init() {
 	ticker := time.NewTicker(time.Duration(LocalConf.ConfigTTL) * time.Second)
 	go func() {
 		for {
-			LoadConsulConfig()
 			<-ticker.C
+			LoadConsulConfig()
 		}
 	}()
 

@@ -53,7 +53,7 @@ return true when trigger log with log info
 */
 func LogContinueS(e interface{}, f func(f interface{}, v ...interface{}), v ...interface{}) (bool, string) {
 	if e != nil && e != true {
-		s := e
+		s := fmt.Sprintf("%v", e)
 		if e == false {
 			s = "false"
 		}
@@ -61,7 +61,7 @@ func LogContinueS(e interface{}, f func(f interface{}, v ...interface{}), v ...i
 			s = fmt.Sprintf(v[0].(string), v[1:]...)
 		}
 		f(s)
-		return true, s.(string)
+		return true, s
 	}
 	return false, ""
 }
