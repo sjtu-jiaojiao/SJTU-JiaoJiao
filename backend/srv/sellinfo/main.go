@@ -90,14 +90,14 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 			utils.Error("Failed to create collection: %v", err)
 		}
 
-		rsp.ContentId = res.InsertedID.(string)
+		rsp.ContentId = res.InsertedID.(primitive.ObjectID).String()
 		rsp.ContentToken = token
 		rsp.Status = sellinfo.ContentCreateResponse_SUCCESS
 	} else if req.ContentId != "" && req.ContentToken != "" {
 		//check token
 		collection := db.MongoDatabase.Collection("release")
 		cur, err := collection.Find(db.MongoContext, bson.D{
-			{"_id", primitive.ObjectIDFromHex(req.ContentId)},
+			{"_id", req.ContentId},
 			{"token", req.ContentToken},
 		})
 		if err != nil {
@@ -118,7 +118,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 			}
 
 			res, err := collection.UpdateOne(db.MongoContext, bson.D{
-				{"_id", primitive.ObjectIDFromHex(req.ContentId)},
+				{"_id", req.ContentId},
 				{"token", req.ContentToken},
 			},
 				bson.D{
@@ -137,7 +137,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 			rsp.Status = sellinfo.ContentCreateResponse_SUCCESS
 		}
 	} else {
-		rsp.Status = sellinfo.ContentCreateResponse_INVALID_TOKEN
+		rsp.Status = sellinfo.ContentCreateResponse_INVALID_PARAM
 	}
 	return nil
 }
