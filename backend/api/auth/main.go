@@ -21,10 +21,6 @@ func setupRouter() *gin.Engine {
 	return router
 }
 
-type authCode struct {
-	Code string `form:"code"`
-}
-
 /**
  * @api {get} /auth GetAuth
  * @apiVersion 1.0.0
@@ -35,13 +31,16 @@ type authCode struct {
  *
  * @apiParam {string} [code]  OAuth code callback, DO NOT call it by yourself
  * @apiSuccess (No param - Redirect 301) {Redirect} url Redirect to OAuth url
- * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth), -1 is not allowed
+ * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth) <br> status: -1 is not allowed
  * @apiError (Error 500) AuthServiceDown Auth service down
  */
 func getAuth(c *gin.Context) {
+	type authCode struct {
+		Code string `form:"code"`
+	}
 	var code authCode
 
-	if !utils.LogContinue(c.BindQuery(&code), utils.Warning) {
+	if !utils.LogContinue(c.ShouldBindQuery(&code), utils.Warning) {
 		if code.Code == "" { // no param
 			baseURL, err := url.Parse(utils.GetStringConfig("sys_config", "auth_url"))
 			utils.LogPanic(err)
@@ -63,8 +62,7 @@ func getAuth(c *gin.Context) {
 			rsp, err := srv.Auth(context.TODO(), &auth.AuthRequest{
 				Code: code.Code,
 			})
-			if err != nil {
-				utils.Warning("Auth service error: " + err.Error())
+			if utils.LogContinue(err, utils.Warning, "Auth service error: %v", err) {
 				c.JSON(500, err)
 				return
 			}
@@ -76,8 +74,7 @@ func getAuth(c *gin.Context) {
 					StudentId:   rsp.StudentId,
 					StudentName: rsp.StudentName,
 				})
-				if err != nil {
-					utils.Warning("User service error: " + err.Error())
+				if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
 					c.JSON(500, err)
 					return
 				}
@@ -85,7 +82,7 @@ func getAuth(c *gin.Context) {
 				// sign token
 				c.JSON(200, gin.H{
 					"status": 1,
-					"token":  utils.JWTSign(int(rsp2.UserId), 0),
+					"token":  utils.JWTSign(int(rsp2.UserId), 1),
 				})
 			} else {
 				c.JSON(200, gin.H{
@@ -93,6 +90,8 @@ func getAuth(c *gin.Context) {
 				})
 			}
 		}
+	} else {
+		c.AbortWithStatus(400)
 	}
 }
 

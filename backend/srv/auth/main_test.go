@@ -11,16 +11,17 @@ import (
 func TestAuth(t *testing.T) {
 	var s srv
 	var req auth.AuthRequest
-	var rsp auth.AuthResponse
-	Convey("Test Auth", t, func() {
+	tf := func(status auth.AuthResponse_Status, token string) {
+		var rsp auth.AuthResponse
 		So(s.Auth(context.TODO(), &req, &rsp), ShouldEqual, nil)
-		So(rsp.Status, ShouldEqual, auth.AuthResponse_EMPTY_PARAM)
-		So(rsp.Token, ShouldEqual, "")
+		So(rsp.Status, ShouldEqual, status)
+		So(rsp.Token, ShouldEqual, token)
+	}
+	Convey("Test Auth", t, func() {
+		tf(auth.AuthResponse_INVALID_PARAM, "")
 
 		req.Code = "123456"
-		So(s.Auth(context.TODO(), &req, &rsp), ShouldEqual, nil)
-		So(rsp.Status, ShouldEqual, auth.AuthResponse_INVALID_CODE)
-		So(rsp.Token, ShouldEqual, "")
+		tf(auth.AuthResponse_INVALID_CODE, "")
 
 		// No test for valid code
 	})

@@ -8,8 +8,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var Orm orm.Ormer
-
 // LoadORM load orm map
 func LoadORM() {
 	utils.LogPanic(orm.RegisterDriver("mysql", orm.DRMySQL), utils.Error)
@@ -17,9 +15,10 @@ func LoadORM() {
 		os.Getenv("JJ_MARIADBUSER")+":"+os.Getenv("JJ_MARIADBPWD")+"@/"+
 			utils.GetStringConfig("sys_config", "maria_dbname")+
 			"?"+utils.GetStringConfig("sys_config", "maria_arg")))
+}
 
-	RegisterDB()
+func InitORM(m ...interface{}) orm.Ormer {
+	orm.RegisterModel(m...)
 	utils.LogPanic(orm.RunSyncdb("default", utils.LocalConf.Deploy == "develop", false))
-
-	Orm = orm.NewOrm()
+	return orm.NewOrm()
 }

@@ -31,7 +31,7 @@ func Test_getAuth(t *testing.T) {
 		t, err := utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
 		So(err, ShouldEqual, nil)
 		So(utils.JWTParse(t, "id"), ShouldEqual, 1)
-		So(utils.JWTParse(t, "role"), ShouldEqual, 0)
+		So(utils.JWTParse(t, "role"), ShouldEqual, 1)
 
 		tf(500, "/auth?code=down")
 		tf(500, "/auth?code=userdown")

@@ -2,8 +2,6 @@ package db
 
 import (
 	"time"
-
-	"github.com/astaxie/beego/orm"
 )
 
 // Test is db test table map
@@ -38,8 +36,4 @@ type Good struct {
 	Description string    `orm:"type(text);null"`
 	ContentId   string    `orm:"type(char);size(24)"`
 	SellInfo    *SellInfo `orm:"reverse(one)"`
-}
-
-func RegisterDB() {
-	orm.RegisterModel(new(Test), new(User), new(SellInfo), new(Good))
 }

@@ -18,7 +18,7 @@ type srvContent struct{}
  * @apiDescription Query sell info
  *
  * @apiParam {int32} sellInfoId sell info id.
- * @apiSuccess {number} status -1 for empty param <br> 1 for success <br> 2 for non-exist
+ * @apiSuccess {int32} status -1 for empty param <br> 1 for success <br> 2 for non-exist
  * @apiUse DBServerDown
  */
 //func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoQueryResponse) error {
@@ -34,7 +34,7 @@ type srvContent struct{}
  * @apiDescription create sell info
  *
  * @apiParam {int32} sellInfoId sell info id
- * @apiSuccess {number} status -1 for empty param <br> 1 for success <br> 2 for non-exist
+ * @apiSuccess {int32} status -1 for empty param <br> 1 for success <br> 2 for non-exist
  * @apiUse DBServerDown
  */
 func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
@@ -52,7 +52,7 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
  * @apiParam {string} [contentToken] content token, left empty for first upload
  * @apiParam {bytes} content binary content
  * @apiParam {int32} type 1 for picture <br> 2 for video
- * @apiSuccess {number} status -1 for empty param <br> 1 for success <br> 2 for invalid token
+ * @apiSuccess {int32} status -1 for empty param <br> 1 for success <br> 2 for invalid token
  * @apiUse DBServerDown
  */
 func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequest, rsp *sellinfo.ContentCreateResponse) error {
