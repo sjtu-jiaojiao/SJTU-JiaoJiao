@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgZorroAntdModule, NZ_I18N, zh_CN, NZ_ICONS } from 'ng-zorro-antd';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
@@ -23,6 +23,10 @@ import { PasswordComponent } from './password/password.component';
 import { InfoStatisticComponent } from './info-statistic/info-statistic.component';
 import { ActivitydetailComponent } from './activitydetail/activitydetail.component';
 import { IconDefinition } from '@ant-design/icons-angular';
+//import { DelonAuthModule, SimpleInterceptor } from '@delon/auth';
+
+
+
 import { DashboardOutline, UserOutline, LeftCircleOutline ,SaveOutline,  ProfileOutline, TransactionOutline, ContactsOutline,
 BulbOutline, LoginOutline, KeyOutline, DeleteOutline, SearchOutline, ControlOutline, LockOutline, LogoutOutline } from '@ant-design/icons-angular/icons'
 const icons: IconDefinition[] = [ControlOutline,LeftCircleOutline ,SaveOutline, DashboardOutline, UserOutline, ProfileOutline, TransactionOutline, ContactsOutline,
@@ -44,7 +48,8 @@ registerLocaleData(zh);
     InfoStatisticComponent,
     ActivitydetailComponent
   ],
-  imports: [
+  imports: [   
+//    DelonAuthModule,
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,    
@@ -56,7 +61,9 @@ registerLocaleData(zh);
       InMemoryDataService, { dataEncapsulation: false }),
     BrowserAnimationsModule
   ],
-  providers: [{ provide: NZ_I18N, useValue: zh_CN } , { provide: NZ_ICONS, useValue: icons }],
+  providers: [    
+//    { provide: HTTP_INTERCEPTORS, useClass: SimpleInterceptor, multi: true},
+    { provide: NZ_I18N, useValue: zh_CN } , { provide: NZ_ICONS, useValue: icons }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
