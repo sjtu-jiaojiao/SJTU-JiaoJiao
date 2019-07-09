@@ -1,19 +1,17 @@
 
 <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
   <nz-form-item>
-    <nz-form-control>
+    <nz-form-control nzErrorTip="请输入用户名!">
       <nz-input-group [nzPrefix]="prefixUser">
         <input type="text" nz-input formControlName="userName" placeholder="Username">
       </nz-input-group>
-      <nz-form-explain *ngIf="validateForm.get('userName').dirty && validateForm.get('userName').errors">请输入用户名!</nz-form-explain>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-control>
+    <nz-form-control nzErrorTip="请输入密码!">
       <nz-input-group [nzPrefix]="prefixLock">
         <input type="password" nz-input formControlName="password" placeholder="Password">
       </nz-input-group>
-      <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">请输入密码!</nz-form-explain>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>

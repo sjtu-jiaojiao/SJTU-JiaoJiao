@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Location } from '@angular/common';
 import {
   FormBuilder,
@@ -9,6 +9,8 @@ import {
 import { NzNotificationService } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { AdminService } from '../admin.service';
+//import { ITokenService, DA_SERVICE_TOKEN } from '@delon/auth';
 
 @Component({
   selector: 'app-login',
@@ -27,8 +29,9 @@ export class LoginComponent implements OnInit {
   }
 
   constructor(
-    public authService: AuthService, public router: Router, 
-    private location: Location, private fb: FormBuilder, private notification: NzNotificationService) {
+    private authService: AuthService, public router: Router, 
+    private adminService: AdminService,
+    private fb: FormBuilder, private notification: NzNotificationService) {
   }
 
   ngOnInit(): void {
@@ -38,21 +41,26 @@ export class LoginComponent implements OnInit {
     });
   }
   login(){
-  if(this.validateForm.controls.password.value ==='123456' && this.validateForm.controls.userName.value ==='root'){
-  this.authService.login().subscribe(() => {
-    if (this.authService.isLoggedIn) {
-      this.notification.create('success', '登陆成功', '验证通过');
-      // Get the redirect URL from our auth service
-      // If no redirect has been set, use the default
-      let redirect = this.authService.redirectUrl ? this.router.parseUrl(this.authService.redirectUrl) : '/dashboard';
-
-      // Redirect the user
-      this.router.navigateByUrl(redirect);
-    }
-  });
-}
-  else{      
-    this.notification.create('error', '登陆失败', '验证错误');
-}
+  this.adminService.login(this.validateForm.controls.userName.value , this.validateForm.controls.password.value).subscribe
+  (
+     e => {
+  if(e && this.adminService.login(this.validateForm.controls.userName.value , this.validateForm.controls.password.value)){
+    this.authService.login().subscribe(() => {
+      if (this.authService.isLoggedIn) {
+        this.notification.create('success', '登陆成功', '验证通过');
+        // Get the redirect URL from our auth service
+        // If no redirect has been set, use the default
+        let redirect = this.authService.redirectUrl ? this.router.parseUrl(this.authService.redirectUrl) : '/dashboard';
+  
+        // Redirect the user
+        this.router.navigateByUrl(redirect);
+      }
+    });
+  }
+    else{      
+      this.notification.create('error', '登陆失败', '验证错误');
+  }
+     } 
+  );
   }
 }

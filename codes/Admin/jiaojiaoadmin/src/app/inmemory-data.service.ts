@@ -38,7 +38,9 @@ export class InMemoryDataService implements InMemoryDbService {
     {id: '19685', source: '123', type: 0, price: 15, tags:['C++','中文','书籍'],time: '2019-6-01', state: 1, count: 10, intro: 'Effective中文版'},
     {id: '4298296', source: '14', type: 1,price: 52,  time: '2019-02-11',tags:['黑色','保温杯'],state: 2, count: 2, intro: '黑色保温杯'},
     {id: '41096', source: '4', type: 1,price: 20,  time: '2019-05-10', tags:['小排量','电动','自行车'], state: 3, count: 0, intro: '小排量电动自行车'}];
-
-    return {users , infos};
+    const admins = [
+      {id: 'root', password: '123456'}
+    ];
+    return {users , infos , admins};
   }
 }

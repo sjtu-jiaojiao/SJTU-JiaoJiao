@@ -8,6 +8,8 @@ import {
 
 import { NzNotificationService } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { AdminService } from '../admin.service';
 @Component({
   selector: 'app-password',
   templateUrl: './password.component.html',
@@ -26,7 +28,8 @@ export class PasswordComponent implements OnInit {
   }
 
   constructor(
-    private location: Location, private router: Router, private fb: FormBuilder, private notification: NzNotificationService) {
+    private adminService: AdminService,
+     private fb: FormBuilder, private notification: NzNotificationService) {
   }
 
   ngOnInit(): void {
@@ -35,5 +38,11 @@ export class PasswordComponent implements OnInit {
       password: [ null, [ Validators.required ] ],
       newpassword: [ null, [ Validators.required ] ]
     });
+  }
+
+  editpwd() {
+  this.adminService.editpwd
+    (this.validateForm.controls.userName.value , this.validateForm.controls.password.value , 
+      this.validateForm.controls.newpassword.value);
   }
 }
