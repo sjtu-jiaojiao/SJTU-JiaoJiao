@@ -21,6 +21,10 @@ func setupRouter() *gin.Engine {
 	return router
 }
 
+type authCode struct {
+	Code string `form:"code"`
+}
+
 /**
  * @api {get} /auth GetAuth
  * @apiVersion 1.0.0
@@ -35,9 +39,6 @@ func setupRouter() *gin.Engine {
  * @apiError (Error 500) AuthServiceDown Auth service down
  */
 func getAuth(c *gin.Context) {
-	type authCode struct {
-		Code string `form:"code"`
-	}
 	var code authCode
 
 	if !utils.LogContinue(c.ShouldBindQuery(&code), utils.Warning) {
@@ -79,11 +80,28 @@ func getAuth(c *gin.Context) {
 					return
 				}
 
-				// sign token
-				c.JSON(200, gin.H{
-					"status": 1,
-					"token":  utils.JWTSign(int(rsp2.UserId), 1),
+				srv3 := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewAdminUserService(name, c) },
+					func() interface{} { return mockuser.NewAdminUserService() }).(user.AdminUserService)
+				rsp3, err := srv3.Find(context.TODO(), &user.AdminUserRequest{
+					StudentId: rsp.StudentId,
 				})
+				if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
+					c.JSON(500, err)
+					return
+				}
+
+				// sign token
+				if rsp3.Status == user.AdminUserResponse_NOT_FOUND {
+					c.JSON(200, gin.H{
+						"status": 1,
+						"token":  utils.JWTSign(int(rsp2.UserId), 1),
+					})
+				} else {
+					c.JSON(200, gin.H{
+						"status": 1,
+						"token":  utils.JWTSign(int(rsp2.UserId), 2),
+					})
+				}
 			} else {
 				c.JSON(200, gin.H{
 					"status": rsp.Status,

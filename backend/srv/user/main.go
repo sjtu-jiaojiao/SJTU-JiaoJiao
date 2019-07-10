@@ -9,7 +9,8 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-type srv struct{}
+type srvUser struct{}
+type srvAdmin struct{}
 
 var o orm.Ormer
 
@@ -31,7 +32,7 @@ var o orm.Ormer
  * @apiSuccess {int32} userId created or existed userid
  * @apiUse DBServerDown
  */
-func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user.UserCreateResponse) error {
+func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user.UserCreateResponse) error {
 	if req.StudentId == "" || req.StudentName == "" {
 		rsp.Status = user.UserCreateResponse_INVALID_PARAM
 	} else {
@@ -70,7 +71,7 @@ func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user
  * @apiSuccess {string} studentName student name
  * @apiUse DBServerDown
  */
-func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.UserInfo) error {
+func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.UserInfo) error {
 	if req.UserId == 0 {
 		return nil
 	}
@@ -100,7 +101,7 @@ func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.U
  * @apiSuccess {list} user see [User Service](#api-Service-user_User_Query)
  * @apiUse DBServerDown
  */
-func (a *srv) Find(ctx context.Context, req *user.UserFindRequest, rsp *user.UserFindResponse) error {
+func (a *srvUser) Find(ctx context.Context, req *user.UserFindRequest, rsp *user.UserFindResponse) error {
 	if req.Limit == 0 {
 		req.Limit = 100
 	}
@@ -126,9 +127,80 @@ func parseUser(s *db.User, d *user.UserInfo) {
 	d.StudentName = s.StudentName
 }
 
+/**
+ * @apiDefine DBServerDown
+ * @apiError (Error 500) DBServerDown can't connect to database server
+ */
+
+/**
+ * @api {rpc} /rpc user.AdminUser.Create
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName user.AdminUser.Create
+ * @apiDescription Create new admin user.
+ *
+ * @apiParam {string} studentId student id.
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for exist user
+ * @apiSuccess {int32} adminId created or existed adminId
+ * @apiUse DBServerDown
+ */
+func (a *srvAdmin) Create(ctx context.Context, req *user.AdminUserRequest, rsp *user.AdminUserResponse) error {
+	if req.StudentId == "" {
+		rsp.Status = user.AdminUserResponse_INVALID_PARAM
+	} else {
+		usr := db.AdminUser{
+			StudentId: req.StudentId,
+		}
+		created, id, err := o.ReadOrCreate(&usr, "StudentId")
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+		if created {
+			rsp.Status = user.AdminUserResponse_SUCCESS
+		} else {
+			rsp.Status = user.AdminUserResponse_USER_EXIST
+		}
+		rsp.AdminId = int32(id)
+	}
+	return nil
+}
+
+/**
+ * @api {rpc} /rpc user.AdminUser.Find
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName user.AdminUser.Find
+ * @apiDescription Find admin user.
+ *
+ * @apiParam {string} studentId student id.
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
+ * @apiSuccess {int32} adminId
+ * @apiUse DBServerDown
+ */
+func (a *srvAdmin) Find(ctx context.Context, req *user.AdminUserRequest, rsp *user.AdminUserResponse) error {
+	if req.StudentId == "" {
+		rsp.Status = user.AdminUserResponse_INVALID_PARAM
+	} else {
+		usr := db.AdminUser{
+			StudentId: req.StudentId,
+		}
+		err := o.Read(&usr, "StudentId")
+		if err == orm.ErrNoRows {
+			rsp.Status = user.AdminUserResponse_NOT_FOUND
+			return nil
+		} else if err != nil {
+			return err
+		}
+		rsp.Status = user.AdminUserResponse_SUCCESS
+		rsp.AdminId = int32(usr.Id)
+	}
+	return nil
+}
+
 func main() {
-	o = db.InitORM(new(db.User))
+	o = db.InitORM(new(db.User), new(db.AdminUser))
 	service := utils.InitMicroService("user")
-	utils.LogPanic(user.RegisterUserHandler(service.Server(), new(srv)))
+	utils.LogPanic(user.RegisterUserHandler(service.Server(), new(srvUser)))
+	utils.LogPanic(user.RegisterAdminUserHandler(service.Server(), new(srvAdmin)))
 	utils.RunMicroService(service)
 }

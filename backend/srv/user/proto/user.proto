@@ -6,6 +6,11 @@ service User {
     rpc Find (UserFindRequest) returns (UserFindResponse);
 }
 
+service AdminUser {
+    rpc Create (AdminUserRequest) returns (AdminUserResponse);
+    rpc Find (AdminUserRequest) returns (AdminUserResponse);
+}
+
 message UserCreateRequest {
     string studentId = 1;
     string studentName = 2;
@@ -43,4 +48,21 @@ message UserFindRequest {
 
 message UserFindResponse {
     repeated UserInfo user = 1;
+}
+
+message AdminUserRequest {
+    string studentId = 1;
+}
+
+message AdminUserResponse {
+    enum Status {
+        option allow_alias = true;
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        USER_EXIST = 2;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
+    int32 adminId = 2;
 }
