@@ -1,0 +1,39 @@
+language: go
+
+go:
+  - 1.12.x
+
+notifications:
+  email: false
+
+services:
+  - docker
+
+addons:
+  mariadb: '10.4'
+
+env:
+- JJ_MARIADBUSER=root
+- JJ_MARIADBPWD=123456
+- GOFLAGS=-mod=vendor
+
+before_install:
+  - mysql -e 'CREATE DATABASE sjtujj;'
+  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('123456') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+  - sudo mysql_upgrade -u root -pnew_password
+  - sudo service mysql restart
+
+install:
+  - sudo apt-get update
+  - sudo apt-get install -y consul
+  - go get code.google.com/p/go.tools/cmd/cover github.com/mattn/goveralls github.com/modocache/gover
+
+before_script:
+  - consul agent  -bootstrap -server -data-dir=./data/ 2>&1 1>consul.log &
+  - sleep 3
+  - consul kv import @consul.json
+
+script:
+  - go list -f '{{if len .TestGoFiles}}"s=`echo {{.Dir}} | tail -c 6` && [ $s == "utils" ] && go test -tags=test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}}"{{end}}' ./... | xargs -L 1 sh -c
+  - gover
+  - goveralls -coverprofile=gover.coverprofile -service=travis-ci -repotoken $COVERALLS_TOKEN

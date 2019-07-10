@@ -4,3 +4,4 @@ go.sum
 build/
 doc/*
 !doc/main.go
+*.coverprofile

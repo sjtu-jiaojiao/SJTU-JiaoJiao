@@ -1,5 +1,5 @@
 {
-    "deploy": "develop",
+    "deploy": "product",
     "hosts": {
         "consul_develop": "127.0.0.1:8500",
         "consul_product": "10.0.0.99:8500",
