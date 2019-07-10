@@ -1,0 +1,22 @@
+[
+	{
+		"key": "api_config",
+		"flags": 0,
+		"value": "ewogICAgInZlcnNpb24iOiAidjEiLAogICAgIm5hbWVzcGFjZSI6ICJnby5taWNyby5hcGkiCn0="
+	},
+	{
+		"key": "srv_config",
+		"flags": 0,
+		"value": "ewogICAgIm5hbWVzcGFjZSI6ICJnby5taWNyby5zcnYiLAogICAgInR0bCI6IDYwLAogICAgImludGVydmFsIjogMjAKfQ=="
+	},
+	{
+		"key": "sys_config",
+		"flags": 0,
+		"value": "ewogICAgImF1dGhfdXJsIjogImh0dHBzOi8vamFjY291bnQuc2p0dS5lZHUuY24vb2F1dGgyL2F1dGhvcml6ZSIsCiAgICAidG9rZW5fdXJsIjogImh0dHBzOi8vamFjY291bnQuc2p0dS5lZHUuY24vb2F1dGgyL3Rva2VuIiwKICAgICJsb2dvdXRfdXJsIjogImh0dHBzOi8vamFjY291bnQuc2p0dS5lZHUuY24vb2F1dGgyL2xvZ291dCIsCiAgICAibW9uZ29fdXJpIjogImxvY2FsaG9zdDoyNzAxNyIsCiAgICAibW9uZ29fZGJuYW1lIjogInNqdHVqaiIsCiAgICAibWFyaWFfZGJuYW1lIjogInNqdHVqaiIsCiAgICAibWFyaWFfYXJnIjogImNoYXJzZXQ9dXRmOCZsb2M9QXNpYSUyRlNoYW5naGFpIgp9"
+	},
+	{
+		"key": "test",
+		"flags": 0,
+		"value": "ewogICAgInRlc3QiOiAiRG9fbm90X21vZGlmeV90aGlzIiwKICAgICJ0ZXN0aW50IjogMTkyNjA4MTcKfQ=="
+	}
+]

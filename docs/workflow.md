@@ -35,10 +35,8 @@
 
 你可以使用
 
+    git checkout [base分支]
     git pull -p
+    git checkout -B [Github用户名]。
 
-或
-
-    git branch -d [Github用户名]
-
-清理你的本地分支。
+开始新工作。

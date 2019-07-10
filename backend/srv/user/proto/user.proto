@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+service User {
+    rpc Create (UserCreateRequest) returns (UserCreateResponse);
+    rpc Query (UserQueryRequest) returns (UserInfo);
+    rpc Find (UserFindRequest) returns (UserFindResponse);
+}
+
+service AdminUser {
+    rpc Create (AdminUserRequest) returns (AdminUserResponse);
+    rpc Find (AdminUserRequest) returns (AdminUserResponse);
+}
+
+message UserCreateRequest {
+    string studentId = 1;
+    string studentName = 2;
+}
+
+message UserCreateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        USER_EXIST = 2;
+    }
+    Status status = 1;
+    int32 userId = 2;
+}
+
+message UserQueryRequest {
+    int32 userId = 1;
+}
+
+message UserInfo {
+    int32 userId = 2;
+    string userName = 3;
+    string avatarId = 4;
+    string telephone = 5;
+    string studentId = 6;
+    string studentName = 7;
+}
+
+message UserFindRequest {
+    string userName = 1;
+    uint32 limit = 2;
+    uint32 offset = 3;
+}
+
+message UserFindResponse {
+    repeated UserInfo user = 1;
+}
+
+message AdminUserRequest {
+    string studentId = 1;
+}
+
+message AdminUserResponse {
+    enum Status {
+        option allow_alias = true;
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        USER_EXIST = 2;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
+    int32 adminId = 2;
+}

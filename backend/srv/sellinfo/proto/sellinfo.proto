@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+service SellInfo {
+    //rpc Query (SellInfoQueryRequest) returns (SellInfoQueryResponse);
+    rpc Create (SellInfoCreateRequest) returns (SellInfoCreateResponse);
+}
+
+service Content {
+    rpc Create (ContentCreateRequest) returns (ContentCreateResponse);
+}
+//
+//message SellInfoQueryRequest {
+//    int32 sellInfoId = 1;
+//}
+//
+//message SellInfoQueryResponse {
+//    enum Status {
+//        UNKNOWN = 0;
+//        EMPTY_PARAM = -1;
+//        SUCCESS = 1;
+//        NOT_EXIST = 2;
+//    }
+//    Status status = 1;
+//    int32 userId = 2;
+//}
+
+message SellInfoCreateRequest {
+    int64 validTime = 1;
+    string goodName = 2;
+    string description = 3;
+    string contentId = 4;
+    repeated string tag = 5;
+    string contentToken = 6;
+}
+
+message SellInfoCreateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        INVALID_TOKEN = 2;
+    }
+    Status status = 1;
+    int32 sellInfoId = 2;
+}
+
+message ContentCreateRequest {
+    string contentId = 1;
+    string contentToken = 2;
+    bytes content = 3;
+    enum Type {
+        UNKNOWN = 0;
+        PICTURE = 1;
+        VIDEO = 2;
+    }
+    Type type = 4;
+}
+
+message ContentCreateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        INVALID_TOKEN = 2;
+    }
+    Status status = 1;
+    string contentId = 2;
+    string contentToken = 3;
+}
