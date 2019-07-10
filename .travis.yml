@@ -28,6 +28,7 @@ install:
 before_script:
   - consul agent  -bootstrap -server -data-dir=./data/ 2>&1 1>consul.log &
   - sleep 3
+  - ls
   - consul kv import @consul.json
 
 script:
