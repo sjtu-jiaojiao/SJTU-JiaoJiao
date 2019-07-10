@@ -6,7 +6,6 @@ import (
 	"os/exec"
 	"strconv"
 	"sync"
-	"syscall"
 	"time"
 
 	"github.com/fatih/color"
@@ -106,7 +105,7 @@ func start(i int, f func(), arg ...string) {
 	for {
 		fmt.Println("\rRestarting", srvName[i]+"...")
 		command[i] = exec.Command(arg[0], arg[1:]...)
-		command[i].SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+		setpid(command[i])
 
 		err := command[i].Start()
 		if err != nil {
