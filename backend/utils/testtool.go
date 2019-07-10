@@ -3,6 +3,7 @@
 package utils
 
 import (
+	"flag"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -23,5 +24,5 @@ func StartTestServer(f func() *gin.Engine, m string, p string, b io.Reader) *htt
 
 // CheckInTest check if running in test
 func CheckInTest() bool {
-	return strings.HasSuffix(os.Args[0], ".test") || strings.Contains(os.Args[0], "/_test/")
+	return strings.HasSuffix(os.Args[0], ".test") || strings.Contains(os.Args[0], "/_test/") || flag.Lookup("test.v") != nil
 }

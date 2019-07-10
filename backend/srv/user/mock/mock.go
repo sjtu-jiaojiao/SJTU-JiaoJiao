@@ -47,7 +47,52 @@ func (a *mockUserSrv) Query(ctx context.Context, req *user.UserQueryRequest, opt
 }
 
 func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts ...client.CallOption) (*user.UserFindResponse, error) {
+	user1 := user.UserInfo{
+		UserId:      1000,
+		UserName:    "test1",
+		AvatarId:    "5d23ea2c32311335f935cd14",
+		Telephone:   "12345224232",
+		StudentId:   "517397299873",
+		StudentName: "Xiao Ming",
+	}
+	user2 := user.UserInfo{
+		UserId:      3000,
+		UserName:    "test2",
+		AvatarId:    "jksfa0980923jkjoifu92323",
+		Telephone:   "67307269876",
+		StudentId:   "517234731342",
+		StudentName: "Xiao Huang",
+	}
+	user3 := user.UserInfo{
+		UserId:      2000,
+		UserName:    "test2",
+		AvatarId:    "yuwry981hkjbgmxnlaud9u34352",
+		Telephone:   "16539896792",
+		StudentId:   "517357253234",
+		StudentName: "Xiao Bai",
+	}
+
 	var rsp user.UserFindResponse
+	if req.UserName == "test1" {
+		rsp.User = append(rsp.User, &user1)
+	} else if req.UserName == "test2" {
+		rsp.User = append(rsp.User, &user2)
+		rsp.User = append(rsp.User, &user3)
+	} else if req.UserName == "" {
+		if req.Limit == 0 {
+			rsp.User = append(rsp.User, &user1)
+			rsp.User = append(rsp.User, &user2)
+			rsp.User = append(rsp.User, &user3)
+		} else if req.Limit == 2 {
+			if req.Offset == 0 {
+				rsp.User = append(rsp.User, &user1)
+				rsp.User = append(rsp.User, &user2)
+			} else if req.Offset == 1 {
+				rsp.User = append(rsp.User, &user2)
+				rsp.User = append(rsp.User, &user3)
+			}
+		}
+	}
 	return &rsp, nil
 }
 
