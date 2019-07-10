@@ -19,8 +19,8 @@ env:
     - GOFLAGS=-mod=vendor
 
 before_install:
-  - mysql -e 'CREATE DATABASE sjtujj;'
-  - mysql -e "use mysql; update user set password=password('123456') where User='root'; flush privileges;"
+  - docker pull mariadb
+  - docker run --net=host -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=sjtujj mariadb
 
 install:
   - sudo apt-get update
