@@ -3,7 +3,7 @@
     "hosts": {
         "consul_develop": "127.0.0.1:8500",
         "consul_product": "127.0.0.1:8500",
-        "url_develop": "http://192.168.43.150:8080",
+        "url_develop": "http://localhost:8080",
         "url_product": "http://localhost:8080",
         "test_develop": "Do_not_modify_this",
         "test_product": "Do_not_modify_this"
