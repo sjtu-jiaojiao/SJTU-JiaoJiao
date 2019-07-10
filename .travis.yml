@@ -28,10 +28,10 @@ install:
 before_script:
   - consul agent  -bootstrap -server -data-dir=./data/ 2>&1 1>consul.log &
   - sleep 3
-  - ls
-  - consul kv import @consul.json
+  - cd backend
 
 script:
+  - consul kv import @consul.json
   - go list -f '{{if len .TestGoFiles}}"s=`echo {{.Dir}} | tail -c 6` && [ $s == "utils" ] && go test -tags=test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}}"{{end}}' ./... | xargs -L 1 sh -c
   - gover
   - goveralls -coverprofile=gover.coverprofile -service=travis-ci -repotoken $COVERALLS_TOKEN
