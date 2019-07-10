@@ -59,38 +59,49 @@ func getUserInfo(c *gin.Context) {
 }
 
 type findCond struct {
-	UserName string `form:"userName" binding:"required"`
+	UserName string `form:"userName"`
+	Limit    uint32 `form:"limit"`
+	Offset   uint32 `form:"offset"`
 }
 
 /**
  * @api {get} /user FindUser
  * @apiVersion 1.0.0
  * @apiGroup User
- * @apiPermission none
+ * @apiPermission none/admin
  * @apiName FindUser
  * @apiDescription Find user
  *
- * @apiParam {--} Param see [User Service](#api-Service-user_User_Find)
+ * @apiParam {--} Param see [User Service](#api-Service-user_User_Find) <br> No param need admin permission!
  * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Find) <br>
- * 											   studentId: hidden <br> studentName: hidden
+ * 											   None - studentId: hidden <br> None - studentName: hidden
  * @apiError (Error 500) UserServiceDown User service down
  */
 func findUser(c *gin.Context) {
 	var cond findCond
+	p := utils.CheckAdmin(c)
 
 	if !utils.LogContinue(c.ShouldBindQuery(&cond), utils.Warning) {
+		if cond.UserName == "" && !p {
+			c.AbortWithStatus(403)
+			return
+		}
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 			func() interface{} { return mock.NewUserService() }).(user.UserService)
 		rsp, err := srv.Find(context.TODO(), &user.UserFindRequest{
 			UserName: cond.UserName,
+			Limit:    cond.Limit,
+			Offset:   cond.Offset,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
 			c.JSON(500, err)
 			return
 		}
-		for _, v := range rsp.User {
-			v.StudentId = ""
-			v.StudentName = ""
+		if !p {
+			for _, v := range rsp.User {
+				v.StudentId = ""
+				v.StudentName = ""
+			}
 		}
 		c.JSON(200, rsp)
 	} else {

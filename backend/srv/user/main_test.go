@@ -15,7 +15,7 @@ func TestUserCreate(t *testing.T) {
 
 	tf := func(status user.UserCreateResponse_Status) int32 {
 		var rsp user.UserCreateResponse
-		So(s.Create(context.TODO(), &req, &rsp), ShouldEqual, nil)
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, status)
 		return rsp.UserId
 	}
@@ -35,6 +35,11 @@ func TestUserCreate(t *testing.T) {
 
 		id2 := tf(user.UserCreateResponse_USER_EXIST)
 		So(id, ShouldEqual, id2)
+
+		_, err := o.Delete(&db.User{
+			Id: int(id),
+		})
+		So(err, ShouldBeNil)
 	})
 }
 
@@ -45,7 +50,7 @@ func TestUserQuery(t *testing.T) {
 	tf := func(uid int, uname string, avatar string,
 		telephone string, sid string, sname string) {
 		var rsp user.UserInfo
-		So(s.Query(context.TODO(), &req, &rsp), ShouldEqual, nil)
+		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.UserId, ShouldEqual, uid)
 		So(rsp.UserName, ShouldEqual, uname)
 		So(rsp.AvatarId, ShouldEqual, avatar)
@@ -63,13 +68,19 @@ func TestUserQuery(t *testing.T) {
 			StudentId:   "1234",
 			StudentName: "jiang",
 		})
-		So(err, ShouldEqual, nil)
+
+		So(err, ShouldBeNil)
 		req.UserId = 1000
 		tf(1000, "jiang", "5d23ea2c32311335f935cd14",
 			"12345678901", "1234", "jiang")
 
 		req.UserId = 1001
 		tf(0, "", "", "", "", "")
+
+		_, err = o.Delete(&db.User{
+			Id: 1000,
+		})
+		So(err, ShouldBeNil)
 	})
 }
 
@@ -96,9 +107,9 @@ func TestUserFind(t *testing.T) {
 			StudentId:   "1234",
 			StudentName: "jiang",
 		})
-		So(err, ShouldEqual, nil)
+		So(err, ShouldBeNil)
 
-		So(s.Find(context.TODO(), &req, &rsp), ShouldEqual, nil)
+		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 1)
 		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
 			"1234", "jiang")
@@ -112,9 +123,9 @@ func TestUserFind(t *testing.T) {
 			StudentId:   "12345",
 			StudentName: "jiangzm",
 		})
-		So(err, ShouldEqual, nil)
+		So(err, ShouldBeNil)
 
-		So(s.Find(context.TODO(), &req, &rsp), ShouldEqual, nil)
+		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 2)
 		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
 			"1234", "jiang")
@@ -123,17 +134,26 @@ func TestUserFind(t *testing.T) {
 		rsp.User = nil
 
 		req.Limit = 1
-		So(s.Find(context.TODO(), &req, &rsp), ShouldEqual, nil)
+		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 1)
 		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
 			"1234", "jiang")
 		rsp.User = nil
 
 		req.Offset = 1
-		So(s.Find(context.TODO(), &req, &rsp), ShouldEqual, nil)
+		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 1)
 		tf(0, 2001, "test2", "5d23ea2c32311335f935cd15", "12345678902",
 			"12345", "jiangzm")
+
+		_, err = o.Delete(&db.User{
+			Id: 2000,
+		})
+		So(err, ShouldBeNil)
+		_, err = o.Delete(&db.User{
+			Id: 2001,
+		})
+		So(err, ShouldBeNil)
 	})
 }
 
@@ -143,7 +163,7 @@ func TestAdminUserCreate(t *testing.T) {
 
 	tf := func(status user.AdminUserResponse_Status) int32 {
 		var rsp user.AdminUserResponse
-		So(s.Create(context.TODO(), &req, &rsp), ShouldEqual, nil)
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, status)
 		return rsp.AdminId
 	}
@@ -156,6 +176,11 @@ func TestAdminUserCreate(t *testing.T) {
 
 		id2 := tf(user.AdminUserResponse_USER_EXIST)
 		So(id, ShouldEqual, id2)
+
+		_, err := o.Delete(&db.AdminUser{
+			Id: int(id),
+		})
+		So(err, ShouldBeNil)
 	})
 }
 
@@ -164,7 +189,7 @@ func TestAdminUserFind(t *testing.T) {
 	var req user.AdminUserRequest
 	tf := func(status user.AdminUserResponse_Status, id int) {
 		var rsp user.AdminUserResponse
-		So(s.Find(context.TODO(), &req, &rsp), ShouldEqual, nil)
+		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, status)
 		So(rsp.AdminId, ShouldEqual, id)
 	}
@@ -178,9 +203,13 @@ func TestAdminUserFind(t *testing.T) {
 			Id:        1000,
 			StudentId: "2000",
 		})
-		So(err, ShouldEqual, nil)
+		So(err, ShouldBeNil)
 
 		tf(user.AdminUserResponse_SUCCESS, 1000)
+		_, err = o.Delete(&db.AdminUser{
+			Id: 1000,
+		})
+		So(err, ShouldBeNil)
 	})
 }
 

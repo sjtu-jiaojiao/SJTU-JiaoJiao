@@ -2,7 +2,7 @@ syntax = "proto3";
 
 service SellInfo {
     //rpc Query (SellInfoQueryRequest) returns (SellInfoQueryResponse);
-    rpc Create (SellInfoCreateRequest) returns (SellInfoCreateResponse);
+    //rpc Create (SellInfoCreateRequest) returns (SellInfoCreateResponse);
 }
 
 service Content {

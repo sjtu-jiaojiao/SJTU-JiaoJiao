@@ -3,6 +3,7 @@
 - golang
 - consul
 - nodejs/npm
+- 建议系统环境为Linux系统，windows下可能出现各种问题
 
 ## 其他依赖
 
@@ -61,6 +62,7 @@
 ### 环境变量
 **环境变量设置敏感信息，相关内容禁止提交到仓库**
 
+- `JJ_CONFIGPATH`：config路径，覆盖默认值，发布二进制文件需设置
 - `JJ_CLIENTID`：OAuth client_id
 - `JJ_CLIENTSECRET`：OAuth client_secret
 - `JJ_MARIADBUSER`：MariaDB用户名
@@ -72,15 +74,11 @@
 ## 目录结构
 
     api             RESTAPI入口
+    doc             API文档
     srv             微服务组件
     database        数据库模块
     utils           通用模块
-    apidoc.json     apidoc配置文件
-    config.json     总配置文件
-    consul.json     项目配置文件
-    go.mod          go mod文件
-    run.go          本地服务启动程序
-    generate.sh     proto文件生成脚本
+    vendor          go库缓存
 
 ## JWT Token
 token存在三个字段：
