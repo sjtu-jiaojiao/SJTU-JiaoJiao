@@ -14,6 +14,7 @@ env:
     - JJ_MARIADBUSER=root
     - JJ_MARIADBPWD=123456
     - GOFLAGS=-mod=vendor
+    - GO111MODULE=on
 
 before_install:
   - docker pull mariadb
