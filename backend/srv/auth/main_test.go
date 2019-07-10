@@ -13,7 +13,7 @@ func TestAuth(t *testing.T) {
 	var req auth.AuthRequest
 	tf := func(status auth.AuthResponse_Status, token string) {
 		var rsp auth.AuthResponse
-		So(s.Auth(context.TODO(), &req, &rsp), ShouldEqual, nil)
+		So(s.Auth(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, status)
 		So(rsp.Token, ShouldEqual, token)
 	}

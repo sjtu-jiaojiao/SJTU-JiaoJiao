@@ -15,7 +15,7 @@ func Test_getAuth(t *testing.T) {
 		r := utils.StartTestServer(setupRouter, "GET", path, nil)
 		So(r.Code, ShouldEqual, code)
 		if r.Body.String() != "{}" {
-			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
+			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldBeNil)
 		}
 		return data
 	}
@@ -29,14 +29,14 @@ func Test_getAuth(t *testing.T) {
 		data = tf(200, "/auth?code=valid_user")
 		So(data["status"], ShouldEqual, 1)
 		t, err := utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
-		So(err, ShouldEqual, nil)
+		So(err, ShouldBeNil)
 		So(utils.JWTParse(t, "id"), ShouldEqual, 1)
 		So(utils.JWTParse(t, "role"), ShouldEqual, 1)
 
 		data = tf(200, "/auth?code=valid_admin")
 		So(data["status"], ShouldEqual, 1)
 		t, err = utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
-		So(err, ShouldEqual, nil)
+		So(err, ShouldBeNil)
 		So(utils.JWTParse(t, "id"), ShouldEqual, 1)
 		So(utils.JWTParse(t, "role"), ShouldEqual, 2)
 

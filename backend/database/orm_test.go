@@ -13,19 +13,19 @@ func TestOrm(t *testing.T) {
 
 		// insert
 		_, err := o.Insert(&test)
-		So(err, ShouldEqual, nil)
+		So(err, ShouldBeNil)
 
 		// update
 		test.TestName = "jiang"
 		_, err = o.Update(&test)
-		So(err, ShouldEqual, nil)
+		So(err, ShouldBeNil)
 
 		// read one
 		u := Test{Id: test.Id}
-		So(o.Read(&u), ShouldEqual, nil)
+		So(o.Read(&u), ShouldBeNil)
 
 		// delete
 		_, err = o.Delete(&u)
-		So(err, ShouldEqual, nil)
+		So(err, ShouldBeNil)
 	})
 }
