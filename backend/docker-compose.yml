@@ -6,9 +6,12 @@ services:
   api-auth:
     image: sjtujj-api-auth
     build: ./api/auth
-    environment:
-      JJ_CONFIGPATH: ./config.json
-      JJ_CLIENTID:
-      JJ_CLIENTSECRET:
-      JJ_JWTSECRET:
-    network_mode: host
+  api-user:
+    image: sjtujj-api-user
+    build: ./api/user
+  srv-auth:
+    image: sjtujj-srv-auth
+    build: ./srv/auth
+  srv-user:
+    image: sjtujj-srv-user
+    build: ./srv/user
