@@ -3,6 +3,7 @@
 - golang
 - consul
 - nodejs/npm
+- 建议系统环境为Linux系统，windows下可能出现各种问题
 
 ## 其他依赖
 
