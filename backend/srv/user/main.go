@@ -95,9 +95,9 @@ func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *us
  * @apiName user.User.Find
  * @apiDescription Find user(fuzzy).
  *
- * @apiParam {string} userName username
+ * @apiParam {string} [userName] username
  * @apiParam {uint32} limit=100 row limit
- * @apiParam {uint32} offset row offset
+ * @apiParam {uint32} offset=0 row offset
  * @apiSuccess {list} user see [User Service](#api-Service-user_User_Query)
  * @apiUse DBServerDown
  */
