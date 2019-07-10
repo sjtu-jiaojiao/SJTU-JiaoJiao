@@ -1,0 +1,14 @@
+version: "2"
+services:
+  global:
+    image: sjtujj
+    build: .
+  api-auth:
+    image: sjtujj-api-auth
+    build: ./api/auth
+    environment:
+      JJ_CONFIGPATH: ./config.json
+      JJ_CLIENTID:
+      JJ_CLIENTSECRET:
+      JJ_JWTSECRET:
+    network_mode: host
