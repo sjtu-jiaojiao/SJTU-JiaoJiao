@@ -13,15 +13,14 @@ addons:
   mariadb: '10.4'
 
 env:
-- JJ_MARIADBUSER=root
-- JJ_MARIADBPWD=123456
-- GOFLAGS=-mod=vendor
+  global:
+    - JJ_MARIADBUSER=root
+    - JJ_MARIADBPWD=123456
+    - GOFLAGS=-mod=vendor
 
 before_install:
   - mysql -e 'CREATE DATABASE sjtujj;'
-  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('123456') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
-  - sudo mysql_upgrade -u root -pnew_password
-  - sudo service mysql restart
+  - sudo mysql -e "use mysql; update user set password=password('123456') where User='root'; flush privileges;"
 
 install:
   - sudo apt-get update
