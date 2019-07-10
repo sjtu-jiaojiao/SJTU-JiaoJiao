@@ -1,0 +1,12 @@
+{
+    "name": "SJTU-JiaoJiao",
+    "version": "1.0.0",
+    "description": "SJTU JiaoJiao backend API document",
+    "title": "SJTU-JiaoJiao",
+    "url": "http://localhost:8080/v1",
+    "order": [
+        "Auth",
+        "User",
+        "Service"
+    ]
+}
