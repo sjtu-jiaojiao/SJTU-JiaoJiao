@@ -27,7 +27,7 @@ install:
   - export GO111MODULE=on
 
 before_script:
-  - consul agent  -bootstrap -server -bind=127.0.0.1 -data-dir=./data/
+  - consul agent  -bootstrap -server -bind=127.0.0.1 -data-dir=./data/ 2>&1 1>consul.log &
   - sleep 3
   - cd backend
 
