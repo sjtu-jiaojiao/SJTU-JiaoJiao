@@ -20,8 +20,9 @@ before_install:
   - docker run -d --net=host -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=sjtujj mariadb
 
 install:
-  - sudo apt-get update
-  - sudo apt-get install -y consul
+  - wget https://releases.hashicorp.com/consul/1.5.2/consul_1.5.2_linux_amd64.zip
+  - unzip consul_1.5.2_linux_amd64.zip
+  - sudo mv consul /usr/local/bin/
   - go get code.google.com/p/go.tools/cmd/cover github.com/mattn/goveralls github.com/modocache/gover
 
 before_script:
