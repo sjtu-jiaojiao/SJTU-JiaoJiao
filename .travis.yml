@@ -15,6 +15,7 @@ env:
     - JJ_MARIADBPWD=123456
 
 before_install:
+  - sudo /etc/init.d/mysql stop
   - docker pull mariadb
   - docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=sjtujj mariadb
 
