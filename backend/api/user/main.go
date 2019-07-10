@@ -60,6 +60,8 @@ func getUserInfo(c *gin.Context) {
 
 type findCond struct {
 	UserName string `form:"userName"`
+	Limit    uint32 `form:"limit"`
+	Offset   uint32 `form:"offset"`
 }
 
 /**
@@ -88,6 +90,8 @@ func findUser(c *gin.Context) {
 			func() interface{} { return mock.NewUserService() }).(user.UserService)
 		rsp, err := srv.Find(context.TODO(), &user.UserFindRequest{
 			UserName: cond.UserName,
+			Limit:    cond.Limit,
+			Offset:   cond.Offset,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
 			c.JSON(500, err)
