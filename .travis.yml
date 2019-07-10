@@ -20,7 +20,7 @@ env:
 
 before_install:
   - mysql -e 'CREATE DATABASE sjtujj;'
-  - sudo mysql -e "use mysql; update user set password=password('123456') where User='root'; flush privileges;"
+  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('123456') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
 
 install:
   - sudo apt-get update
