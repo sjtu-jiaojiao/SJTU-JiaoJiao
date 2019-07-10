@@ -12,7 +12,7 @@ import (
 func Test_getAuth(t *testing.T) {
 	tf := func(code int, path string) map[string]interface{} {
 		var data map[string]interface{}
-		r := utils.StartTestServer(setupRouter, "GET", path, nil)
+		r := utils.StartTestServer(setupRouter, "GET", path, nil, nil)
 		So(r.Code, ShouldEqual, code)
 		if r.Body.String() != "{}" {
 			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldBeNil)
@@ -20,7 +20,7 @@ func Test_getAuth(t *testing.T) {
 		return data
 	}
 	Convey("Auth router test", t, func() {
-		r := utils.StartTestServer(setupRouter, "GET", "/auth", nil)
+		r := utils.StartTestServer(setupRouter, "GET", "/auth", nil, nil)
 		So(r.Code, ShouldEqual, 301)
 
 		data := tf(200, "/auth?code=invalid")
