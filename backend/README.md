@@ -16,7 +16,7 @@
 ## 本地启动
 一键启动：
 
-    go run run.go
+    go run run.go run_*.go
 
 ## 本地默认地址
 - consul服务：`localhost:8500`
