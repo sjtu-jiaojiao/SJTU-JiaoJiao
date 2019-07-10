@@ -74,7 +74,7 @@ func main() {
 			isExit = true
 			for _, v := range command {
 				if v != nil {
-					_ = syscall.Kill(-v.Process.Pid, syscall.SIGKILL)
+					kill(v)
 				}
 			}
 			os.Exit(0)
@@ -99,7 +99,7 @@ func main() {
 
 func start(i int, f func(), arg ...string) {
 	if status[i] != 0 {
-		_ = syscall.Kill(-command[i].Process.Pid, syscall.SIGKILL)
+		kill(command[i])
 		return
 	}
 
