@@ -6,7 +6,6 @@ import (
 	db "jiaojiao/database"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
 	"jiaojiao/utils"
-	"strconv"
 
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -72,7 +71,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 			return primitive.ObjectID{}, err
 		}
 
-		objId, err := bucket.UploadFromStream("filename", bytes.NewReader(req.Content))
+		objId, err := bucket.UploadFromStream("", bytes.NewReader(req.Content))
 		if utils.LogContinue(err, utils.Warning) {
 			return primitive.ObjectID{}, err
 		}
@@ -107,12 +106,15 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 	} else if req.ContentId != "" && req.ContentToken != "" {
 		//check token
 		collection := db.MongoDatabase.Collection("sellinfo")
-		id, _ := strconv.ParseInt(req.ContentId, 16, 64)
-		tt, err := collection.FindOne(db.MongoContext, bson.D{
-			{"_id", id},
+		rid, err := primitive.ObjectIDFromHex(req.ContentId)
+		if err != nil {
+			rsp.Status = sellinfo.ContentCreateResponse_INVALID_TOKEN
+			return nil
+		}
+		_, err = collection.FindOne(db.MongoContext, bson.D{
+			{"_id", rid},
 			{"token", req.ContentToken},
 		}).DecodeBytes()
-		utils.Error(tt)
 		if err != nil {
 			rsp.Status = sellinfo.ContentCreateResponse_INVALID_TOKEN
 			return nil
@@ -123,8 +125,8 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 			return err
 		}
 
-		res, err := collection.UpdateOne(db.MongoContext, bson.D{
-			{"_id", req.ContentId},
+		_, err = collection.UpdateOne(db.MongoContext, bson.D{
+			{"_id", rid},
 			{"token", req.ContentToken},
 		},
 			bson.D{
@@ -138,7 +140,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
-		rsp.ContentId = res.UpsertedID.(string)
+		rsp.ContentId = req.ContentId
 		rsp.ContentToken = req.ContentToken
 		rsp.Status = sellinfo.ContentCreateResponse_SUCCESS
 	} else {
