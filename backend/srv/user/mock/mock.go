@@ -56,7 +56,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 		StudentName: "Xiao Ming",
 	}
 	user2 := user.UserInfo{
-		UserId:      3000,
+		UserId:      1001,
 		UserName:    "test2",
 		AvatarId:    "jksfa0980923jkjoifu92323",
 		Telephone:   "67307269876",
@@ -64,7 +64,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 		StudentName: "Xiao Huang",
 	}
 	user3 := user.UserInfo{
-		UserId:      2000,
+		UserId:      1002,
 		UserName:    "test2",
 		AvatarId:    "yuwry981hkjbgmxnlaud9u34352",
 		Telephone:   "16539896792",
