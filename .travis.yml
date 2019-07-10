@@ -11,12 +11,12 @@ services:
 
 env:
   global:
-    - JJ_MARIADBUSER=sjtujj
+    - JJ_MARIADBUSER=root
     - JJ_MARIADBPWD=123456
 
 before_install:
   - docker pull mariadb
-  - docker run -d --net=host -e MYSQL_USER=sjtujj -e MYSQL_PASSWORD=123456 -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=sjtujj mariadb
+  - docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=sjtujj mariadb
 
 install:
   - wget https://releases.hashicorp.com/consul/1.5.2/consul_1.5.2_linux_amd64.zip
@@ -32,6 +32,7 @@ before_script:
   - cd backend
 
 script:
+  - sleep 20
   - consul kv import @consul.json
   - go list -f '{{if len .TestGoFiles}}"s=`echo {{.Dir}} | tail -c 6` && [ $s == "utils" ] && go test -tags=test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}}"{{end}}' ./... | xargs -L 1 sh -c
   - gover
