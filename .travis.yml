@@ -23,7 +23,7 @@ install:
   - wget https://releases.hashicorp.com/consul/1.5.2/consul_1.5.2_linux_amd64.zip
   - unzip consul_1.5.2_linux_amd64.zip
   - sudo mv consul /usr/local/bin/
-  - go get code.google.com/p/go.tools/cmd/cover github.com/mattn/goveralls github.com/modocache/gover
+  - go get github.com/mattn/goveralls github.com/modocache/gover
 
 before_script:
   - consul agent  -bootstrap -server -data-dir=./data/ 2>&1 1>consul.log &
