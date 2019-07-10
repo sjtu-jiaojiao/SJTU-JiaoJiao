@@ -1,0 +1,18 @@
+settings:
+  legacy:
+    force: false
+    interval: 0s
+schema:
+- name: backend
+  path: .
+  commands: {}
+  watcher:
+    extensions:
+    - go
+    paths:
+    - /
+    ignore:
+      paths:
+      - .git
+      - .realize
+      - vendor
