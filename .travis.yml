@@ -9,9 +9,6 @@ notifications:
 services:
   - docker
 
-addons:
-  mariadb: '10.4'
-
 env:
   global:
     - JJ_MARIADBUSER=root
@@ -20,7 +17,7 @@ env:
 
 before_install:
   - docker pull mariadb
-  - docker run --net=host -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=sjtujj mariadb
+  - docker run -d --net=host -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=sjtujj mariadb
 
 install:
   - sudo apt-get update
