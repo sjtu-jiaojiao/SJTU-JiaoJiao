@@ -23,18 +23,26 @@ func Test_getAuth(t *testing.T) {
 		r := utils.StartTestServer(setupRouter, "GET", "/auth", nil)
 		So(r.Code, ShouldEqual, 301)
 
-		data := tf(200, "/auth?code=123456")
+		data := tf(200, "/auth?code=invalid")
 		So(data["status"], ShouldEqual, 2)
 
-		data = tf(200, "/auth?code=valid")
+		data = tf(200, "/auth?code=valid_user")
 		So(data["status"], ShouldEqual, 1)
 		t, err := utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
 		So(err, ShouldEqual, nil)
 		So(utils.JWTParse(t, "id"), ShouldEqual, 1)
 		So(utils.JWTParse(t, "role"), ShouldEqual, 1)
 
+		data = tf(200, "/auth?code=valid_admin")
+		So(data["status"], ShouldEqual, 1)
+		t, err = utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
+		So(err, ShouldEqual, nil)
+		So(utils.JWTParse(t, "id"), ShouldEqual, 1)
+		So(utils.JWTParse(t, "role"), ShouldEqual, 2)
+
 		tf(500, "/auth?code=down")
 		tf(500, "/auth?code=userdown")
+		tf(500, "/auth?code=admindown")
 	})
 }
 

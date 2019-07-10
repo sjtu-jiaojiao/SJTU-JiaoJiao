@@ -9,8 +9,8 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestCreate(t *testing.T) {
-	var s srv
+func TestUserCreate(t *testing.T) {
+	var s srvUser
 	var req user.UserCreateRequest
 
 	tf := func(status user.UserCreateResponse_Status) int32 {
@@ -38,8 +38,8 @@ func TestCreate(t *testing.T) {
 	})
 }
 
-func TestQuery(t *testing.T) {
-	var s srv
+func TestUserQuery(t *testing.T) {
+	var s srvUser
 	var req user.UserQueryRequest
 
 	tf := func(uid int, uname string, avatar string,
@@ -73,8 +73,8 @@ func TestQuery(t *testing.T) {
 	})
 }
 
-func TestFind(t *testing.T) {
-	var s srv
+func TestUserFind(t *testing.T) {
+	var s srvUser
 	var req user.UserFindRequest
 	var rsp user.UserFindResponse
 	tf := func(index int, uid int, uname string, avatar string,
@@ -134,6 +134,53 @@ func TestFind(t *testing.T) {
 		So(len(rsp.User), ShouldEqual, 1)
 		tf(0, 2001, "test2", "5d23ea2c32311335f935cd15", "12345678902",
 			"12345", "jiangzm")
+	})
+}
+
+func TestAdminUserCreate(t *testing.T) {
+	var s srvAdmin
+	var req user.AdminUserRequest
+
+	tf := func(status user.AdminUserResponse_Status) int32 {
+		var rsp user.AdminUserResponse
+		So(s.Create(context.TODO(), &req, &rsp), ShouldEqual, nil)
+		So(rsp.Status, ShouldEqual, status)
+		return rsp.AdminId
+	}
+	Convey("Test Admin User Create", t, func() {
+		tf(user.AdminUserResponse_INVALID_PARAM)
+
+		req.StudentId = "1000"
+		id := tf(user.AdminUserResponse_SUCCESS)
+		So(id, ShouldBeGreaterThan, 0)
+
+		id2 := tf(user.AdminUserResponse_USER_EXIST)
+		So(id, ShouldEqual, id2)
+	})
+}
+
+func TestAdminUserFind(t *testing.T) {
+	var s srvAdmin
+	var req user.AdminUserRequest
+	tf := func(status user.AdminUserResponse_Status, id int) {
+		var rsp user.AdminUserResponse
+		So(s.Find(context.TODO(), &req, &rsp), ShouldEqual, nil)
+		So(rsp.Status, ShouldEqual, status)
+		So(rsp.AdminId, ShouldEqual, id)
+	}
+	Convey("Test Admin User Find", t, func() {
+		tf(user.AdminUserResponse_INVALID_PARAM, 0)
+
+		req.StudentId = "2000"
+		tf(user.AdminUserResponse_NOT_FOUND, 0)
+
+		_, err := o.Insert(&db.AdminUser{
+			Id:        1000,
+			StudentId: "2000",
+		})
+		So(err, ShouldEqual, nil)
+
+		tf(user.AdminUserResponse_SUCCESS, 1000)
 	})
 }
 

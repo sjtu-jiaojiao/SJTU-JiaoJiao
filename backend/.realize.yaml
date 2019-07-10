@@ -2,16 +2,13 @@ settings:
   files:
     outputs:
       status: false
-      path: ""
-      name: .r.outputs.log
+      name: outputs.log
     logs:
       status: false
-      path: ""
-      name: .r.logs.log
+      name: logs.log
     errors:
       status: false
-      path: ""
-      name: .r.errors.log
+      name: errors.log
   legacy:
     force: false
     interval: 0s

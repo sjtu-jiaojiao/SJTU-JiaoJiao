@@ -17,6 +17,10 @@ func setupRouter() *gin.Engine {
 	return router
 }
 
+type userInfo struct {
+	UserId int32 `uri:"userId" binding:"required,min=1"`
+}
+
 /**
  * @api {get} /user/:userId GetUserInfo
  * @apiVersion 1.0.0
@@ -32,9 +36,6 @@ func setupRouter() *gin.Engine {
  * @apiError (Error 500) UserServiceDown User service down
  */
 func getUserInfo(c *gin.Context) {
-	type userInfo struct {
-		UserId int32 `uri:"userId" binding:"required,min=1"`
-	}
 	var info userInfo
 
 	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
@@ -57,6 +58,10 @@ func getUserInfo(c *gin.Context) {
 	}
 }
 
+type findCond struct {
+	UserName string `form:"userName" binding:"required"`
+}
+
 /**
  * @api {get} /user FindUser
  * @apiVersion 1.0.0
@@ -71,10 +76,7 @@ func getUserInfo(c *gin.Context) {
  * @apiError (Error 500) UserServiceDown User service down
  */
 func findUser(c *gin.Context) {
-	type condition struct {
-		UserName string `form:"userName" binding:"required"`
-	}
-	var cond condition
+	var cond findCond
 
 	if !utils.LogContinue(c.ShouldBindQuery(&cond), utils.Warning) {
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
