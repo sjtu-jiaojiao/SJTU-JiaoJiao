@@ -11,12 +11,12 @@ services:
 
 env:
   global:
-    - JJ_MARIADBUSER=root
+    - JJ_MARIADBUSER=sjtujj
     - JJ_MARIADBPWD=123456
 
 before_install:
   - docker pull mariadb
-  - docker run -d --net=host -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=sjtujj mariadb
+  - docker run -d --net=host -e MYSQL_USER=sjtujj -e MYSQL_PASSWORD=123456 -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=sjtujj mariadb
 
 install:
   - wget https://releases.hashicorp.com/consul/1.5.2/consul_1.5.2_linux_amd64.zip
