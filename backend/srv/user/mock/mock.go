@@ -90,8 +90,12 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 			} else if req.Offset == 1 {
 				rsp.User = append(rsp.User, &user2)
 				rsp.User = append(rsp.User, &user3)
+			} else if req.Offset == 2 {
+				rsp.User = append(rsp.User, &user3)
 			}
 		}
+	} else if req.UserName == "down" {
+		return nil, errors.New("")
 	}
 	return &rsp, nil
 }
