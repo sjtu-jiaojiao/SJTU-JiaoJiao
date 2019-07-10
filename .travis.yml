@@ -23,11 +23,11 @@ install:
   - unzip consul_1.5.2_linux_amd64.zip
   - sudo mv consul /usr/local/bin/
   - go get github.com/mattn/goveralls github.com/modocache/gover
-  - GOFLAGS=-mod=vendor
-  - GO111MODULE=on
+  - export GOFLAGS=-mod=vendor
+  - export GO111MODULE=on
 
 before_script:
-  - consul agent  -bootstrap -server -data-dir=./data/ 2>&1 1>consul.log &
+  - consul agent  -bootstrap -server -data-dir=./data/
   - sleep 3
   - cd backend
 
