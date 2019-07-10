@@ -14,10 +14,14 @@ import (
 )
 
 // StartTestServer start the test server
-func StartTestServer(f func() *gin.Engine, m string, p string, b io.Reader) *httptest.ResponseRecorder {
+func StartTestServer(f func() *gin.Engine, m string, p string, b io.Reader,
+	setter func(r *http.Request)) *httptest.ResponseRecorder {
 	router := f()
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest(m, "/"+GetStringConfig("api_config", "version")+"/"+p, b)
+	if setter != nil {
+		setter(req)
+	}
 	router.ServeHTTP(w, req)
 	return w
 }
