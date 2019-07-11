@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"os"
 	"path"
 	"runtime"
 
@@ -23,7 +24,12 @@ var ConsulConf config.Config
 func LoadLocalConfig() {
 	_, filename, _, ok := runtime.Caller(0)
 	LogPanic(ok, "No caller information")
-	LogPanic(config.LoadFile(path.Dir(filename) + "/../config.json"))
+	p := os.Getenv("JJ_CONFIGPATH")
+	if p != "" {
+		LogPanic(config.LoadFile(p))
+	} else {
+		LogPanic(config.LoadFile(path.Dir(filename) + "/../config.json"))
+	}
 	LogPanic(config.Scan(&LocalConf))
 	Info("Local config loaded")
 }
