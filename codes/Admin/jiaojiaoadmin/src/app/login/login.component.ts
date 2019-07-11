@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-
+  
  login() {
     this.socialService.login('/auth','/callback',{type: 'window'} ).subscribe(res => {
     this.authService.login(res);

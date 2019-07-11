@@ -42,11 +42,11 @@ describe('ActivityComponent', () => {
         InfoStatisticComponent,
         ActivitydetailComponent
       ],
-      imports: [   
-    //    DelonAuthModule,
+      imports: [
+        //    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
-        AppRoutingModule,    
+        AppRoutingModule,
         NgZorroAntdModule,
         FormsModule,
         NgxEchartsModule,
@@ -56,7 +56,7 @@ describe('ActivityComponent', () => {
         BrowserAnimationsModule
       ],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

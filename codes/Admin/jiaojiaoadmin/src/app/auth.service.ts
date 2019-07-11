@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 
 export class AuthService {
-  isLoggedIn = false;  
+  isLoggedIn = false;
   private authUrl = 'auth';  // URL to web api
   constructor(private http: HttpClient, @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService) {
   }
@@ -19,7 +19,7 @@ export class AuthService {
 
   login(res): void {
     //JWTTokenModely
-    this.isLoggedIn= true;
+    this.isLoggedIn = true;
     this.tokenService.set(res);
   }
 

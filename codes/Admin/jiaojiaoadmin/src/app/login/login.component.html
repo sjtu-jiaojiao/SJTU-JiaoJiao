@@ -16,8 +16,34 @@
   </nz-form-item>
   <nz-form-item>
     <nz-form-control> -->
-      <div id='log'>
-          <button nz-button (click)='login()' class="login-form-button" [nzType]="'primary'">登录</button>
+
+	<div class="cloud" id="cloud-back"></div>
+	<div class="cloud" id="cloud-mid"></div>
+	<div class="cloud" id="cloud-front"></div>
+<svg width="0" height="0"> 
+  <!--Top Layer-->
+    <filter id="filter-back">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" 
+seed="0" />     
+      <feDisplacementMap  in="SourceGraphic" scale="170" />
+    </filter>
+       <filter id="filter-mid">
+        <feTurbulence type="fractalNoise"  baseFrequency="0.012" numOctaves="2" 
+seed="0"/>
+      <feDisplacementMap  in="SourceGraphic" scale="150" />
+    </filter>
+    <filter id="filter-front">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" 
+seed="0"/>
+      <feDisplacementMap  in="SourceGraphic" scale="100" />
+    </filter>
+</svg>
+
+      <div id='log' (click)='login()'> 
+          <button nz-button class="login-form-button" [nzType]="'primary'">登录
+            <br><br>
+        <img class='img' src="../assets//jaccount.png">
+          </button>
         </div>
       <!-- 
     </nz-form-control>

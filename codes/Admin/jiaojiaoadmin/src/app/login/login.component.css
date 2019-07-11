@@ -15,7 +15,31 @@
 }
 #log {
   position: absolute;
-  width: 30%;
+  width: 15%;
   bottom: 50%;
-  left: 35%;
+  left: 42.5%;
+}
+.img{
+  border-radius:5px;
+  width: 100%;
+  height: auto;
+}
+.cloud {
+  width: 500px;
+  height: 275px;
+  border-radius: 50%;
+  position: absolute;
+  top: -10%;
+  left: 13%;
+}
+#cloud-back {
+  filter: url(#filter-back);
+  box-shadow: 300px 300px 30px -20px #fff;
+}
+#cloud-mid {
+  filter: url(#filter-mid);
+  box-shadow: 300px 340px 70px -60px rgba(158, 168, 179, 0.5);
+}
+#cloud-front {
+  box-shadow: 300px 370px 60px -100px rgba(0, 0, 0, 0.3);
 }

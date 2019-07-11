@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class AppComponent {
   title = 'JOJO-Admin';
   isCollapsed = false;
-  constructor( private router: Router, private authService: AuthService, private notification: NzNotificationService){}
+  constructor( private router: Router, public authService: AuthService, private notification: NzNotificationService){}
   logout(): boolean{
     if(this.authService.isLoggedIn){
     this.authService.logout();
