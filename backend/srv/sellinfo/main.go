@@ -6,7 +6,9 @@ import (
 	db "jiaojiao/database"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
 	"jiaojiao/utils"
+	"time"
 
+	"github.com/astaxie/beego/orm"
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -14,8 +16,9 @@ import (
 )
 
 type srvInfo struct{}
-
 type srvContent struct{}
+
+var o orm.Ormer
 
 /**
  * @apiIgnore Not finished Method
@@ -29,26 +32,95 @@ type srvContent struct{}
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for non-exist
  * @apiUse DBServerDown
  */
-//func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoQueryResponse) error {
-//
-//	return nil
-//}
+func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoQueryResponse) error {
+
+	return nil
+}
 
 /**
- * @apiIgnore Not finished Method
  * @api {rpc} /rpc sellinfo.SellInfo.Create
  * @apiVersion 1.0.0
  * @apiGroup Service
  * @apiName sellinfo.SellInfo.Create
  * @apiDescription create sell info
  *
- * @apiParam {int32} sellInfoId sell info id
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for non-exist
+ * @apiParam {int64} validTime valid timestamp
+ * @apiParam {string} goodName good name
+ * @apiParam {string} description description for good
+ * @apiParam {string} [contentId] content id of good
+ * @apiParam {array} [tag] tags for good(un-finished)
+ * @apiParam {string} [contentToken] content token
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
  * @apiUse DBServerDown
  */
-//func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
-//	return nil
-//}
+func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
+	good := db.Good{
+		GoodName:    req.GoodName,
+		Description: req.Description,
+	}
+	info := db.SellInfo{
+		Status:      1,
+		ReleaseTime: time.Now(),
+		ValidDate:   time.Unix(req.ValidTime, 0),
+		Good:        &good,
+	}
+
+	insert := func() (int32, error) {
+		err := o.Begin()
+		_, err1 := o.Insert(&good)
+		id, err2 := o.Insert(&info)
+		if err != nil || err1 != nil || err2 != nil {
+			err = o.Rollback()
+			if err != nil {
+				utils.LogContinue(err, utils.Warning)
+			}
+			return 0, err
+		}
+
+		err = o.Commit()
+		if err != nil {
+			utils.LogContinue(err, utils.Warning)
+			return 0, err
+		}
+		return int32(id), nil
+	}
+
+	if req.ValidTime == 0 || req.GoodName == "" {
+		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
+	} else if req.ContentId == "" && req.ContentToken == "" {
+		id, err := insert()
+		if err != nil || id == 0 {
+			return nil
+		}
+		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
+		rsp.SellInfoId = int32(id)
+	} else if req.ContentId != "" && req.ContentToken != "" {
+		collection := db.MongoDatabase.Collection("sellinfo")
+		rid, err := primitive.ObjectIDFromHex(req.ContentId)
+		if err != nil {
+			return nil
+		}
+		_, err = collection.FindOne(db.MongoContext, bson.D{
+			{"_id", rid},
+			{"token", req.ContentToken},
+		}).DecodeBytes()
+		if err != nil {
+			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_TOKEN
+			return nil
+		}
+
+		good.ContentId = req.ContentId
+		id, err := insert()
+		if err != nil || id == 0 {
+			return nil
+		}
+		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
+		rsp.SellInfoId = int32(id)
+	} else {
+		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
+	}
+	return nil
+}
 
 /**
  * @api {rpc} /rpc sellinfo.Content.Create
