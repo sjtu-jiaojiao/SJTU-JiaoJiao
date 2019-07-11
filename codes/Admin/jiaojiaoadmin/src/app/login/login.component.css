@@ -13,3 +13,9 @@
   .login-form-button {
     width: 100%;
 }
+#log {
+  position: absolute;
+  width: 30%;
+  bottom: 50%;
+  left: 35%;
+}

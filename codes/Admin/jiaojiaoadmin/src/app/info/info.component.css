@@ -24,6 +24,11 @@ input{
   border-radius: 4px 0 0 4px;
 }
 
+
+#type {
+  float:right;
+  width: 10%;
+}
 #tag {
   float:right;
   width: 10%;

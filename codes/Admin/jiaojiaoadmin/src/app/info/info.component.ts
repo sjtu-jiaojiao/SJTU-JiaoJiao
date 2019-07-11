@@ -6,17 +6,18 @@ import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-info',
   templateUrl: './info.component.html',
-  styleUrls: ['./info.component.css']
+  styleUrls: ['./info.component.css'],
 })
 export class InfoComponent implements OnInit {
   searchTag: string[]=[];
   infos: Info[];
-  current : number;
+  current : number = 1;
   curinfos: Info[];
-  size :number;
+  size :number = 4;
   count : number;
   Tthreshold: number;
   Ythreshold: number;
+  selectedType: number=-1;
   threshold: number;
   constructor(private infoService: InfoService) { }
 
@@ -24,16 +25,33 @@ export class InfoComponent implements OnInit {
     this.getinfos();
   }
 
+
+  selectType(type: number) :void {
+    this.infoService.getInfos()
+    .subscribe(infos => {
+      this.infos = infos;        
+        this.infos = this.infos.filter( ele => ele.type !== (1-type) );
+        this.searchTag.forEach( e => {
+          this.infos = this.infos.filter( arr => arr.tags.indexOf(e) >= 0 );
+        });
+        this.count = this.infos.length;
+        this.current=1;
+        this.switchPage(this.current, this.size);
+    }
+        );
+  }
+
   selectTag(tags: string[]) :void {
     this.infoService.getInfos()
     .subscribe(infos => {
       this.infos = infos;
+      this.infos = this.infos.filter( ele => ele.type !== (1-this.selectedType) );
       tags.forEach( e => {
         this.infos = this.infos.filter( arr => arr.tags.indexOf(e) >= 0 );
-        this.count = this.infos.length; 
-        this.current=1;
-        this.switchPage(this.current, this.size);
       });
+      this.count = this.infos.length; 
+      this.current=1;
+      this.switchPage(this.current, this.size);
     });
   }
   getstate(statecode: number): string {
@@ -60,8 +78,6 @@ export class InfoComponent implements OnInit {
     .subscribe(infos => {
       this.infos = infos; 
       this.count = this.infos.length; 
-      this.current=1;
-      this.size=4;
       this.switchPage(this.current, this.size);
     });
   }
@@ -79,19 +95,11 @@ export class InfoComponent implements OnInit {
   }
   delete(info: Info): void {
     this.infos = this.infos.filter(h => h !== info);
-    this.infoService.deleteInfo(info).subscribe(_ =>{
+    this.infoService.deleteInfo(info.id).subscribe(_ =>{
       this.count = this.infos.length; 
       this.switchPage(this.current, this.size);
     });
   }
 
-  add(id: string): void {
-    id = id.trim();
-    if (!id) { return; }
-    this.infoService.addInfo({ id } as Info)
-      .subscribe(info => {
-        this.infos.push(info);
-      });
-  }
 
 }

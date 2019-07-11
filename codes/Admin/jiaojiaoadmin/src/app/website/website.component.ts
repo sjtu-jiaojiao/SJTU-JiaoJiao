@@ -18,10 +18,10 @@ export class WebsiteComponent implements OnInit {
   validateForm: FormGroup;
   submitForm(): void {
     for (const i in this.validateForm.controls) {
-      if (this.validateForm.controls.hasOwnProperty(i)) {
+      //if (this.validateForm.controls.hasOwnProperty(i)) {
         this.validateForm.controls[ i ].markAsDirty();
         this.validateForm.controls[ i ].updateValueAndValidity();
-      }
+      //}
     }
   }
 

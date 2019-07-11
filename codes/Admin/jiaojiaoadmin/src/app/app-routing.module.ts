@@ -8,10 +8,10 @@ import { InfoComponent } from './info/info.component';
 import { InfoDetailComponent } from './infodetail/infodetail.component';
 import { WebsiteComponent } from './website/website.component';
 import { ActivityComponent } from './activity/activity.component';
-import { PasswordComponent } from './password/password.component';
 import { InfoStatisticComponent } from './info-statistic/info-statistic.component';
 import { ActivitydetailComponent } from './activitydetail/activitydetail.component';
 import { AuthGuard } from './auth/auth.guard';
+import { CallbackComponent } from './callback/callback.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent,canActivate: [AuthGuard] },
@@ -25,7 +25,7 @@ const routes: Routes = [
   { path: 'statistic', component:  InfoStatisticComponent,canActivate: [AuthGuard]},
   { path: 'website', component:  WebsiteComponent,canActivate: [AuthGuard]},
   { path: 'activity', component:  ActivityComponent,canActivate: [AuthGuard]},
-  { path: 'password', component:  PasswordComponent,canActivate: [AuthGuard]},
+  { path: 'callback/:token',component:  CallbackComponent }
 ];
 
 @NgModule({

@@ -1,6 +1,11 @@
 input{
     color: black;
 }
+ 
+h2{
+  color: white;
+}
+
  .badge {
    display: inline-block;
    font-size: small;

@@ -8,6 +8,13 @@
 ></nz-input-number>
 <button nz-button (click)="forbid()" [nzType]="'primary'">封禁所有信用评价低于{{threshold}}的人</button>
 
+<nz-input-group id='searchname' nzSearch [nzAddOnAfter]="suffixIconButton">
+  <input type="text" [(ngModel)]="searchName" nz-input placeholder="输入用户名" />
+</nz-input-group>
+<ng-template #suffixIconButton>
+  <button nz-button (click)='searchByName()' nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+</ng-template>
+
 <nz-list [nzDataSource]="curusers" [nzRenderItem]="user" [nzGrid]="{gutter: 16, span: 6}">
     <ng-template #user let-user>
       <nz-list-item [nzContent]="nzContent">
