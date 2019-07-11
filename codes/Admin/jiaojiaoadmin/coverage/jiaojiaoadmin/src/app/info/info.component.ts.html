@@ -20,31 +20,31 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">55% </span>
+        <span class="strong">92.5% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>22/40</span>
+        <span class='fraction'>37/40</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">77.78% </span>
+        <span class="strong">88.89% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>7/9</span>
+        <span class='fraction'>8/9</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">42.11% </span>
+        <span class="strong">89.47% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>8/19</span>
+        <span class='fraction'>17/19</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">60% </span>
+        <span class="strong">94.29% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>21/35</span>
+        <span class='fraction'>33/35</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line medium'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -160,14 +160,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,9 +186,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -199,10 +199,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -211,10 +211,10 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -228,7 +228,7 @@ import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-info',
   templateUrl: './info.component.html',
-  styleUrls: ['./info.component.css']
+  styleUrls: ['./info.component.css'],
 })
 export class InfoComponent implements OnInit {
   searchTag: string[]=[];
@@ -246,15 +246,15 @@ export class InfoComponent implements OnInit {
     this.getinfos();
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  selectTag(</span>tags: string[]) :void {
-<span class="cstat-no" title="statement not covered" >    this.infoService.getInfos()</span>
-    .subscribe(<span class="fstat-no" title="function not covered" >infos </span>=&gt; {
-<span class="cstat-no" title="statement not covered" >      this.infos = infos;</span>
-<span class="cstat-no" title="statement not covered" >      tags.forEach( <span class="fstat-no" title="function not covered" >e </span>=&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        this.infos = this.infos.filter( <span class="fstat-no" title="function not covered" >arr </span>=&gt; <span class="cstat-no" title="statement not covered" >arr.tags.indexOf(e) &gt;= 0 </span>);</span>
-<span class="cstat-no" title="statement not covered" >        this.count = this.infos.length; </span>
-<span class="cstat-no" title="statement not covered" >        this.current=1;</span>
-<span class="cstat-no" title="statement not covered" >        this.switchPage(this.current, this.size);</span>
+  selectTag(tags: string[]) :void {
+    this.infoService.getInfos()
+    .subscribe(infos =&gt; {
+      this.infos = infos;
+      tags.forEach( e =&gt; {
+        this.infos = this.infos.filter( arr =&gt; arr.tags.indexOf(e) &gt;= 0 );
+        this.count = this.infos.length; 
+        this.current=1;
+        this.switchPage(this.current, this.size);
       });
     });
   }
@@ -272,8 +272,8 @@ export class InfoComponent implements OnInit {
           return '强制结束';
       }
   }
-<span class="fstat-no" title="function not covered" >  end(</span>):void {
-<span class="cstat-no" title="statement not covered" >    this.infos.filter(<span class="fstat-no" title="function not covered" >h </span>=&gt; <span class="cstat-no" title="statement not covered" >new Date().getTime() - new Date(h.time).getTime() /1000/60/60/24 &gt; this.Tthreshold &amp;&amp; h.count &lt; this.Ythreshold)</span></span>
+  end():void {
+    this.infos.filter(h =&gt; new Date().getTime() - new Date(h.time).getTime() /1000/60/60/24 &gt; this.Tthreshold &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >h.count &lt; this.Ythreshold)</span>
     .map(<span class="fstat-no" title="function not covered" >h </span>=&gt; { <span class="cstat-no" title="statement not covered" >h.state=4 ; <span class="cstat-no" title="statement not covered" ></span>return h;}</span>).forEach(<span class="fstat-no" title="function not covered" >element </span>=&gt; 
 <span class="cstat-no" title="statement not covered" >      this.infoService.updateInfo(element).subscribe())</span>;
   }	
@@ -297,11 +297,11 @@ export class InfoComponent implements OnInit {
   sizeChange(size){
     this.switchPage(this.current,size);
   }
-<span class="fstat-no" title="function not covered" >  delete(</span>info: Info): void {
-<span class="cstat-no" title="statement not covered" >    this.infos = this.infos.filter(<span class="fstat-no" title="function not covered" >h </span>=&gt; <span class="cstat-no" title="statement not covered" >h !== info)</span>;</span>
-<span class="cstat-no" title="statement not covered" >    this.infoService.deleteInfo(info).subscribe(<span class="fstat-no" title="function not covered" >_ </span>=&gt;{</span>
-<span class="cstat-no" title="statement not covered" >      this.count = this.infos.length; </span>
-<span class="cstat-no" title="statement not covered" >      this.switchPage(this.current, this.size);</span>
+  delete(info: Info): void {
+    this.infos = this.infos.filter(h =&gt; h !== info);
+    this.infoService.deleteInfo(info.id).subscribe(_ =&gt;{
+      this.count = this.infos.length; 
+      this.switchPage(this.current, this.size);
     });
   }
 &nbsp;
@@ -313,7 +313,7 @@ export class InfoComponent implements OnInit {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Jul 11 2019 09:07:25 GMT+0800 (GMT+08:00)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Jul 11 2019 09:27:45 GMT+0800 (GMT+08:00)
 </div>
 </div>
 <script src="..\..\..\prettify.js"></script>
