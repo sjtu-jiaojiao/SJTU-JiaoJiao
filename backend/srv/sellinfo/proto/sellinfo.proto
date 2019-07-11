@@ -1,28 +1,33 @@
 syntax = "proto3";
 
 service SellInfo {
-    //rpc Query (SellInfoQueryRequest) returns (SellInfoQueryResponse);
-    //rpc Create (SellInfoCreateRequest) returns (SellInfoCreateResponse);
+    rpc Query (SellInfoQueryRequest) returns (SellInfoQueryResponse);
+    rpc Create (SellInfoCreateRequest) returns (SellInfoCreateResponse);
 }
 
 service Content {
     rpc Create (ContentCreateRequest) returns (ContentCreateResponse);
 }
-//
-//message SellInfoQueryRequest {
-//    int32 sellInfoId = 1;
-//}
-//
-//message SellInfoQueryResponse {
-//    enum Status {
-//        UNKNOWN = 0;
-//        EMPTY_PARAM = -1;
-//        SUCCESS = 1;
-//        NOT_EXIST = 2;
-//    }
-//    Status status = 1;
-//    int32 userId = 2;
-//}
+
+message SellInfoQueryRequest {
+    int32 sellInfoId = 1;
+}
+
+message SellInfoQueryResponse {
+    enum Status {
+        UNKNOWN = 0;
+        EMPTY_PARAM = -1;
+        SUCCESS = 1;
+        NOT_EXIST = 2;
+    }
+    Status status = 1;
+    int32 sellInfoId = 2;
+    int64 validTime = 3;
+    string goodName = 4;
+    string description = 5;
+    string contentId = 6;
+    repeated string tag = 7;
+}
 
 message SellInfoCreateRequest {
     int64 validTime = 1;
