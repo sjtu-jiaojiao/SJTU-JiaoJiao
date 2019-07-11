@@ -6,16 +6,20 @@ services:
   api-auth:
     image: sjtujj/api-auth
     build: ./api/auth
-    depends_on: global
+    depends_on: 
+      - global
   api-user:
     image: sjtujj/api-user
     build: ./api/user
-    depends_on: global
+    depends_on: 
+      - global
   srv-auth:
     image: sjtujj/srv-auth
     build: ./srv/auth
-    depends_on: global
+    depends_on: 
+      - global
   srv-user:
     image: sjtujj/srv-user
     build: ./srv/user
-    depends_on: global
+    depends_on: 
+      - global
