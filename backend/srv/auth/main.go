@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"io/ioutil"
 	auth "jiaojiao/srv/auth/proto"
@@ -40,7 +41,12 @@ func (a *srv) Auth(ctx context.Context, req *auth.AuthRequest, rsp *auth.AuthRes
 			utils.GetStringConfig("api_config", "version")+"/auth")
 		params.Add("client_id", os.Getenv("JJ_CLIENTID"))
 		params.Add("client_secret", os.Getenv("JJ_CLIENTSECRET"))
-		resp, err := http.PostForm(utils.GetStringConfig("sys_config", "token_url"), params)
+
+		tr := &http.Transport{
+			TLSClientConfig:    &tls.Config{InsecureSkipVerify: true},
+		}
+		client := &http.Client{Transport: tr}
+		resp, err := client.PostForm(utils.GetStringConfig("sys_config", "token_url"), params)
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
