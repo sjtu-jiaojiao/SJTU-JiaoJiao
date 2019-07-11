@@ -198,7 +198,7 @@ func (a *srvAdmin) Find(ctx context.Context, req *user.AdminUserRequest, rsp *us
 }
 
 func main() {
-	o = db.InitORM(new(db.User), new(db.AdminUser))
+	o = db.InitORM("userdb",new(db.User), new(db.AdminUser))
 	service := utils.InitMicroService("user")
 	utils.LogPanic(user.RegisterUserHandler(service.Server(), new(srvUser)))
 	utils.LogPanic(user.RegisterAdminUserHandler(service.Server(), new(srvAdmin)))

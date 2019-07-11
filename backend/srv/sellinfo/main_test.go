@@ -78,3 +78,8 @@ func TestCreate(t *testing.T) {
 		}
 	})
 }
+
+func TestMain(m *testing.M) {
+	main()
+	m.Run()
+}
