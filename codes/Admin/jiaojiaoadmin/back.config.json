@@ -1,0 +1,10 @@
+{
+    "/auth": {
+      "target": "http://192.168.43.150:8080/v1",
+      "secure": "false"
+    },
+    "/user": {
+      "target": "http://192.168.43.150:8080/v1",
+      "secure": "false"
+    }
+}
