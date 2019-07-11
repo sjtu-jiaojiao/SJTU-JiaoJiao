@@ -21,7 +21,12 @@ message SellInfoQueryResponse {
         NOT_EXIST = 2;
     }
     Status status = 1;
-    int32 userId = 2;
+    int32 sellInfoId = 2;
+    int64 validTime = 3;
+    string goodName = 4;
+    string description = 5;
+    string contentId = 6;
+    repeated string tag = 7;
 }
 
 message SellInfoCreateRequest {

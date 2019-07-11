@@ -21,19 +21,44 @@ type srvContent struct{}
 var o orm.Ormer
 
 /**
- * @apiIgnore Not finished Method
  * @api {rpc} /rpc sellinfo.SellInfo.Query
  * @apiVersion 1.0.0
  * @apiGroup Service
  * @apiName sellinfo.SellInfo.Query
  * @apiDescription Query sell info
  *
- * @apiParam {int32} sellInfoId sell info id.
+ * @apiParam {int32} sellInfoId sellInfo id.
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for non-exist
+ * @apiSuccess {int32} sellInfoId sellInfoId
+ * @apiSuccess {int64} validTime sellInfo validate time
+ * @apiSuccess {string} goodName good name
+ * @apiSuccess {string} description good description
+ * @apiSuccess {string} contentId multimedia data
+ * @apiSuccess {array} tag good tags (un-finished)
  * @apiUse DBServerDown
  */
 func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoQueryResponse) error {
+	if req.SellInfoId == 0 {
+		rsp.Status = sellinfo.SellInfoQueryResponse_EMPTY_PARAM
+		return nil
+	}
+	info := db.SellInfo{
+		Id: int(req.SellInfoId),
+	}
+	err := o.Read(&info)
+	if err == orm.ErrNoRows {
+		rsp.Status = sellinfo.SellInfoQueryResponse_NOT_EXIST
+		return nil
+	} else if err != nil {
+		return err
+	}
 
+	rsp.SellInfoId = int32(info.Id)
+	rsp.ValidTime = info.ValidDate.Unix()
+	rsp.GoodName = info.Good.GoodName
+	rsp.Description = info.Good.Description
+	rsp.ContentId = info.Good.ContentId
+	rsp.Status = sellinfo.SellInfoQueryResponse_SUCCESS
 	return nil
 }
 
@@ -51,6 +76,7 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
  * @apiParam {array} [tag] tags for good(un-finished)
  * @apiParam {string} [contentToken] content token
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
+ * @apiSuccess {int32} sellInfoId created sellInfoId
  * @apiUse DBServerDown
  */
 func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
