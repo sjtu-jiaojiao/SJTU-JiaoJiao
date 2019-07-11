@@ -42,7 +42,7 @@ script:
   - gover
   - goveralls -coverprofile=gover.coverprofile -service=travis-ci -repotoken $COVERALLS_TOKEN
   - cp config_deploy.json config.json
-  - docker-compose build
+  - docker-compose build --no-cache --parallel 
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 deploy:
