@@ -41,9 +41,9 @@ script:
   - go list -f '{{if len .TestGoFiles}}"s=`echo {{.Dir}} | tail -c 6` && [ $s == "utils" ] && go test -tags=test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}}"{{end}}' ./... | xargs -L 1 bash -c
   - gover
   - goveralls -coverprofile=gover.coverprofile -service=travis-ci -repotoken $COVERALLS_TOKEN
+  - cp config_deploy.json config.json
   - docker-compose build
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - cp config_deploy.json config.json
 
 deploy:
   provider: script
