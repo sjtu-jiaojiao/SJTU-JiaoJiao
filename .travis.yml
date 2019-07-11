@@ -48,9 +48,9 @@ deploy:
   script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - cp config_deploy.json config.json
-    - docker_push sjtujj/api-auth
-    - docker_push sjtujj/api-user
-    - docker_push sjtujj/srv-auth
-    - docker_push sjtujj/srv-user
+    - bash docker_push sjtujj/api-auth
+    - bash docker_push sjtujj/api-user
+    - bash docker_push sjtujj/srv-auth
+    - bash docker_push sjtujj/srv-user
   on:
     branch: master
