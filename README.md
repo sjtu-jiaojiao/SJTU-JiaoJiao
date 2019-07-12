@@ -36,7 +36,7 @@ Powered by NG-ALAIN by Ali, JWT格式,输入Token后自动加入请求头,点击
 ## 后台Demo
 ### Jaccount登录
 为了减少后端工作量，目前首先使用Jaccount登录后获取Token，由管理员手动输入Token登录。JWT会进行路由守卫
-![avatar](/codes/Admin/demo/J+Docker.jpg)
+![avatar](/codes/Admin/demo/J+Docker.JPG)
 ### 用户管理
 ![avatar](/codes/Admin/demo/用户管理详情.JPG)
 ### 交易管理
