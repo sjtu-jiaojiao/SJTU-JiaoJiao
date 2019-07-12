@@ -21,6 +21,18 @@ type sellInfo struct {
 	SellInfoId int32 `uri:"sellInfoId" binding:"required,min=1"`
 }
 
+/**
+ * @api {get} /sellInfo/:sellInfoId GetSell
+ * @apiVersion 1.0.0
+ * @apiGroup SellInfo
+ * @apiPermission none/self
+ * @apiName GetSellInfo
+ * @apiDescription Get sell info
+ *
+ * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query) <br>
+ * @apiError (Error 500) SellInfoServiceDown SellInfo service down
+ */
 func getSellInfo(c *gin.Context) {
 	var info sellInfo
 	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
@@ -36,6 +48,10 @@ func getSellInfo(c *gin.Context) {
 		if !utils.CheckSellInfo(c, info.SellInfoId) {
 			rsp.SellInfoId = 0
 			rsp.GoodName = ""
+			rsp.ValidTime = 0
+			rsp.ContentId = ""
+			rsp.ContentToken = ""
+			rsp.Description = ""
 		}
 		c.JSON(200, rsp)
 	} else {

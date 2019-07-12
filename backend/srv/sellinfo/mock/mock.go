@@ -19,6 +19,18 @@ func (a *mockSellInfoSrv) Create(ctx context.Context, req *sellinfo.SellInfoCrea
 
 func (a *mockSellInfoSrv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, opts ...client.CallOption) (*sellinfo.SellInfoQueryResponse, error) {
 	var rsp sellinfo.SellInfoQueryResponse
+	if req.SellInfoId != 0 {
+		if req.SellInfoId == 1000 {
+			rsp.SellInfoId = 1000
+			rsp.GoodName = "good"
+			rsp.ValidTime = 1234567890
+			rsp.Description = "very good!"
+			rsp.ContentId = "123456789abc123456789abc"
+			rsp.ContentToken = "fajoijrw78029347-fsay"
+		} else if req.SellInfoId == 2000 {
+			return nil, errors.New("")
+		}
+	}
 	return &rsp, nil
 }
 
