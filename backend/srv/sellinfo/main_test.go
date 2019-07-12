@@ -67,6 +67,22 @@ func TestSrvInfo_Create(t *testing.T) {
 	var s srvInfo
 	var req sellinfo.SellInfoCreateRequest
 	var rsp sellinfo.SellInfoCreateResponse
+
+	getToken := func() (string, string) {
+		var sc srvContent
+		var reqc sellinfo.ContentCreateRequest
+		var rspc sellinfo.ContentCreateResponse
+
+		reqc.Content = []byte{1, 2, 3, 4, 5, 6}
+		reqc.Type = sellinfo.ContentCreateRequest_PICTURE
+		So(sc.Create(context.TODO(), &reqc, &rspc), ShouldBeNil)
+		So(rspc.Status, ShouldEqual, sellinfo.ContentCreateResponse_SUCCESS)
+		So(rspc.ContentId, ShouldNotBeBlank)
+		So(rspc.ContentToken, ShouldNotBeBlank)
+
+		return rspc.ContentId, rspc.ContentToken
+	}
+
 	Convey("Test SellInfo Create", t, func() {
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
@@ -92,6 +108,10 @@ func TestSrvInfo_Create(t *testing.T) {
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
 
+		req.ContentId, req.ContentToken = getToken()
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_SUCCESS)
+		So(rsp.SellInfoId, ShouldNotEqual, 0)
 	})
 }
 
