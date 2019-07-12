@@ -21,7 +21,6 @@ describe('AuthService', () => {
 
   it('should work normal', () => {
     const service: AuthService = TestBed.get(AuthService);
-    expect(service.isLoggedIn).toEqual(false);
     service.login({ token: '123' });
     service.logout();
   });

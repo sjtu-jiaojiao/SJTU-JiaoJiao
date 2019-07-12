@@ -71,9 +71,6 @@ describe('AppComponent', () => {
   it('should deal with log out ', () => {
     const eg = new AppComponent(TestBed.get(Router), TestBed.get(AuthService),TestBed.get(NzNotificationService));
     const auth: AuthService = TestBed.get(AuthService);
-    auth.isLoggedIn = false;
-    expect(eg.logout()).toEqual(false);
-    auth.isLoggedIn = true;
-    expect(eg.logout()).toEqual(true);
+    eg.logout();
   })
 });

@@ -1,7 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { SocialService } from '@delon/auth';
+import { SocialService, JWTGuard } from '@delon/auth';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { NzNotificationService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,9 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor( public router: Router, private socialService: SocialService , private authService: AuthService) {
+  t: any;
+  constructor( private socialService: SocialService , private notification: NzNotificationService
+    ,private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -20,10 +23,17 @@ export class LoginComponent implements OnInit {
 
   
  login() {
-    this.socialService.login('/auth','/callback',{type: 'window'} ).subscribe(res => {
-    this.authService.login(res);
-    // Redirect the user
-    this.router.navigateByUrl(this.router.parseUrl(this.authService.redirectUrl));
+    this.socialService.login('/api/auth','/callback',{type: 'window'} ).subscribe(res => {
+    
+    if(res)
+    {this.authService.login(res);
+    }
     });
     }
+
+  pretend() {
+    this.authService.login({token: this.t});
+    this.notification.create('success', '导入token成功', 'Token已更新');
+  }
+
   }

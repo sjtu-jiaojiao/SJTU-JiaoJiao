@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from './inmemory-data.service';
 import { AppRoutingModule } from './app-routing.module';
@@ -22,7 +22,7 @@ import { ActivityComponent } from './activity/activity.component';
 import { InfoStatisticComponent } from './info-statistic/info-statistic.component';
 import { ActivitydetailComponent } from './activitydetail/activitydetail.component';
 import { IconDefinition } from '@ant-design/icons-angular';
-import { DelonAuthModule, JWTInterceptor } from '@delon/auth';
+import { DelonAuthModule, JWTInterceptor, DA_STORE_TOKEN, MemoryStore } from '@delon/auth';
 
 
 
@@ -32,6 +32,17 @@ import { CallbackComponent } from './callback/callback.component'
 const icons: IconDefinition[] = [ControlOutline,LeftCircleOutline ,SaveOutline, DashboardOutline, UserOutline, ProfileOutline, TransactionOutline, ContactsOutline,
   BulbOutline, LoginOutline, LockOutline, KeyOutline, DeleteOutline, SearchOutline ,LogoutOutline];
 registerLocaleData(zh);
+
+export class DelonModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: DelonModule,
+      providers: [
+        { provide: DA_STORE_TOKEN, useClass: MemoryStore }
+      ]
+    };
+  }
+}
 
 @NgModule({
   declarations: [
@@ -57,7 +68,7 @@ registerLocaleData(zh);
     FormsModule,
     NgxEchartsModule,
     HttpClientModule,
-     HttpClientInMemoryWebApiModule.forRoot(
+    HttpClientInMemoryWebApiModule.forRoot(
        InMemoryDataService, { dataEncapsulation: false }),
     BrowserAnimationsModule
   ],

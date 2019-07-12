@@ -10,21 +10,21 @@ import { WebsiteComponent } from './website/website.component';
 import { ActivityComponent } from './activity/activity.component';
 import { InfoStatisticComponent } from './info-statistic/info-statistic.component';
 import { ActivitydetailComponent } from './activitydetail/activitydetail.component';
-import { AuthGuard } from './auth/auth.guard';
 import { CallbackComponent } from './callback/callback.component';
+import { JWTGuard } from '@delon/auth';
 
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent,canActivate: [AuthGuard] },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full',canActivate: [AuthGuard] },
-  { path: 'user/:id', component: UserDetailComponent ,canActivate: [AuthGuard]},
-  { path: 'user', component: UserComponent,canActivate: [AuthGuard]},
+  { path: 'dashboard', component: DashboardComponent,canActivate: [JWTGuard] },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full',canActivate: [JWTGuard] },
+  { path: 'user/:id', component: UserDetailComponent ,canActivate: [JWTGuard]},
+  { path: 'user', component: UserComponent,canActivate: [JWTGuard]},
   { path: 'login', component: LoginComponent},
-  { path: 'info', component:  InfoComponent,canActivate: [AuthGuard]},
-  { path: 'info/:id', component:  InfoDetailComponent,canActivate: [AuthGuard]},
-  { path: 'activity/:id', component:  ActivitydetailComponent,canActivate: [AuthGuard]},
-  { path: 'statistic', component:  InfoStatisticComponent,canActivate: [AuthGuard]},
-  { path: 'website', component:  WebsiteComponent,canActivate: [AuthGuard]},
-  { path: 'activity', component:  ActivityComponent,canActivate: [AuthGuard]},
+  { path: 'info', component:  InfoComponent,canActivate: [JWTGuard]},
+  { path: 'info/:id', component:  InfoDetailComponent,canActivate: [JWTGuard]},
+  { path: 'activity/:id', component:  ActivitydetailComponent,canActivate: [JWTGuard]},
+  { path: 'statistic', component:  InfoStatisticComponent,canActivate: [JWTGuard]},
+  { path: 'website', component:  WebsiteComponent,canActivate: [JWTGuard]},
+  { path: 'activity', component:  ActivityComponent,canActivate: [JWTGuard]},
   { path: 'callback/:token',component:  CallbackComponent }
 ];
 

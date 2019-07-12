@@ -54,7 +54,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
+                  "maximumWarning": "4mb",
                   "maximumError": "5mb"
                 }
               ]
@@ -64,8 +64,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "jiaojiaoadmin:build",
-            "proxyConfig": "back.config.json"
+            "browserTarget": "jiaojiaoadmin:build"
           },
           "configurations": {
             "production": {

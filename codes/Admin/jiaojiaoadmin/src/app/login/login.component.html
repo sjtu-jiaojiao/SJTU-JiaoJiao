@@ -17,29 +17,14 @@
   <nz-form-item>
     <nz-form-control> -->
 
-	<div class="cloud" id="cloud-back"></div>
-	<div class="cloud" id="cloud-mid"></div>
-	<div class="cloud" id="cloud-front"></div>
-<svg width="0" height="0"> 
-  <!--Top Layer-->
-    <filter id="filter-back">
-      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" 
-seed="0" />     
-      <feDisplacementMap  in="SourceGraphic" scale="170" />
-    </filter>
-       <filter id="filter-mid">
-        <feTurbulence type="fractalNoise"  baseFrequency="0.012" numOctaves="2" 
-seed="0"/>
-      <feDisplacementMap  in="SourceGraphic" scale="150" />
-    </filter>
-    <filter id="filter-front">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" 
-seed="0"/>
-      <feDisplacementMap  in="SourceGraphic" scale="100" />
-    </filter>
-</svg>
-
+      <nz-input-group id='pretend' nzSearch [nzAddOnAfter]="suffixIconButton">
+        <input type="text" [(ngModel)]="t" nz-input placeholder="输入Token" />
+      </nz-input-group>
       <div id='log' (click)='login()'> 
+        <ng-template #suffixIconButton>
+          <button nz-button (click)='pretend()' nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+        </ng-template>
+        
           <button nz-button class="login-form-button" [nzType]="'primary'">登录
             <br><br>
         <img class='img' src="../assets//jaccount.png">
