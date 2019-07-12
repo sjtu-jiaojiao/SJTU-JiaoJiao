@@ -22,7 +22,7 @@ type sellInfo struct {
 }
 
 /**
- * @api {get} /sellInfo/:sellInfoId GetSell
+ * @api {get} /sellInfo/:sellInfoId GetSellInfo
  * @apiVersion 1.0.0
  * @apiGroup SellInfo
  * @apiPermission none/self
@@ -50,7 +50,6 @@ func getSellInfo(c *gin.Context) {
 			rsp.GoodName = ""
 			rsp.ValidTime = 0
 			rsp.ContentId = ""
-			rsp.ContentToken = ""
 			rsp.Description = ""
 		}
 		c.JSON(200, rsp)

@@ -30,11 +30,13 @@ var o orm.Ormer
  * @apiParam {int32} sellInfoId sellInfo id.
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for non-exist
  * @apiSuccess {int32} sellInfoId sellInfoId
+ * @apiSuccess {int32} sellInfoState 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
+ * @apiSuccess {int64} releaseTime sellInfo release time
  * @apiSuccess {int64} validTime sellInfo validate time
  * @apiSuccess {string} goodName good name
+ * @apiSuccess {double} price good price
  * @apiSuccess {string} description good description
  * @apiSuccess {string} contentId multimedia data
- * @apiSuccess {array} tag good tags (un-finished)
  * @apiUse DBServerDown
  */
 func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoQueryResponse) error {
@@ -63,12 +65,15 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 		return err
 	}
 
+	rsp.Status = sellinfo.SellInfoQueryResponse_SUCCESS
 	rsp.SellInfoId = int32(info.Id)
-	rsp.ValidTime = info.ValidDate.Unix()
+	rsp.SellInfoState = int32(info.Status)
+	rsp.ReleaseTime = info.ReleaseTime.Unix()
+	rsp.ValidTime = info.ValidTime.Unix()
 	rsp.GoodName = good.GoodName
+	rsp.Price = good.Price
 	rsp.Description = good.Description
 	rsp.ContentId = good.ContentId
-	rsp.Status = sellinfo.SellInfoQueryResponse_SUCCESS
 	return nil
 }
 
@@ -81,9 +86,9 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
  *
  * @apiParam {int64} validTime valid timestamp
  * @apiParam {string} goodName good name
+ * @apiParam {double} price good price
  * @apiParam {string} description description for good
  * @apiParam {string} [contentId] content id of good
- * @apiParam {array} [tag] tags for good(un-finished)
  * @apiParam {string} [contentToken] content token
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
  * @apiSuccess {int32} sellInfoId created sellInfoId
@@ -92,12 +97,13 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
 	good := db.Good{
 		GoodName:    req.GoodName,
+		Price:       req.Price,
 		Description: req.Description,
 	}
 	info := db.SellInfo{
 		Status:      1,
 		ReleaseTime: time.Now(),
-		ValidDate:   time.Unix(req.ValidTime, 0),
+		ValidTime:   time.Unix(req.ValidTime, 0),
 		Good:        &good,
 	}
 
@@ -166,11 +172,13 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
  * @apiName sellinfo.Content.Create
  * @apiDescription create sell info content
  *
- * @apiParam {string} [contentId] content id, left empty for first upload
+ * @apiParam {string} [contentId] 24 bytes content id, left empty for first upload
  * @apiParam {string} [contentToken] content token, left empty for first upload
  * @apiParam {bytes} content binary content
  * @apiParam {int32} type 1 for picture <br> 2 for video
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
+ * @apiSuccess {string} contentId 24 bytes contentId
+ * @apiSuccess {string} contentToken random uuid content token
  * @apiUse DBServerDown
  */
 func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequest, rsp *sellinfo.ContentCreateResponse) error {

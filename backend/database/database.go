@@ -31,14 +31,15 @@ type SellInfo struct {
 	Id          int `orm:"auto;pk;column(sell_info_id)"`
 	Status      int
 	ReleaseTime time.Time `orm:"auto_now_add;type(datetime)"`
-	ValidDate   time.Time `orm:"type(datetime)"`
+	ValidTime   time.Time `orm:"type(datetime)"`
 	Good        *Good     `orm:"rel(one);on_delete(cascade)"`
 }
 
 // Good is db good table map
 type Good struct {
-	Id          int       `orm:"auto;pk;column(good_id)"`
-	GoodName    string    `orm:"size(128)"`
+	Id          int    `orm:"auto;pk;column(good_id)"`
+	GoodName    string `orm:"size(128)"`
+	Price       float64
 	Description string    `orm:"type(text);null"`
 	ContentId   string    `orm:"type(char);size(24)"`
 	SellInfo    *SellInfo `orm:"reverse(one)"`
