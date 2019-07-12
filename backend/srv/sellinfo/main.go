@@ -52,12 +52,22 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 	} else if err != nil {
 		return err
 	}
+	good := db.Good{
+		Id: info.Good.Id,
+	}
+	err = o.Read(&good)
+	if err == orm.ErrNoRows {
+		rsp.Status = sellinfo.SellInfoQueryResponse_NOT_EXIST
+		return nil
+	} else if err != nil {
+		return err
+	}
 
 	rsp.SellInfoId = int32(info.Id)
 	rsp.ValidTime = info.ValidDate.Unix()
-	rsp.GoodName = info.Good.GoodName
-	rsp.Description = info.Good.Description
-	rsp.ContentId = info.Good.ContentId
+	rsp.GoodName = good.GoodName
+	rsp.Description = good.Description
+	rsp.ContentId = good.ContentId
 	rsp.Status = sellinfo.SellInfoQueryResponse_SUCCESS
 	return nil
 }
@@ -248,6 +258,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 }
 
 func main() {
+	o = db.InitORM(new(db.SellInfo), new(db.Good))
 	service := utils.InitMicroService("sellinfo")
 	utils.LogPanic(sellinfo.RegisterSellInfoHandler(service.Server(), new(srvInfo)))
 	utils.LogPanic(sellinfo.RegisterContentHandler(service.Server(), new(srvContent)))
