@@ -1,5 +1,11 @@
 # SJTU-JiaoJiao
-
+## Dockerize
+In the root of Admin/docker file folder.               
+`docker build -f Dockerfile -t ng-app .`            
+Then           
+`docker run -d -p 8099:80     --name jojoadmin    ng-app`            
+And in the 8099 port of the virtual machine address you will see the webfrontend          
+All your need is to proxy pass the /api/ uri to /v1/ outside the docker inside the server by nginx Reverse Proxy
 ## Tools
 - gitflow.sh: 自动配置gitflow.
 
