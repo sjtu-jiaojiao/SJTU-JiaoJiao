@@ -8,19 +8,7 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
-
-import HomeScreen from './src/Views/Home'
-import ContactScreen from './src/Views/Contact'
-import ReleaseScreen from './src/Views/Release'
-import UserScreen from './src/Views/User'
 import AppContainer from './src/Navigation/Navigation'
-import { Test } from './src/Navigation/Navigation'
-import {
-    createBottomTabNavigator,
-    createStackNavigator,
-    createAppContainer
-} from "react-navigation";
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -34,28 +22,6 @@ export default class App extends Component<Props> {
   render() {
     return (
         <AppContainer/>
-      /*<View style={styles.container}>
-        <View>
-          <Icon name={'home'} size={52} color={'blue'}/>
-          <HomeScreen/>
-        </View>
-        <View style={{width: 15}}/>
-        <View>
-          <Icon name={'form'} size={52} color={'red'}/>
-          <ReleaseScreen/>
-        </View>
-        <View style={{width: 15}}/>
-        <View>
-          <Icon name={'message1'} size={52} color={'green'}/>
-          <ContactScreen/>
-        </View>
-        <View style={{width: 15}}/>
-        <View>
-          <Icon name={'user'} size={52} color={'yellow'}/>
-          <UserScreen/>
-          <Test/>
-        </View>
-      </View>*/
     );
   }
 }

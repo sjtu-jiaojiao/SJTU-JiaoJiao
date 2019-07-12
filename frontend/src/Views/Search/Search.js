@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, FlatList } from 'react-native';
 import {SearchBar, CheckBox, ListItem} from "react-native-elements";
+import Popover from 'react-native-popover';
 import Config from '../../Config';
 
 class SearchUserItem extends Component {

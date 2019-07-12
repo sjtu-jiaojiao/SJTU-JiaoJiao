@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList } from 'react-native';
-import { ListItem, Avatar } from "react-native-elements";
+import {Text, View, FlatList, Alert} from 'react-native';
+import {ListItem, Avatar, Button} from "react-native-elements";
+import Icon from "react-native-vector-icons/AntDesign";
+import Config from "../../Config";
+import {NavigationActions} from "react-navigation";
 
 export default class UserInfoScreen extends Component {
 
@@ -53,6 +56,35 @@ export default class UserInfoScreen extends Component {
                     title={'手机'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
                     rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>15221278083</Text>}
+                />
+                <View style={{height: 15}}/>
+                <Button
+                    title='退出登录'
+                    titleStyle={{color: 'white', fontSize: 17}}
+                    buttonStyle={{backgroundColor: 'red'}}
+                    containerStyle={{width: 160, marginLeft: 120}}
+                    raised={true}
+                    onPress={() => Alert.alert(
+                        '退出登录',
+                        '您确定要退出登录吗？',
+                        [
+                            {
+                                text: '取消',
+                                onPress: () => console.log('Cancel Pressed'),
+                                style: 'cancel',
+                            },
+                            {
+                                text: '确定', onPress: () => {
+                                    Config.JaccountToken={};
+                                    this.props.navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0);
+                                }
+                            },
+                        ],
+                        {cancelable: false},
+                    )
+
+
+                    }
                 />
             </View>
         )
