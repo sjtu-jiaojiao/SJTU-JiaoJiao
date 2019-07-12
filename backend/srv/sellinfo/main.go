@@ -134,6 +134,7 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 		collection := db.MongoDatabase.Collection("sellinfo")
 		rid, err := primitive.ObjectIDFromHex(req.ContentId)
 		if err != nil {
+			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 			return nil
 		}
 		_, err = collection.FindOne(db.MongoContext, bson.D{

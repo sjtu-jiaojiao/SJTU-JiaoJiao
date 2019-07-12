@@ -63,11 +63,43 @@ func TestSrvInfo_Query(t *testing.T) {
 
 }
 
+func TestSrvInfo_Create(t *testing.T) {
+	var s srvInfo
+	var req sellinfo.SellInfoCreateRequest
+	var rsp sellinfo.SellInfoCreateResponse
+	Convey("Test SellInfo Create", t, func() {
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
+
+		req.GoodName = "good"
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
+
+		req.ValidTime = 19087982694
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_SUCCESS)
+		So(rsp.SellInfoId, ShouldNotEqual, 0)
+
+		req.ContentId = "123456789abc123456789abc"
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
+
+		req.ContentToken = "jlkfjaoiu2709429-98247ksf"
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_TOKEN)
+
+		req.ContentId = "1234"
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
+
+	})
+}
+
 func TestSrvContent_Create(t *testing.T) {
 	var s srvContent
 	var req sellinfo.ContentCreateRequest
 	var rsp sellinfo.ContentCreateResponse
-	Convey("Test SellInfo Create", t, func() {
+	Convey("Test SellInfo Content Create", t, func() {
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, sellinfo.ContentCreateResponse_INVALID_PARAM)
 
