@@ -27,7 +27,7 @@ func TestSrvInfo_Query(t *testing.T) {
 		Id:          1000,
 		Status:      1,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
-		ValidDate:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
+		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		Good:        &good,
 	}
 	tf := func(sellId int, validTime int64, goodName string,
