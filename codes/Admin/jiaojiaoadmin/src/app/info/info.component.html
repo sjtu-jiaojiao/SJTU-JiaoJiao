@@ -14,6 +14,17 @@
 <button nz-button (click)='end()' [nzType]="'primary'">结束所有等待时间超过{{Tthreshold}}天且预约数小于{{Ythreshold}}的交易信息</button>
 
 
+<nz-select 
+id='type'
+[(ngModel)]="selectedType"
+(ngModelChange)	="selectType($event)"
+nzPlaceHolder="Choose">
+  <nz-option [nzValue]="0" nzLabel="出售"></nz-option>
+  <nz-option [nzValue]="1" nzLabel="求购"></nz-option>
+  <nz-option [nzValue]="-1" nzLabel="All"></nz-option>
+</nz-select>
+
+
 <nz-select
 id = 'tag'
 nzMode="tags"
@@ -23,9 +34,10 @@ nzMode="tags"
 [nzTokenSeparators]="[',']"
 [(ngModel)]="searchTag"
 nzPlaceHolder="TagFilter">
-
 <nz-option *ngFor="let option of searchTag" [nzLabel]="option" [nzValue]="option"> </nz-option>
 </nz-select>
+
+
 <nz-list [nzDataSource]="curinfos" [nzRenderItem]="info" [nzGrid]="{gutter: 16, span: 6}">
     <ng-template #info let-info>
       <nz-list-item [nzContent]="nzContent">
@@ -36,7 +48,7 @@ nzPlaceHolder="TagFilter">
               <span class="badge">交易ID</span>{{info.id}}
         </div>
         <div class='infoitem'>
-              <span class="badge">交易类型</span>{{info.type? '买':'卖'}}
+              <span class="badge">交易类型</span>{{info.type? '求购':'出售'}}
         </div>
         <div class='infoitem'>
           <span class="badge">交易发起人</span>{{info.source}}

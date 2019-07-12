@@ -6,4 +6,6 @@ export class User
    public  score: number;
    public  active: number;
    public  intro: string;
+   public  telephone: string;
+   public  avatarId: string;
 }

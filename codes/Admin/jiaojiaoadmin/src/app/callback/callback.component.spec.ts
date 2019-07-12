@@ -13,40 +13,47 @@ import { InfoComponent } from '../info/info.component';
 import { LoginComponent } from '../login/login.component';
 import { InfoDetailComponent } from '../infodetail/infodetail.component';
 import { WebsiteComponent } from '../website/website.component';
-import { ActivityComponent } from './activity.component';
+import { ActivityComponent } from '../activity/activity.component';
 import { InfoStatisticComponent } from '../info-statistic/info-statistic.component';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CallbackComponent } from '../callback/callback.component';
+import { CallbackComponent } from './callback.component';
+import { Router, ActivatedRoute } from '@angular/router';
+import { SocialService } from '@delon/auth';
 
-describe('ActivityComponent', () => {
-  let component: ActivityComponent;
-  let fixture: ComponentFixture<ActivityComponent>;
+describe('Callback', () => {
+  let component: CallbackComponent;
+  let fixture: ComponentFixture<CallbackComponent>;
 
   beforeEach(async(() => {
+    const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get','put','post','delete']);
+    const socialSpy = jasmine.createSpyObj('SocialService',['callback']);
     TestBed.configureTestingModule({
+    providers: [
+          {provide: HttpClient, useValue: httpClientSpy},
+        {provide: SocialService, useValue: socialSpy}],
       declarations: [
         AppComponent,
         UserDetailComponent,
         UserComponent,
         InfoComponent,
         InfoDetailComponent,
-        CallbackComponent,
         LoginComponent,
         DashboardComponent,
+        CallbackComponent,
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
         ActivitydetailComponent
       ],
-      imports: [
-        //    DelonAuthModule,
+      imports: [   
+    //    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
-        AppRoutingModule,
+        AppRoutingModule,    
         NgZorroAntdModule,
         FormsModule,
         NgxEchartsModule,
@@ -56,16 +63,17 @@ describe('ActivityComponent', () => {
         BrowserAnimationsModule
       ],
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ActivityComponent);
+    fixture = TestBed.createComponent(CallbackComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    component.mockModel('123456');
   });
 });

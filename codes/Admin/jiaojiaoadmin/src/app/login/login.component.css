@@ -13,3 +13,20 @@
   .login-form-button {
     width: 100%;
 }
+#log {
+  position: absolute;
+  width: 15%;
+  bottom: 50%;
+  left: 42.5%;
+}
+.img{
+  border-radius:5px;
+  width: 100%;
+  height: auto;
+}
+#pretend {
+  position: absolute;
+  width: 20%;
+  bottom: 30%;
+  left: 40%;
+}

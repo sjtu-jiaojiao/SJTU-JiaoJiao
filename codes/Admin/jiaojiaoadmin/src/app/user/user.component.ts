@@ -1,31 +1,41 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../entity/user';
 import { UserService } from '../user.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JWTInterceptor } from '@delon/auth';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css']
+  styleUrls: ['./user.component.css'],    
+  //providers: [{ provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true}]
+
 })
 export class UserComponent implements OnInit {
   users: User[];
   threshold: number;
-  current : number;
-  curusers: User[];
-  size :number;
+  current : number =1 ;
+  curusers: User[] ; 
+  size :number = 4;
   count : number;
+  searchName: string;
   constructor(private userService: UserService) { }
 
   ngOnInit() {
     this.getusers();
   }
-
+  searchByName(): void {
+    this.userService.searchUsers(this.searchName)
+    .subscribe(users => {
+      this.users = users;
+      this.count = this.users.length; 
+      this.switchPage(this.current, this.size);
+    });
+  }
   getusers(): void {
     this.userService.getUsers()
     .subscribe(users => {
       this.users = users;
-      this.current=1;
-      this.size=4;
       this.count = this.users.length; 
       this.switchPage(this.current, this.size);
     });
@@ -51,18 +61,9 @@ export class UserComponent implements OnInit {
 
   delete(user: User): void {
     this.users = this.users.filter(h => h !== user);
-    this.userService.deleteUser(user).subscribe(_ =>{
+    this.userService.deleteUser(user.id).subscribe(_ =>{
       this.count = this.users.length; 
       this.switchPage(this.current, this.size);
     });
   }
-  add(id: string): void {
-    id = id.trim();
-    if (!id) { return; }
-    this.userService.addUser({ id } as User)
-      .subscribe(user => {
-        this.users.push(user);
-      });
-  }
-
 }
