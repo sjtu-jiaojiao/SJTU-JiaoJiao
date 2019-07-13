@@ -20,6 +20,7 @@ import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login.component';
 import { CallbackComponent } from '../callback/callback.component';
+import { ITokenService } from '@delon/auth';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -66,5 +67,7 @@ describe('LoginComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
     component.login();
+    component.t= null;
+    component.pretend();
   });
 });

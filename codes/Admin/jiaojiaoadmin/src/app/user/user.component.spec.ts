@@ -77,6 +77,8 @@ describe('UserComponent', () => {
     c.count =3;
     c.size = 2;
     c.current = 1;
+    c.threshold = 1;
+    c.curusers = [new User()];
     c.pageChange(2);
     expect(c.curusers.length).toEqual(1);
     c.sizeChange(2);
@@ -84,6 +86,8 @@ describe('UserComponent', () => {
     c.forbid();
     c.delete(new User());
     c.searchName="";
+    c.searchByName();
+    c.searchName="4396";
     c.searchByName();
   });
 });

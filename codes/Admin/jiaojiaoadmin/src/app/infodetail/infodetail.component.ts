@@ -4,7 +4,11 @@ import { Info } from '../entity/info';
 import { Location } from '@angular/common';
 import { InfoService } from '../info.service';
 
-
+export function formatDate(params) {
+    params = params[0];
+    const date = new Date(params.name);
+    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+}
 @Component({
   selector: 'app-infodetail',
   templateUrl: './infodetail.component.html',
@@ -53,7 +57,6 @@ export class InfoDetailComponent implements OnInit {
     this.infoService.updateInfo(this.info)
       .subscribe(() => this.goBack());
   }
-
   graph() {
       
     for (let i = 0; i < 1000; i++) {
@@ -65,11 +68,7 @@ export class InfoDetailComponent implements OnInit {
     },
     tooltip: {
         trigger: 'axis',
-        formatter: (params) => {
-            params = params[0];
-            const date = new Date(params.name);
-            return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
-        },
+        formatter: formatDate,
         axisPointer: {
             animation: false
         }
@@ -95,6 +94,62 @@ export class InfoDetailComponent implements OnInit {
         data: this.d
     }]
 };
+    this.fnoption = {
+    title: {
+        text: '流量跟踪漏斗图',
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c}'
+    },
+    legend: {
+        data: ['展现', '点击' , '申请' , '预约' , '完成']
+    },
+    calculable: true,
+    series: [
+        {
+            name: '漏斗图',
+            type: 'funnel',
+            left: '10%',
+            top: 60,
+            bottom: 60,
+            width: '80%',
+            min: 0,
+            max: 100,
+            minSize: '0%',
+            maxSize: '100%',
+            sort: 'descending',
+            gap: 2,
+            label: {
+                show: true,
+                position: 'inside'
+            },
+            labelLine: {
+                length: 10,
+                lineStyle: {
+                    width: 1,
+                    type: 'solid'
+                }
+            },
+            itemStyle: {
+                borderColor: '#fff',
+                borderWidth: 1
+            },
+            emphasis: {
+                label: {
+                    fontSize: 20
+                }
+            },
+            data: [
+                {value: 1, name: '完成'},
+                {value: 2, name: '预约'},
+                {value: 10, name: '申请'},
+                {value: 100, name: '点击'},
+                {value: 1000, name: '展现'}
+            ]
+        }
+    ]
+};
 
     setInterval(() => {
 
@@ -102,73 +157,13 @@ export class InfoDetailComponent implements OnInit {
         this.d.shift();
         this.d.push(this.randomData());
     }
-    this.fnoption = {
-        title: {
-            text: '流量跟踪漏斗图',
-        },
-        tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b} : {c}'
-        },
-        legend: {
-            data: ['展现', '点击' , '申请' , '预约' , '完成']
-        },
-        calculable: true,
-        series: [
-            {
-                name: '漏斗图',
-                type: 'funnel',
-                left: '10%',
-                top: 60,
-                bottom: 60,
-                width: '80%',
-                min: 0,
-                max: 100,
-                minSize: '0%',
-                maxSize: '100%',
-                sort: 'descending',
-                gap: 2,
-                label: {
-                    show: true,
-                    position: 'inside'
-                },
-                labelLine: {
-                    length: 10,
-                    lineStyle: {
-                        width: 1,
-                        type: 'solid'
-                    }
-                },
-                itemStyle: {
-                    borderColor: '#fff',
-                    borderWidth: 1
-                },
-                emphasis: {
-                    label: {
-                        fontSize: 20
-                    }
-                },
-                data: [
-                    {value: 1, name: '完成'},
-                    {value: 2, name: '预约'},
-                    {value: 10, name: '申请'},
-                    {value: 100, name: '点击'},
-                    {value: 1000, name: '展现'}
-                ]
-            }
-        ]
-    };
     this.option = {
       title: {
           text: '价格波动曲线'
       },
       tooltip: {
           trigger: 'axis',
-          formatter: (params) => {
-              params = params[0];
-              const date = new Date(params.name);
-              return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
-          },
+          formatter: formatDate,
           axisPointer: {
               animation: false
           }
@@ -197,3 +192,4 @@ export class InfoDetailComponent implements OnInit {
 }, 1000);
   }
 }
+

@@ -83,6 +83,8 @@ describe('InfoComponent', () => {
     c.count =3;
     c.size = 2;
     c.current = 1;
+    c.Tthreshold = 1;
+    c.Ythreshold = 1;
     c.pageChange(2);
     expect(c.curinfos.length).toEqual(1);
     c.sizeChange(2);

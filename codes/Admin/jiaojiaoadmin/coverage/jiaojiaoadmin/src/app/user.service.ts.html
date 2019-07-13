@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">94.12% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>16/17</span>
+        <span class='fraction'>17/17</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">50% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>1/2</span>
+        <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>8/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">93.75% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>15/16</span>
+        <span class='fraction'>16/16</span>
       </div>
     </div>
     <p class="quiet">
@@ -156,16 +156,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,6 +169,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,7 +187,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -200,29 +200,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
- 
+&nbsp;
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { User} from './entity/user'
+import { User } from './entity/user'
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
- 
+&nbsp;
 @Injectable({ providedIn: 'root' })
 export class UserService {
- 
+&nbsp;
   private usersUrl = 'api/users';  // URL to web api
- 
-  constructor(private http: HttpClient){}
- 
+&nbsp;
+  constructor(private http: HttpClient) { }
+&nbsp;
   /** GET users from the server */
-  getUsers (): Observable&lt;User[]&gt; {
+  getUsers(): Observable&lt;User[]&gt; {
     return this.http.get&lt;User[]&gt;(this.usersUrl)
       .pipe(
         catchError(this.handleError&lt;User[]&gt;('getUsers', []))
       );
   }
- 
+&nbsp;
   /** GET user by id. Will 404 if id not found */
   getUser(id: string): Observable&lt;User&gt; {
     const url = `${this.usersUrl}/${id}`;
@@ -232,40 +232,40 @@ export class UserService {
   }
   /* GET users whose name contains search term */
   searchUsers(term: string): Observable&lt;User[]&gt; {
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (!term.trim()) {
+    if (!term.trim()) {
       // if not search term, return empty user array.
       return this.getUsers();
     }
-<span class="cstat-no" title="statement not covered" >    return this.http.get&lt;User[]&gt;(`${this.usersUrl}/?name=${term}`).pipe(</span>
+    return this.http.get&lt;User[]&gt;(`${this.usersUrl}/?name=${term}`).pipe(
       catchError(this.handleError&lt;User[]&gt;('searchUsers', []))
     );
   }
- 
+&nbsp;
   /** DELETE: delete the user from the server */
-  deleteUser (id: string): Observable&lt;User&gt; {
+  deleteUser(id: string): Observable&lt;User&gt; {
     const url = `${this.usersUrl}/${id}`;
- 
+&nbsp;
     return this.http.delete&lt;User&gt;(url, httpOptions).pipe(
       catchError(this.handleError&lt;User&gt;('deleteUser'))
     );
   }
- 
+&nbsp;
   /** PUT: update the user on the server */
-  updateUser (user: User): Observable&lt;any&gt; {
+  updateUser(user: User): Observable&lt;any&gt; {
     return this.http.put(this.usersUrl, user, httpOptions).pipe(
       catchError(this.handleError&lt;any&gt;('updateUser'))
     );
   }
- 
+&nbsp;
   /**
    * Handle Http operation that failed.
    * Let the app continue.
    * @param operation - name of the operation that failed
    * @param result - optional value to return as the observable result
    */
-  private handleError&lt;T&gt; (operation, result?: T) {
+  private handleError&lt;T&gt;(operation, result?: T) {
     return (error: any): Observable&lt;T&gt; =&gt; {
- 
+&nbsp;
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
 &nbsp;
@@ -273,14 +273,14 @@ export class UserService {
       return of(result as T);
     };
   }
- 
+&nbsp;
 }</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Jul 11 2019 10:59:59 GMT+0800 (GMT+08:00)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Jul 13 2019 23:11:38 GMT+0800 (GMT+08:00)
 </div>
 </div>
 <script src="..\..\prettify.js"></script>

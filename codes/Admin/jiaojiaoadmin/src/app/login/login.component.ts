@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { SocialService, JWTGuard } from '@delon/auth';
+import { SocialService, JWTGuard, JWTTokenModel } from '@delon/auth';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
@@ -24,12 +24,9 @@ export class LoginComponent implements OnInit {
   
  login() {
     this.socialService.login('/api/auth','/callback',{type: 'window'} ).subscribe(res => {
-    
-    if(res)
-    {this.authService.login(res);
-    }
-    });
-    }
+//      this.authService.login(res);
+    })
+  }
 
   pretend() {
     this.authService.login({token: this.t});

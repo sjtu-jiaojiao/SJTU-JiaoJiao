@@ -19,7 +19,7 @@ import { InfoComponent } from '../info/info.component';
 import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { UserDetailComponent } from './userdetail.component';
+import { UserDetailComponent, fAnimationDelay, fSymbolSize, fFormatter } from './userdetail.component';
 import { CallbackComponent } from '../callback/callback.component';
 
 describe('UserdetailComponent', () => {
@@ -69,5 +69,8 @@ describe('UserdetailComponent', () => {
     expect(component).toBeTruthy();
     component.save();
     component.goBack();
+    expect(fAnimationDelay(5)).toEqual(25);
+    expect(fSymbolSize([0,0,5])).toEqual(10);
+    expect(fFormatter({value: [0,0,5]})).toEqual('5 commits in 12a of Saturday');
   });
 });
