@@ -39,7 +39,7 @@ var o orm.Ormer
  */
 func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoQueryResponse) error {
 	if req.SellInfoId == 0 {
-		rsp.Status = sellinfo.SellInfoQueryResponse_EMPTY_PARAM
+		rsp.Status = sellinfo.SellInfoQueryResponse_INVALID_PARAM
 		return nil
 	}
 	info := db.SellInfo{

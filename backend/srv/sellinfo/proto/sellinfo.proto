@@ -16,7 +16,7 @@ message SellInfoQueryRequest {
 message SellInfoQueryResponse {
     enum Status {
         UNKNOWN = 0;
-        EMPTY_PARAM = -1;
+        INVALID_PARAM = -1;
         SUCCESS = 1;
         NOT_EXIST = 2;
     }
