@@ -7,7 +7,7 @@ import (
 )
 
 func TestOrm(t *testing.T) {
-	o := InitORM(new(Test))
+	o := InitORM("testdb",new(Test))
 	Convey("Load orm test", t, func() {
 		test := Test{TestName: "tester"}
 
