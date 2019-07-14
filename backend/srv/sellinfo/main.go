@@ -26,7 +26,6 @@ type srvContent struct{}
  * @apiDescription Query sell info
  *
  * @apiParam {int32} sellInfoId sellInfo id.
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for non-exist
  * @apiSuccess {int32} sellInfoId sellInfoId
  * @apiSuccess {int32} sellInfoState 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
  * @apiSuccess {int64} releaseTime sellInfo release time
@@ -38,9 +37,8 @@ type srvContent struct{}
  * @apiSuccess {int32} userId userId
  * @apiUse DBServerDown
  */
-func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoQueryResponse) error {
+func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoMsg) error {
 	if req.SellInfoId == 0 {
-		rsp.Status = sellinfo.SellInfoQueryResponse_INVALID_PARAM
 		return nil
 	}
 	info := db.SellInfo{
@@ -48,7 +46,6 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 	}
 	err := db.Ormer.Read(&info)
 	if err == orm.ErrNoRows {
-		rsp.Status = sellinfo.SellInfoQueryResponse_NOT_EXIST
 		return nil
 	} else if utils.LogContinue(err, utils.Warning) {
 		return err
@@ -58,22 +55,20 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 	}
 	err = db.Ormer.Read(&good)
 	if err == orm.ErrNoRows {
-		rsp.Status = sellinfo.SellInfoQueryResponse_NOT_EXIST
 		return nil
 	} else if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
 
-	rsp.Status = sellinfo.SellInfoQueryResponse_SUCCESS
-	rsp.SellInfoId = int32(info.Id)
-	rsp.SellInfoState = int32(info.Status)
+	rsp.SellInfoId = info.Id
+	rsp.Status = info.Status
 	rsp.ReleaseTime = info.ReleaseTime.Unix()
 	rsp.ValidTime = info.ValidTime.Unix()
 	rsp.GoodName = good.GoodName
 	rsp.Price = good.Price
 	rsp.Description = good.Description
 	rsp.ContentId = good.ContentId
-	rsp.UserId = int32(info.UserId)
+	rsp.UserId = info.UserId
 	return nil
 }
 
@@ -180,10 +175,10 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
  * @apiName sellinfo.SellInfo.Find
  * @apiDescription Find SellInfo.
  *
- * @apiParam {string} userId userId
+ * @apiParam {int32} [userId] userId
  * @apiParam {uint32} limit=100 row limit
  * @apiParam {uint32} offset=0 row offset
- * @apiSuccess {list} user see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
+ * @apiSuccess {list} sellInfo see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
  * @apiUse DBServerDown
  */
 func (a *srvInfo) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *sellinfo.SellInfoFindResponse) error {
@@ -192,31 +187,38 @@ func (a *srvInfo) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, r
 	}
 
 	var res []*db.SellInfo
-	_, err := db.Ormer.QueryTable(&db.SellInfo{}).Filter("profile__id", req.UserId).Limit(req.Limit, req.Offset).All(&res)
+	tb := db.Ormer.QueryTable(&db.SellInfo{})
+	if req.UserId != 0 {
+		tb = tb.Filter("userId", req.UserId)
+	}
+	_, err := tb.Limit(req.Limit, req.Offset).All(&res)
 	if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
 	for i, v := range res {
-		rsp.SellInfos = append(rsp.SellInfos, new(sellinfo.SellInfoMsg))
+		rsp.SellInfo = append(rsp.SellInfo, new(sellinfo.SellInfoMsg))
 		good := db.Good{
-			Id: v.Good.Id,
+			Id: v.GoodId,
 		}
 		err = db.Ormer.Read(&good)
-		parseSellInfo(v, &good, rsp.SellInfos[i])
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+		parseSellInfo(v, &good, rsp.SellInfo[i])
 	}
 	return nil
 }
 
 func parseSellInfo(s *db.SellInfo, g *db.Good, d *sellinfo.SellInfoMsg) {
-	d.Status = int32(s.Status)
-	d.SellInfoId = int32(s.Id)
-	d.SellInfoState = int32(s.Status)
+	d.SellInfoId = s.Id
+	d.Status = s.Status
 	d.ReleaseTime = s.ReleaseTime.Unix()
 	d.ValidTime = s.ValidTime.Unix()
 	d.GoodName = g.GoodName
 	d.Price = g.Price
 	d.Description = g.Description
 	d.ContentId = g.ContentId
+	d.UserId = s.UserId
 }
 
 /**

@@ -19,10 +19,7 @@ func Test_getSellInfo(t *testing.T) {
 		return data
 	}
 	Convey("GetSellInfo router test", t, func() {
-		r := utils.StartTestServer(setupRouter, "GET", "/sellInfo", nil, nil)
-		So(r.Code, ShouldEqual, 404)
-
-		r = utils.StartTestServer(setupRouter, "GET", "/sellInfo/0", nil, nil)
+		r := utils.StartTestServer(setupRouter, "GET", "/sellInfo/0", nil, nil)
 		So(r.Code, ShouldEqual, 400)
 
 		data := tf(200, "/sellInfo/1000")

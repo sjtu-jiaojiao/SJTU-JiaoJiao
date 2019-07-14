@@ -14,6 +14,7 @@ import (
 func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
 	rg.GET("/sellInfo/:sellInfoId", getSellInfo)
+	rg.GET("/sellInfo", findSellInfo)
 	rg.PUT("/content", addContent)
 	rg.PUT("/sellInfo", addSellInfo)
 	return router
@@ -24,6 +25,11 @@ type sellInfo struct {
 }
 
 /**
+ * @apiDefine SellInfoServiceDown
+ * @apiError (Error 500) SellInfoServiceDown SellInfo service down
+ */
+
+/**
  * @api {get} /sellInfo/:sellInfoId GetSellInfo
  * @apiVersion 1.0.0
  * @apiGroup SellInfo
@@ -32,8 +38,8 @@ type sellInfo struct {
  * @apiDescription Get sell info
  *
  * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
- * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query) <br>
- * @apiError (Error 500) SellInfoServiceDown SellInfo service down
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
+ * @apiUse SellInfoServiceDown
  */
 func getSellInfo(c *gin.Context) {
 	var info sellInfo
@@ -69,8 +75,8 @@ type content struct {
  * @apiDescription Add sell info content
  *
  * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_Content_Create)
- * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_Content_Create) <br>
- * @apiError (Error 500) SellInfoServiceDown SellInfo service down
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_Content_Create)
+ * @apiUse SellInfoServiceDown
  */
 func addContent(c *gin.Context) {
 	var cont content
@@ -116,8 +122,8 @@ type createSellInfo struct {
  * @apiDescription Add sell info
  *
  * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_SellInfo_Create)
- * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Create) <br>
- * @apiError (Error 500) SellInfoServiceDown SellInfo service down
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Create)
+ * @apiUse SellInfoServiceDown
  */
 func addSellInfo(c *gin.Context) {
 	var info createSellInfo
@@ -136,6 +142,45 @@ func addSellInfo(c *gin.Context) {
 			ContentId:    info.ContentId,
 			ContentToken: info.ContentToken,
 			UserId:       info.UserId,
+		})
+		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+			c.JSON(500, err)
+			return
+		}
+		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+type findCond struct {
+	UserId int32  `form:"userId"`
+	Limit  uint32 `form:"limit"`
+	Offset uint32 `form:"offset"`
+}
+
+/**
+ * @api {get} /sellInfo FindSellInfo
+ * @apiVersion 1.0.0
+ * @apiGroup SellInfo
+ * @apiPermission none
+ * @apiName FindSellInfo
+ * @apiDescription Find sell info
+ *
+ * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_SellInfo_Find)
+ * @apiSuccess {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Find)
+ * @apiUse SellInfoServiceDown
+ */
+func findSellInfo(c *gin.Context) {
+	var cond findCond
+
+	if !utils.LogContinue(c.ShouldBindQuery(&cond), utils.Warning) {
+		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
+			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
+		rsp, err := srv.Find(context.TODO(), &sellinfo.SellInfoFindRequest{
+			UserId: cond.UserId,
+			Limit:  cond.Limit,
+			Offset: cond.Offset,
 		})
 		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
 			c.JSON(500, err)

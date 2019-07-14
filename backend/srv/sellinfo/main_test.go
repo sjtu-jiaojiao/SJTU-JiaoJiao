@@ -32,7 +32,7 @@ func TestSrvInfoQuery(t *testing.T) {
 		ContentId:   "123456789",
 	}
 	tf := func(sellId int, goodName string, description string, contentId string, userId int) {
-		var rsp sellinfo.SellInfoQueryResponse
+		var rsp sellinfo.SellInfoMsg
 		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.SellInfoId, ShouldEqual, sellId)
 		So(rsp.GoodName, ShouldEqual, goodName)

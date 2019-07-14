@@ -177,7 +177,7 @@ type updateInfo struct {
  * @apiDescription Update user
  *
  * @apiParam {--} Param see [User Service](#api-Service-user_User_Update)
- * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Update) <br> status: -1 is not allowed
+ * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Update)
  * @apiUse UserServiceDown
  */
 func updateUser(c *gin.Context) {

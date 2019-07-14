@@ -42,7 +42,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Response",
-            "description": "<p>see <a href=\"#api-Service-auth_Auth_Auth\">Auth service</a> <br> status: -1 is not allowed</p>"
+            "description": "<p>see <a href=\"#api-Service-auth_Auth_Auth\">Auth service</a></p>"
           }
         ]
       }
@@ -96,11 +96,13 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_Content_Create\">SellInfo Service</a> <br></p>"
+            "description": "<p>see <a href=\"#api-Service-sellinfo_Content_Create\">SellInfo Service</a></p>"
           }
         ]
       }
     },
+    "filename": "./api/sellinfo/main.go",
+    "groupTitle": "SellInfo",
     "error": {
       "fields": {
         "Error 500": [
@@ -112,9 +114,7 @@ define({ "api": [
           }
         ]
       }
-    },
-    "filename": "./api/sellinfo/main.go",
-    "groupTitle": "SellInfo"
+    }
   },
   {
     "type": "put",
@@ -150,11 +150,13 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Create\">SellInfo Service</a> <br></p>"
+            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Create\">SellInfo Service</a></p>"
           }
         ]
       }
     },
+    "filename": "./api/sellinfo/main.go",
+    "groupTitle": "SellInfo",
     "error": {
       "fields": {
         "Error 500": [
@@ -166,9 +168,61 @@ define({ "api": [
           }
         ]
       }
+    }
+  },
+  {
+    "type": "get",
+    "url": "/sellInfo",
+    "title": "FindSellInfo",
+    "version": "1.0.0",
+    "group": "SellInfo",
+    "permission": [
+      {
+        "name": "none"
+      }
+    ],
+    "name": "FindSellInfo",
+    "description": "<p>Find sell info</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Find\">SellInfo Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Find\">SellInfo Service</a></p>"
+          }
+        ]
+      }
     },
     "filename": "./api/sellinfo/main.go",
-    "groupTitle": "SellInfo"
+    "groupTitle": "SellInfo",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "SellInfoServiceDown",
+            "description": "<p>SellInfo service down</p>"
+          }
+        ]
+      }
+    }
   },
   {
     "type": "get",
@@ -204,11 +258,13 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Query\">SellInfo Service</a> <br></p>"
+            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Query\">SellInfo Service</a></p>"
           }
         ]
       }
     },
+    "filename": "./api/sellinfo/main.go",
+    "groupTitle": "SellInfo",
     "error": {
       "fields": {
         "Error 500": [
@@ -220,9 +276,7 @@ define({ "api": [
           }
         ]
       }
-    },
-    "filename": "./api/sellinfo/main.go",
-    "groupTitle": "SellInfo"
+    }
   },
   {
     "type": "rpc",
@@ -465,6 +519,71 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
+    "title": "sellinfo.SellInfo.Find",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "sellinfo_SellInfo_Find",
+    "description": "<p>Find SellInfo.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": true,
+            "field": "userId",
+            "description": "<p>userId</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "uint32",
+            "optional": false,
+            "field": "limit",
+            "defaultValue": "100",
+            "description": "<p>row limit</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "uint32",
+            "optional": false,
+            "field": "offset",
+            "defaultValue": "0",
+            "description": "<p>row offset</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "list",
+            "optional": false,
+            "field": "sellInfo",
+            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Query\">SellInfo Service</a></p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/sellinfo/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
     "title": "sellinfo.SellInfo.Query",
     "version": "1.0.0",
     "group": "Service",
@@ -486,13 +605,6 @@ define({ "api": [
     "success": {
       "fields": {
         "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int32",
-            "optional": false,
-            "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for non-exist</p>"
-          },
           {
             "group": "Success 200",
             "type": "int32",
@@ -1209,7 +1321,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-user_User_Update\">User Service</a> <br> status: -1 is not allowed</p>"
+            "description": "<p>see <a href=\"#api-Service-user_User_Update\">User Service</a></p>"
           }
         ]
       }

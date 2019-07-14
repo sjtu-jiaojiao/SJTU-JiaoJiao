@@ -17,8 +17,8 @@ func (a *mockSellInfoSrv) Create(ctx context.Context, req *sellinfo.SellInfoCrea
 	return &rsp, nil
 }
 
-func (a *mockSellInfoSrv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, opts ...client.CallOption) (*sellinfo.SellInfoQueryResponse, error) {
-	var rsp sellinfo.SellInfoQueryResponse
+func (a *mockSellInfoSrv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, opts ...client.CallOption) (*sellinfo.SellInfoMsg, error) {
+	var rsp sellinfo.SellInfoMsg
 	if req.SellInfoId != 0 {
 		if req.SellInfoId == 1000 {
 			rsp.SellInfoId = 1000
@@ -31,6 +31,11 @@ func (a *mockSellInfoSrv) Query(ctx context.Context, req *sellinfo.SellInfoQuery
 			return nil, errors.New("")
 		}
 	}
+	return &rsp, nil
+}
+
+func (a *mockSellInfoSrv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, opts ...client.CallOption) (*sellinfo.SellInfoFindResponse, error) {
+	var rsp sellinfo.SellInfoFindResponse
 	return &rsp, nil
 }
 

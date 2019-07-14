@@ -34,7 +34,7 @@ var _ server.Option
 // Client API for SellInfo service
 
 type SellInfoService interface {
-	Query(ctx context.Context, in *SellInfoQueryRequest, opts ...client.CallOption) (*SellInfoQueryResponse, error)
+	Query(ctx context.Context, in *SellInfoQueryRequest, opts ...client.CallOption) (*SellInfoMsg, error)
 	Create(ctx context.Context, in *SellInfoCreateRequest, opts ...client.CallOption) (*SellInfoCreateResponse, error)
 	Find(ctx context.Context, in *SellInfoFindRequest, opts ...client.CallOption) (*SellInfoFindResponse, error)
 }
@@ -57,9 +57,9 @@ func NewSellInfoService(name string, c client.Client) SellInfoService {
 	}
 }
 
-func (c *sellInfoService) Query(ctx context.Context, in *SellInfoQueryRequest, opts ...client.CallOption) (*SellInfoQueryResponse, error) {
+func (c *sellInfoService) Query(ctx context.Context, in *SellInfoQueryRequest, opts ...client.CallOption) (*SellInfoMsg, error) {
 	req := c.c.NewRequest(c.name, "SellInfo.Query", in)
-	out := new(SellInfoQueryResponse)
+	out := new(SellInfoMsg)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -90,14 +90,14 @@ func (c *sellInfoService) Find(ctx context.Context, in *SellInfoFindRequest, opt
 // Server API for SellInfo service
 
 type SellInfoHandler interface {
-	Query(context.Context, *SellInfoQueryRequest, *SellInfoQueryResponse) error
+	Query(context.Context, *SellInfoQueryRequest, *SellInfoMsg) error
 	Create(context.Context, *SellInfoCreateRequest, *SellInfoCreateResponse) error
 	Find(context.Context, *SellInfoFindRequest, *SellInfoFindResponse) error
 }
 
 func RegisterSellInfoHandler(s server.Server, hdlr SellInfoHandler, opts ...server.HandlerOption) error {
 	type sellInfo interface {
-		Query(ctx context.Context, in *SellInfoQueryRequest, out *SellInfoQueryResponse) error
+		Query(ctx context.Context, in *SellInfoQueryRequest, out *SellInfoMsg) error
 		Create(ctx context.Context, in *SellInfoCreateRequest, out *SellInfoCreateResponse) error
 		Find(ctx context.Context, in *SellInfoFindRequest, out *SellInfoFindResponse) error
 	}
@@ -112,7 +112,7 @@ type sellInfoHandler struct {
 	SellInfoHandler
 }
 
-func (h *sellInfoHandler) Query(ctx context.Context, in *SellInfoQueryRequest, out *SellInfoQueryResponse) error {
+func (h *sellInfoHandler) Query(ctx context.Context, in *SellInfoQueryRequest, out *SellInfoMsg) error {
 	return h.SellInfoHandler.Query(ctx, in, out)
 }
 
