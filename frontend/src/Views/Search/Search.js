@@ -4,6 +4,43 @@ import {SearchBar, Button, ListItem} from "react-native-elements";
 import Config from '../../Config';
 import {NavigationActions} from "react-navigation";
 
+let dev = "http://202.120.40.8:30711/v1";
+
+class Http {
+    // 静态方法
+    static get(url, params) {
+        // 将后台接口的公共部分拼接进去
+        url = dev + url;
+        //判断有木有参数
+        if (params) {
+            // 定一个空数组
+            let paramsArray = [];
+            //  拆分对象
+            Object.keys(params).forEach(key =>
+                paramsArray.push(key + "=" + params[key])
+            );
+            // 判断是否地址拼接的有没有 ？,当没有的时候，使用 ？拼接第一个参数，如果有参数拼接，则用&符号拼接后边的参数
+            if (url.search(/\?/) === -1) {
+                url = url + "?" + paramsArray.join("&");
+            } else {
+                url = url + "&" + paramsArray.join("&");
+            }
+        }
+        // 返回一个promise
+        return new Promise((resolve, reject) => {
+            //fetch请求
+            fetch(url, { method: "GET" })
+                .then(response => response.json())
+                .then(resulet => {
+                    resolve(resulet);
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    }
+}
+
 export default class SearchScreen extends Component {
     constructor(props) {
         super(props);
@@ -24,13 +61,13 @@ export default class SearchScreen extends Component {
     renderItem = ({ item }) => (
         <ListItem
             bottomDivider
-            title={item.title}
+            title={item.userName}
             titleStyle={{ color: 'black', fontSize: 17 }}
         />
     );
 
     updateSearch = (searchText) => {
-        this.setState({ searchText });
+        this.setState({ searchText: searchText });
     };
 
     cancelSearch = (searchText) => {
@@ -40,6 +77,20 @@ export default class SearchScreen extends Component {
         });
     };
 
+    startSearch = () => {
+        if(this.state.searchText !== '') {
+            let obj = { userName: this.state.searchText };
+            Http.get('/user', obj)
+                .then((response) => {
+                    this.setState({
+                        UserList: response.user,
+                    });
+                    //console.warn(this.state.UserList);
+                })
+                .catch((error) => console.error(error));
+        }
+    };
+
     render() {
         const { searchText } = this.state.searchText;
         if (this.state.UserList !== null) {
@@ -47,30 +98,19 @@ export default class SearchScreen extends Component {
                 <View>
                     <View style={{flexDirection: 'row'}}>
                         <SearchBar
+                            containerStyle={{flex: 4}}
                             placeholder={'搜索'}
                             onChangeText={ this.updateSearch }
                             onClear={this.cancelSearch}
                             value={ this.state.searchText }
                         />
                         <Button
-                            title='搜索'
+                            title='搜  索'
                             titleStyle={{color: 'white', fontSize: 17}}
-                            buttonStyle={{backgroundColor: 'red'}}
-                            containerStyle={{height: 50}}
+                            buttonStyle={{backgroundColor: 'steelblue'}}
+                            containerStyle={{flex: 1}}
                             raised={true}
-                            onPress={() => {
-                                fetch((Config.fetchPrefix + 'user/?userName=' + this.state.searchText))
-                                    .then((response) => {response.json();console.warn(responseJson);})
-                                    .then((responseJson) => {
-
-                                        this.setState({
-                                            UserList: responseJson.user,
-                                        });
-                                        //console.warn(this.state.UserList);
-                                        //console.warn(responseJson);
-                                    })
-                                    .catch((error) => console.error(error));
-                            }}
+                            onPress={() => this.startSearch()}
                         />
                     </View>
                     <FlatList
@@ -86,37 +126,19 @@ export default class SearchScreen extends Component {
                 <View>
                     <View style={{flexDirection: 'row'}}>
                         <SearchBar
-                            containerStyle={{width: 340}}
+                            containerStyle={{flex: 4}}
                             placeholder={'搜索'}
                             onChangeText={ this.updateSearch }
                             onClear={this.cancelSearch}
                             value={ this.state.searchText }
                         />
                         <Button
-                            title='搜索'
+                            title='搜  索'
                             titleStyle={{color: 'white', fontSize: 17}}
-                            buttonStyle={{backgroundColor: 'steelblue'}}
-                            containerStyle={{height: 50}}
+                            buttonStyle={{flex: 1}}
+                            containerStyle={{backgroundColor: 'steelblue', flex: 1, alignItems: 'center'}}
                             raised={true}
-                            onPress={() => {
-                                if(this.state.searchText !== '') {
-                                    console.warn(this.state.searchText);
-                                    //fetch((Config.fetchPrefix + 'user/?userName=' + this.state.searchText))
-                                    fetch('http://202.120.40.8:30711/v1/user?userName=c')
-                                        .then((response) => {
-                                            console.warn(response);
-                                            response.json();
-                                        })
-                                        .then((responseJson) => {
-                                            this.setState({
-                                                UserList: responseJson.user,
-                                            });
-                                            console.warn(this.state.UserList);
-                                            //console.warn(responseJson);
-                                        })
-                                        .catch((error) => console.error(error));
-                                }
-                            }}
+                            onPress={() => this.startSearch()}
                         />
                     </View>
                 </View>

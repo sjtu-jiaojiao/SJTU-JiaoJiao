@@ -8,7 +8,7 @@ import {NavigationActions} from "react-navigation";
 export default class UserInfoScreen extends Component {
     constructor(props) {
         super(props);
-        console.warn(Config)
+        //console.warn(Config)
         this.state = {
             userId: Config.userInfo.userId,
             userName: Config.userInfo.userName,
