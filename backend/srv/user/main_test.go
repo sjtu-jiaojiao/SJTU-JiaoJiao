@@ -37,7 +37,7 @@ func TestUserCreate(t *testing.T) {
 		So(id, ShouldEqual, id2)
 
 		_, err := db.Ormer.Delete(&db.User{
-			Id: int(id),
+			Id: id,
 		})
 		So(err, ShouldBeNil)
 	})
@@ -183,7 +183,7 @@ func TestAdminUserCreate(t *testing.T) {
 		So(id, ShouldEqual, id2)
 
 		_, err := db.Ormer.Delete(&db.AdminUser{
-			Id: int(id),
+			Id: id,
 		})
 		So(err, ShouldBeNil)
 	})

@@ -30,6 +30,7 @@ func Test_getSellInfo(t *testing.T) {
 		So(data["goodName"], ShouldEqual, "good")
 		So(data["validTime"], ShouldEqual, 1234567890)
 		So(data["contentId"], ShouldEqual, "123456789abc123456789abc")
+		So(data["userId"], ShouldEqual, 1000)
 
 		r = utils.StartTestServer(setupRouter, "GET", "/sellInfo/2000", nil, nil)
 		So(r.Code, ShouldEqual, 500)

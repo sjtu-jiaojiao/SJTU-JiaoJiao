@@ -77,7 +77,7 @@ func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *us
 		return nil
 	}
 	usr := db.User{
-		Id: int(req.UserId),
+		Id: req.UserId,
 	}
 	err := db.Ormer.Read(&usr)
 	if err == orm.ErrNoRows {
@@ -114,7 +114,7 @@ func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.User
 	}
 
 	usr := db.User{
-		Id: int(req.UserId),
+		Id: req.UserId,
 	}
 	if err := db.Ormer.Read(&usr); err == nil {
 		utils.AssignNotEmpty(&req.UserName, &usr.UserName)
