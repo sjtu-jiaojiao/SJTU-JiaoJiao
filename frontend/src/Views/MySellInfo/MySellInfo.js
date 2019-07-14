@@ -82,15 +82,15 @@ export default class MySellInfoScreen extends Component {
             bottomDivider
             containerStyle={{height: 200}}
             title={
-                <Text style={{color: 'black', fontWeight: 'bold', fontSize: 20}}>出售商品：{item.goodName}</Text>
+                <Text numberOfLines={1} style={{color: 'black', fontWeight: 'bold', fontSize: 20}}>出售物品：{item.goodName}</Text>
             }
             subtitle={
                 <View style={styles.subtitleView}>
-                    <Text style={styles.ratingText}>商品状态：{item.status}</Text>
-                    <Text style={styles.ratingText}>商品描述：{item.description}</Text>
-                    <Text style={styles.ratingText}>定价：￥{item.price}</Text>
-                    <Text style={styles.ratingText}>发布时间：{item.releaseTime}</Text>
-                    <Text style={styles.ratingText}>成交时间：{item.validTime}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>商品状态：{item.status}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>商品描述：{item.description}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>出售价格：￥{item.price}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>发布时间：{item.releaseTime}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>成交时间：{item.validTime}</Text>
                 </View>
             }
         />
