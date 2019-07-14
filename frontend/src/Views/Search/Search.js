@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {Text, View, FlatList, Alert} from 'react-native';
 import {SearchBar, Button, ListItem} from "react-native-elements";
 import Config from '../../Config';
-import {NavigationActions} from "react-navigation";
 
 let dev = "http://202.120.40.8:30711/v1";
 

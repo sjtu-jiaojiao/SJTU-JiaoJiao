@@ -47,6 +47,22 @@ export default class UserInfoScreen extends Component {
         postxml.setRequestHeader("Content-type","application/json");
         postxml.send("userId=1&telephone=15221278083&status=1");*/
 
+        axios.post('http://202.120.40.8:30711/v1/user',
+            {
+                'userId': '1',
+                'telephone': '15221278083',
+                'status': '1',
+            },
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMxMzY3MTQsImlkIjo0LCJyb2xlIjoxfQ.9UCj-BC-hL1KVRBs8KCPVE4LSKDriicCuCZ_s495_Pg',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            }
+        )
+            .then(res => console.warn(res))
+            .catch(e => console.warn(e));
+
         /*axios.post(
             '202.120.40.8:30711/v1/user',
             {
@@ -66,11 +82,11 @@ export default class UserInfoScreen extends Component {
             .finally(function () {
                 // always executed
             });*/
-        fetch('https://http://202.120.40.8:30711/v1/user', {
+        /*fetch('http://202.120.40.8:30711/v1/user', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
                 Authorization: ('Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMxMzY3MTQsImlkIjo0LCJyb2xlIjoxfQ.9UCj-BC-hL1KVRBs8KCPVE4LSKDriicCuCZ_s495_Pg'),
             },
             body: 'userId=1&telephone=15221278083&status=1',
@@ -80,7 +96,7 @@ export default class UserInfoScreen extends Component {
             })
             .catch((error) => {
                 console.error(error);
-            });
+            });*/
     }
 
     render() {
