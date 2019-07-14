@@ -14,6 +14,7 @@ func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
 	rg.GET("/user/:userId", getUserInfo)
 	rg.GET("/user", findUser)
+	rg.PUT("/user", addUser)
 	rg.POST("/user", updateUser)
 	return router
 }
@@ -110,6 +111,47 @@ func findUser(c *gin.Context) {
 			}
 		}
 		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+type addInfo struct {
+	StudentId   string `form:"studentId"`
+	StudentName string `form:"studentName"`
+}
+
+/**
+ * @api {put} /user AddUser
+ * @apiVersion 1.0.0
+ * @apiGroup User
+ * @apiPermission admin
+ * @apiName AddUser
+ * @apiDescription Add user, use default value.
+ *
+ * @apiParam {--} Param see [User Service](#api-Service-user_User_Create)
+ * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Create) <br>
+ * @apiError (Error 500) UserServiceDown User service down
+ */
+func addUser(c *gin.Context) {
+	var info addInfo
+
+	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
+		if !utils.CheckAdmin(c) {
+      c.AbortWithStatus(403)
+			return
+		}
+		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
+			func() interface{} { return mock.NewUserService() }).(user.UserService)
+    rsp, err := srv.Create(context.TODO(), &user.UserCreateRequest{
+			StudentId:   info.StudentId,
+			StudentName: info.StudentName,
+    })
+		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
+			c.JSON(500, err)
+			return
+		}
+    c.JSON(200, rsp)
 	} else {
 		c.AbortWithStatus(400)
 	}

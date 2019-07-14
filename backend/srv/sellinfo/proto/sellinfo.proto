@@ -22,19 +22,21 @@ message SellInfoQueryResponse {
     }
     Status status = 1;
     int32 sellInfoId = 2;
-    int64 validTime = 3;
-    string goodName = 4;
-    string description = 5;
-    string contentId = 6;
-    repeated string tag = 7;
+    int32 sellInfoState = 3;
+    int64 releaseTime = 4;
+    int64 validTime = 5;
+    string goodName = 6;
+    double price = 7;
+    string description = 8;
+    string contentId = 9;
 }
 
 message SellInfoCreateRequest {
     int64 validTime = 1;
     string goodName = 2;
-    string description = 3;
-    string contentId = 4;
-    repeated string tag = 5;
+    double price = 3;
+    string description = 4;
+    string contentId = 5;
     string contentToken = 6;
 }
 
