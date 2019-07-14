@@ -22,6 +22,31 @@ export default class UserInfoScreen extends Component {
         headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23}}>个人信息</Text>)
     };
 
+    updateUserInfo() {
+        fetch((Config.fetchPrefix + 'user'), {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: ('Bearer ' + Config.JaccountToken.token),
+            },
+            body: JSON.stringify({
+                userId: 1,
+                telephone: '15221278083',
+                status: 1,
+            }),
+        })
+            .then((response) => {
+                console.warn(response);
+            })
+            .then((json) => {
+                //alert(JSON.stringify(json));
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
     render() {
         return (
             <View>
@@ -39,6 +64,9 @@ export default class UserInfoScreen extends Component {
                     title={'用户名'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
                     rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{this.state.userName}</Text>}
+                    onPress={ () => {
+                        this.updateUserInfo();
+                    }}
                 />
                 <ListItem
                     bottomDivider

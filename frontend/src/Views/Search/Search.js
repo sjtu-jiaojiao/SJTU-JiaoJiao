@@ -74,6 +74,7 @@ export default class SearchScreen extends Component {
         this.setState({
             showSearchItem: false,
             searchText: '',
+            UserList: null,
         });
     };
 
@@ -107,8 +108,8 @@ export default class SearchScreen extends Component {
                         <Button
                             title='搜  索'
                             titleStyle={{color: 'white', fontSize: 17}}
-                            buttonStyle={{backgroundColor: 'steelblue'}}
-                            containerStyle={{flex: 1}}
+                            buttonStyle={{flex: 1}}
+                            containerStyle={{backgroundColor: 'steelblue', flex: 1, alignItems: 'center'}}
                             raised={true}
                             onPress={() => this.startSearch()}
                         />
