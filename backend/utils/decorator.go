@@ -38,6 +38,21 @@ func CheckAdmin(c *gin.Context) bool {
 	return false
 }
 
+func CheckUser(c *gin.Context) bool {
+	if CheckInTest() {
+		if c.Request.Header.Get("Authorization") == "admin" {
+			return true
+		} else {
+			return false
+		}
+	}
+	t := parseHeader(c)
+	if t != nil {
+		return true
+	}
+	return false
+}
+
 func CheckUserId(c *gin.Context, id int32) bool {
 	if CheckInTest() {
 		if c.Request.Header.Get("Authorization") == "valid_user" {
