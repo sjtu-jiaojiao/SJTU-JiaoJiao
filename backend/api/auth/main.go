@@ -94,12 +94,12 @@ func getAuth(c *gin.Context) {
 				if rsp3.Status == user.AdminUserResponse_NOT_FOUND {
 					c.JSON(200, gin.H{
 						"status": 1,
-						"token":  utils.JWTSign(int(rsp2.UserId), 1),
+						"token":  utils.JWTSign(rsp2.UserId, 1),
 					})
 				} else {
 					c.JSON(200, gin.H{
 						"status": 1,
-						"token":  utils.JWTSign(int(rsp2.UserId), 2),
+						"token":  utils.JWTSign(rsp2.UserId, 2),
 					})
 				}
 			} else {

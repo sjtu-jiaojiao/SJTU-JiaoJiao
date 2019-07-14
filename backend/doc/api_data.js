@@ -63,6 +63,114 @@ define({ "api": [
     "groupTitle": "Auth"
   },
   {
+    "type": "put",
+    "url": "/content",
+    "title": "AddContent",
+    "version": "1.0.0",
+    "group": "SellInfo",
+    "permission": [
+      {
+        "name": "user/admin"
+      }
+    ],
+    "name": "AddContent",
+    "description": "<p>Add sell info content</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-sellinfo_Content_Create\">SellInfo Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-sellinfo_Content_Create\">SellInfo Service</a> <br></p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "SellInfoServiceDown",
+            "description": "<p>SellInfo service down</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/sellinfo/main.go",
+    "groupTitle": "SellInfo"
+  },
+  {
+    "type": "put",
+    "url": "/sellInfo",
+    "title": "AddSellInfo",
+    "version": "1.0.0",
+    "group": "SellInfo",
+    "permission": [
+      {
+        "name": "self/admin"
+      }
+    ],
+    "name": "AddSellInfo",
+    "description": "<p>Add sell info</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Create\">SellInfo Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Create\">SellInfo Service</a> <br></p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "SellInfoServiceDown",
+            "description": "<p>SellInfo service down</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/sellinfo/main.go",
+    "groupTitle": "SellInfo"
+  },
+  {
     "type": "get",
     "url": "/sellInfo/:sellInfoId",
     "title": "GetSellInfo",
@@ -70,7 +178,7 @@ define({ "api": [
     "group": "SellInfo",
     "permission": [
       {
-        "name": "none/self/admin"
+        "name": "none"
       }
     ],
     "name": "GetSellInfo",
@@ -269,6 +377,13 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>sellinfo userid</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "int64",
             "optional": false,
             "field": "validTime",
@@ -433,6 +548,13 @@ define({ "api": [
             "optional": false,
             "field": "contentId",
             "description": "<p>multimedia data</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>userId</p>"
           }
         ]
       }

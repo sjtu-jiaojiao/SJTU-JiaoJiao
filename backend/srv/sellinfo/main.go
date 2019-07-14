@@ -35,6 +35,7 @@ type srvContent struct{}
  * @apiSuccess {double} price good price
  * @apiSuccess {string} description good description
  * @apiSuccess {string} contentId multimedia data
+ * @apiSuccess {int32} userId userId
  * @apiUse DBServerDown
  */
 func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoQueryResponse) error {
@@ -43,7 +44,7 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 		return nil
 	}
 	info := db.SellInfo{
-		Id: int(req.SellInfoId),
+		Id: req.SellInfoId,
 	}
 	err := db.Ormer.Read(&info)
 	if err == orm.ErrNoRows {
@@ -53,7 +54,7 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 		return err
 	}
 	good := db.Good{
-		Id: info.Good.Id,
+		Id: info.GoodId,
 	}
 	err = db.Ormer.Read(&good)
 	if err == orm.ErrNoRows {
@@ -72,6 +73,7 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 	rsp.Price = good.Price
 	rsp.Description = good.Description
 	rsp.ContentId = good.ContentId
+	rsp.UserId = int32(info.UserId)
 	return nil
 }
 
@@ -82,6 +84,7 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
  * @apiName sellinfo.SellInfo.Create
  * @apiDescription create sell info
  *
+ * @apiParam {int32} userId sellinfo userid
  * @apiParam {int64} validTime valid timestamp
  * @apiParam {string} goodName good name
  * @apiParam {string} [description] description for good
@@ -93,6 +96,11 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
  * @apiUse DBServerDown
  */
 func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
+	if req.ValidTime == 0 || req.GoodName == "" || req.UserId == 0 {
+		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
+		return nil
+	}
+
 	good := db.Good{
 		GoodName:    req.GoodName,
 		Price:       req.Price,
@@ -101,35 +109,41 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 	info := db.SellInfo{
 		Status:    1,
 		ValidTime: time.Unix(req.ValidTime, 0),
-		Good:      &good,
+		UserId:    req.UserId,
 	}
 
 	insert := func() (int32, error) {
 		err := db.Ormer.Begin()
-		_, err1 := db.Ormer.Insert(&good)
-		id, err2 := db.Ormer.Insert(&info)
-		if err != nil || err1 != nil || err2 != nil {
-			err = db.Ormer.Rollback()
-			utils.LogContinue(err, utils.Warning)
+		if utils.LogContinue(err, utils.Warning) {
+			return 0, err
+		}
+		id, err := db.Ormer.Insert(&good)
+		if id == 0 || utils.LogContinue(err, utils.Warning) {
+			utils.LogContinue(db.Ormer.Rollback(), utils.Warning)
+			return 0, err
+		}
+		info.GoodId = int32(id)
+		id, err = db.Ormer.Insert(&info)
+		if id == 0 || utils.LogContinue(err, utils.Warning) {
+			utils.LogContinue(db.Ormer.Rollback(), utils.Warning)
 			return 0, err
 		}
 
 		err = db.Ormer.Commit()
 		if utils.LogContinue(err, utils.Warning) {
+			utils.LogContinue(db.Ormer.Rollback(), utils.Warning)
 			return 0, err
 		}
 		return int32(id), nil
 	}
 
-	if req.ValidTime == 0 || req.GoodName == "" {
-		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
-	} else if req.ContentId == "" && req.ContentToken == "" {
+	if req.ContentId == "" && req.ContentToken == "" {
 		id, err := insert()
 		if err != nil || id == 0 {
 			return nil
 		}
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
-		rsp.SellInfoId = int32(id)
+		rsp.SellInfoId = id
 	} else if req.ContentId != "" && req.ContentToken != "" {
 		collection := db.MongoDatabase.Collection("sellinfo")
 		rid, err := primitive.ObjectIDFromHex(req.ContentId)
@@ -152,7 +166,7 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 			return nil
 		}
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
-		rsp.SellInfoId = int32(id)
+		rsp.SellInfoId = id
 	} else {
 		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 	}
@@ -263,7 +277,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 func main() {
 	db.InitORM("sellinfodb", new(db.SellInfo), new(db.Good))
 	db.InitMongoDB("sellinfomongo")
-	service := utils.InitMicroService("sellinfo")
+	service := utils.InitMicroService("sellInfo")
 	utils.LogPanic(sellinfo.RegisterSellInfoHandler(service.Server(), new(srvInfo)))
 	utils.LogPanic(sellinfo.RegisterContentHandler(service.Server(), new(srvContent)))
 	utils.RunMicroService(service)

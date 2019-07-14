@@ -26,6 +26,7 @@ func (a *mockSellInfoSrv) Query(ctx context.Context, req *sellinfo.SellInfoQuery
 			rsp.ValidTime = 1234567890
 			rsp.Description = "very good!"
 			rsp.ContentId = "123456789abc123456789abc"
+			rsp.UserId = 1000
 		} else if req.SellInfoId == 2000 {
 			return nil, errors.New("")
 		}

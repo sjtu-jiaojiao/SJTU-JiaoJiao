@@ -138,20 +138,20 @@ func addUser(c *gin.Context) {
 
 	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
 		if !utils.CheckAdmin(c) {
-      c.AbortWithStatus(403)
+			c.AbortWithStatus(403)
 			return
 		}
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 			func() interface{} { return mock.NewUserService() }).(user.UserService)
-    rsp, err := srv.Create(context.TODO(), &user.UserCreateRequest{
+		rsp, err := srv.Create(context.TODO(), &user.UserCreateRequest{
 			StudentId:   info.StudentId,
 			StudentName: info.StudentName,
-    })
+		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
 			c.JSON(500, err)
 			return
 		}
-    c.JSON(200, rsp)
+		c.JSON(200, rsp)
 	} else {
 		c.AbortWithStatus(400)
 	}
