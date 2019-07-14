@@ -43,9 +43,9 @@ func TestSrvInfo_Query(t *testing.T) {
 	Convey("Test SellInfo Query", t, func() {
 		tf(0, 0, "", "", "")
 
-		_, err := o.Insert(&good)
+		_, err := db.Ormer.Insert(&good)
 		So(err, ShouldBeNil)
-		_, err = o.Insert(&info)
+		_, err = db.Ormer.Insert(&info)
 		So(err, ShouldBeNil)
 
 		req.SellInfoId = 1000
@@ -55,7 +55,7 @@ func TestSrvInfo_Query(t *testing.T) {
 		req.SellInfoId = 1001
 		tf(0, 0, "", "", "")
 
-		_, err = o.Delete(&db.SellInfo{
+		_, err = db.Ormer.Delete(&db.SellInfo{
 			Id: 1000,
 		})
 		So(err, ShouldBeNil)

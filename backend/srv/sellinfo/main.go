@@ -18,8 +18,6 @@ import (
 type srvInfo struct{}
 type srvContent struct{}
 
-var o orm.Ormer
-
 /**
  * @api {rpc} /rpc sellinfo.SellInfo.Query
  * @apiVersion 1.0.0
@@ -47,21 +45,21 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 	info := db.SellInfo{
 		Id: int(req.SellInfoId),
 	}
-	err := o.Read(&info)
+	err := db.Ormer.Read(&info)
 	if err == orm.ErrNoRows {
 		rsp.Status = sellinfo.SellInfoQueryResponse_NOT_EXIST
 		return nil
-	} else if err != nil {
+	} else if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
 	good := db.Good{
 		Id: info.Good.Id,
 	}
-	err = o.Read(&good)
+	err = db.Ormer.Read(&good)
 	if err == orm.ErrNoRows {
 		rsp.Status = sellinfo.SellInfoQueryResponse_NOT_EXIST
 		return nil
-	} else if err != nil {
+	} else if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
 
@@ -108,18 +106,18 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 	}
 
 	insert := func() (int32, error) {
-		err := o.Begin()
-		_, err1 := o.Insert(&good)
-		id, err2 := o.Insert(&info)
+		err := db.Ormer.Begin()
+		_, err1 := db.Ormer.Insert(&good)
+		id, err2 := db.Ormer.Insert(&info)
 		if err != nil || err1 != nil || err2 != nil {
-			err = o.Rollback()
+			err = db.Ormer.Rollback()
 			if err != nil {
 				utils.LogContinue(err, utils.Warning)
 			}
 			return 0, err
 		}
 
-		err = o.Commit()
+		err = db.Ormer.Commit()
 		if err != nil {
 			utils.LogContinue(err, utils.Warning)
 			return 0, err
@@ -267,7 +265,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 }
 
 func main() {
-	o = db.InitORM(new(db.SellInfo), new(db.Good))
+	db.InitORM("sellinfodb", new(db.SellInfo), new(db.Good))
 	db.InitMongoDB("sellinfomongo")
 	service := utils.InitMicroService("sellinfo")
 	utils.LogPanic(sellinfo.RegisterSellInfoHandler(service.Server(), new(srvInfo)))

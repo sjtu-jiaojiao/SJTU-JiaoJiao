@@ -52,18 +52,3 @@ func CheckUserId(c *gin.Context, id int32) bool {
 	}
 	return false
 }
-
-func CheckSellInfo(c *gin.Context, id int32) bool {
-	if CheckInTest() {
-		if c.Request.Header.Get("Authorization") == "valid_user" {
-			return true
-		} else {
-			return false
-		}
-	}
-	t := parseHeader(c)
-	if t != nil {
-		return JWTParse(t, "id").(float64) == float64(id)
-	}
-	return false
-}

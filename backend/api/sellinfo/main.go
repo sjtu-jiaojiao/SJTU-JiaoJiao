@@ -25,7 +25,7 @@ type sellInfo struct {
  * @api {get} /sellInfo/:sellInfoId GetSellInfo
  * @apiVersion 1.0.0
  * @apiGroup SellInfo
- * @apiPermission none/self
+ * @apiPermission none/self/admin
  * @apiName GetSellInfo
  * @apiDescription Get sell info
  *
@@ -44,13 +44,6 @@ func getSellInfo(c *gin.Context) {
 		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
 			c.JSON(500, err)
 			return
-		}
-		if !utils.CheckSellInfo(c, info.SellInfoId) {
-			rsp.SellInfoId = 0
-			rsp.GoodName = ""
-			rsp.ValidTime = 0
-			rsp.ContentId = ""
-			rsp.Description = ""
 		}
 		c.JSON(200, rsp)
 	} else {

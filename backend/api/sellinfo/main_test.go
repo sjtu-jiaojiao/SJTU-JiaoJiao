@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"jiaojiao/utils"
-	"net/http"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -12,12 +11,7 @@ import (
 func Test_getSellInfo(t *testing.T) {
 	tf := func(code int, path string, admin bool) map[string]interface{} {
 		var data map[string]interface{}
-		r := utils.StartTestServer(setupRouter, "GET", path, nil,
-			func(r *http.Request) {
-				if admin {
-					r.Header.Set("Authorization", "valid_user")
-				}
-			})
+		r := utils.StartTestServer(setupRouter, "GET", path, nil, nil)
 		So(r.Code, ShouldEqual, code)
 		if r.Body.String() != "{}" {
 			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)

@@ -12,8 +12,6 @@ import (
 type srvUser struct{}
 type srvAdmin struct{}
 
-var o orm.Ormer
-
 /**
  * @apiDefine DBServerDown
  * @apiError (Error 500) DBServerDown can't connect to database server
@@ -43,7 +41,7 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
 			StudentName: req.StudentName,
 			Status:      1,
 		}
-		created, id, err := o.ReadOrCreate(&usr, "StudentId")
+		created, id, err := db.Ormer.ReadOrCreate(&usr, "StudentId")
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
@@ -81,7 +79,7 @@ func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *us
 	usr := db.User{
 		Id: int(req.UserId),
 	}
-	err := o.Read(&usr)
+	err := db.Ormer.Read(&usr)
 	if err == orm.ErrNoRows {
 		return nil
 	} else if utils.LogContinue(err, utils.Warning) {
@@ -118,7 +116,7 @@ func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.User
 	usr := db.User{
 		Id: int(req.UserId),
 	}
-	if err := o.Read(&usr); err == nil {
+	if err := db.Ormer.Read(&usr); err == nil {
 		utils.AssignNotEmpty(&req.UserName, &usr.UserName)
 		utils.AssignNotEmpty(&req.AvatarId, &usr.AvatarId)
 		if req.ClearEmpty {
@@ -129,7 +127,7 @@ func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.User
 		utils.AssignNotEmpty(&req.StudentId, &usr.StudentId)
 		utils.AssignNotEmpty(&req.StudentName, &usr.StudentName)
 		utils.AssignNotZero(&req.Status, &usr.Status)
-		_, err := o.Update(&usr)
+		_, err := db.Ormer.Update(&usr)
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
@@ -163,7 +161,7 @@ func (a *srvUser) Find(ctx context.Context, req *user.UserFindRequest, rsp *user
 	}
 
 	var res []*db.User
-	_, err := o.QueryTable(&db.User{}).Filter("UserName__icontains", req.UserName).Limit(req.Limit, req.Offset).All(&res)
+	_, err := db.Ormer.QueryTable(&db.User{}).Filter("UserName__icontains", req.UserName).Limit(req.Limit, req.Offset).All(&res)
 	if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
@@ -208,7 +206,7 @@ func (a *srvAdmin) Create(ctx context.Context, req *user.AdminUserRequest, rsp *
 		usr := db.AdminUser{
 			StudentId: req.StudentId,
 		}
-		created, id, err := o.ReadOrCreate(&usr, "StudentId")
+		created, id, err := db.Ormer.ReadOrCreate(&usr, "StudentId")
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
@@ -241,7 +239,7 @@ func (a *srvAdmin) Find(ctx context.Context, req *user.AdminUserRequest, rsp *us
 		usr := db.AdminUser{
 			StudentId: req.StudentId,
 		}
-		err := o.Read(&usr, "StudentId")
+		err := db.Ormer.Read(&usr, "StudentId")
 		if err == orm.ErrNoRows {
 			rsp.Status = user.AdminUserResponse_NOT_FOUND
 			return nil
@@ -255,7 +253,7 @@ func (a *srvAdmin) Find(ctx context.Context, req *user.AdminUserRequest, rsp *us
 }
 
 func main() {
-	o = db.InitORM("userdb", new(db.User), new(db.AdminUser))
+	db.InitORM("userdb", new(db.User), new(db.AdminUser))
 	service := utils.InitMicroService("user")
 	utils.LogPanic(user.RegisterUserHandler(service.Server(), new(srvUser)))
 	utils.LogPanic(user.RegisterAdminUserHandler(service.Server(), new(srvAdmin)))
