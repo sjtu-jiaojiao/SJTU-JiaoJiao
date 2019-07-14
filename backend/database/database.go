@@ -34,6 +34,7 @@ type SellInfo struct {
 	ReleaseTime time.Time `orm:"auto_now_add;type(datetime)"`
 	ValidTime   time.Time `orm:"type(datetime)"`
 	Good        *Good     `orm:"rel(one);on_delete(cascade)"`
+	User        *User     ``
 }
 
 // Good is db good table map

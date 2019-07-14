@@ -7,6 +7,7 @@ define({
   "order": [
     "Auth",
     "User",
+    "SellInfo",
     "Service"
   ],
   "sampleUrl": false,
@@ -14,7 +15,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-07-14T02:49:29.633Z",
+    "time": "2019-07-14T17:17:30.681Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

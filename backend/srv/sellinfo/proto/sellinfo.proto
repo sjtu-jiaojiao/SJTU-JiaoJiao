@@ -3,10 +3,25 @@ syntax = "proto3";
 service SellInfo {
     rpc Query (SellInfoQueryRequest) returns (SellInfoQueryResponse);
     rpc Create (SellInfoCreateRequest) returns (SellInfoCreateResponse);
+    rpc Find (SellInfoFindRequest) returns (SellInfoFindResponse);
 }
 
 service Content {
     rpc Create (ContentCreateRequest) returns (ContentCreateResponse);
+}
+
+message SellInfoMsg {
+    int32 sellInfoId = 1;
+    int32 sellInfoState = 2;
+    int64 releaseTime = 3;
+    int64 validTime = 4;
+    string goodName = 5;
+    double price = 6;
+    string description = 7;
+    string contentId = 8;
+    int32 status = 9;
+
+    bool clearEmpty = 99;
 }
 
 message SellInfoQueryRequest {
@@ -73,4 +88,14 @@ message ContentCreateResponse {
     Status status = 1;
     string contentId = 2;
     string contentToken = 3;
+}
+
+message SellInfoFindRequest{
+    int32 userId = 1;
+    uint32 limit = 2;
+    uint32 offset = 3;
+}
+
+message SellInfoFindResponse{
+    repeated SellInfoMsg sellInfos = 1;
 }
