@@ -174,6 +174,52 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 }
 
 /**
+ * @api {rpc} /rpc sellinfo.SellInfo.Find
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName sellinfo.SellInfo.Find
+ * @apiDescription Find SellInfo.
+ *
+ * @apiParam {string} userId userId
+ * @apiParam {uint32} limit=100 row limit
+ * @apiParam {uint32} offset=0 row offset
+ * @apiSuccess {list} user see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
+ * @apiUse DBServerDown
+ */
+func (a *srvInfo) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *sellinfo.SellInfoFindResponse) error {
+	if req.Limit == 0 {
+		req.Limit = 100
+	}
+
+	var res []*db.SellInfo
+	_, err := db.Ormer.QueryTable(&db.SellInfo{}).Filter("profile__id", req.UserId).Limit(req.Limit, req.Offset).All(&res)
+	if utils.LogContinue(err, utils.Warning) {
+		return err
+	}
+	for i, v := range res {
+		rsp.SellInfos = append(rsp.SellInfos, new(sellinfo.SellInfoMsg))
+		good := db.Good{
+			Id: v.Good.Id,
+		}
+		err = db.Ormer.Read(&good)
+		parseSellInfo(v, &good, rsp.SellInfos[i])
+	}
+	return nil
+}
+
+func parseSellInfo(s *db.SellInfo, g *db.Good, d *sellinfo.SellInfoMsg) {
+	d.Status = int32(s.Status)
+	d.SellInfoId = int32(s.Id)
+	d.SellInfoState = int32(s.Status)
+	d.ReleaseTime = s.ReleaseTime.Unix()
+	d.ValidTime = s.ValidTime.Unix()
+	d.GoodName = g.GoodName
+	d.Price = g.Price
+	d.Description = g.Description
+	d.ContentId = g.ContentId
+}
+
+/**
  * @api {rpc} /rpc sellinfo.Content.Create
  * @apiVersion 1.0.0
  * @apiGroup Service

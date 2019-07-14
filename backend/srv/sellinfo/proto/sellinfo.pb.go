@@ -48,7 +48,7 @@ func (x SellInfoQueryResponse_Status) String() string {
 }
 
 func (SellInfoQueryResponse_Status) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_9c322b32f573704b, []int{1, 0}
+	return fileDescriptor_9c322b32f573704b, []int{2, 0}
 }
 
 type SellInfoCreateResponse_Status int32
@@ -79,7 +79,7 @@ func (x SellInfoCreateResponse_Status) String() string {
 }
 
 func (SellInfoCreateResponse_Status) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_9c322b32f573704b, []int{3, 0}
+	return fileDescriptor_9c322b32f573704b, []int{4, 0}
 }
 
 type ContentCreateRequest_Type int32
@@ -107,7 +107,7 @@ func (x ContentCreateRequest_Type) String() string {
 }
 
 func (ContentCreateRequest_Type) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_9c322b32f573704b, []int{4, 0}
+	return fileDescriptor_9c322b32f573704b, []int{5, 0}
 }
 
 type ContentCreateResponse_Status int32
@@ -138,7 +138,118 @@ func (x ContentCreateResponse_Status) String() string {
 }
 
 func (ContentCreateResponse_Status) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_9c322b32f573704b, []int{5, 0}
+	return fileDescriptor_9c322b32f573704b, []int{6, 0}
+}
+
+type SellInfoMsg struct {
+	SellInfoId           int32    `protobuf:"varint,1,opt,name=sellInfoId,proto3" json:"sellInfoId,omitempty"`
+	SellInfoState        int32    `protobuf:"varint,2,opt,name=sellInfoState,proto3" json:"sellInfoState,omitempty"`
+	ReleaseTime          int64    `protobuf:"varint,3,opt,name=releaseTime,proto3" json:"releaseTime,omitempty"`
+	ValidTime            int64    `protobuf:"varint,4,opt,name=validTime,proto3" json:"validTime,omitempty"`
+	GoodName             string   `protobuf:"bytes,5,opt,name=goodName,proto3" json:"goodName,omitempty"`
+	Price                float64  `protobuf:"fixed64,6,opt,name=price,proto3" json:"price,omitempty"`
+	Description          string   `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
+	ContentId            string   `protobuf:"bytes,8,opt,name=contentId,proto3" json:"contentId,omitempty"`
+	Status               int32    `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
+	ClearEmpty           bool     `protobuf:"varint,99,opt,name=clearEmpty,proto3" json:"clearEmpty,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *SellInfoMsg) Reset()         { *m = SellInfoMsg{} }
+func (m *SellInfoMsg) String() string { return proto.CompactTextString(m) }
+func (*SellInfoMsg) ProtoMessage()    {}
+func (*SellInfoMsg) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9c322b32f573704b, []int{0}
+}
+
+func (m *SellInfoMsg) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SellInfoMsg.Unmarshal(m, b)
+}
+func (m *SellInfoMsg) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SellInfoMsg.Marshal(b, m, deterministic)
+}
+func (m *SellInfoMsg) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SellInfoMsg.Merge(m, src)
+}
+func (m *SellInfoMsg) XXX_Size() int {
+	return xxx_messageInfo_SellInfoMsg.Size(m)
+}
+func (m *SellInfoMsg) XXX_DiscardUnknown() {
+	xxx_messageInfo_SellInfoMsg.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SellInfoMsg proto.InternalMessageInfo
+
+func (m *SellInfoMsg) GetSellInfoId() int32 {
+	if m != nil {
+		return m.SellInfoId
+	}
+	return 0
+}
+
+func (m *SellInfoMsg) GetSellInfoState() int32 {
+	if m != nil {
+		return m.SellInfoState
+	}
+	return 0
+}
+
+func (m *SellInfoMsg) GetReleaseTime() int64 {
+	if m != nil {
+		return m.ReleaseTime
+	}
+	return 0
+}
+
+func (m *SellInfoMsg) GetValidTime() int64 {
+	if m != nil {
+		return m.ValidTime
+	}
+	return 0
+}
+
+func (m *SellInfoMsg) GetGoodName() string {
+	if m != nil {
+		return m.GoodName
+	}
+	return ""
+}
+
+func (m *SellInfoMsg) GetPrice() float64 {
+	if m != nil {
+		return m.Price
+	}
+	return 0
+}
+
+func (m *SellInfoMsg) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *SellInfoMsg) GetContentId() string {
+	if m != nil {
+		return m.ContentId
+	}
+	return ""
+}
+
+func (m *SellInfoMsg) GetStatus() int32 {
+	if m != nil {
+		return m.Status
+	}
+	return 0
+}
+
+func (m *SellInfoMsg) GetClearEmpty() bool {
+	if m != nil {
+		return m.ClearEmpty
+	}
+	return false
 }
 
 type SellInfoQueryRequest struct {
@@ -152,7 +263,7 @@ func (m *SellInfoQueryRequest) Reset()         { *m = SellInfoQueryRequest{} }
 func (m *SellInfoQueryRequest) String() string { return proto.CompactTextString(m) }
 func (*SellInfoQueryRequest) ProtoMessage()    {}
 func (*SellInfoQueryRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_9c322b32f573704b, []int{0}
+	return fileDescriptor_9c322b32f573704b, []int{1}
 }
 
 func (m *SellInfoQueryRequest) XXX_Unmarshal(b []byte) error {
@@ -200,7 +311,7 @@ func (m *SellInfoQueryResponse) Reset()         { *m = SellInfoQueryResponse{} }
 func (m *SellInfoQueryResponse) String() string { return proto.CompactTextString(m) }
 func (*SellInfoQueryResponse) ProtoMessage()    {}
 func (*SellInfoQueryResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_9c322b32f573704b, []int{1}
+	return fileDescriptor_9c322b32f573704b, []int{2}
 }
 
 func (m *SellInfoQueryResponse) XXX_Unmarshal(b []byte) error {
@@ -308,7 +419,7 @@ func (m *SellInfoCreateRequest) Reset()         { *m = SellInfoCreateRequest{} }
 func (m *SellInfoCreateRequest) String() string { return proto.CompactTextString(m) }
 func (*SellInfoCreateRequest) ProtoMessage()    {}
 func (*SellInfoCreateRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_9c322b32f573704b, []int{2}
+	return fileDescriptor_9c322b32f573704b, []int{3}
 }
 
 func (m *SellInfoCreateRequest) XXX_Unmarshal(b []byte) error {
@@ -390,7 +501,7 @@ func (m *SellInfoCreateResponse) Reset()         { *m = SellInfoCreateResponse{}
 func (m *SellInfoCreateResponse) String() string { return proto.CompactTextString(m) }
 func (*SellInfoCreateResponse) ProtoMessage()    {}
 func (*SellInfoCreateResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_9c322b32f573704b, []int{3}
+	return fileDescriptor_9c322b32f573704b, []int{4}
 }
 
 func (m *SellInfoCreateResponse) XXX_Unmarshal(b []byte) error {
@@ -439,7 +550,7 @@ func (m *ContentCreateRequest) Reset()         { *m = ContentCreateRequest{} }
 func (m *ContentCreateRequest) String() string { return proto.CompactTextString(m) }
 func (*ContentCreateRequest) ProtoMessage()    {}
 func (*ContentCreateRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_9c322b32f573704b, []int{4}
+	return fileDescriptor_9c322b32f573704b, []int{5}
 }
 
 func (m *ContentCreateRequest) XXX_Unmarshal(b []byte) error {
@@ -501,7 +612,7 @@ func (m *ContentCreateResponse) Reset()         { *m = ContentCreateResponse{} }
 func (m *ContentCreateResponse) String() string { return proto.CompactTextString(m) }
 func (*ContentCreateResponse) ProtoMessage()    {}
 func (*ContentCreateResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_9c322b32f573704b, []int{5}
+	return fileDescriptor_9c322b32f573704b, []int{6}
 }
 
 func (m *ContentCreateResponse) XXX_Unmarshal(b []byte) error {
@@ -543,17 +654,114 @@ func (m *ContentCreateResponse) GetContentToken() string {
 	return ""
 }
 
+type SellInfoFindRequest struct {
+	UserId               int32    `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	Limit                uint32   `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset               uint32   `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *SellInfoFindRequest) Reset()         { *m = SellInfoFindRequest{} }
+func (m *SellInfoFindRequest) String() string { return proto.CompactTextString(m) }
+func (*SellInfoFindRequest) ProtoMessage()    {}
+func (*SellInfoFindRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9c322b32f573704b, []int{7}
+}
+
+func (m *SellInfoFindRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SellInfoFindRequest.Unmarshal(m, b)
+}
+func (m *SellInfoFindRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SellInfoFindRequest.Marshal(b, m, deterministic)
+}
+func (m *SellInfoFindRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SellInfoFindRequest.Merge(m, src)
+}
+func (m *SellInfoFindRequest) XXX_Size() int {
+	return xxx_messageInfo_SellInfoFindRequest.Size(m)
+}
+func (m *SellInfoFindRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SellInfoFindRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SellInfoFindRequest proto.InternalMessageInfo
+
+func (m *SellInfoFindRequest) GetUserId() int32 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *SellInfoFindRequest) GetLimit() uint32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *SellInfoFindRequest) GetOffset() uint32 {
+	if m != nil {
+		return m.Offset
+	}
+	return 0
+}
+
+type SellInfoFindResponse struct {
+	SellInfos            []*SellInfoMsg `protobuf:"bytes,1,rep,name=sellInfos,proto3" json:"sellInfos,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
+}
+
+func (m *SellInfoFindResponse) Reset()         { *m = SellInfoFindResponse{} }
+func (m *SellInfoFindResponse) String() string { return proto.CompactTextString(m) }
+func (*SellInfoFindResponse) ProtoMessage()    {}
+func (*SellInfoFindResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9c322b32f573704b, []int{8}
+}
+
+func (m *SellInfoFindResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SellInfoFindResponse.Unmarshal(m, b)
+}
+func (m *SellInfoFindResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SellInfoFindResponse.Marshal(b, m, deterministic)
+}
+func (m *SellInfoFindResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SellInfoFindResponse.Merge(m, src)
+}
+func (m *SellInfoFindResponse) XXX_Size() int {
+	return xxx_messageInfo_SellInfoFindResponse.Size(m)
+}
+func (m *SellInfoFindResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_SellInfoFindResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SellInfoFindResponse proto.InternalMessageInfo
+
+func (m *SellInfoFindResponse) GetSellInfos() []*SellInfoMsg {
+	if m != nil {
+		return m.SellInfos
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterEnum("SellInfoQueryResponse_Status", SellInfoQueryResponse_Status_name, SellInfoQueryResponse_Status_value)
 	proto.RegisterEnum("SellInfoCreateResponse_Status", SellInfoCreateResponse_Status_name, SellInfoCreateResponse_Status_value)
 	proto.RegisterEnum("ContentCreateRequest_Type", ContentCreateRequest_Type_name, ContentCreateRequest_Type_value)
 	proto.RegisterEnum("ContentCreateResponse_Status", ContentCreateResponse_Status_name, ContentCreateResponse_Status_value)
+	proto.RegisterType((*SellInfoMsg)(nil), "SellInfoMsg")
 	proto.RegisterType((*SellInfoQueryRequest)(nil), "SellInfoQueryRequest")
 	proto.RegisterType((*SellInfoQueryResponse)(nil), "SellInfoQueryResponse")
 	proto.RegisterType((*SellInfoCreateRequest)(nil), "SellInfoCreateRequest")
 	proto.RegisterType((*SellInfoCreateResponse)(nil), "SellInfoCreateResponse")
 	proto.RegisterType((*ContentCreateRequest)(nil), "ContentCreateRequest")
 	proto.RegisterType((*ContentCreateResponse)(nil), "ContentCreateResponse")
+	proto.RegisterType((*SellInfoFindRequest)(nil), "SellInfoFindRequest")
+	proto.RegisterType((*SellInfoFindResponse)(nil), "SellInfoFindResponse")
 }
 
 func init() { proto.RegisterFile("sellinfo.proto", fileDescriptor_9c322b32f573704b) }
