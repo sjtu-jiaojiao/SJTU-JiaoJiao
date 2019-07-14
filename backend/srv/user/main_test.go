@@ -36,7 +36,7 @@ func TestUserCreate(t *testing.T) {
 		id2 := tf(user.UserCreateResponse_USER_EXIST)
 		So(id, ShouldEqual, id2)
 
-		_, err := o.Delete(&db.User{
+		_, err := db.Ormer.Delete(&db.User{
 			Id: int(id),
 		})
 		So(err, ShouldBeNil)
@@ -61,7 +61,7 @@ func TestUserQuery(t *testing.T) {
 	}
 	Convey("Test User Query", t, func() {
 		tf(0, "", "", "", "", "", 0)
-		_, err := o.Insert(&db.User{
+		_, err := db.Ormer.Insert(&db.User{
 			Id:          1000,
 			UserName:    "jiang",
 			AvatarId:    "5d23ea2c32311335f935cd14",
@@ -79,7 +79,7 @@ func TestUserQuery(t *testing.T) {
 		req.UserId = 1001
 		tf(0, "", "", "", "", "", 0)
 
-		_, err = o.Delete(&db.User{
+		_, err = db.Ormer.Delete(&db.User{
 			Id: 1000,
 		})
 		So(err, ShouldBeNil)
@@ -102,7 +102,7 @@ func TestUserFind(t *testing.T) {
 	}
 	Convey("Test User Find", t, func() {
 		req.UserName = "test"
-		_, err := o.Insert(&db.User{
+		_, err := db.Ormer.Insert(&db.User{
 			Id:          2000,
 			UserName:    "test1",
 			AvatarId:    "5d23ea2c32311335f935cd14",
@@ -119,7 +119,7 @@ func TestUserFind(t *testing.T) {
 			"1234", "jiang", 1)
 		rsp.User = nil
 
-		_, err = o.Insert(&db.User{
+		_, err = db.Ormer.Insert(&db.User{
 			Id:          2001,
 			UserName:    "test2",
 			AvatarId:    "5d23ea2c32311335f935cd15",
@@ -151,11 +151,11 @@ func TestUserFind(t *testing.T) {
 		tf(0, 2001, "test2", "5d23ea2c32311335f935cd15", "12345678902",
 			"12345", "jiangzm", 1)
 
-		_, err = o.Delete(&db.User{
+		_, err = db.Ormer.Delete(&db.User{
 			Id: 2000,
 		})
 		So(err, ShouldBeNil)
-		_, err = o.Delete(&db.User{
+		_, err = db.Ormer.Delete(&db.User{
 			Id: 2001,
 		})
 		So(err, ShouldBeNil)
@@ -182,7 +182,7 @@ func TestAdminUserCreate(t *testing.T) {
 		id2 := tf(user.AdminUserResponse_USER_EXIST)
 		So(id, ShouldEqual, id2)
 
-		_, err := o.Delete(&db.AdminUser{
+		_, err := db.Ormer.Delete(&db.AdminUser{
 			Id: int(id),
 		})
 		So(err, ShouldBeNil)
@@ -204,14 +204,14 @@ func TestAdminUserFind(t *testing.T) {
 		req.StudentId = "2000"
 		tf(user.AdminUserResponse_NOT_FOUND, 0)
 
-		_, err := o.Insert(&db.AdminUser{
+		_, err := db.Ormer.Insert(&db.AdminUser{
 			Id:        1000,
 			StudentId: "2000",
 		})
 		So(err, ShouldBeNil)
 
 		tf(user.AdminUserResponse_SUCCESS, 1000)
-		_, err = o.Delete(&db.AdminUser{
+		_, err = db.Ormer.Delete(&db.AdminUser{
 			Id: 1000,
 		})
 		So(err, ShouldBeNil)

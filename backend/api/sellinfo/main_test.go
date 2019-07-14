@@ -9,7 +9,7 @@ import (
 )
 
 func Test_getSellInfo(t *testing.T) {
-	tf := func(code int, path string, admin bool) map[string]interface{} {
+	tf := func(code int, path string) map[string]interface{} {
 		var data map[string]interface{}
 		r := utils.StartTestServer(setupRouter, "GET", path, nil, nil)
 		So(r.Code, ShouldEqual, code)
@@ -25,17 +25,11 @@ func Test_getSellInfo(t *testing.T) {
 		r = utils.StartTestServer(setupRouter, "GET", "/sellInfo/0", nil, nil)
 		So(r.Code, ShouldEqual, 400)
 
-		data := tf(200, "/sellInfo/1000", true)
+		data := tf(200, "/sellInfo/1000")
 		So(data["sellInfoId"], ShouldEqual, 1000)
 		So(data["goodName"], ShouldEqual, "good")
 		So(data["validTime"], ShouldEqual, 1234567890)
 		So(data["contentId"], ShouldEqual, "123456789abc123456789abc")
-
-		data = tf(200, "/sellInfo/1000", false)
-		So(data["sellInfoId"], ShouldEqual, nil)
-		So(data["goodName"], ShouldEqual, nil)
-		So(data["validTime"], ShouldEqual, nil)
-		So(data["contentId"], ShouldEqual, nil)
 
 		r = utils.StartTestServer(setupRouter, "GET", "/sellInfo/2000", nil, nil)
 		So(r.Code, ShouldEqual, 500)

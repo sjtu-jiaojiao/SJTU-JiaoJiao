@@ -30,18 +30,16 @@ func TestSrvInfo_Query(t *testing.T) {
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		Good:        &good,
 	}
-	tf := func(sellId int, validTime int64, goodName string,
-		description string, contentId string) {
+	tf := func(sellId int, goodName string, description string, contentId string) {
 		var rsp sellinfo.SellInfoQueryResponse
 		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.SellInfoId, ShouldEqual, sellId)
-		So(rsp.ValidTime, ShouldEqual, validTime)
 		So(rsp.GoodName, ShouldEqual, goodName)
 		So(rsp.Description, ShouldEqual, description)
 		So(rsp.ContentId, ShouldEqual, contentId)
 	}
 	Convey("Test SellInfo Query", t, func() {
-		tf(0, 0, "", "", "")
+		tf(0, "", "", "")
 
 		_, err := db.Ormer.Insert(&good)
 		So(err, ShouldBeNil)
@@ -49,11 +47,10 @@ func TestSrvInfo_Query(t *testing.T) {
 		So(err, ShouldBeNil)
 
 		req.SellInfoId = 1000
-		tf(1000, time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local).Unix(), "good",
-			"Very good!", "123456789")
+		tf(1000, "good", "Very good!", "123456789")
 
 		req.SellInfoId = 1001
-		tf(0, 0, "", "", "")
+		tf(0, "", "", "")
 
 		_, err = db.Ormer.Delete(&db.SellInfo{
 			Id: 1000,
