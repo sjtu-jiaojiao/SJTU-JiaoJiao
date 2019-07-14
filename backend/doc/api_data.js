@@ -113,7 +113,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/sellInfo/main.go",
+    "filename": "./api/sellinfo/main.go",
     "groupTitle": "SellInfo"
   },
   {
@@ -283,17 +283,17 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "double",
-            "optional": false,
-            "field": "price",
-            "description": "<p>good price</p>"
+            "type": "string",
+            "optional": true,
+            "field": "description",
+            "description": "<p>description for good</p>"
           },
           {
             "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "description",
-            "description": "<p>description for good</p>"
+            "type": "double",
+            "optional": true,
+            "field": "price",
+            "description": "<p>good price</p>"
           },
           {
             "group": "Parameter",
