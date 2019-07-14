@@ -14,6 +14,8 @@ import (
 func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
 	rg.GET("/sellInfo/:sellInfoId", getSellInfo)
+	rg.PUT("/content", addContent)
+	rg.PUT("/sellInfo", addSellInfo)
 	return router
 }
 
@@ -40,6 +42,90 @@ func getSellInfo(c *gin.Context) {
 			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
 		rsp, err := srv.Query(context.TODO(), &sellinfo.SellInfoQueryRequest{
 			SellInfoId: info.SellInfoId,
+		})
+		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+			c.JSON(500, err)
+			return
+		}
+		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+type content struct {
+	ContentId    string                             `form:"contentId"`
+	ContentToken string                             `form:"contentToken"`
+	Content      []byte                             `form:"content"`
+	Type         sellinfo.ContentCreateRequest_Type `form:"type"`
+}
+
+/**
+ * @api {put} /content AddContent
+ * @apiVersion 1.0.0
+ * @apiGroup SellInfo
+ * @apiPermission none/self/admin
+ * @apiName AddContent
+ * @apiDescription Add sell info content
+ *
+ * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_Content_Create)
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_Content_Create) <br>
+ * @apiError (Error 500) SellInfoServiceDown SellInfo service down
+ */
+func addContent(c *gin.Context) {
+	var cont content
+	if !utils.LogContinue(c.ShouldBindUri(&cont), utils.Warning) {
+		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewContentService(name, c) },
+			func() interface{} { return mock.NewContentService() }).(sellinfo.ContentService)
+		rsp, err := srv.Create(context.TODO(), &sellinfo.ContentCreateRequest{
+			ContentId:    cont.ContentId,
+			ContentToken: cont.ContentToken,
+			Content:      cont.Content,
+			Type:         cont.Type,
+		})
+		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+			c.JSON(500, err)
+			return
+		}
+		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+type create_sellInfo struct {
+	ValidTime    int64   `form:"validTime"`
+	GoodName     string  `form:"goodName"`
+	Price        float64 `form:"price"`
+	Description  string  `form:"description"`
+	ContentId    string  `form:"contentId"`
+	ContentToken string  `form:"contentToken"`
+}
+
+/**
+ * @api {put} /content AddSellInfo
+ * @apiVersion 1.0.0
+ * @apiGroup SellInfo
+ * @apiPermission none/self/admin
+ * @apiName AddSellInfo
+ * @apiDescription Add sell info
+ *
+ * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_SellInfo_Create)
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Create) <br>
+ * @apiError (Error 500) SellInfoServiceDown SellInfo service down
+ */
+func addSellInfo(c *gin.Context) {
+	var info create_sellInfo
+	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
+		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
+			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
+		rsp, err := srv.Create(context.TODO(), &sellinfo.SellInfoCreateRequest{
+			ValidTime:    info.ValidTime,
+			GoodName:     info.GoodName,
+			Price:        info.Price,
+			Description:  info.Description,
+			ContentId:    info.ContentId,
+			ContentToken: info.ContentToken,
 		})
 		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
 			c.JSON(500, err)
