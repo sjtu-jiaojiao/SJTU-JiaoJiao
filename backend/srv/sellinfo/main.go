@@ -84,8 +84,8 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
  *
  * @apiParam {int64} validTime valid timestamp
  * @apiParam {string} goodName good name
- * @apiParam {double} price good price
- * @apiParam {string} description description for good
+ * @apiParam {string} [description] description for good
+ * @apiParam {double} [price] good price
  * @apiParam {string} [contentId] content id of good
  * @apiParam {string} [contentToken] content token
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
@@ -99,10 +99,9 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 		Description: req.Description,
 	}
 	info := db.SellInfo{
-		Status:      1,
-		ReleaseTime: time.Now(),
-		ValidTime:   time.Unix(req.ValidTime, 0),
-		Good:        &good,
+		Status:    1,
+		ValidTime: time.Unix(req.ValidTime, 0),
+		Good:      &good,
 	}
 
 	insert := func() (int32, error) {
@@ -111,15 +110,12 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 		id, err2 := db.Ormer.Insert(&info)
 		if err != nil || err1 != nil || err2 != nil {
 			err = db.Ormer.Rollback()
-			if err != nil {
-				utils.LogContinue(err, utils.Warning)
-			}
+			utils.LogContinue(err, utils.Warning)
 			return 0, err
 		}
 
 		err = db.Ormer.Commit()
-		if err != nil {
-			utils.LogContinue(err, utils.Warning)
+		if utils.LogContinue(err, utils.Warning) {
 			return 0, err
 		}
 		return int32(id), nil
