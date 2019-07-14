@@ -34,6 +34,9 @@ var _ server.Option
 // Client API for SellInfo service
 
 type SellInfoService interface {
+	Query(ctx context.Context, in *SellInfoQueryRequest, opts ...client.CallOption) (*SellInfoMsg, error)
+	Create(ctx context.Context, in *SellInfoCreateRequest, opts ...client.CallOption) (*SellInfoCreateResponse, error)
+	Find(ctx context.Context, in *SellInfoFindRequest, opts ...client.CallOption) (*SellInfoFindResponse, error)
 }
 
 type sellInfoService struct {
@@ -54,13 +57,49 @@ func NewSellInfoService(name string, c client.Client) SellInfoService {
 	}
 }
 
+func (c *sellInfoService) Query(ctx context.Context, in *SellInfoQueryRequest, opts ...client.CallOption) (*SellInfoMsg, error) {
+	req := c.c.NewRequest(c.name, "SellInfo.Query", in)
+	out := new(SellInfoMsg)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sellInfoService) Create(ctx context.Context, in *SellInfoCreateRequest, opts ...client.CallOption) (*SellInfoCreateResponse, error) {
+	req := c.c.NewRequest(c.name, "SellInfo.Create", in)
+	out := new(SellInfoCreateResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sellInfoService) Find(ctx context.Context, in *SellInfoFindRequest, opts ...client.CallOption) (*SellInfoFindResponse, error) {
+	req := c.c.NewRequest(c.name, "SellInfo.Find", in)
+	out := new(SellInfoFindResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for SellInfo service
 
 type SellInfoHandler interface {
+	Query(context.Context, *SellInfoQueryRequest, *SellInfoMsg) error
+	Create(context.Context, *SellInfoCreateRequest, *SellInfoCreateResponse) error
+	Find(context.Context, *SellInfoFindRequest, *SellInfoFindResponse) error
 }
 
 func RegisterSellInfoHandler(s server.Server, hdlr SellInfoHandler, opts ...server.HandlerOption) error {
 	type sellInfo interface {
+		Query(ctx context.Context, in *SellInfoQueryRequest, out *SellInfoMsg) error
+		Create(ctx context.Context, in *SellInfoCreateRequest, out *SellInfoCreateResponse) error
+		Find(ctx context.Context, in *SellInfoFindRequest, out *SellInfoFindResponse) error
 	}
 	type SellInfo struct {
 		sellInfo
@@ -71,6 +110,18 @@ func RegisterSellInfoHandler(s server.Server, hdlr SellInfoHandler, opts ...serv
 
 type sellInfoHandler struct {
 	SellInfoHandler
+}
+
+func (h *sellInfoHandler) Query(ctx context.Context, in *SellInfoQueryRequest, out *SellInfoMsg) error {
+	return h.SellInfoHandler.Query(ctx, in, out)
+}
+
+func (h *sellInfoHandler) Create(ctx context.Context, in *SellInfoCreateRequest, out *SellInfoCreateResponse) error {
+	return h.SellInfoHandler.Create(ctx, in, out)
+}
+
+func (h *sellInfoHandler) Find(ctx context.Context, in *SellInfoFindRequest, out *SellInfoFindResponse) error {
+	return h.SellInfoHandler.Find(ctx, in, out)
 }
 
 // Client API for Content service

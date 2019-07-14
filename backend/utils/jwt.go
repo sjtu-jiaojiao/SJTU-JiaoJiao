@@ -29,7 +29,7 @@ func JWTParse(token *jwt.Token, param string) interface{} {
 	return ""
 }
 
-func JWTSign(id int, role int) string {
+func JWTSign(id int32, role int32) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":   id,
 		"role": role,

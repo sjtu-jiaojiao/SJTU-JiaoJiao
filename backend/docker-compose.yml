@@ -13,6 +13,11 @@ services:
     build: ./api/user
     depends_on: 
       - global
+  api-sellinfo:
+    image: sjtujj/api-sellinfo
+    build: ./api/sellinfo
+    depends_on:
+      - global
   srv-auth:
     image: sjtujj/srv-auth
     build: ./srv/auth
@@ -22,4 +27,9 @@ services:
     image: sjtujj/srv-user
     build: ./srv/user
     depends_on: 
+      - global
+  srv-sellinfo:
+    image: sjtujj/srv-sellinfo
+    build: ./srv/sellinfo
+    depends_on:
       - global

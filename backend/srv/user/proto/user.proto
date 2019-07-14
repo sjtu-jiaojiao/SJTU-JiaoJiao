@@ -4,6 +4,7 @@ service User {
     rpc Create (UserCreateRequest) returns (UserCreateResponse);
     rpc Query (UserQueryRequest) returns (UserInfo);
     rpc Find (UserFindRequest) returns (UserFindResponse);
+    rpc Update (UserInfo) returns (UserUpdateResponse);
 }
 
 service AdminUser {
@@ -32,12 +33,14 @@ message UserQueryRequest {
 }
 
 message UserInfo {
-    int32 userId = 2;
-    string userName = 3;
-    string avatarId = 4;
-    string telephone = 5;
-    string studentId = 6;
-    string studentName = 7;
+    int32 userId = 1;
+    string userName = 2;
+    string avatarId = 3;
+    string telephone = 4;
+    string studentId = 5;
+    string studentName = 6;
+    int32 status = 7;
+    bool clearEmpty = 99;
 }
 
 message UserFindRequest {
@@ -48,6 +51,16 @@ message UserFindRequest {
 
 message UserFindResponse {
     repeated UserInfo user = 1;
+}
+
+message UserUpdateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
 }
 
 message AdminUserRequest {

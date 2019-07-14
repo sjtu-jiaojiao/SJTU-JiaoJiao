@@ -1,36 +1,41 @@
 syntax = "proto3";
 
 service SellInfo {
-    //rpc Query (SellInfoQueryRequest) returns (SellInfoQueryResponse);
-    //rpc Create (SellInfoCreateRequest) returns (SellInfoCreateResponse);
+    rpc Query (SellInfoQueryRequest) returns (SellInfoMsg);
+    rpc Create (SellInfoCreateRequest) returns (SellInfoCreateResponse);
+    rpc Find (SellInfoFindRequest) returns (SellInfoFindResponse);
 }
 
 service Content {
     rpc Create (ContentCreateRequest) returns (ContentCreateResponse);
 }
-//
-//message SellInfoQueryRequest {
-//    int32 sellInfoId = 1;
-//}
-//
-//message SellInfoQueryResponse {
-//    enum Status {
-//        UNKNOWN = 0;
-//        EMPTY_PARAM = -1;
-//        SUCCESS = 1;
-//        NOT_EXIST = 2;
-//    }
-//    Status status = 1;
-//    int32 userId = 2;
-//}
+
+message SellInfoMsg {
+    int32 sellInfoId = 1;
+    int32 status = 2;
+    int64 releaseTime = 3;
+    int64 validTime = 4;
+    string goodName = 5;
+    double price = 6;
+    string description = 7;
+    string contentId = 8;
+    int32 userId = 9;
+
+    bool clearEmpty = 99;
+}
+
+message SellInfoQueryRequest {
+    int32 sellInfoId = 1;
+}
 
 message SellInfoCreateRequest {
     int64 validTime = 1;
     string goodName = 2;
-    string description = 3;
-    string contentId = 4;
-    repeated string tag = 5;
+    double price = 3;
+    string description = 4;
+    string contentId = 5;
     string contentToken = 6;
+    int32 userId = 7;
 }
 
 message SellInfoCreateResponse {
@@ -66,4 +71,14 @@ message ContentCreateResponse {
     Status status = 1;
     string contentId = 2;
     string contentToken = 3;
+}
+
+message SellInfoFindRequest {
+    int32 userId = 1;
+    uint32 limit = 2;
+    uint32 offset = 3;
+}
+
+message SellInfoFindResponse {
+    repeated SellInfoMsg sellInfo = 1;
 }

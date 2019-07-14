@@ -35,7 +35,7 @@ type authCode struct {
  *
  * @apiParam {string} [code]  OAuth code callback, DO NOT call it by yourself
  * @apiSuccess (No param - Redirect 301) {Redirect} url Redirect to OAuth url
- * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth) <br> status: -1 is not allowed
+ * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth)
  * @apiError (Error 500) AuthServiceDown Auth service down
  */
 func getAuth(c *gin.Context) {
@@ -94,12 +94,12 @@ func getAuth(c *gin.Context) {
 				if rsp3.Status == user.AdminUserResponse_NOT_FOUND {
 					c.JSON(200, gin.H{
 						"status": 1,
-						"token":  utils.JWTSign(int(rsp2.UserId), 1),
+						"token":  utils.JWTSign(rsp2.UserId, 1),
 					})
 				} else {
 					c.JSON(200, gin.H{
 						"status": 1,
-						"token":  utils.JWTSign(int(rsp2.UserId), 2),
+						"token":  utils.JWTSign(rsp2.UserId, 2),
 					})
 				}
 			} else {
