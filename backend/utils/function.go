@@ -8,9 +8,9 @@ func AssignNotEmpty(src *string, dst *string) {
 
 func AssignNotZero(src interface{}, dst interface{}) {
 	switch v := dst.(type) {
-	case *int:
-		if *src.(*int) != 0 {
-			*v = *src.(*int)
+	case *int32:
+		if *src.(*int32) != 0 {
+			*v = *src.(*int32)
 		}
 	case *float32:
 		if *src.(*float32) != 0 {
