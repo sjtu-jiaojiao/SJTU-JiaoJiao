@@ -250,7 +250,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 func main() {
 	db.InitMongoDB("sellinfomongo")
 	service := utils.InitMicroService("sellinfo")
-	//utils.LogPanic(sellinfo.RegisterSellInfoHandler(service.Server(), new(srvInfo)))
+	utils.LogPanic(sellinfo.RegisterSellInfoHandler(service.Server(), new(srvInfo)))
 	utils.LogPanic(sellinfo.RegisterContentHandler(service.Server(), new(srvContent)))
 	utils.RunMicroService(service)
 }

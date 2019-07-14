@@ -191,6 +191,188 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
+    "title": "sellinfo.SellInfo.Create",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "sellinfo_SellInfo_Create",
+    "description": "<p>create sell info</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int64",
+            "optional": false,
+            "field": "validTime",
+            "description": "<p>valid timestamp</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "goodName",
+            "description": "<p>good name</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "description",
+            "description": "<p>description for good</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "contentId",
+            "description": "<p>content id of good</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "array",
+            "optional": true,
+            "field": "tag",
+            "description": "<p>tags for good(un-finished)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "contentToken",
+            "description": "<p>content token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "sellInfoId",
+            "description": "<p>created sellInfoId</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/sellinfo/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
+    "title": "sellinfo.SellInfo.Query",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "sellinfo_SellInfo_Query",
+    "description": "<p>Query sell info</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "sellInfoId",
+            "description": "<p>sellInfo id.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for non-exist</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "sellInfoId",
+            "description": "<p>sellInfoId</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int64",
+            "optional": false,
+            "field": "validTime",
+            "description": "<p>sellInfo validate time</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "goodName",
+            "description": "<p>good name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "description",
+            "description": "<p>good description</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "contentId",
+            "description": "<p>multimedia data</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "array",
+            "optional": false,
+            "field": "tag",
+            "description": "<p>good tags (un-finished)</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/sellinfo/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
     "title": "user.AdminUser.Create",
     "version": "1.0.0",
     "group": "Service",
@@ -493,6 +675,112 @@ define({ "api": [
             "optional": false,
             "field": "studentName",
             "description": "<p>student name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>user status, 1 for normal <br> 2 for frozen</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/user/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
+    "title": "user.User.Update",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "user_User_Update",
+    "description": "<p>Update user info, only update provided field. If clearEmpty=1 and param support allow clear, clear the field when not provided.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>user id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "userName",
+            "description": "<p>user name</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "avatarId",
+            "description": "<p>user avatar id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "telephone",
+            "description": "<p>user telephone, allow clear</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "studentId",
+            "description": "<p>student id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "studentName",
+            "description": "<p>student name</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>user status, 1 for normal <br> 2 for frozen</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "bool",
+            "optional": false,
+            "field": "clearEmpty",
+            "defaultValue": "0",
+            "description": "<p>clear the empty field</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for user not found</p>"
           }
         ]
       }
@@ -551,6 +839,8 @@ define({ "api": [
         ]
       }
     },
+    "filename": "./api/user/main.go",
+    "groupTitle": "User",
     "error": {
       "fields": {
         "Error 500": [
@@ -562,9 +852,7 @@ define({ "api": [
           }
         ]
       }
-    },
-    "filename": "./api/user/main.go",
-    "groupTitle": "User"
+    }
   },
   {
     "type": "get",
@@ -614,6 +902,8 @@ define({ "api": [
         ]
       }
     },
+    "filename": "./api/user/main.go",
+    "groupTitle": "User",
     "error": {
       "fields": {
         "Error 500": [
@@ -625,9 +915,61 @@ define({ "api": [
           }
         ]
       }
+    }
+  },
+  {
+    "type": "post",
+    "url": "/user",
+    "title": "UpdateUser",
+    "version": "1.0.0",
+    "group": "User",
+    "permission": [
+      {
+        "name": "self/admin"
+      }
+    ],
+    "name": "UpdateUser",
+    "description": "<p>Update user</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-user_User_Update\">User Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-user_User_Update\">User Service</a> <br> status: -1 is not allowed</p>"
+          }
+        ]
+      }
     },
     "filename": "./api/user/main.go",
-    "groupTitle": "User"
+    "groupTitle": "User",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "UserServiceDown",
+            "description": "<p>User service down</p>"
+          }
+        ]
+      }
+    }
   },
   {
     "success": {

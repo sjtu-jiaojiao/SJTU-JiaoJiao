@@ -24,6 +24,7 @@ type User struct {
 	Telephone   string `orm:"type(char);size(11);null"`
 	StudentId   string `orm:"size(32);index"`
 	StudentName string `orm:"size(32)"`
+	Status      int
 }
 
 // SellInfo is db release table map

@@ -48,7 +48,7 @@ func TestUserQuery(t *testing.T) {
 	var req user.UserQueryRequest
 
 	tf := func(uid int, uname string, avatar string,
-		telephone string, sid string, sname string) {
+		telephone string, sid string, sname string, status int) {
 		var rsp user.UserInfo
 		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.UserId, ShouldEqual, uid)
@@ -57,9 +57,10 @@ func TestUserQuery(t *testing.T) {
 		So(rsp.Telephone, ShouldEqual, telephone)
 		So(rsp.StudentId, ShouldEqual, sid)
 		So(rsp.StudentName, ShouldEqual, sname)
+		So(rsp.Status, ShouldEqual, status)
 	}
 	Convey("Test User Query", t, func() {
-		tf(0, "", "", "", "", "")
+		tf(0, "", "", "", "", "", 0)
 		_, err := o.Insert(&db.User{
 			Id:          1000,
 			UserName:    "jiang",
@@ -67,15 +68,16 @@ func TestUserQuery(t *testing.T) {
 			Telephone:   "12345678901",
 			StudentId:   "1234",
 			StudentName: "jiang",
+			Status:      1,
 		})
 
 		So(err, ShouldBeNil)
 		req.UserId = 1000
 		tf(1000, "jiang", "5d23ea2c32311335f935cd14",
-			"12345678901", "1234", "jiang")
+			"12345678901", "1234", "jiang", 1)
 
 		req.UserId = 1001
-		tf(0, "", "", "", "", "")
+		tf(0, "", "", "", "", "", 0)
 
 		_, err = o.Delete(&db.User{
 			Id: 1000,
@@ -89,13 +91,14 @@ func TestUserFind(t *testing.T) {
 	var req user.UserFindRequest
 	var rsp user.UserFindResponse
 	tf := func(index int, uid int, uname string, avatar string,
-		telephone string, sid string, sname string) {
+		telephone string, sid string, sname string, status int) {
 		So(rsp.User[index].UserId, ShouldEqual, uid)
 		So(rsp.User[index].UserName, ShouldEqual, uname)
 		So(rsp.User[index].AvatarId, ShouldEqual, avatar)
 		So(rsp.User[index].Telephone, ShouldEqual, telephone)
 		So(rsp.User[index].StudentId, ShouldEqual, sid)
 		So(rsp.User[index].StudentName, ShouldEqual, sname)
+		So(rsp.User[index].Status, ShouldEqual, status)
 	}
 	Convey("Test User Find", t, func() {
 		req.UserName = "test"
@@ -106,13 +109,14 @@ func TestUserFind(t *testing.T) {
 			Telephone:   "12345678901",
 			StudentId:   "1234",
 			StudentName: "jiang",
+			Status:      1,
 		})
 		So(err, ShouldBeNil)
 
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 1)
 		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
-			"1234", "jiang")
+			"1234", "jiang", 1)
 		rsp.User = nil
 
 		_, err = o.Insert(&db.User{
@@ -122,29 +126,30 @@ func TestUserFind(t *testing.T) {
 			Telephone:   "12345678902",
 			StudentId:   "12345",
 			StudentName: "jiangzm",
+			Status:      1,
 		})
 		So(err, ShouldBeNil)
 
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 2)
 		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
-			"1234", "jiang")
+			"1234", "jiang", 1)
 		tf(1, 2001, "test2", "5d23ea2c32311335f935cd15", "12345678902",
-			"12345", "jiangzm")
+			"12345", "jiangzm", 1)
 		rsp.User = nil
 
 		req.Limit = 1
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 1)
 		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
-			"1234", "jiang")
+			"1234", "jiang", 1)
 		rsp.User = nil
 
 		req.Offset = 1
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 1)
 		tf(0, 2001, "test2", "5d23ea2c32311335f935cd15", "12345678902",
-			"12345", "jiangzm")
+			"12345", "jiangzm", 1)
 
 		_, err = o.Delete(&db.User{
 			Id: 2000,

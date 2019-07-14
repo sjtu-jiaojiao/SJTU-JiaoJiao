@@ -37,6 +37,7 @@ type UserService interface {
 	Create(ctx context.Context, in *UserCreateRequest, opts ...client.CallOption) (*UserCreateResponse, error)
 	Query(ctx context.Context, in *UserQueryRequest, opts ...client.CallOption) (*UserInfo, error)
 	Find(ctx context.Context, in *UserFindRequest, opts ...client.CallOption) (*UserFindResponse, error)
+	Update(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*UserUpdateResponse, error)
 }
 
 type userService struct {
@@ -87,12 +88,23 @@ func (c *userService) Find(ctx context.Context, in *UserFindRequest, opts ...cli
 	return out, nil
 }
 
+func (c *userService) Update(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*UserUpdateResponse, error) {
+	req := c.c.NewRequest(c.name, "User.Update", in)
+	out := new(UserUpdateResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
 	Create(context.Context, *UserCreateRequest, *UserCreateResponse) error
 	Query(context.Context, *UserQueryRequest, *UserInfo) error
 	Find(context.Context, *UserFindRequest, *UserFindResponse) error
+	Update(context.Context, *UserInfo, *UserUpdateResponse) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) error {
@@ -100,6 +112,7 @@ func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.Handl
 		Create(ctx context.Context, in *UserCreateRequest, out *UserCreateResponse) error
 		Query(ctx context.Context, in *UserQueryRequest, out *UserInfo) error
 		Find(ctx context.Context, in *UserFindRequest, out *UserFindResponse) error
+		Update(ctx context.Context, in *UserInfo, out *UserUpdateResponse) error
 	}
 	type User struct {
 		user
@@ -122,6 +135,10 @@ func (h *userHandler) Query(ctx context.Context, in *UserQueryRequest, out *User
 
 func (h *userHandler) Find(ctx context.Context, in *UserFindRequest, out *UserFindResponse) error {
 	return h.UserHandler.Find(ctx, in, out)
+}
+
+func (h *userHandler) Update(ctx context.Context, in *UserInfo, out *UserUpdateResponse) error {
+	return h.UserHandler.Update(ctx, in, out)
 }
 
 // Client API for AdminUser service
