@@ -6,6 +6,17 @@ import Config from "../../Config";
 import {NavigationActions} from "react-navigation";
 
 export default class UserInfoScreen extends Component {
+    constructor(props) {
+        super(props);
+        console.warn(Config)
+        this.state = {
+            userId: Config.userInfo.userId,
+            userName: Config.userInfo.userName,
+            studentId: Config.userInfo.studentId,
+            studentName: Config.userInfo.studentName,
+            telephone: Config.userInfo.telephone,
+        };
+    }
 
     static navigationOptions = {
         headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23}}>个人信息</Text>)
@@ -27,28 +38,28 @@ export default class UserInfoScreen extends Component {
                     chevron
                     title={'用户名'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{Config.userInfo.userName}</Text>}
+                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{this.state.userName}</Text>}
                 />
                 <ListItem
                     bottomDivider
                     chevron
                     title={'手机'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{Config.userInfo.telephone}</Text>}
+                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{this.state.telephone}</Text>}
                 />
                 <ListItem
                     bottomDivider
                     chevron
                     title={'学号'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{Config.userInfo.studentId}</Text>}
+                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{this.state.studentId}</Text>}
                 />
                 <ListItem
                     bottomDivider
                     chevron
                     title={'真实姓名'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{Config.userInfo.studentName}</Text>}
+                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{this.state.studentName}</Text>}
                 />
                 <View style={{height: 15}}/>
                 <Button
@@ -69,15 +80,20 @@ export default class UserInfoScreen extends Component {
                             {
                                 text: '确定', onPress: () => {
                                     Config.JaccountToken={};
+                                    Config.userInfo = {
+                                        userId: -1,
+                                        userName: '',
+                                        avatarId: '',
+                                        telephone: '',
+                                        studentId: '',
+                                        studentName: '',
+                                    };
                                     this.props.navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0);
                                 }
                             },
                         ],
                         {cancelable: false},
-                    )
-
-
-                    }
+                    )}
                 />
             </View>
         )
