@@ -23,24 +23,21 @@ export default class UserInfoScreen extends Component {
     };
 
     updateUserInfo() {
-        fetch((Config.fetchPrefix + 'user'), {
+        let formData = new FormData();
+        formData.append('userId', 1);
+        formData.append('telephone', '15221278083');
+        formData.append('status', 1);
+
+        fetch('https://http://202.120.40.8:30711/v1/user/', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                Authorization: ('Bearer ' + Config.JaccountToken.token),
             },
-            body: JSON.stringify({
-                userId: 1,
-                telephone: '15221278083',
-                status: 1,
-            }),
+            body: 'userId=1&telephone=15221278083&status=1',
         })
             .then((response) => {
                 console.warn(response);
-            })
-            .then((json) => {
-                //alert(JSON.stringify(json));
             })
             .catch((error) => {
                 console.error(error);
