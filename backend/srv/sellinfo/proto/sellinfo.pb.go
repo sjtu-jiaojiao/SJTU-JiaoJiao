@@ -23,24 +23,24 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 type SellInfoQueryResponse_Status int32
 
 const (
-	SellInfoQueryResponse_UNKNOWN     SellInfoQueryResponse_Status = 0
-	SellInfoQueryResponse_EMPTY_PARAM SellInfoQueryResponse_Status = -1
-	SellInfoQueryResponse_SUCCESS     SellInfoQueryResponse_Status = 1
-	SellInfoQueryResponse_NOT_EXIST   SellInfoQueryResponse_Status = 2
+	SellInfoQueryResponse_UNKNOWN       SellInfoQueryResponse_Status = 0
+	SellInfoQueryResponse_INVALID_PARAM SellInfoQueryResponse_Status = -1
+	SellInfoQueryResponse_SUCCESS       SellInfoQueryResponse_Status = 1
+	SellInfoQueryResponse_NOT_EXIST     SellInfoQueryResponse_Status = 2
 )
 
 var SellInfoQueryResponse_Status_name = map[int32]string{
 	0:  "UNKNOWN",
-	-1: "EMPTY_PARAM",
+	-1: "INVALID_PARAM",
 	1:  "SUCCESS",
 	2:  "NOT_EXIST",
 }
 
 var SellInfoQueryResponse_Status_value = map[string]int32{
-	"UNKNOWN":     0,
-	"EMPTY_PARAM": -1,
-	"SUCCESS":     1,
-	"NOT_EXIST":   2,
+	"UNKNOWN":       0,
+	"INVALID_PARAM": -1,
+	"SUCCESS":       1,
+	"NOT_EXIST":     2,
 }
 
 func (x SellInfoQueryResponse_Status) String() string {

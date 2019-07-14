@@ -41,7 +41,7 @@ var o orm.Ormer
  */
 func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoQueryResponse) error {
 	if req.SellInfoId == 0 {
-		rsp.Status = sellinfo.SellInfoQueryResponse_EMPTY_PARAM
+		rsp.Status = sellinfo.SellInfoQueryResponse_INVALID_PARAM
 		return nil
 	}
 	info := db.SellInfo{
@@ -268,6 +268,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 
 func main() {
 	o = db.InitORM(new(db.SellInfo), new(db.Good))
+	db.InitMongoDB("sellinfomongo")
 	service := utils.InitMicroService("sellinfo")
 	utils.LogPanic(sellinfo.RegisterSellInfoHandler(service.Server(), new(srvInfo)))
 	utils.LogPanic(sellinfo.RegisterContentHandler(service.Server(), new(srvContent)))

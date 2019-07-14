@@ -2,5 +2,4 @@ go.sum
 .vscode/
 .idea/
 build/
-doc/*
-!doc/main.go
+*.coverprofile

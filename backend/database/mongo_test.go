@@ -8,6 +8,7 @@ import (
 )
 
 func TestLoadMongoDB(t *testing.T) {
+	InitMongoDB("testmongo")
 	Convey("Insert mongodb test", t, func() {
 		collection := MongoDatabase.Collection("test")
 		_, err := collection.InsertOne(MongoContext, bson.M{"name": "pi", "value": 3.14159})

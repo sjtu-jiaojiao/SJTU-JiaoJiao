@@ -39,6 +39,7 @@ func (a *mockUserSrv) Query(ctx context.Context, req *user.UserQueryRequest, opt
 			rsp.Telephone = "12345678901"
 			rsp.StudentId = "1000"
 			rsp.StudentName = "jiang"
+			rsp.Status = 1
 		} else if req.UserId == 2000 {
 			return nil, errors.New("")
 		}
@@ -54,6 +55,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 		Telephone:   "12345224232",
 		StudentId:   "517397299873",
 		StudentName: "Xiao Ming",
+		Status:      1,
 	}
 	user2 := user.UserInfo{
 		UserId:      1001,
@@ -62,6 +64,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 		Telephone:   "67307269876",
 		StudentId:   "517234731342",
 		StudentName: "Xiao Huang",
+		Status:      1,
 	}
 	user3 := user.UserInfo{
 		UserId:      1002,
@@ -70,6 +73,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 		Telephone:   "16539896792",
 		StudentId:   "517357253234",
 		StudentName: "Xiao Bai",
+		Status:      1,
 	}
 
 	var rsp user.UserFindResponse
@@ -97,6 +101,11 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 	} else if req.UserName == "down" {
 		return nil, errors.New("")
 	}
+	return &rsp, nil
+}
+
+func (a *mockUserSrv) Update(ctx context.Context, req *user.UserInfo, opts ...client.CallOption) (*user.UserUpdateResponse, error) {
+	var rsp user.UserUpdateResponse
 	return &rsp, nil
 }
 

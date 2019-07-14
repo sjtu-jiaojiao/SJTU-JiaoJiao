@@ -38,8 +38,10 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
 	} else {
 		usr := db.User{
 			UserName:    req.StudentName,
+			AvatarId:    utils.GetStringConfig("srv_config", "default_avatar"),
 			StudentId:   req.StudentId,
 			StudentName: req.StudentName,
+			Status:      1,
 		}
 		created, id, err := o.ReadOrCreate(&usr, "StudentId")
 		if utils.LogContinue(err, utils.Warning) {
@@ -69,6 +71,7 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
  * @apiSuccess {string} telephone user telephone
  * @apiSuccess {string} studentId student id
  * @apiSuccess {string} studentName student name
+ * @apiSuccess {int32} status user status, 1 for normal <br> 2 for frozen
  * @apiUse DBServerDown
  */
 func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.UserInfo) error {
@@ -81,10 +84,63 @@ func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *us
 	err := o.Read(&usr)
 	if err == orm.ErrNoRows {
 		return nil
-	} else if err != nil {
+	} else if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
 	parseUser(&usr, rsp)
+	return nil
+}
+
+/**
+ * @api {rpc} /rpc user.User.Update
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName user.User.Update
+ * @apiDescription Update user info, only update provided field. If clearEmpty=1 and param support allow clear, clear the field when not provided.
+ *
+ * @apiParam {int32} userId user id
+ * @apiParam {string} [userName] user name
+ * @apiParam {string} [avatarId] user avatar id
+ * @apiParam {string} [telephone] user telephone, allow clear
+ * @apiParam {string} [studentId] student id
+ * @apiParam {string} [studentName] student name
+ * @apiParam {int32} status user status, 1 for normal <br> 2 for frozen
+ * @apiParam {bool} clearEmpty=0 clear the empty field
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for user not found
+ * @apiUse DBServerDown
+ */
+func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.UserUpdateResponse) error {
+	if req.UserId == 0 {
+		rsp.Status = user.UserUpdateResponse_INVALID_PARAM
+		return nil
+	}
+
+	usr := db.User{
+		Id: int(req.UserId),
+	}
+	if err := o.Read(&usr); err == nil {
+		utils.AssignNotEmpty(&req.UserName, &usr.UserName)
+		utils.AssignNotEmpty(&req.AvatarId, &usr.AvatarId)
+		if req.ClearEmpty {
+			usr.Telephone = req.Telephone
+		} else {
+			utils.AssignNotEmpty(&req.Telephone, &usr.Telephone)
+		}
+		utils.AssignNotEmpty(&req.StudentId, &usr.StudentId)
+		utils.AssignNotEmpty(&req.StudentName, &usr.StudentName)
+		utils.AssignNotZero(&req.Status, &usr.Status)
+		_, err := o.Update(&usr)
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+		rsp.Status = user.UserUpdateResponse_SUCCESS
+	} else if err == orm.ErrNoRows {
+		rsp.Status = user.UserUpdateResponse_NOT_FOUND
+		return nil
+	} else {
+		utils.Warning(err)
+		return err
+	}
 	return nil
 }
 
@@ -108,7 +164,7 @@ func (a *srvUser) Find(ctx context.Context, req *user.UserFindRequest, rsp *user
 
 	var res []*db.User
 	_, err := o.QueryTable(&db.User{}).Filter("UserName__icontains", req.UserName).Limit(req.Limit, req.Offset).All(&res)
-	if err != nil {
+	if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
 	for i, v := range res {
@@ -125,6 +181,7 @@ func parseUser(s *db.User, d *user.UserInfo) {
 	d.Telephone = s.Telephone
 	d.StudentId = s.StudentId
 	d.StudentName = s.StudentName
+	d.Status = int32(s.Status)
 }
 
 /**
@@ -188,7 +245,7 @@ func (a *srvAdmin) Find(ctx context.Context, req *user.AdminUserRequest, rsp *us
 		if err == orm.ErrNoRows {
 			rsp.Status = user.AdminUserResponse_NOT_FOUND
 			return nil
-		} else if err != nil {
+		} else if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
 		rsp.Status = user.AdminUserResponse_SUCCESS
@@ -198,7 +255,7 @@ func (a *srvAdmin) Find(ctx context.Context, req *user.AdminUserRequest, rsp *us
 }
 
 func main() {
-	o = db.InitORM(new(db.User), new(db.AdminUser))
+	o = db.InitORM("userdb", new(db.User), new(db.AdminUser))
 	service := utils.InitMicroService("user")
 	utils.LogPanic(user.RegisterUserHandler(service.Server(), new(srvUser)))
 	utils.LogPanic(user.RegisterAdminUserHandler(service.Server(), new(srvAdmin)))

@@ -2,9 +2,9 @@
     "deploy": "develop",
     "hosts": {
         "consul_develop": "127.0.0.1:8500",
-        "consul_product": "127.0.0.1:8500",
+        "consul_product": "10.0.0.62:8500",
         "url_develop": "http://localhost:8080",
-        "url_product": "http://localhost:8080",
+        "url_product": "http://202.120.40.8:30711",
         "test_develop": "Do_not_modify_this",
         "test_product": "Do_not_modify_this"
     },
