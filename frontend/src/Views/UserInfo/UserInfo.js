@@ -4,6 +4,7 @@ import {ListItem, Avatar, Button} from "react-native-elements";
 import Icon from "react-native-vector-icons/AntDesign";
 import Config from "../../Config";
 import {NavigationActions} from "react-navigation";
+import axios from "axios";
 
 export default class UserInfoScreen extends Component {
     constructor(props) {
@@ -27,12 +28,50 @@ export default class UserInfoScreen extends Component {
         formData.append('userId', 1);
         formData.append('telephone', '15221278083');
         formData.append('status', 1);
+        /*
+        let postxml = new XMLHttpRequest();
+        postxml.onreadystatechange = (e) => {
+            if (postxml.readyState !== 4) {
+                return;
+            }
+            if (postxml.status === 200) {
+                alert("请求成功！");
+                //this.setState({responseText: postxml.responseText})
+                console.warn(postxml.responseText);
 
-        fetch('https://http://202.120.40.8:30711/v1/user/', {
+            } else {
+                alert("请求失败！");
+            }
+        };
+        postxml.open("POST","ajax_test.asp",true);
+        postxml.setRequestHeader("Content-type","application/json");
+        postxml.send("userId=1&telephone=15221278083&status=1");*/
+
+        /*axios.post(
+            '202.120.40.8:30711/v1/user',
+            {
+                'userId': '1',
+                'telephone': '15221278083',
+                'status': '1',
+            }
+        )
+            .then(function (response) {
+                // handle success
+                console.warn(response);
+            })
+            .catch(function (error) {
+                // handle error
+                console.warn(error);
+            })
+            .finally(function () {
+                // always executed
+            });*/
+        fetch('https://http://202.120.40.8:30711/v1/user', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
+                Authorization: ('Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMxMzY3MTQsImlkIjo0LCJyb2xlIjoxfQ.9UCj-BC-hL1KVRBs8KCPVE4LSKDriicCuCZ_s495_Pg'),
             },
             body: 'userId=1&telephone=15221278083&status=1',
         })
