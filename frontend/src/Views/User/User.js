@@ -8,19 +8,14 @@ import {NavigationActions} from "react-navigation";
 export default class UserScreen extends Component {
     constructor(props) {
         super(props);
+        //console.warn(Config)
         this.state = {
-            isLogin: false,
-            userName: 'chiangel',
-            realName: '林江浩',
-            gender: '男',
-            email: 'chiangel.ljh@gmail.com',
-            phoneNumber: '15221278083',
-        }
-    }
-
-    loginFail = () => {
-        alert('登录失败 QAQ 请再试一次吧');
-        Config.JaccountToken = {};
+            userId: Config.userInfo.userId,
+            userName: Config.userInfo.userName,
+            studentId: Config.userInfo.studentId,
+            studentName: Config.userInfo.studentName,
+            telephone: Config.userInfo.telephone,
+        };
     }
 
     static navigationOptions = {
@@ -100,9 +95,9 @@ export default class UserScreen extends Component {
                 '似乎没有登录成功，请再试一次吧~',
                 [
                     {text: '好', onPress: () => {
-                        Config.JaccountToken={};
-                        this.props.navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0);
-                    }}
+                            Config.JaccountToken={};
+                            this.props.navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0);
+                        }}
                 ],
                 {cancelable: false},
             )
@@ -119,7 +114,7 @@ export default class UserScreen extends Component {
                         rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
                         title={this.state.userName}
                         titleStyle={{ color: 'black', fontSize: 25 }}
-                        subtitle={this.state.email}
+                        subtitle={this.state.telephone}
                         subtitleStyle={{ color: 'black', fontSize: 15 }}
                         onPress={() => this.props.navigation.navigate('UserInfo')}
                     />

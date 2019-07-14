@@ -27,35 +27,28 @@ export default class UserInfoScreen extends Component {
                     chevron
                     title={'用户名'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>chiangel</Text>}
-                />
-                <ListItem
-                    bottomDivider
-                    chevron
-                    title={'真实姓名'}
-                    titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>林江浩</Text>}
-                />
-                <ListItem
-                    bottomDivider
-                    chevron
-                    title={'性别'}
-                    titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>男</Text>}
-                />
-                <ListItem
-                    bottomDivider
-                    chevron
-                    title={'邮箱'}
-                    titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>chiangel.ljh@gmail.com</Text>}
+                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{Config.userInfo.userName}</Text>}
                 />
                 <ListItem
                     bottomDivider
                     chevron
                     title={'手机'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>15221278083</Text>}
+                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{Config.userInfo.telephone}</Text>}
+                />
+                <ListItem
+                    bottomDivider
+                    chevron
+                    title={'学号'}
+                    titleStyle={{ color: 'black', fontSize: 17 }}
+                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{Config.userInfo.studentId}</Text>}
+                />
+                <ListItem
+                    bottomDivider
+                    chevron
+                    title={'真实姓名'}
+                    titleStyle={{ color: 'black', fontSize: 17 }}
+                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{Config.userInfo.studentName}</Text>}
                 />
                 <View style={{height: 15}}/>
                 <Button

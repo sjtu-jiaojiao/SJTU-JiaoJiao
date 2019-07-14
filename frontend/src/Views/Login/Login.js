@@ -20,7 +20,26 @@ export default class LoginScreen extends Component {
                     Config.JaccountToken = JSON.parse(event.nativeEvent.data);
                     //console.warn(Config.JaccountToken);
                     //console.warn(Config.JaccountToken.status);
-                    this.props.navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0);
+                    fetch((Config.fetchPrefix + 'user/1'),{
+                        headers: {
+                            Authorization: ('Bearer ' + Config.JaccountToken.token),
+                        }
+                    })
+                        .then((response) => {
+                            //console.warn(response);
+                            return response.json();
+                        })
+                        .then((responseJson) => {
+                            Config.userInfo.userId=responseJson.userId;
+                            Config.userInfo.userName=responseJson.userName;
+                            Config.userInfo.studentId=responseJson.studentId;
+                            Config.userInfo.studentName=responseJson.studentName;
+                            Config.userInfo.telephone=responseJson.telephone;
+                            //console.warn(Config.userInfo);
+                            this.props.navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0);
+                            //console.warn(responseJson);
+                        })
+                        .catch((error) => console.error(error));
                 }}
                 onNavigationStateChange={(event)=>{
                     if(event.title.includes('?code='))
