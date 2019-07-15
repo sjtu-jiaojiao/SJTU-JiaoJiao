@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"jiaojiao/utils"
 	"net/http"
+	"net/url"
+	"strings"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -36,6 +38,36 @@ func Test_getUserInfo(t *testing.T) {
 
 		r = utils.StartTestServer(setupRouter, "GET", "/user/2000", nil, nil)
 		So(r.Code, ShouldEqual, 500)
+	})
+}
+
+func Test_updateUser(t *testing.T) {
+	v := url.Values{
+		"userId": {"1001"},
+	}
+	tf := func(code int, status int32) {
+		var data map[string]interface{}
+		r := utils.StartTestServer(setupRouter, "POST", "/user", strings.NewReader(v.Encode()), func(r *http.Request) {
+			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+			r.Header.Add("Authorization", "valid_user")
+		})
+		So(r.Code, ShouldEqual, code)
+		if r.Body.String() != "{}" {
+			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
+			So(data["status"], ShouldEqual, status)
+		}
+	}
+
+	Convey("UpdateUser router test", t, func() {
+		r := utils.StartTestServer(setupRouter, "POST", "/user", nil, nil)
+		So(r.Code, ShouldEqual, 400)
+
+		r = utils.StartTestServer(setupRouter, "POST", "/user", strings.NewReader(v.Encode()), func(r *http.Request) {
+			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		})
+		So(r.Code, ShouldEqual, 403)
+
+		tf(200, 1)
 	})
 }
 

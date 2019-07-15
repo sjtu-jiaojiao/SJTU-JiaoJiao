@@ -322,6 +322,61 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 	return nil
 }
 
+/**
+ * @api {rpc} /rpc sellinfo.Content.Delete
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName sellinfo.Content.Delete
+ * @apiDescription delete sell info content
+ *
+ * @apiParam {string} contentId 24 bytes content id
+ * @apiParam {string} contentToken content token
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
+ * @apiUse DBServerDown
+ */
+func (a *srvContent) Delete(ctx context.Context, req *sellinfo.ContentDeleteRequest, rsp *sellinfo.ContentDeleteResponse) error {
+	if req.ContentId == "" || req.ContentToken == "" {
+		rsp.Status = sellinfo.ContentDeleteResponse_INVALID_PARAM
+		return nil
+	}
+	type files struct {
+		FileId primitive.ObjectID `bson:"fileId"`
+		Type   string             `bson:"type"`
+	}
+	type result struct {
+		Id    primitive.ObjectID `bson:"_id"`
+		Files []files            `bson:"files"`
+	}
+
+	collection := db.MongoDatabase.Collection("sellinfo")
+	rid, err := primitive.ObjectIDFromHex(req.ContentId)
+	if err != nil {
+		rsp.Status = sellinfo.ContentDeleteResponse_INVALID_TOKEN
+		return nil
+	}
+	var res result
+	err = collection.FindOneAndDelete(db.MongoContext, bson.D{
+		{"_id", rid},
+		{"token", req.ContentToken},
+	}).Decode(&res)
+	if err != nil {
+		rsp.Status = sellinfo.ContentDeleteResponse_INVALID_TOKEN
+		return nil
+	}
+
+	for _, v := range res.Files {
+		bucket, err := gridfs.NewBucket(db.MongoDatabase)
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+		err = bucket.Delete(v.FileId)
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+	}
+	return nil
+}
+
 func main() {
 	db.InitORM("sellinfodb", new(db.SellInfo), new(db.Good))
 	db.InitMongoDB("sellinfomongo")

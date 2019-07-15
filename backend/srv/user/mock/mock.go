@@ -106,6 +106,17 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 
 func (a *mockUserSrv) Update(ctx context.Context, req *user.UserInfo, opts ...client.CallOption) (*user.UserUpdateResponse, error) {
 	var rsp user.UserUpdateResponse
+	if req.UserId == 0 {
+		rsp.Status = user.UserUpdateResponse_INVALID_PARAM
+	} else {
+		if req.UserId == 1001 {
+			rsp.Status = user.UserUpdateResponse_SUCCESS
+		} else if req.UserId == 2001 {
+			return &rsp, errors.New("")
+		} else {
+			rsp.Status = user.UserUpdateResponse_NOT_FOUND
+		}
+	}
 	return &rsp, nil
 }
 
