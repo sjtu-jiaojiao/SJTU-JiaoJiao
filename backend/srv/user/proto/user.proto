@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+service User {
+    rpc Create (UserCreateRequest) returns (UserCreateResponse);
+    rpc Query (UserQueryRequest) returns (UserInfo);
+    rpc Find (UserFindRequest) returns (UserFindResponse);
+    rpc Update (UserInfo) returns (UserUpdateResponse);
+}
+
+service AdminUser {
+    rpc Create (AdminUserRequest) returns (AdminUserResponse);
+    rpc Find (AdminUserRequest) returns (AdminUserResponse);
+}
+
+message UserCreateRequest {
+    string studentId = 1;
+    string studentName = 2;
+}
+
+message UserCreateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        USER_EXIST = 2;
+    }
+    Status status = 1;
+    int32 userId = 2;
+}
+
+message UserQueryRequest {
+    int32 userId = 1;
+}
+
+message UserInfo {
+    int32 userId = 1;
+    string userName = 2;
+    string avatarId = 3;
+    string telephone = 4;
+    string studentId = 5;
+    string studentName = 6;
+    int32 status = 7;
+    bool clearEmpty = 99;
+}
+
+message UserFindRequest {
+    string userName = 1;
+    uint32 limit = 2;
+    uint32 offset = 3;
+}
+
+message UserFindResponse {
+    repeated UserInfo user = 1;
+}
+
+message UserUpdateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
+}
+
+message AdminUserRequest {
+    string studentId = 1;
+}
+
+message AdminUserResponse {
+    enum Status {
+        option allow_alias = true;
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        USER_EXIST = 2;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
+    int32 adminId = 2;
+}
