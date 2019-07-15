@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/app/inmemory-data.service.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="..\..\prettify.css" />
+    <link rel="stylesheet" href="..\..\base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(..\..\sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="..\..\index.html">All files</a> / <a href="index.html">src/app</a> inmemory-data.service.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>5/5</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/1</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>4/4</span>
+      </div>
+    </div>
+    <p class="quiet">
+      Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+    </p>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { InMemoryDbService } from 'angular-in-memory-web-api';
+import { Injectable } from '@angular/core';
+&nbsp;
+@Injectable({
+  providedIn: 'root',
+})
+export class InMemoryDataService implements InMemoryDbService {
+  createDb() {
+    const users = [{ id: '4396', name: '4396', forbid: false, score: 5, active: 100, intro: '我是练习市场两年半的偶像练习生,我是练习市场两年半的偶像练习生，我喜欢唱跳rap和篮球' },
+    { id: '216', name: '王牌测试员', forbid: false, score: 4.2, active: 20, intro: '我是lboss的小粉丝,一生唯爱lboss，一见lboss误终生' },
+    { id: '426', name: '艾克', forbid: true, score: 4.396, active: 200, intro: 'cnmooc天下第二！jboss！我爱学习强国！' },
+    { id: '123', name: '垃圾分类小助手', forbid: true, score: 3, active: 10, intro: '你是什么垃圾？我是本群的垃圾分类小助手，帮助你回收你的垃圾' }];
+&nbsp;
+    const infos = [
+      { id: '4396', source: '4396', type: 0, price: 100, tags: ['黑色', '塑料', '垃圾桶'], time: '2019-01-01', state: 0, count: 2, intro: '黑色塑料分类垃圾桶' },
+      { id: '196', source: '123', type: 0, price: 35, tags: ['C++', '精装', '中文', '书籍'], time: '2019-07-01', state: 1, count: 10, intro: '深度探索C++对象模型中文精装本' },
+      { id: '42396', source: '1234', type: 1, price: 52, time: '2019-02-11', tags: ['不锈钢', '保温杯'], state: 2, count: 2, intro: '虎牌不锈钢保温杯' },
+      { id: '43396', source: '4396', type: 1, price: 200, time: '2019-05-10', tags: ['凤凰牌', '自行车'], state: 3, count: 0, intro: '凤凰牌使用1年的自行车' },
+      { id: '2396', source: '213', type: 0, price: 23, tags: ['塑料', '垃圾袋'], time: '2019-01-01', state: 0, count: 2, intro: '100抽塑料垃圾袋' },
+      { id: '195', source: '123', type: 0, price: 15, tags: ['C++', '中文', '书籍'], time: '2019-6-01', state: 1, count: 10, intro: 'Effective中文版' },
+      { id: '42296', source: '14', type: 1, price: 52, time: '2019-02-11', tags: ['黑色', '保温杯'], state: 2, count: 2, intro: '黑色保温杯' },
+      { id: '4196', source: '4', type: 1, price: 20, time: '2019-05-10', tags: ['小排量', '电动', '自行车'], state: 3, count: 0, intro: '小排量电动自行车' },
+&nbsp;
+      { id: '42396', source: '4396', type: 0, price: 100, tags: ['黑色', '塑料', '垃圾桶'], time: '2019-01-01', state: 0, count: 2, intro: '黑色塑料分类垃圾桶' },
+      { id: '1296', source: '123', type: 0, price: 35, tags: ['C++', '精装', '中文', '书籍'], time: '2019-07-01', state: 1, count: 10, intro: '深度探索C++对象模型中文精装本' },
+      { id: '4223396', source: '1234', type: 1, price: 52, time: '2019-02-11', tags: ['不锈钢', '保温杯'], state: 2, count: 2, intro: '虎牌不锈钢保温杯' },
+      { id: '42343396', source: '4396', type: 1, price: 200, time: '2019-05-10', tags: ['凤凰牌', '自行车'], state: 3, count: 0, intro: '凤凰牌使用1年的自行车' },
+      { id: '25396', source: '213', type: 0, price: 23, tags: ['塑料', '垃圾袋'], time: '2019-01-01', state: 0, count: 2, intro: '100抽塑料垃圾袋' },
+      { id: '1956', source: '123', type: 0, price: 15, tags: ['C++', '中文', '书籍'], time: '2019-6-01', state: 1, count: 10, intro: 'Effective中文版' },
+      { id: '424296', source: '14', type: 1, price: 52, time: '2019-02-11', tags: ['黑色', '保温杯'], state: 2, count: 2, intro: '黑色保温杯' },
+      { id: '41916', source: '4', type: 1, price: 20, time: '2019-05-10', tags: ['小排量', '电动', '自行车'], state: 3, count: 0, intro: '小排量电动自行车' },
+&nbsp;
+      { id: '4393216', source: '4396', type: 0, price: 100, tags: ['黑色', '塑料', '垃圾桶'], time: '2019-01-01', state: 0, count: 2, intro: '黑色塑料分类垃圾桶' },
+      { id: '14396', source: '123', type: 0, price: 35, tags: ['C++', '精装', '中文', '书籍'], time: '2019-07-01', state: 1, count: 10, intro: '深度探索C++对象模型中文精装本' },
+      { id: '42323496', source: '1234', type: 1, price: 52, time: '2019-02-11', tags: ['不锈钢', '保温杯'], state: 2, count: 2, intro: '虎牌不锈钢保温杯' },
+      { id: '43324396', source: '4396', type: 1, price: 200, time: '2019-05-10', tags: ['凤凰牌', '自行车'], state: 3, count: 0, intro: '凤凰牌使用1年的自行车' },
+      { id: '23396', source: '213', type: 0, price: 23, tags: ['塑料', '垃圾袋'], time: '2019-01-01', state: 0, count: 2, intro: '100抽塑料垃圾袋' },
+      { id: '19685', source: '123', type: 0, price: 15, tags: ['C++', '中文', '书籍'], time: '2019-6-01', state: 1, count: 10, intro: 'Effective中文版' },
+      { id: '4298296', source: '14', type: 1, price: 52, time: '2019-02-11', tags: ['黑色', '保温杯'], state: 2, count: 2, intro: '黑色保温杯' },
+      { id: '41096', source: '4', type: 1, price: 20, time: '2019-05-10', tags: ['小排量', '电动', '自行车'], state: 3, count: 0, intro: '小排量电动自行车' }];
+&nbsp;
+    return { users, infos };
+  }
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Jul 13 2019 23:11:38 GMT+0800 (GMT+08:00)
+</div>
+</div>
+<script src="..\..\prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="..\..\sorter.js"></script>
+<script src="..\..\block-navigation.js"></script>
+</body>
+</html>
