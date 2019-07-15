@@ -20,7 +20,7 @@ drop table if exists evaluate;
 
 drop table if exists good_picture;
 
-drop table if exists `release`;
+drop table if exists "release";
 
 drop table if exists tag;
 
@@ -122,7 +122,7 @@ create table good_picture
 /*==============================================================*/
 /* Table: "release"                                             */
 /*==============================================================*/
-create table `release`
+create table "release"
 (
    release_id           int not null,
    user_id              int not null,
@@ -171,7 +171,7 @@ create table user
 );
 
 alter table Good add constraint FK_Relationship_6 foreign key (release_id)
-      references `release` (release_id) on delete restrict on update restrict;
+      references "release" (release_id) on delete restrict on update restrict;
 
 alter table Relationship_5 add constraint FK_Relationship_7 foreign key (release_id)
       references Good (release_id) on delete restrict on update restrict;
@@ -206,17 +206,18 @@ alter table evaluate add constraint FK_Relationship_16 foreign key (user_id)
 alter table good_picture add constraint FK_Relationship_10 foreign key (release_id)
       references Good (release_id) on delete restrict on update restrict;
 
-alter table `release` add constraint FK_Relationship_4 foreign key (tra_release_id)
+alter table "release" add constraint FK_Relationship_4 foreign key (tra_release_id)
       references transaction (release_id) on delete restrict on update restrict;
 
-alter table `release` add constraint FK_Relationship_5 foreign key (Goo_release_id)
+alter table "release" add constraint FK_Relationship_5 foreign key (Goo_release_id)
       references Good (release_id) on delete restrict on update restrict;
 
-alter table `release` add constraint FK_Relationship_9 foreign key (user_id)
+alter table "release" add constraint FK_Relationship_9 foreign key (user_id)
       references user (user_id) on delete restrict on update restrict;
 
 alter table transaction add constraint FK_Relationship_1 foreign key (user_id)
       references user (user_id) on delete restrict on update restrict;
 
 alter table transaction add constraint FK_Relationship_3 foreign key (release_id)
-      references `release` (release_id) on delete restrict on update restrict;
+      references "release" (release_id) on delete restrict on update restrict;
+
