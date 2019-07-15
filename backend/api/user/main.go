@@ -183,7 +183,7 @@ type updateInfo struct {
 func updateUser(c *gin.Context) {
 	var usrInfo updateInfo
 
-	if !utils.LogContinue(c.ShouldBindQuery(&usrInfo), utils.Warning) {
+	if !utils.LogContinue(c.ShouldBind(&usrInfo), utils.Warning) {
 		if !utils.CheckAdmin(c) && !utils.CheckUserId(c, usrInfo.UserId) {
 			c.AbortWithStatus(403)
 			return

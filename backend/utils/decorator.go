@@ -40,7 +40,7 @@ func CheckAdmin(c *gin.Context) bool {
 
 func CheckUser(c *gin.Context) bool {
 	if CheckInTest() {
-		if c.Request.Header.Get("Authorization") == "admin" {
+		if c.Request.Header.Get("Authorization") == "user" {
 			return true
 		} else {
 			return false
