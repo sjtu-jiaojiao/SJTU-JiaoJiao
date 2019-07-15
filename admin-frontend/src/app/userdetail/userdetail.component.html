@@ -1,3 +1,35 @@
-<p>
-  userdetail works!
-</p>
+
+<nz-card *ngIf='user'  nzTitle="用户管理">
+    <div nz-row [nzGutter]="8">
+      <div nz-col [nzSpan]="8">
+        <nz-card nzTitle="用户状态">
+            <div class='useritem'>
+                  <span class="badge">用户ID</span>{{user.id}}
+            </div>
+            <div class='useritem'>
+              <span class="badge">用户名</span><input [(ngModel)]="user.name" placeholder="name"/>
+          </div>
+          <div class='useritem'>
+              <span class="badge">封禁</span><label nz-checkbox [(ngModel)]="user.forbid"></label>
+
+          </div>
+          <div class='useritem'>
+              <span class="badge">信用评价</span>{{user.score}}
+          </div>
+          <div class='useritem'>
+              <span class="badge">活跃度</span>{{user.active}}
+          </div>
+        </nz-card>
+        <nz-card nzType="inner" nzTitle="用户简介">     
+           <textarea nz-input placeholder="intro" [(ngModel)]="user.intro" nzAutosize></textarea>
+          </nz-card>
+  <button (click)="goBack()" nz-button nzType="dashed"><i nz-icon type="left-circle" theme="outline"></i>返回</button>
+  <button (click)="save()" nz-button nzType="primary"><i nz-icon type="save" theme="outline"></i>保存</button>
+      </div>
+      <div nz-col [nzSpan]="16">
+        <nz-card nzType="inner" nzTitle="用户活跃度">            
+          <div echarts theme="dark" [loading]="true"  [options]="option"></div>
+        </nz-card>
+      </div>
+    </div>
+</nz-card>
