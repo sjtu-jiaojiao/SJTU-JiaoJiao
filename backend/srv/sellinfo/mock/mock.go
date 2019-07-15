@@ -72,6 +72,8 @@ func (a *mockContentSrv) Delete(ctx context.Context, req *sellinfo.ContentDelete
 			} else {
 				rsp.Status = sellinfo.ContentDeleteResponse_INVALID_TOKEN
 			}
+		} else if req.ContentId == "2000" {
+			return nil, errors.New("")
 		} else {
 			rsp.Status = sellinfo.ContentDeleteResponse_INVALID_TOKEN
 		}

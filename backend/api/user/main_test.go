@@ -42,9 +42,8 @@ func Test_getUserInfo(t *testing.T) {
 }
 
 func Test_updateUser(t *testing.T) {
-	var v = url.Values{
-		"userId": {"1001"},
-	}
+	v := url.Values{}
+	v.Add("userId", "1001")
 	var data map[string]interface{}
 
 	Convey("UpdateUser router test", t, func() {
