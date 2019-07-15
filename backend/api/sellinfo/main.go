@@ -82,7 +82,7 @@ type addContentQuery struct {
 func addContent(c *gin.Context) {
 	var cont addContentQuery
 	if !utils.LogContinue(c.ShouldBindQuery(&cont), utils.Warning) {
-		if !utils.CheckUser(c) {
+		if !utils.CheckUser(c) && !utils.CheckAdmin(c) {
 			c.AbortWithStatus(403)
 			return
 		}
@@ -124,7 +124,7 @@ type deleteContentQuery struct {
 func deleteContent(c *gin.Context) {
 	var q deleteContentQuery
 	if !utils.LogContinue(c.ShouldBindQuery(&q), utils.Warning) {
-		if !utils.CheckUser(c) {
+		if !utils.CheckUser(c) && !utils.CheckAdmin(c) {
 			c.AbortWithStatus(403)
 			return
 		}

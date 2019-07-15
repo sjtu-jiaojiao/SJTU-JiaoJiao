@@ -42,47 +42,32 @@ func Test_getUserInfo(t *testing.T) {
 }
 
 func Test_updateUser(t *testing.T) {
-	var v = url.Values{
+	v := url.Values{
 		"userId": {"1001"},
 	}
-	var data map[string]interface{}
+	tf := func(code int, status int32) {
+		var data map[string]interface{}
+		r := utils.StartTestServer(setupRouter, "POST", "/user", strings.NewReader(v.Encode()), func(r *http.Request) {
+			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+			r.Header.Add("Authorization", "valid_user")
+		})
+		So(r.Code, ShouldEqual, code)
+		if r.Body.String() != "{}" {
+			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
+			So(data["status"], ShouldEqual, status)
+		}
+	}
 
 	Convey("UpdateUser router test", t, func() {
 		r := utils.StartTestServer(setupRouter, "POST", "/user", nil, nil)
 		So(r.Code, ShouldEqual, 400)
 
-		r = utils.StartTestServer(setupRouter, "POST", "/user/1001", nil, nil)
-		So(r.Code, ShouldEqual, 404)
-
-		r = utils.StartTestServer(setupRouter, "POST", "/user", strings.NewReader(v.Encode()), nil)
+		r = utils.StartTestServer(setupRouter, "POST", "/user", strings.NewReader(v.Encode()), func(r *http.Request) {
+			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		})
 		So(r.Code, ShouldEqual, 403)
 
-		r = utils.StartTestServer(setupRouter, "POST", "/user", strings.NewReader(v.Encode()),
-			func(r *http.Request) {
-				r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-				r.Header.Set("Authorization", "valid_user")
-			})
-		So(r.Code, ShouldEqual, 200)
-		So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
-		So(data["status"], ShouldEqual, 1)
-
-		v.Set("userId", "2001")
-		r = utils.StartTestServer(setupRouter, "POST", "/user", strings.NewReader(v.Encode()),
-			func(r *http.Request) {
-				r.Header.Set("Authorization", "valid_user")
-			})
-		So(r.Code, ShouldEqual, 200)
-		So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
-		So(data["status"], ShouldEqual, -1)
-
-		v.Set("userId", "3001")
-		r = utils.StartTestServer(setupRouter, "POST", "/user", strings.NewReader(v.Encode()),
-			func(r *http.Request) {
-				r.Header.Set("Authorization", "valid_user")
-			})
-		So(r.Code, ShouldEqual, 200)
-		So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
-		So(data["status"], ShouldEqual, 2)
+		tf(200, 1)
 	})
 }
 
