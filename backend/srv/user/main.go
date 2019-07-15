@@ -201,8 +201,7 @@ func parseUser(s *db.User, d *user.UserInfo) {
  */
 func (a *srvAdmin) Create(ctx context.Context, req *user.AdminUserRequest, rsp *user.AdminUserResponse) error {
 	if req.StudentId == "" {
-		rsp.Status = user.AdminUserResponse_INVALID_PARAM
-	} else {
+		rsp.Status = user.AdminUserResponse_INVA
 		usr := db.AdminUser{
 			StudentId: req.StudentId,
 		}
@@ -215,7 +214,8 @@ func (a *srvAdmin) Create(ctx context.Context, req *user.AdminUserRequest, rsp *
 		} else {
 			rsp.Status = user.AdminUserResponse_USER_EXIST
 		}
-		rsp.AdminId = int32(id)
+		rsp.AdminId = int32(id)LID_PARAM
+	} else {
 	}
 	return nil
 }

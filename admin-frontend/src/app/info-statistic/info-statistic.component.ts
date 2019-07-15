@@ -279,7 +279,7 @@ export class InfoStatisticComponent implements OnInit {
               color :'source',
               type : 'solid',
               width: 0.5,
-              curveness: 0,
+              curveness: 0.2,
               opacity: 0.7
           }
       }

@@ -238,36 +238,36 @@ func parseSellInfo(s *db.SellInfo, g *db.Good, d *sellinfo.SellInfoMsg) {
  * @apiUse DBServerDown
  */
 func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequest, rsp *sellinfo.ContentCreateResponse) error {
-	upload := func() (primitive.ObjectID, error) {
-		bucket, err := gridfs.NewBucket(db.MongoDatabase)
-		if utils.LogContinue(err, utils.Warning) {
+			upload := func() (primitive.ObjectID, error) {
+			bucket, err := gridfs.NewBucket(db.MongoDatabase)
+			if utils.LogContinue(err, utils.Warning) {
 			return primitive.ObjectID{}, err
-		}
+			}
 
-		objId, err := bucket.UploadFromStream("", bytes.NewReader(req.Content))
-		if utils.LogContinue(err, utils.Warning) {
+			objId, err := bucket.UploadFromStream("", bytes.NewReader(req.Content))
+			if utils.LogContinue(err, utils.Warning) {
 			return primitive.ObjectID{}, err
-		}
-		return objId, nil
-	}
+			}
+			return objId, nil
+			}
 
-	if req.Content == nil || req.Type == 0 {
-		rsp.Status = sellinfo.ContentCreateResponse_INVALID_PARAM
-	} else if req.ContentId == "" && req.ContentToken == "" {
-		objId, err := upload()
-		if utils.LogContinue(err, utils.Warning) {
+			if req.Content == nil || req.Type == 0 {
+			rsp.Status = sellinfo.ContentCreateResponse_INVALID_PARAM
+			} else if req.ContentId == "" && req.ContentToken == "" {
+			objId, err := upload()
+			if utils.LogContinue(err, utils.Warning) {
 			return err
-		}
+			}
 
-		token := uuid.NewV4().String()
-		collection := db.MongoDatabase.Collection("sellinfo")
-		res, err := collection.InsertOne(db.MongoContext, bson.M{
+			token := uuid.NewV4().String()
+			collection := db.MongoDatabase.Collection("sellinfo")
+			res, err := collection.InsertOne(db.MongoContext, bson.M{
 			"token": token,
 			"files": bson.A{
-				bson.M{
-					"fileId": objId,
-					"type":   req.Type.String(),
-				}},
+			bson.M{
+			"fileId": objId,
+			"type":   req.Type.String(),
+			}},
 		})
 		if utils.LogContinue(err, utils.Warning) {
 			return err
