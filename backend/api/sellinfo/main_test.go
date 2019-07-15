@@ -33,3 +33,10 @@ func Test_getSellInfo(t *testing.T) {
 		So(r.Code, ShouldEqual, 500)
 	})
 }
+
+func Test_deleteSellInfo(t *testing.T) {
+}
+
+func Test_main(t *testing.T) {
+	main()
+}

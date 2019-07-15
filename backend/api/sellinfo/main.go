@@ -15,12 +15,13 @@ func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
 	rg.GET("/sellInfo/:sellInfoId", getSellInfo)
 	rg.GET("/sellInfo", findSellInfo)
-	rg.PUT("/content", addContent)
 	rg.PUT("/sellInfo", addSellInfo)
+	rg.PUT("/content", addContent)
+	rg.DELETE("/content", deleteContent)
 	return router
 }
 
-type sellInfo struct {
+type getSellInfoQuery struct {
 	SellInfoId int32 `uri:"sellInfoId" binding:"required,min=1"`
 }
 
@@ -42,7 +43,7 @@ type sellInfo struct {
  * @apiUse SellInfoServiceDown
  */
 func getSellInfo(c *gin.Context) {
-	var info sellInfo
+	var info getSellInfoQuery
 	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
 		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
 			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
@@ -59,7 +60,7 @@ func getSellInfo(c *gin.Context) {
 	}
 }
 
-type content struct {
+type addContentQuery struct {
 	ContentId    string `form:"contentId"`
 	ContentToken string `form:"contentToken"`
 	Content      []byte `form:"content"`
@@ -79,7 +80,7 @@ type content struct {
  * @apiUse SellInfoServiceDown
  */
 func addContent(c *gin.Context) {
-	var cont content
+	var cont addContentQuery
 	if !utils.LogContinue(c.ShouldBindQuery(&cont), utils.Warning) {
 		if !utils.CheckUser(c) {
 			c.AbortWithStatus(403)
@@ -103,7 +104,47 @@ func addContent(c *gin.Context) {
 	}
 }
 
-type createSellInfo struct {
+type deleteContentQuery struct {
+	ContentId    string `form:"contentId"`
+	ContentToken string `form:"contentToken"`
+}
+
+/**
+ * @api {delete} /content DeleteContent
+ * @apiVersion 1.0.0
+ * @apiGroup SellInfo
+ * @apiPermission user/admin
+ * @apiName DeleteContent
+ * @apiDescription Delete sell info content
+ *
+ * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_Content_Delete)
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_Content_Delete)
+ * @apiUse SellInfoServiceDown
+ */
+func deleteContent(c *gin.Context) {
+	var q deleteContentQuery
+	if !utils.LogContinue(c.ShouldBindQuery(&q), utils.Warning) {
+		if !utils.CheckUser(c) {
+			c.AbortWithStatus(403)
+			return
+		}
+		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewContentService(name, c) },
+			func() interface{} { return mock.NewContentService() }).(sellinfo.ContentService)
+		rsp, err := srv.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
+			ContentId:    q.ContentId,
+			ContentToken: q.ContentToken,
+		})
+		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+			c.JSON(500, err)
+			return
+		}
+		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+type createSellInfoQuery struct {
 	ValidTime    int64   `form:"validTime"`
 	GoodName     string  `form:"goodName"`
 	Price        float64 `form:"price"`
@@ -126,7 +167,7 @@ type createSellInfo struct {
  * @apiUse SellInfoServiceDown
  */
 func addSellInfo(c *gin.Context) {
-	var info createSellInfo
+	var info createSellInfoQuery
 	if !utils.LogContinue(c.ShouldBindQuery(&info), utils.Warning) {
 		if !utils.CheckUserId(c, info.UserId) && !utils.CheckAdmin(c) {
 			c.AbortWithStatus(403)
