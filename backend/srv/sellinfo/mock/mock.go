@@ -61,6 +61,24 @@ func (a *mockContentSrv) Find(ctx context.Context, req *user.AdminUserRequest, o
 	return &rsp, nil
 }
 
+func (a *mockContentSrv) Delete(ctx context.Context, req *sellinfo.ContentDeleteRequest, opts ...client.CallOption) (*sellinfo.ContentDeleteResponse, error) {
+	var rsp sellinfo.ContentDeleteResponse
+	if req.ContentId == "" || req.ContentToken == "" {
+		rsp.Status = sellinfo.ContentDeleteResponse_INVALID_PARAM
+	} else {
+		if req.ContentId == "1000" {
+			if req.ContentToken == "valid_token" {
+				rsp.Status = sellinfo.ContentDeleteResponse_SUCCESS
+			} else {
+				rsp.Status = sellinfo.ContentDeleteResponse_INVALID_TOKEN
+			}
+		} else {
+			rsp.Status = sellinfo.ContentDeleteResponse_INVALID_TOKEN
+		}
+	}
+	return &rsp, nil
+}
+
 func NewSellInfoService() sellinfo.SellInfoService {
 	return new(mockSellInfoSrv)
 }
