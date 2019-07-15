@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1562814732599" clover="3.2.0">
+  <project timestamp="1562814732600" name="All files">
+    <metrics statements="11" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="3" elements="17" coveredelements="11" complexity="0" loc="11" ncloc="11" packages="4" files="5" classes="5"/>
+    <package name="Views.BuyInfo">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="BuyInfo.js" path="C:\Users\22859\Desktop\SJTU-JiaoJiao\frontend\src\Views\BuyInfo\BuyInfo.js">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="Views.Contact">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="Contact.js" path="C:\Users\22859\Desktop\SJTU-JiaoJiao\frontend\src\Views\Contact\Contact.js">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="Views.Home">
+      <metrics statements="5" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="1"/>
+      <file name="Home.js" path="C:\Users\22859\Desktop\SJTU-JiaoJiao\frontend\src\Views\Home\Home.js">
+        <metrics statements="5" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="1"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="57" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="assets.images">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="buyIcon.png" path="C:\Users\22859\Desktop\SJTU-JiaoJiao\frontend\src\assets\images\buyIcon.png">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+      <file name="sellIcon.png" path="C:\Users\22859\Desktop\SJTU-JiaoJiao\frontend\src\assets\images\sellIcon.png">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
