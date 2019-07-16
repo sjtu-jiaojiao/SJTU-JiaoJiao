@@ -1,7 +1,6 @@
-import React, { Component } from 'React';
+import React, { Component } from 'react';
 import { Text, View, Alert } from 'react-native';
-import { ListItem, Avatar } from "react-native-elements";
-import Icon from "react-native-vector-icons/AntDesign";
+import { ListItem, Avatar, Icon } from "react-native-elements";
 import Config from "../../Config";
 import {NavigationActions} from "react-navigation";
 
@@ -33,7 +32,11 @@ export default class UserScreen extends Component {
                     <ListItem
                         topDivider
                         bottomDivider
-                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
+                        rightIcon={<Avatar
+                            rounded size='small'
+                            source={require('../../assets/icons/right.png')}
+                            overlayContainerStyle={{backgroundColor: 'white'}}
+                        />}
                         leftAvatar={<Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')} />}
                         title={'请登录'}
                         titleStyle={{ color: 'black', fontSize: 22 }}
@@ -43,7 +46,11 @@ export default class UserScreen extends Component {
                     <ListItem
                         topDivider
                         bottomDivider
-                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
+                        rightIcon={<Avatar
+                            rounded size='small'
+                            source={require('../../assets/icons/right.png')}
+                            overlayContainerStyle={{backgroundColor: 'white'}}
+                        />}
                         title={'我的出售信息'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
                         onPress={() => Alert.alert(
@@ -57,7 +64,11 @@ export default class UserScreen extends Component {
                     />
                     <ListItem
                         bottomDivider
-                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
+                        rightIcon={<Avatar
+                            rounded size='small'
+                            source={require('../../assets/icons/right.png')}
+                            overlayContainerStyle={{backgroundColor: 'white'}}
+                        />}
                         title={'我的求购信息'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
                         onPress={() => Alert.alert(
@@ -71,7 +82,11 @@ export default class UserScreen extends Component {
                     />
                     <ListItem
                         bottomDivider
-                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
+                        rightIcon={<Avatar
+                            rounded size='small'
+                            source={require('../../assets/icons/right.png')}
+                            overlayContainerStyle={{backgroundColor: 'white'}}
+                        />}
                         title={'我的历史交易记录'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
                         onPress={() => Alert.alert(
@@ -111,7 +126,11 @@ export default class UserScreen extends Component {
                         topDivider
                         bottomDivider
                         leftAvatar={<Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')} />}
-                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
+                        rightIcon={<Avatar
+                            rounded size='small'
+                            source={require('../../assets/icons/right.png')}
+                            overlayContainerStyle={{backgroundColor: 'white'}}
+                        />}
                         title={this.state.userName}
                         titleStyle={{ color: 'black', fontSize: 25 }}
                         subtitle={this.state.telephone}
@@ -122,21 +141,33 @@ export default class UserScreen extends Component {
                     <ListItem
                         topDivider
                         bottomDivider
-                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
+                        rightIcon={<Avatar
+                            rounded size='small'
+                            source={require('../../assets/icons/right.png')}
+                            overlayContainerStyle={{backgroundColor: 'white'}}
+                        />}
                         title={'我的出售信息'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
                         onPress={() => this.props.navigation.navigate('MySellInfo')}
                     />
                     <ListItem
                         bottomDivider
-                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
+                        rightIcon={<Avatar
+                            rounded size='small'
+                            source={require('../../assets/icons/right.png')}
+                            overlayContainerStyle={{backgroundColor: 'white'}}
+                        />}
                         title={'我的求购信息'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
                         onPress={() => this.props.navigation.navigate('MyBuyInfo')}
                     />
                     <ListItem
                         bottomDivider
-                        rightIcon={<Icon name='rightcircleo' size={20} color={'grey'} />}
+                        rightIcon={<Avatar
+                            rounded size='small'
+                            source={require('../../assets/icons/right.png')}
+                            overlayContainerStyle={{backgroundColor: 'white'}}
+                        />}
                         title={'我的历史交易记录'}
                         titleStyle={{ color: 'black', fontSize: 17 }}
                         onPress={() => this.props.navigation.navigate('MyHistoryInfo')}

@@ -5,7 +5,7 @@ import {
     createStackNavigator,
     createAppContainer
 } from "react-navigation";
-import Icon from 'react-native-vector-icons/AntDesign';
+import {Avatar, Image} from 'react-native-elements';
 
 import HomeScreen from '../Views/Home/Home'
 import ReleaseScreen from '../Views/Release/Release'
@@ -80,20 +80,60 @@ const TabBar = createBottomTabNavigator({
         },
         tabBarIcon: ({ focused, tintColor }) => {
             const { routeName } = navigation.state;
-            let iconName;
+            let iconRoot;
             if (routeName === 'Home') {
-                iconName = 'home'
+                return (
+                    focused? (<Avatar
+                        rounded size='small'
+                        source={require('../assets/icons/home-focused.png')}
+                        overlayContainerStyle={{backgroundColor: 'white'}}
+                    />) : (<Avatar
+                        rounded size='small'
+                        source={require('../assets/icons/home.png')}
+                        overlayContainerStyle={{backgroundColor: 'white'}}
+                    />)
+                ) ;
             }
             else if (routeName === 'Release') {
-                iconName = 'form'
+                return (
+                    focused? (<Avatar
+                        rounded size='small'
+                        source={require('../assets/icons/release-focused.png')}
+                        iconStyle={{height: 10}}
+                        overlayContainerStyle={{backgroundColor: 'white'}}
+                    />) : (<Avatar
+                        rounded size='small'
+                        source={require('../assets/icons/release.png')}
+                        overlayContainerStyle={{backgroundColor: 'white'}}
+                    />)
+                ) ;
             }
             else if (routeName === 'Contact') {
-                iconName = 'message1'
+                return (
+                    focused? (<Avatar
+                        rounded size='small'
+                        source={require('../assets/icons/message-focused.png')}
+                        overlayContainerStyle={{backgroundColor: 'white'}}
+                    />) : (<Avatar
+                        rounded size='small'
+                        source={require('../assets/icons/message.png')}
+                        overlayContainerStyle={{backgroundColor: 'white'}}
+                    />)
+                ) ;
             }
             else if (routeName === 'User') {
-                iconName = 'user'
+                return (
+                    focused? (<Avatar
+                        rounded size='small'
+                        source={require('../assets/icons/user-focused.png')}
+                        overlayContainerStyle={{backgroundColor: 'white'}}
+                    />) : (<Avatar
+                        rounded size='small'
+                        source={require('../assets/icons/user.png')}
+                        overlayContainerStyle={{backgroundColor: 'white'}}
+                    />)
+                ) ;
             }
-            return <Icon name={iconName} size={25} color={tintColor} />;
         }
     })
 });

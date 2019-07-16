@@ -3605,10 +3605,10 @@ jest@^24.8.0:
     import-local "^2.0.0"
     jest-cli "^24.8.0"
 
-jetifier@^1.6.2:
-  version "1.6.2"
-  resolved "https://registry.npm.taobao.org/jetifier/download/jetifier-1.6.2.tgz#c1d8b7cc2af1d3a255963dbdaed3d56157e94712"
-  integrity sha1-wdi3zCrx06JVlj29rtPVYVfpRxI=
+jetifier@^1.6.3:
+  version "1.6.3"
+  resolved "https://registry.npm.taobao.org/jetifier/download/jetifier-1.6.3.tgz#61a95b29aefddfe3b6d81ee956f5e99f8b9cba19"
+  integrity sha1-YalbKa793+O22B7pVvXpn4ucuhk=
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"

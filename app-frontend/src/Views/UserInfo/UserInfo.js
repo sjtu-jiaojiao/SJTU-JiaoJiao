@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import {Text, View, FlatList, Alert} from 'react-native';
-import {ListItem, Avatar, Button} from "react-native-elements";
-import Icon from "react-native-vector-icons/AntDesign";
+import {ListItem, Avatar, Button, Icon } from "react-native-elements";
 import Config from "../../Config";
 import {NavigationActions} from "react-navigation";
-import axios from "axios";
 
 export default class UserInfoScreen extends Component {
     constructor(props) {
@@ -28,75 +26,22 @@ export default class UserInfoScreen extends Component {
         formData.append('userId', 1);
         formData.append('telephone', '15221278083');
         formData.append('status', 1);
-        /*
-        let postxml = new XMLHttpRequest();
-        postxml.onreadystatechange = (e) => {
-            if (postxml.readyState !== 4) {
-                return;
-            }
-            if (postxml.status === 200) {
-                alert("请求成功！");
-                //this.setState({responseText: postxml.responseText})
-                console.warn(postxml.responseText);
 
-            } else {
-                alert("请求失败！");
-            }
-        };
-        postxml.open("POST","ajax_test.asp",true);
-        postxml.setRequestHeader("Content-type","application/json");
-        postxml.send("userId=1&telephone=15221278083&status=1");*/
-
-        axios.post('http://202.120.40.8:30711/v1/user',
-            {
-                'userId': '1',
-                'telephone': '15221278083',
-                'status': '1',
-            },
-            {
-                headers: {
-                    'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMxMzY3MTQsImlkIjo0LCJyb2xlIjoxfQ.9UCj-BC-hL1KVRBs8KCPVE4LSKDriicCuCZ_s495_Pg',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            }
-        )
-            .then(res => console.warn(res))
-            .catch(e => console.warn(e));
-
-        /*axios.post(
-            '202.120.40.8:30711/v1/user',
-            {
-                'userId': '1',
-                'telephone': '15221278083',
-                'status': '1',
-            }
-        )
-            .then(function (response) {
-                // handle success
-                console.warn(response);
-            })
-            .catch(function (error) {
-                // handle error
-                console.warn(error);
-            })
-            .finally(function () {
-                // always executed
-            });*/
-        /*fetch('http://202.120.40.8:30711/v1/user', {
+        fetch('http://202.120.40.8:30711/v1/user', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded',
-                Authorization: ('Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMxMzY3MTQsImlkIjo0LCJyb2xlIjoxfQ.9UCj-BC-hL1KVRBs8KCPVE4LSKDriicCuCZ_s495_Pg'),
+                Authorization: ('Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMyOTAxNTUsImlkIjoxLCJyb2xlIjoxfQ.MrIGXiZ8Nu0CSrVb7xNWmCab3RPcUCbWuMvkrYWHW6s'),
             },
-            body: 'userId=1&telephone=15221278083&status=1',
+            body: 'userId=1&telephone=15221278083',
         })
             .then((response) => {
                 console.warn(response);
             })
             .catch((error) => {
                 console.error(error);
-            });*/
+            });
     }
 
     render() {
@@ -132,14 +77,14 @@ export default class UserInfoScreen extends Component {
                     chevron
                     title={'学号'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{this.state.studentId}</Text>}
+                    rightElement={<Text style={{ color: 'grey', fontSize: 17 }}>{this.state.studentId}</Text>}
                 />
                 <ListItem
                     bottomDivider
                     chevron
                     title={'真实姓名'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{this.state.studentName}</Text>}
+                    rightElement={<Text style={{ color: 'grey', fontSize: 17 }}>{this.state.studentName}</Text>}
                 />
                 <View style={{height: 15}}/>
                 <Button

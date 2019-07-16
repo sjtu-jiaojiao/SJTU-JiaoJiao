@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import {FlatList, Text, View, StyleSheet} from 'react-native';
-import {Avatar, Button, ListItem, SearchBar} from "react-native-elements";
+import {Avatar, Button, ListItem, SearchBar, Icon} from "react-native-elements";
 import Config from '../../Config';
-import Icon from "react-native-vector-icons/AntDesign";
 
 let dev = "http://202.120.40.8:30711/v1";
 
