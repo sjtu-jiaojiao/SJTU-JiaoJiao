@@ -18,7 +18,7 @@ func StartTestServer(f func() *gin.Engine, m string, p string, b io.Reader,
 	setter func(r *http.Request)) *httptest.ResponseRecorder {
 	router := f()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest(m, "/"+GetStringConfig("api_config", "version")+"/"+p, b)
+	req, _ := http.NewRequest(m, "/"+GetStringConfig("api_config", "version")+p, b)
 	if setter != nil {
 		setter(req)
 	}

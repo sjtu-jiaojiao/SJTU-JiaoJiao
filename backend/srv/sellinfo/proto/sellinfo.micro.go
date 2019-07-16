@@ -128,6 +128,7 @@ func (h *sellInfoHandler) Find(ctx context.Context, in *SellInfoFindRequest, out
 
 type ContentService interface {
 	Create(ctx context.Context, in *ContentCreateRequest, opts ...client.CallOption) (*ContentCreateResponse, error)
+	Delete(ctx context.Context, in *ContentDeleteRequest, opts ...client.CallOption) (*ContentDeleteResponse, error)
 }
 
 type contentService struct {
@@ -158,15 +159,27 @@ func (c *contentService) Create(ctx context.Context, in *ContentCreateRequest, o
 	return out, nil
 }
 
+func (c *contentService) Delete(ctx context.Context, in *ContentDeleteRequest, opts ...client.CallOption) (*ContentDeleteResponse, error) {
+	req := c.c.NewRequest(c.name, "Content.Delete", in)
+	out := new(ContentDeleteResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Content service
 
 type ContentHandler interface {
 	Create(context.Context, *ContentCreateRequest, *ContentCreateResponse) error
+	Delete(context.Context, *ContentDeleteRequest, *ContentDeleteResponse) error
 }
 
 func RegisterContentHandler(s server.Server, hdlr ContentHandler, opts ...server.HandlerOption) error {
 	type content interface {
 		Create(ctx context.Context, in *ContentCreateRequest, out *ContentCreateResponse) error
+		Delete(ctx context.Context, in *ContentDeleteRequest, out *ContentDeleteResponse) error
 	}
 	type Content struct {
 		content
@@ -181,4 +194,8 @@ type contentHandler struct {
 
 func (h *contentHandler) Create(ctx context.Context, in *ContentCreateRequest, out *ContentCreateResponse) error {
 	return h.ContentHandler.Create(ctx, in, out)
+}
+
+func (h *contentHandler) Delete(ctx context.Context, in *ContentDeleteRequest, out *ContentDeleteResponse) error {
+	return h.ContentHandler.Delete(ctx, in, out)
 }

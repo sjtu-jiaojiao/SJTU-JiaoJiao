@@ -102,7 +102,7 @@ func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *us
  * @apiParam {string} [telephone] user telephone, allow clear
  * @apiParam {string} [studentId] student id
  * @apiParam {string} [studentName] student name
- * @apiParam {int32} status user status, 1 for normal <br> 2 for frozen
+ * @apiParam {int32} [status] user status, 1 for normal <br> 2 for frozen
  * @apiParam {bool} clearEmpty=0 clear the empty field
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for user not found
  * @apiUse DBServerDown

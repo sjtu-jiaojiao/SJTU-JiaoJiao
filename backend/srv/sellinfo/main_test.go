@@ -8,9 +8,6 @@ import (
 	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo/gridfs"
 )
 
 func TestSrvInfoQuery(t *testing.T) {
@@ -68,59 +65,74 @@ func TestSrvInfoQuery(t *testing.T) {
 }
 
 func TestSrvInfoCreate(t *testing.T) {
-	//var s srvInfo
-	//var req sellinfo.SellInfoCreateRequest
-	//var rsp sellinfo.SellInfoCreateResponse
-	//
-	//getToken := func() (string, string) {
-	//	var sc srvContent
-	//	var reqc sellinfo.ContentCreateRequest
-	//	var rspc sellinfo.ContentCreateResponse
-	//
-	//	reqc.Content = []byte{1, 2, 3, 4, 5, 6}
-	//	reqc.Type = sellinfo.ContentCreateRequest_PICTURE
-	//	So(sc.Create(context.TODO(), &reqc, &rspc), ShouldBeNil)
-	//	So(rspc.Status, ShouldEqual, sellinfo.ContentCreateResponse_SUCCESS)
-	//	So(rspc.ContentId, ShouldNotBeBlank)
-	//	So(rspc.ContentToken, ShouldNotBeBlank)
-	//
-	//	return rspc.ContentId, rspc.ContentToken
-	//}
-	//
-	//Convey("Test SellInfo Create", t, func() {
-	//	So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-	//	So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
-	//
-	//	req.GoodName = "good"
-	//	So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-	//	So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
-	//
-	//	req.ValidTime = 19087982694
-	//	So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-	//	So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
-	//
-	//	req.UserId = 1000
-	//	So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-	//	So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_SUCCESS)
-	//	So(rsp.SellInfoId, ShouldNotEqual, 0)
-	//
-	//	req.ContentId = "123456789abc123456789abc"
-	//	So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-	//	So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
-	//
-	//	req.ContentToken = "jlkfjaoiu2709429-98247ksf"
-	//	So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-	//	So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_TOKEN)
-	//
-	//	req.ContentId = "1234"
-	//	So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-	//	So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
-	//
-	//	req.ContentId, req.ContentToken = getToken()
-	//	So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-	//	So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_SUCCESS)
-	//	So(rsp.SellInfoId, ShouldNotEqual, 0)
-	//})
+	var s srvInfo
+	var req sellinfo.SellInfoCreateRequest
+	var rsp sellinfo.SellInfoCreateResponse
+
+	getToken := func() (string, string) {
+		var sc srvContent
+		var reqc sellinfo.ContentCreateRequest
+		var rspc sellinfo.ContentCreateResponse
+
+		reqc.Content = []byte{1, 2, 3, 4, 5, 6}
+		reqc.Type = sellinfo.ContentCreateRequest_PICTURE
+		So(sc.Create(context.TODO(), &reqc, &rspc), ShouldBeNil)
+		So(rspc.Status, ShouldEqual, sellinfo.ContentCreateResponse_SUCCESS)
+		So(rspc.ContentId, ShouldNotBeBlank)
+		So(rspc.ContentToken, ShouldNotBeBlank)
+
+		return rspc.ContentId, rspc.ContentToken
+	}
+
+	Convey("Test SellInfo Create", t, func() {
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
+
+		req.GoodName = "good"
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
+
+		req.ValidTime = 19087982694
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
+
+		req.UserId = 1000
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_SUCCESS)
+		So(rsp.SellInfoId, ShouldNotEqual, 0)
+
+		_, _ = db.Ormer.Delete(&db.SellInfo{
+			Id: rsp.SellInfoId,
+		})
+
+		req.ContentId = "123456789abc123456789abc"
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
+
+		req.ContentToken = "jlkfjaoiu2709429-98247ksf"
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_TOKEN)
+
+		req.ContentId = "1234"
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
+
+		req.ContentId, req.ContentToken = getToken()
+		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_SUCCESS)
+		So(rsp.SellInfoId, ShouldNotEqual, 0)
+
+		_, _ = db.Ormer.Delete(&db.SellInfo{
+			Id: rsp.SellInfoId,
+		})
+		var sc srvContent
+		var rspc sellinfo.ContentDeleteResponse
+		err := sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
+			ContentId:    req.ContentId,
+			ContentToken: req.ContentToken,
+		}, &rspc)
+		So(err, ShouldBeNil)
+	})
 }
 
 func TestSrvContentCreate(t *testing.T) {
@@ -164,29 +176,13 @@ func TestSrvContentCreate(t *testing.T) {
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, sellinfo.ContentCreateResponse_INVALID_TOKEN)
 
-		// clean up
-		collection := db.MongoDatabase.Collection("sellinfo")
-		rid, err := primitive.ObjectIDFromHex(req.ContentId)
+		var sc srvContent
+		var rspc sellinfo.ContentDeleteResponse
+		err := sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
+			ContentId:    req.ContentId,
+			ContentToken: req.ContentToken,
+		}, &rspc)
 		So(err, ShouldBeNil)
-		type files struct {
-			FileId primitive.ObjectID `bson:"fileId"`
-			Type   string             `bson:"type"`
-		}
-		type result struct {
-			Id    primitive.ObjectID `bson:"_id"`
-			Files []files            `bson:"files"`
-		}
-		var res result
-		err = collection.FindOneAndDelete(db.MongoContext, bson.D{
-			{"_id", rid},
-		}).Decode(&res)
-		So(err, ShouldBeNil)
-		for _, v := range res.Files {
-			bucket, err := gridfs.NewBucket(db.MongoDatabase)
-			So(err, ShouldBeNil)
-			err = bucket.Delete(v.FileId)
-			So(err, ShouldBeNil)
-		}
 	})
 }
 
