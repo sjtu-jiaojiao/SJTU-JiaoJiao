@@ -34,26 +34,21 @@
                 </ng-template>
         </nz-card>
         
-        <nz-card nzTitle="站点信息">
+        <nz-card  *ngIf="site" nzTitle="站点信息">
                 <div nz-row [nzGutter]="8">
-                  <div nz-col [nzSpan]="6">
-                    <nz-card  nzType="inner" nzTitle="域名">
-                            <p>http://jiaojiao.sjtu.edu.cn</p>
-                    </nz-card>
-                  </div>
-                  <div nz-col [nzSpan]="6">
+                  <div nz-col [nzSpan]="8">
                         <nz-card  nzType="inner" nzTitle="网站名">
-                                <p>交大交交</p>
+                                <p>{{site.name}}</p>
                         </nz-card>
                   </div>
-                  <div nz-col [nzSpan]="6">
+                  <div nz-col [nzSpan]="8">
                     <nz-card nzType="inner" nzTitle="版权信息">
-                        <p>CopyRight@SE 2019</p>
+                        <p> {{site.cp}}</p>
                     </nz-card>
                   </div>
-                  <div nz-col [nzSpan]="6">
+                  <div nz-col [nzSpan]="8">
                     <nz-card nzType="inner" nzTitle="网站状态">
-                        <p>不公开外网</p>
+                        <p>{{site.status?'正常':'维护'}}</p>
                     </nz-card>
                   </div>
                 </div>
