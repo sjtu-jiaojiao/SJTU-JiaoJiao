@@ -135,6 +135,115 @@ func TestSrvInfoCreate(t *testing.T) {
 	})
 }
 
+func TestSrvInfoFind(t *testing.T) {
+	var s srvInfo
+	var req sellinfo.SellInfoFindRequest
+
+	info1 := db.SellInfo{
+		Id:          1000,
+		Status:      1,
+		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
+		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
+		UserId:      1000,
+		GoodId:      1000,
+	}
+	info2 := db.SellInfo{
+		Id:          1001,
+		Status:      2,
+		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
+		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
+		UserId:      1000,
+		GoodId:      1001,
+	}
+	info3 := db.SellInfo{
+		Id:          1002,
+		Status:      3,
+		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
+		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
+		UserId:      1001,
+		GoodId:      1002,
+	}
+	good1 := db.Good{
+		Id:          1000,
+		GoodName:    "good",
+		Description: "Very good!",
+		ContentId:   "123456789",
+	}
+	good2 := db.Good{
+		Id:          1001,
+		GoodName:    "good",
+		Description: "Very good!",
+		ContentId:   "123456789",
+	}
+	good3 := db.Good{
+		Id:          1002,
+		GoodName:    "good",
+		Description: "Very good!",
+		ContentId:   "123456789",
+	}
+
+	prepare := func() {
+		_, err := db.Ormer.Insert(&good1)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Insert(&good2)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Insert(&good3)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Insert(&info1)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Insert(&info2)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Insert(&info3)
+		So(err, ShouldBeNil)
+	}
+	end := func() {
+		_, err := db.Ormer.Delete(&db.SellInfo{Id: 1000})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.SellInfo{Id: 1001})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.SellInfo{Id: 1002})
+		So(err, ShouldBeNil)
+
+		_, err = db.Ormer.Delete(&db.Good{Id: 1000})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.Good{Id: 1001})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.Good{Id: 1002})
+		So(err, ShouldBeNil)
+	}
+	testLen := func(length int) {
+		var rsp sellinfo.SellInfoFindResponse
+
+		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(len(rsp.SellInfo), ShouldEqual, length)
+	}
+
+	Convey("Test SellInfo Find", t, func() {
+		testLen(0)
+
+		prepare()
+
+		testLen(3)
+
+		req.UserId = 1001
+		testLen(1)
+
+		req.UserId = 1000
+		testLen(2)
+
+		req.Limit = 1
+		testLen(1)
+
+		req.Offset = 1
+		testLen(1)
+
+		req.Offset = 2
+		testLen(0)
+
+		end()
+	})
+}
+
 func TestSrvContentCreate(t *testing.T) {
 	var s srvContent
 	var req sellinfo.ContentCreateRequest
