@@ -6,9 +6,9 @@
 ## 分支
 - master: 稳定分支. PR必须从`develop`分支合并且有4人通过review（目前为小组全体成员）
 - develop: 当前开发分支，可能存在bug或不稳定新特性. PR必须有至少1人review
-- feature_[name]: feature 分支
-- bug_[name]: bugfix 分支
-- hotfix_[name]: hotfix 分支
+- feature/[name]: feature 分支
+- bugfix/[name]: bugfix 分支
+- hotfix/[name]: hotfix 分支
 
 ## 创建新feature
 使用下面的命令创建新特性并提交远程
