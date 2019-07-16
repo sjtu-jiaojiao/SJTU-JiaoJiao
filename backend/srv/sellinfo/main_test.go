@@ -101,9 +101,17 @@ func TestSrvInfoCreate(t *testing.T) {
 		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_SUCCESS)
 		So(rsp.SellInfoId, ShouldNotEqual, 0)
 
-		_, _ = db.Ormer.Delete(&db.SellInfo{
+		tmp := db.SellInfo{
 			Id: rsp.SellInfoId,
+		}
+		err := db.Ormer.Read(&tmp)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.Good{
+			Id: tmp.GoodId,
 		})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&tmp)
+		So(err, ShouldBeNil)
 
 		req.ContentId = "123456789abc123456789abc"
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
@@ -122,12 +130,20 @@ func TestSrvInfoCreate(t *testing.T) {
 		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_SUCCESS)
 		So(rsp.SellInfoId, ShouldNotEqual, 0)
 
-		_, _ = db.Ormer.Delete(&db.SellInfo{
+		tmp = db.SellInfo{
 			Id: rsp.SellInfoId,
+		}
+		err = db.Ormer.Read(&tmp)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.Good{
+			Id: tmp.GoodId,
 		})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&tmp)
+		So(err, ShouldBeNil)
 		var sc srvContent
 		var rspc sellinfo.ContentDeleteResponse
-		err := sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
+		err = sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
 			ContentId:    req.ContentId,
 			ContentToken: req.ContentToken,
 		}, &rspc)
@@ -288,8 +304,8 @@ func TestSrvContentCreate(t *testing.T) {
 		var sc srvContent
 		var rspc sellinfo.ContentDeleteResponse
 		err := sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
-			ContentId:    req.ContentId,
-			ContentToken: req.ContentToken,
+			ContentId:    rsp.ContentId,
+			ContentToken: rsp.ContentToken,
 		}, &rspc)
 		So(err, ShouldBeNil)
 	})
