@@ -754,7 +754,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "int32",
             "optional": false,
-            "field": "sellInfoState",
+            "field": "status",
             "description": "<p>1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired</p>"
           },
           {
