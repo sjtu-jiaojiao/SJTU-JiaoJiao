@@ -57,7 +57,6 @@ export default class UserInfoScreen extends Component {
                 <ListItem
                     topDivider
                     bottomDivider
-                    chevron
                     title={'用户名'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
                     rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{this.state.userName}</Text>}
@@ -67,21 +66,18 @@ export default class UserInfoScreen extends Component {
                 />
                 <ListItem
                     bottomDivider
-                    chevron
                     title={'手机'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
                     rightElement={<Text style={{ color: 'steelblue', fontSize: 17 }}>{this.state.telephone}</Text>}
                 />
                 <ListItem
                     bottomDivider
-                    chevron
                     title={'学号'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
                     rightElement={<Text style={{ color: 'grey', fontSize: 17 }}>{this.state.studentId}</Text>}
                 />
                 <ListItem
                     bottomDivider
-                    chevron
                     title={'真实姓名'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
                     rightElement={<Text style={{ color: 'grey', fontSize: 17 }}>{this.state.studentName}</Text>}
