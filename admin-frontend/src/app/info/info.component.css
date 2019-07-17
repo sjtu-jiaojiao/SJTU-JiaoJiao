@@ -25,6 +25,10 @@ input{
 }
 
 
+#searchname {
+  float:right;
+  width: 20%;
+}
 #type {
   float:right;
   width: 10%;

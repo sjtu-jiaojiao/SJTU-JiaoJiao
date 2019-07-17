@@ -21,6 +21,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { UserDetailComponent, fAnimationDelay, fSymbolSize, fFormatter } from './userdetail.component';
 import { CallbackComponent } from '../callback/callback.component';
+import { AuthService } from '../auth.service';
+import { User } from '../entity/user';
 
 describe('UserdetailComponent', () => {
   let component: UserDetailComponent;
@@ -67,7 +69,16 @@ describe('UserdetailComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    const service: AuthService = TestBed.get(AuthService);
+    service.login({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMzMzk3MDYsImlkIjozLCJyb2xlIjoyfQ.woB67gYA8hTMljeg6lqwG_3fSJm4Q7SD6Ln8w2Ol4xk' });
+
+    component.user= new User();
+    component.forbid = true;
     component.save();
+    
+    component.forbid = false;
+    component.save();
+    
     component.goBack();
     expect(fAnimationDelay(5)).toEqual(25);
     expect(fSymbolSize([0,0,5])).toEqual(10);

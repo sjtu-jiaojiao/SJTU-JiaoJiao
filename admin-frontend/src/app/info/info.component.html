@@ -1,4 +1,4 @@
-<h2>交易信息管理</h2>      
+<h2>交易信息管理</h2> 
 <nz-input-number
   [(ngModel)]="Tthreshold"
   [nzMin]="1"
@@ -11,13 +11,18 @@
   [nzStep]="1"
   [nzPlaceHolder]="'预约阈值'"
 ></nz-input-number>
-<button nz-button (click)='end()' [nzType]="'primary'">结束所有等待时间超过{{Tthreshold}}天且预约数小于{{Ythreshold}}的交易信息</button>
+<button nz-button [nzType]="'primary'">结束所有等待时间超过{{Tthreshold}}天且预约数小于{{Ythreshold}}的交易信息</button>
 
+<nz-input-group id='searchname' nzSearch [nzAddOnAfter]="suffixIconButton">
+  <input type="text" [(ngModel)]="searchUser" nz-input placeholder="输入用户ID" />
+</nz-input-group>
+<ng-template #suffixIconButton>
+  <button nz-button (click)='searchByUser()' nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+</ng-template>
 
 <nz-select 
 id='type'
 [(ngModel)]="selectedType"
-(ngModelChange)	="selectType($event)"
 nzPlaceHolder="Choose">
   <nz-option [nzValue]="0" nzLabel="出售"></nz-option>
   <nz-option [nzValue]="1" nzLabel="求购"></nz-option>
@@ -38,29 +43,32 @@ nzPlaceHolder="TagFilter">
 </nz-select>
 
 
-<nz-list [nzDataSource]="curinfos" [nzRenderItem]="info" [nzGrid]="{gutter: 16, span: 6}">
+<nz-list [nzDataSource]="infos" [nzRenderItem]="info" [nzGrid]="{gutter: 16, span: 6}">
     <ng-template #info let-info>
       <nz-list-item [nzContent]="nzContent">
         <ng-template #nzContent>
-          <nz-card [nzTitle]="info.intro">
+          <nz-card [nzTitle]="info.goodName">
       <div>
         <div class='infoitem'>
-              <span class="badge">交易ID</span>{{info.id}}
+            <span class="badge">交易名</span>{{info.goodName}}
         </div>
         <div class='infoitem'>
-              <span class="badge">交易类型</span>{{info.type? '求购':'出售'}}
+              <span class="badge">交易ID</span>{{info.sellInfoId}}
         </div>
         <div class='infoitem'>
-          <span class="badge">交易发起人</span>{{info.source}}
+              <span class="badge">交易类型</span>{{'出售'}}
+        </div>
+      <div class='infoitem'>
+        <span class="badge">发起用户</span>{{info.userId}}
+    </div>
+    <div class='infoitem'>
+        <span class="badge">发布日期</span>{{stringToDate(info.releaseTime)}}
+    </div>
+      <div class='infoitem'>
+          <span class="badge">截止日期</span>{{stringToDate(info.validTime)}}
       </div>
       <div class='infoitem'>
-          <span class="badge">发起时间</span>{{info.time}}
-      </div>
-      <div class='infoitem'>
-          <span class="badge">状态</span>{{getstate(info.state)}}
-      </div>
-      <div class='infoitem'>
-          <span class="badge">当前预约数</span>{{info.count}}
+          <span class="badge">状态</span>{{getstate(info.status)}}
       </div>
       <nz-tag
         *ngFor="let tag of info.tags"
@@ -68,7 +76,7 @@ nzPlaceHolder="TagFilter">
         {{ tag }}
       </nz-tag>
       </div>
-              <a routerLink="/info/{{info.id}}">
+              <a routerLink="/info/{{info.sellInfoId}}">
               交易详情
               <i nz-icon type="search"></i>
                </a>
@@ -83,7 +91,7 @@ nzPlaceHolder="TagFilter">
   [(nzPageSize)]="size"
   [nzPageSizeOptions]="[4,8,12,16,20,24,28,32]"	
   [nzTotal]="count"
-  (nzPageIndexChange)	="pageChange($event)"
-  (nzPageSizeChange)= "sizeChange($event)"
+  (nzPageIndexChange)	="onChange()"
+  (nzPageSizeChange)= "onChange()"
   nzShowSizeChanger
 ></nz-pagination>
