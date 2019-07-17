@@ -4,20 +4,20 @@
       <div nz-col [nzSpan]="8">
         <nz-card nzTitle="用户状态">
             <div class='useritem'>
-                  <span class="badge">用户ID</span>{{user.id}}
+                  <span class="badge">用户ID</span>{{user.userId}}
             </div>
             <div class='useritem'>
-              <span class="badge">用户名</span><input [(ngModel)]="user.name" placeholder="name"/>
+              <span class="badge">用户名</span><input [(ngModel)]="userName" placeholder="name"/>
           </div>
           <div class='useritem'>
-              <span class="badge">封禁</span><label nz-checkbox [(ngModel)]="user.forbid"></label>
+              <span class="badge">封禁</span><label nz-checkbox [(ngModel)]="forbid"></label>
 
           </div>
           <div class='useritem'>
-              <span class="badge">信用评价</span>{{user.score}}
+              <span class="badge">电话号码</span>{{user.telephone}}
           </div>
           <div class='useritem'>
-              <span class="badge">活跃度</span>{{user.active}}
+              <span class="badge">头像</span>{{user.avatarId}}
           </div>
         </nz-card>
         <nz-card nzType="inner" nzTitle="用户简介">     

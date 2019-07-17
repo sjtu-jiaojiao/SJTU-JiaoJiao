@@ -93,13 +93,4 @@ export class InfoComponent implements OnInit {
   sizeChange(size){
     this.switchPage(this.current,size);
   }
-  delete(info: Info): void {
-    this.infos = this.infos.filter(h => h !== info);
-    this.infoService.deleteInfo(info.id).subscribe(_ =>{
-      this.count = this.infos.length; 
-      this.switchPage(this.current, this.size);
-    });
-  }
-
-
 }
