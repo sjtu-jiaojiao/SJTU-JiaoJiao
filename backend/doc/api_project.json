@@ -1,22 +1,22 @@
 {
-  "name": "SJTU-JiaoJiao",
-  "version": "1.0.0",
-  "description": "SJTU JiaoJiao backend API document",
-  "title": "SJTU-JiaoJiao",
-  "url": "http://localhost:8080/v1",
-  "order": [
-    "Auth",
-    "User",
-    "SellInfo",
-    "Service"
-  ],
-  "sampleUrl": false,
-  "defaultVersion": "0.0.0",
-  "apidoc": "0.3.0",
-  "generator": {
-    "name": "apidoc",
-    "time": "2019-07-17T09:46:01.252Z",
-    "url": "http://apidocjs.com",
-    "version": "0.17.7"
-  }
+    "name": "SJTU-JiaoJiao",
+    "version": "1.0.0",
+    "description": "SJTU JiaoJiao backend API document",
+    "title": "SJTU-JiaoJiao",
+    "url": "http://202.120.40.8:30711/v1",
+    "order": [
+        "Auth",
+        "User",
+        "SellInfo",
+        "Service"
+    ],
+    "sampleUrl": false,
+    "defaultVersion": "0.0.0",
+    "apidoc": "0.3.0",
+    "generator": {
+        "name": "apidoc",
+        "time": "2019-07-17T10:37:12.479Z",
+        "url": "http://apidocjs.com",
+        "version": "0.17.7"
+    }
 }

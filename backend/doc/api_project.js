@@ -3,7 +3,7 @@ define({
   "version": "1.0.0",
   "description": "SJTU JiaoJiao backend API document",
   "title": "SJTU-JiaoJiao",
-  "url": "http://localhost:8080/v1",
+  "url": "http://202.120.40.8:30711/v1",
   "order": [
     "Auth",
     "User",
