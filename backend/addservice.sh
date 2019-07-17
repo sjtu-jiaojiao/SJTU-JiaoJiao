@@ -12,8 +12,8 @@ mv ./srv/$srvnamel/proto/NAME.proto ./srv/$srvnamel/proto/$srvnamel.proto
 sed -i "s/{{SERVICE_LNAME}}/$srvnamel/g" ./srv/$srvnamel/Dockerfile
 sed -i "s/{{SERVICE_NAME}}/$srvname/g" ./srv/$srvnamel/main.go
 
-sed -i "/# docker api insert before this/i sudo docker build ./api/$srvnamel -t sjtujj/api-$srvnamel" build.sh
-sed -i "/# docker srv insert before this/i sudo docker build ./srv/$srvnamel -t sjtujj/srv-$srvnamel" build.sh
+sed -i "/# docker api insert before this/i sudo docker build ./api/$srvnamel -t sjtujj/api-$srvnamel" dockerbuild.sh
+sed -i "/# docker srv insert before this/i sudo docker build ./srv/$srvnamel -t sjtujj/srv-$srvnamel" dockerbuild.sh
 sed -i "/# build api insert before this/i CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ./build/api-$srvnamel ./api/$srvnamel/main.go" build.sh
 sed -i "/# build srv insert before this/i CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ./build/srv-$srvnamel ./srv/$srvnamel/main.go" build.sh
 sed -i "/# docker api insert before this/i sudo docker push sjtujj/api-$srvnamel" deploy.sh

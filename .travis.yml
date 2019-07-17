@@ -43,7 +43,7 @@ script:
   - gover
   - goveralls -coverprofile=gover.coverprofile -service=travis-ci -repotoken $COVERALLS_TOKEN
   - cp config_deploy.json config.json
-  - bash build.sh
+  - bash dockerbuild.sh
 
 deploy:
   provider: script
