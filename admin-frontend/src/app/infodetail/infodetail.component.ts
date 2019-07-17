@@ -63,6 +63,7 @@ stringToDate(params) {
       });
   }
     save(): void {
+    if(!this.info) return;
     this.info.validTime = this.deadLine.getTime().toString();
     this.infoService.updateInfo(this.info)
       .subscribe(() => this.goBack());

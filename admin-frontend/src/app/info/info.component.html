@@ -91,7 +91,7 @@ nzPlaceHolder="TagFilter">
   [(nzPageSize)]="size"
   [nzPageSizeOptions]="[4,8,12,16,20,24,28,32]"	
   [nzTotal]="count"
-  (nzPageIndexChange)	="pageChange($event)"
-  (nzPageSizeChange)= "sizeChange($event)"
+  (nzPageIndexChange)	="onChange()"
+  (nzPageSizeChange)= "onChange()"
   nzShowSizeChanger
 ></nz-pagination>

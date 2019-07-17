@@ -61,6 +61,7 @@ export class InfoComponent implements OnInit {
   }
     this.infoService.searchInfos(this.searchUser,this.size, this.current*this.size-this.size)
     .subscribe(infos => {
+      if(!infos) return;
       this.infos = infos.sellInfo;
       this.checkcount();
     });
@@ -78,15 +79,13 @@ export class InfoComponent implements OnInit {
   getinfos(): void {
     this.infoService.getPageInfos(this.size, this.current*this.size-this.size)
     .subscribe(infos => {
+      if(!infos) return;
       this.infos = infos.sellInfo;
       this.checkcount();
     });
   }
 
-  pageChange(page){
-    this.searchByUser();
-  }
-  sizeChange(size){
+  onChange(){
     this.searchByUser();
   }
 }

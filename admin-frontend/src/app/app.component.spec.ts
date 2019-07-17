@@ -63,6 +63,6 @@ describe('AppComponent', () => {
 
   it('should deal with log out ', () => {
     const eg = new AppComponent(TestBed.get(Router), TestBed.get(AuthService),TestBed.get(NzNotificationService));
-    const auth: AuthService = TestBed.get(AuthService);
+    eg.logout();
   })
 });

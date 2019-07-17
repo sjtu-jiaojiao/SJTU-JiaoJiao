@@ -50,7 +50,7 @@
   [(nzPageSize)]="size"
   [nzTotal]="count"
   [nzPageSizeOptions]="[2,4,8,12,16,20,24,28,32]"	
-  (nzPageIndexChange)	="pageChange($event)"
-  (nzPageSizeChange)= "sizeChange($event)"
+  (nzPageIndexChange)	="onChange()"
+  (nzPageSizeChange)= "onChange()"
   nzShowSizeChanger      
 ></nz-pagination>

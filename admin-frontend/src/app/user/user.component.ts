@@ -30,6 +30,7 @@ export class UserComponent implements OnInit {
   }
     this.userService.searchUsers(this.searchName,this.size, this.current*this.size-this.size)
     .subscribe(users => {
+      if(!users) return;
       this.users = users.user;
       this.checkcount();
     });
@@ -44,15 +45,13 @@ export class UserComponent implements OnInit {
   getusers(): void {
     this.userService.getPageUsers(this.size, this.current*this.size-this.size)
     .subscribe(users => {
+      if(!users) return;
       this.users = users.user;
       this.checkcount();
     });
   }
 
-  pageChange(page){
-    this.searchByName();
-  }
-  sizeChange(size){
+  onChange(){
     this.searchByName();
   }
   /*forbid(): void {
