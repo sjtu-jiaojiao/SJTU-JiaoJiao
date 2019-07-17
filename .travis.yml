@@ -22,7 +22,6 @@ before_install:
   - docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=sjtujj mariadb
   - docker pull mongo
   - docker run -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=123456 mongo
-  - openssl aes-256-cbc -K $encrypted_3b095c6852fb_key -iv $encrypted_3b095c6852fb_iv -in private.key.enc -out private.key -d
 
 install:
   - wget https://releases.hashicorp.com/consul/1.5.2/consul_1.5.2_linux_amd64.zip
@@ -36,6 +35,7 @@ before_script:
   - consul agent  -bootstrap -server -bind=127.0.0.1 -data-dir=./data/ 2>&1 1>consul.log &
   - sleep 3
   - cd backend
+  - openssl aes-256-cbc -K $encrypted_3b095c6852fb_key -iv $encrypted_3b095c6852fb_iv -in private.key.enc -out private.key -d
   - consul kv import @consul.json
 
 script:
