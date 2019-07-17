@@ -1,7 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	uuid "github.com/satori/go.uuid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	db "jiaojiao/database"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
 	"testing"
@@ -264,6 +269,7 @@ func TestSrvContentCreate(t *testing.T) {
 	var s srvContent
 	var req sellinfo.ContentCreateRequest
 	var rsp sellinfo.ContentCreateResponse
+
 	Convey("Test SellInfo Content Create", t, func() {
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, sellinfo.ContentCreateResponse_INVALID_PARAM)
@@ -308,6 +314,91 @@ func TestSrvContentCreate(t *testing.T) {
 			ContentToken: rsp.ContentToken,
 		}, &rspc)
 		So(err, ShouldBeNil)
+	})
+}
+
+func TestSrvContentDelete(t *testing.T) {
+	var s srvContent
+	var req sellinfo.ContentDeleteRequest
+	var rsp sellinfo.ContentDeleteResponse
+
+	upload := func() (string, string) {
+		collection := db.MongoDatabase.Collection("sellinfo")
+
+		bucket, err := gridfs.NewBucket(db.MongoDatabase)
+		So(err, ShouldBeNil)
+
+		objId, err := bucket.UploadFromStream("", bytes.NewReader([]byte{0, 10, 20, 30}))
+		So(err, ShouldBeNil)
+
+		token := uuid.NewV4().String()
+
+		res, err := collection.InsertOne(db.MongoContext, bson.M{
+			"token": token,
+			"files": bson.A{
+				bson.M{
+					"fileId": objId,
+					"type":   sellinfo.ContentCreateRequest_PICTURE,
+				}},
+		})
+		So(err, ShouldBeNil)
+
+		return res.InsertedID.(primitive.ObjectID).Hex(), token
+	}
+
+	check := func(id string, token string, error bool) {
+		collection := db.MongoDatabase.Collection("sellinfo")
+		rid, err := primitive.ObjectIDFromHex(id)
+
+		type files struct {
+			FileId primitive.ObjectID                 `bson:"fileId"`
+			Type   sellinfo.ContentCreateRequest_Type `bson:"type"`
+		}
+		type result struct {
+			Id    primitive.ObjectID `bson:"_id"`
+			Files []files            `bson:"files"`
+		}
+
+		var res result
+		err = collection.FindOne(db.MongoContext, bson.D{
+			{"_id", rid},
+			{"token", token},
+		}).Decode(&res)
+
+		if error {
+			So(err, ShouldNotBeNil)
+		} else {
+			So(err, ShouldBeNil)
+		}
+	}
+	Convey("Test SellInfo Content Delete", t, func() {
+		id, token := upload()
+		check(id, token, false)
+
+		So(s.Delete(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.ContentDeleteResponse_INVALID_PARAM)
+		check(id, token, false)
+
+		req.ContentId = id
+		So(s.Delete(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.ContentDeleteResponse_INVALID_PARAM)
+		check(id, token, false)
+
+		req.ContentId = ""
+		req.ContentToken = token
+		So(s.Delete(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.ContentDeleteResponse_INVALID_PARAM)
+		check(id, token, false)
+
+		req.ContentId = "1234"
+		So(s.Delete(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.ContentCreateResponse_INVALID_TOKEN)
+		check(id, token, false)
+
+		req.ContentId = id
+		So(s.Delete(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.ContentDeleteResponse_SUCCESS)
+		check(id, token, true)
 	})
 }
 
