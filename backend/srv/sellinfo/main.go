@@ -340,8 +340,8 @@ func (a *srvContent) Delete(ctx context.Context, req *sellinfo.ContentDeleteRequ
 		return nil
 	}
 	type files struct {
-		FileId primitive.ObjectID `bson:"fileId"`
-		Type   string             `bson:"type"`
+		FileId primitive.ObjectID                 `bson:"fileId"`
+		Type   sellinfo.ContentCreateRequest_Type `bson:"type"`
 	}
 	type result struct {
 		Id    primitive.ObjectID `bson:"_id"`
@@ -374,6 +374,7 @@ func (a *srvContent) Delete(ctx context.Context, req *sellinfo.ContentDeleteRequ
 			return err
 		}
 	}
+	rsp.Status = sellinfo.ContentDeleteResponse_SUCCESS
 	return nil
 }
 
