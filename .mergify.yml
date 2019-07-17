@@ -2,6 +2,7 @@ pull_request_rules:
   - name: Master automatic merge
     conditions:
       - "#approved-reviews-by>=3"
+      - status-success=continuous-integration/travis-ci/pr
       - base=master
     actions:
       merge:
@@ -9,6 +10,7 @@ pull_request_rules:
   - name: Develop automatic merge
     conditions:
       - "#approved-reviews-by>=1"
+      - status-success=continuous-integration/travis-ci/pr
       - base=develop
     actions:
       merge:
