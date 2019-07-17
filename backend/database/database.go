@@ -10,12 +10,6 @@ type Test struct {
 	TestName string `orm:"size(100)"`
 }
 
-// AdminUser is db admin_user table map
-type AdminUser struct {
-	Id        int32  `orm:"auto;pk;column(admin_id)"`
-	StudentId string `orm:"size(32);index"`
-}
-
 // User is db user table map
 type User struct {
 	Id          int32  `orm:"auto;pk;column(user_id)"`
@@ -25,6 +19,7 @@ type User struct {
 	StudentId   string `orm:"size(32);index"`
 	StudentName string `orm:"size(32)"`
 	Status      int32
+	Role        int32
 }
 
 // SellInfo is db release table map

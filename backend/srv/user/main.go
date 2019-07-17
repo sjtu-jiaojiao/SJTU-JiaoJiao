@@ -10,7 +10,6 @@ import (
 )
 
 type srvUser struct{}
-type srvAdmin struct{}
 
 /**
  * @apiDefine DBServerDown
@@ -39,9 +38,10 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
 			AvatarId:    utils.GetStringConfig("srv_config", "default_avatar"),
 			StudentId:   req.StudentId,
 			StudentName: req.StudentName,
-			Status:      1,
+			Status:      int32(user.UserInfo_NORMAL),
+			Role:        int32(user.UserInfo_USER),
 		}
-		created, id, err := db.Ormer.ReadOrCreate(&usr, "StudentId")
+		created, _, err := db.Ormer.ReadOrCreate(&usr, "StudentId")
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
@@ -50,7 +50,8 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
 		} else {
 			rsp.Status = user.UserCreateResponse_USER_EXIST
 		}
-		rsp.UserId = int32(id)
+		rsp.User = new(user.UserInfo)
+		parseUser(&usr, rsp.User)
 	}
 	return nil
 }
@@ -70,6 +71,7 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
  * @apiSuccess {string} studentId student id
  * @apiSuccess {string} studentName student name
  * @apiSuccess {int32} status user status, 1 for normal <br> 2 for frozen
+ * @apiSuccess {int32} role user role, 1 for user <br> 2 for admin
  * @apiUse DBServerDown
  */
 func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.UserInfo) error {
@@ -103,6 +105,7 @@ func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *us
  * @apiParam {string} [studentId] student id
  * @apiParam {string} [studentName] student name
  * @apiParam {int32} [status] user status, 1 for normal <br> 2 for frozen
+ * @apiParam {int32} [role] user role, 1 for user <br> 2 for admin
  * @apiParam {bool} clearEmpty=0 clear the empty field
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for user not found
  * @apiUse DBServerDown
@@ -127,6 +130,7 @@ func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.User
 		utils.AssignNotEmpty(&req.StudentId, &usr.StudentId)
 		utils.AssignNotEmpty(&req.StudentName, &usr.StudentName)
 		utils.AssignNotZero(&req.Status, &usr.Status)
+		utils.AssignNotZero(&req.Role, &usr.Role)
 		_, err := db.Ormer.Update(&usr)
 		if utils.LogContinue(err, utils.Warning) {
 			return err
@@ -179,115 +183,13 @@ func parseUser(s *db.User, d *user.UserInfo) {
 	d.Telephone = s.Telephone
 	d.StudentId = s.StudentId
 	d.StudentName = s.StudentName
-	d.Status = int32(s.Status)
-}
-
-/**
- * @apiDefine DBServerDown
- * @apiError (Error 500) DBServerDown can't connect to database server
- */
-
-/**
- * @api {rpc} /rpc user.AdminUser.Create
- * @apiVersion 1.0.0
- * @apiGroup Service
- * @apiName user.AdminUser.Create
- * @apiDescription Create new admin user.
- *
- * @apiParam {string} studentId student id.
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for exist user
- * @apiSuccess {int32} adminId created or existed adminId
- * @apiUse DBServerDown
- */
-func (a *srvAdmin) Create(ctx context.Context, req *user.AdminUserRequest, rsp *user.AdminUserResponse) error {
-	if req.StudentId == "" {
-		rsp.Status = user.AdminUserResponse_INVALID_PARAM
-	} else {
-		usr := db.AdminUser{
-			StudentId: req.StudentId,
-		}
-		created, id, err := db.Ormer.ReadOrCreate(&usr, "StudentId")
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-		if created {
-			rsp.Status = user.AdminUserResponse_SUCCESS
-		} else {
-			rsp.Status = user.AdminUserResponse_USER_EXIST
-		}
-		rsp.AdminId = int32(id)
-	}
-	return nil
-}
-
-/**
- * @api {rpc} /rpc user.AdminUser.Find
- * @apiVersion 1.0.0
- * @apiGroup Service
- * @apiName user.AdminUser.Find
- * @apiDescription Find admin user.
- *
- * @apiParam {string} studentId student id.
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
- * @apiSuccess {int32} adminId
- * @apiUse DBServerDown
- */
-func (a *srvAdmin) Find(ctx context.Context, req *user.AdminUserRequest, rsp *user.AdminUserResponse) error {
-	if req.StudentId == "" {
-		rsp.Status = user.AdminUserResponse_INVALID_PARAM
-	} else {
-		usr := db.AdminUser{
-			StudentId: req.StudentId,
-		}
-		err := db.Ormer.Read(&usr, "StudentId")
-		if err == orm.ErrNoRows {
-			rsp.Status = user.AdminUserResponse_NOT_FOUND
-			return nil
-		} else if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-		rsp.Status = user.AdminUserResponse_SUCCESS
-		rsp.AdminId = int32(usr.Id)
-	}
-	return nil
-}
-
-/**
- * @api {rpc} /rpc user.AdminUser.Delete
- * @apiVersion 1.0.0
- * @apiGroup Service
- * @apiName user.AdminUser.Delete
- * @apiDescription Delete admin user.
- *
- * @apiParam {string} studentId student id.
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
- * @apiSuccess {int32} deleted adminId
- * @apiUse DBServerDown
- */
-func (a *srvAdmin) Delete(ctx context.Context, req *user.AdminUserRequest, rsp *user.AdminUserResponse) error {
-	if req.StudentId == "" {
-		rsp.Status = user.AdminUserResponse_INVALID_PARAM
-	} else {
-		usr := db.AdminUser{
-			StudentId: req.StudentId,
-		}
-		id, err := db.Ormer.Delete(&usr, "StudentId")
-		if err == orm.ErrNoRows {
-			rsp.Status = user.AdminUserResponse_NOT_FOUND
-			return nil
-		} else if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-		rsp.Status = user.AdminUserResponse_SUCCESS
-		rsp.AdminId = int32(id)
-	}
-	return nil
+	d.Status = user.UserInfo_Status(s.Status)
+	d.Role = user.UserInfo_Role(s.Role)
 }
 
 func main() {
-	db.InitORM("userdb", new(db.User), new(db.AdminUser))
+	db.InitORM("userdb", new(db.User))
 	service := utils.InitMicroService("user")
 	utils.LogPanic(user.RegisterUserHandler(service.Server(), new(srvUser)))
-	utils.LogPanic(user.RegisterAdminUserHandler(service.Server(), new(srvAdmin)))
 	utils.RunMicroService(service)
 }

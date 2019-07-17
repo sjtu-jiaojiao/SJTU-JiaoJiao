@@ -27,7 +27,7 @@ type srvContent struct{}
  *
  * @apiParam {int32} sellInfoId sellInfo id.
  * @apiSuccess {int32} sellInfoId sellInfoId
- * @apiSuccess {int32} sellInfoState 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
+ * @apiSuccess {int32} status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
  * @apiSuccess {int64} releaseTime sellInfo release time
  * @apiSuccess {int64} validTime sellInfo validate time
  * @apiSuccess {string} goodName good name
