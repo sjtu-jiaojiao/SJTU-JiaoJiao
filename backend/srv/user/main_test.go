@@ -17,7 +17,10 @@ func TestUserCreate(t *testing.T) {
 		var rsp user.UserCreateResponse
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, status)
-		return rsp.UserId
+		if rsp.Status == user.UserCreateResponse_SUCCESS || rsp.Status == user.UserCreateResponse_USER_EXIST {
+			return rsp.User.UserId
+		}
+		return 0
 	}
 	Convey("Test User Create", t, func() {
 		tf(user.UserCreateResponse_INVALID_PARAM)
@@ -157,62 +160,6 @@ func TestUserFind(t *testing.T) {
 		So(err, ShouldBeNil)
 		_, err = db.Ormer.Delete(&db.User{
 			Id: 2001,
-		})
-		So(err, ShouldBeNil)
-	})
-}
-
-func TestAdminUserCreate(t *testing.T) {
-	var s srvAdmin
-	var req user.AdminUserRequest
-
-	tf := func(status user.AdminUserResponse_Status) int32 {
-		var rsp user.AdminUserResponse
-		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, status)
-		return rsp.AdminId
-	}
-	Convey("Test Admin User Create", t, func() {
-		tf(user.AdminUserResponse_INVALID_PARAM)
-
-		req.StudentId = "1000"
-		id := tf(user.AdminUserResponse_SUCCESS)
-		So(id, ShouldBeGreaterThan, 0)
-
-		id2 := tf(user.AdminUserResponse_USER_EXIST)
-		So(id, ShouldEqual, id2)
-
-		_, err := db.Ormer.Delete(&db.AdminUser{
-			Id: id,
-		})
-		So(err, ShouldBeNil)
-	})
-}
-
-func TestAdminUserFind(t *testing.T) {
-	var s srvAdmin
-	var req user.AdminUserRequest
-	tf := func(status user.AdminUserResponse_Status, id int) {
-		var rsp user.AdminUserResponse
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, status)
-		So(rsp.AdminId, ShouldEqual, id)
-	}
-	Convey("Test Admin User Find", t, func() {
-		tf(user.AdminUserResponse_INVALID_PARAM, 0)
-
-		req.StudentId = "2000"
-		tf(user.AdminUserResponse_NOT_FOUND, 0)
-
-		_, err := db.Ormer.Insert(&db.AdminUser{
-			Id:        1000,
-			StudentId: "2000",
-		})
-		So(err, ShouldBeNil)
-
-		tf(user.AdminUserResponse_SUCCESS, 1000)
-		_, err = db.Ormer.Delete(&db.AdminUser{
-			Id: 1000,
 		})
 		So(err, ShouldBeNil)
 	})

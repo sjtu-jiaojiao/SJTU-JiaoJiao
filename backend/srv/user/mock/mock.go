@@ -9,7 +9,6 @@ import (
 )
 
 type mockUserSrv struct{}
-type mockAdminSrv struct{}
 
 func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, opts ...client.CallOption) (*user.UserCreateResponse, error) {
 	var rsp user.UserCreateResponse
@@ -18,12 +17,16 @@ func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, o
 	} else {
 		if req.StudentId == "1000" {
 			rsp.Status = user.UserCreateResponse_SUCCESS
-			rsp.UserId = 1
+			rsp.User = new(user.UserInfo)
+			rsp.User.UserId = 1
+			rsp.User.Status = user.UserInfo_NORMAL
+			rsp.User.Role = user.UserInfo_USER
 		} else if req.StudentId == "2000" {
 			return &rsp, errors.New("")
 		} else {
 			rsp.Status = user.UserCreateResponse_USER_EXIST
-			rsp.UserId = 1
+			rsp.User = new(user.UserInfo)
+			rsp.User.UserId = 1
 		}
 	}
 	return &rsp, nil
@@ -118,45 +121,6 @@ func (a *mockUserSrv) Update(ctx context.Context, req *user.UserInfo, opts ...cl
 		}
 	}
 	return &rsp, nil
-}
-
-func (a *mockAdminSrv) Create(ctx context.Context, req *user.AdminUserRequest, opts ...client.CallOption) (*user.AdminUserResponse, error) {
-	var rsp user.AdminUserResponse
-	if req.StudentId == "" {
-		rsp.Status = user.AdminUserResponse_INVALID_PARAM
-	} else {
-		if req.StudentId == "1001" {
-			rsp.Status = user.AdminUserResponse_SUCCESS
-			rsp.AdminId = 1
-		} else if req.StudentId == "2001" {
-			return &rsp, errors.New("")
-		} else {
-			rsp.Status = user.AdminUserResponse_USER_EXIST
-			rsp.AdminId = 1
-		}
-	}
-	return &rsp, nil
-}
-
-func (a *mockAdminSrv) Find(ctx context.Context, req *user.AdminUserRequest, opts ...client.CallOption) (*user.AdminUserResponse, error) {
-	var rsp user.AdminUserResponse
-	if req.StudentId == "" {
-		rsp.Status = user.AdminUserResponse_INVALID_PARAM
-	} else {
-		if req.StudentId == "1001" {
-			rsp.Status = user.AdminUserResponse_SUCCESS
-			rsp.AdminId = 1
-		} else if req.StudentId == "2001" {
-			return &rsp, errors.New("")
-		} else {
-			rsp.Status = user.AdminUserResponse_NOT_FOUND
-		}
-	}
-	return &rsp, nil
-}
-
-func NewAdminUserService() user.AdminUserService {
-	return new(mockAdminSrv)
 }
 
 func NewUserService() user.UserService {

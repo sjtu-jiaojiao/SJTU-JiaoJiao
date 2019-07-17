@@ -27,7 +27,7 @@ type srvContent struct{}
  *
  * @apiParam {int32} sellInfoId sellInfo id.
  * @apiSuccess {int32} sellInfoId sellInfoId
- * @apiSuccess {int32} sellInfoState 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
+ * @apiSuccess {int32} status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
  * @apiSuccess {int64} releaseTime sellInfo release time
  * @apiSuccess {int64} validTime sellInfo validate time
  * @apiSuccess {string} goodName good name
@@ -251,7 +251,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 		return objId, nil
 	}
 
-	if req.Content == nil || req.Type == 0 {
+	if bytes.Equal(req.Content, []byte{0}) || req.Type == 0 {
 		rsp.Status = sellinfo.ContentCreateResponse_INVALID_PARAM
 	} else if req.ContentId == "" && req.ContentToken == "" {
 		objId, err := upload()
@@ -340,8 +340,8 @@ func (a *srvContent) Delete(ctx context.Context, req *sellinfo.ContentDeleteRequ
 		return nil
 	}
 	type files struct {
-		FileId primitive.ObjectID `bson:"fileId"`
-		Type   string             `bson:"type"`
+		FileId primitive.ObjectID                 `bson:"fileId"`
+		Type   sellinfo.ContentCreateRequest_Type `bson:"type"`
 	}
 	type result struct {
 		Id    primitive.ObjectID `bson:"_id"`
@@ -374,6 +374,7 @@ func (a *srvContent) Delete(ctx context.Context, req *sellinfo.ContentDeleteRequ
 			return err
 		}
 	}
+	rsp.Status = sellinfo.ContentDeleteResponse_SUCCESS
 	return nil
 }
 

@@ -1,12 +1,11 @@
 package mock
 
 import (
+	"bytes"
 	"context"
 	"errors"
-	sellinfo "jiaojiao/srv/sellinfo/proto"
-	user "jiaojiao/srv/user/proto"
-
 	"github.com/micro/go-micro/client"
+	sellinfo "jiaojiao/srv/sellinfo/proto"
 )
 
 type mockSellInfoSrv struct{}
@@ -14,6 +13,25 @@ type mockContentSrv struct{}
 
 func (a *mockSellInfoSrv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, opts ...client.CallOption) (*sellinfo.SellInfoCreateResponse, error) {
 	var rsp sellinfo.SellInfoCreateResponse
+	if req.ValidTime == 0 || req.GoodName == "" || req.UserId == 0 {
+		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
+		return &rsp, nil
+	}
+	if req.ContentId == "" && req.ContentToken == "" {
+		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
+		rsp.SellInfoId = 1000
+	} else if req.ContentId != "" && req.ContentToken != "" {
+		if req.ContentToken == "invalid_token" {
+			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_TOKEN
+			return &rsp, nil
+		}
+		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
+		rsp.SellInfoId = 1000
+	} else if req.ContentId == "error" {
+		return nil, errors.New("")
+	} else {
+		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
+	}
 	return &rsp, nil
 }
 
@@ -41,22 +59,20 @@ func (a *mockSellInfoSrv) Find(ctx context.Context, req *sellinfo.SellInfoFindRe
 
 func (a *mockContentSrv) Create(ctx context.Context, req *sellinfo.ContentCreateRequest, opts ...client.CallOption) (*sellinfo.ContentCreateResponse, error) {
 	var rsp sellinfo.ContentCreateResponse
-	return &rsp, nil
-}
-
-func (a *mockContentSrv) Find(ctx context.Context, req *user.AdminUserRequest, opts ...client.CallOption) (*user.AdminUserResponse, error) {
-	var rsp user.AdminUserResponse
-	if req.StudentId == "" {
-		rsp.Status = user.AdminUserResponse_INVALID_PARAM
-	} else {
-		if req.StudentId == "1001" {
-			rsp.Status = user.AdminUserResponse_SUCCESS
-			rsp.AdminId = 1
-		} else if req.StudentId == "2001" {
-			return &rsp, errors.New("")
+	if bytes.Equal(req.Content, []byte{0}) || req.Type == 0 {
+		rsp.Status = sellinfo.ContentCreateResponse_INVALID_PARAM
+	} else if req.ContentId == "" && req.ContentToken == "" {
+		rsp.Status = sellinfo.ContentCreateResponse_SUCCESS
+	} else if req.ContentId != "" && req.ContentToken != "" {
+		if req.ContentToken == "invalid_token" {
+			rsp.Status = sellinfo.ContentCreateResponse_INVALID_TOKEN
 		} else {
-			rsp.Status = user.AdminUserResponse_NOT_FOUND
+			rsp.Status = sellinfo.ContentCreateResponse_SUCCESS
 		}
+	} else if req.ContentId == "error" {
+		return nil, errors.New("")
+	} else {
+		rsp.Status = sellinfo.ContentCreateResponse_INVALID_PARAM
 	}
 	return &rsp, nil
 }

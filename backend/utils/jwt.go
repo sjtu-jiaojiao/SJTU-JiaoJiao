@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	user "jiaojiao/srv/user/proto"
 	"os"
 	"time"
 
@@ -29,7 +30,7 @@ func JWTParse(token *jwt.Token, param string) interface{} {
 	return ""
 }
 
-func JWTSign(id int32, role int32) string {
+func JWTSign(id int32, role user.UserInfo_Role) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":   id,
 		"role": role,

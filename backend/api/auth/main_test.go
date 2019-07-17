@@ -42,10 +42,10 @@ func Test_getAuth(t *testing.T) {
 
 		tf(500, "/auth?code=down")
 		tf(500, "/auth?code=userdown")
-		tf(500, "/auth?code=admindown")
 	})
 }
 
-func Test_main(t *testing.T) {
+func TestMain(m *testing.M) {
 	main()
+	m.Run()
 }

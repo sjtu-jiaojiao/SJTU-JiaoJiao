@@ -27,7 +27,7 @@ type idToken struct {
  * @apiDescription Check OAuth code.
  *
  * @apiParam {string} code OAuth code.
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid code
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid code <br> 3 for frozen user
  * @apiSuccess {string} token verified token when status=1
  * @apiError (Error 500) OAuthServerDown can't connect to OAuth server
  */
@@ -43,7 +43,7 @@ func (a *srv) Auth(ctx context.Context, req *auth.AuthRequest, rsp *auth.AuthRes
 		params.Add("client_secret", os.Getenv("JJ_CLIENTSECRET"))
 
 		tr := &http.Transport{
-			TLSClientConfig:    &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
 		client := &http.Client{Transport: tr}
 		resp, err := client.PostForm(utils.GetStringConfig("sys_config", "token_url"), params)

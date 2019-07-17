@@ -16,6 +16,7 @@ func setupRouter() *gin.Engine {
 	rg.GET("/user", findUser)
 	rg.PUT("/user", addUser)
 	rg.POST("/user", updateUser)
+
 	return router
 }
 
@@ -130,7 +131,7 @@ type addInfo struct {
  * @apiDescription Add user, use default value.
  *
  * @apiParam {--} Param see [User Service](#api-Service-user_User_Create)
- * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Create) <br>
+ * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Create)
  * @apiError (Error 500) UserServiceDown User service down
  */
 func addUser(c *gin.Context) {
@@ -165,6 +166,7 @@ type updateInfo struct {
 	StudentId   string `form:"studentId"`
 	StudentName string `form:"studentName"`
 	Status      int32  `form:"status"`
+	Role        int32  `form:"role"`
 	ClearEmpty  bool   `form:"clearEmpty"`
 }
 
@@ -197,7 +199,8 @@ func updateUser(c *gin.Context) {
 			Telephone:   usrInfo.Telephone,
 			StudentId:   usrInfo.StudentId,
 			StudentName: usrInfo.StudentName,
-			Status:      usrInfo.Status,
+			Status:      user.UserInfo_Status(usrInfo.Status),
+			Role:        user.UserInfo_Role(usrInfo.Role),
 			ClearEmpty:  usrInfo.ClearEmpty,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {

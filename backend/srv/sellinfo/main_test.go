@@ -1,7 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	uuid "github.com/satori/go.uuid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	db "jiaojiao/database"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
 	"testing"
@@ -101,9 +106,17 @@ func TestSrvInfoCreate(t *testing.T) {
 		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_SUCCESS)
 		So(rsp.SellInfoId, ShouldNotEqual, 0)
 
-		_, _ = db.Ormer.Delete(&db.SellInfo{
+		tmp := db.SellInfo{
 			Id: rsp.SellInfoId,
+		}
+		err := db.Ormer.Read(&tmp)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.Good{
+			Id: tmp.GoodId,
 		})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&tmp)
+		So(err, ShouldBeNil)
 
 		req.ContentId = "123456789abc123456789abc"
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
@@ -122,12 +135,20 @@ func TestSrvInfoCreate(t *testing.T) {
 		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_SUCCESS)
 		So(rsp.SellInfoId, ShouldNotEqual, 0)
 
-		_, _ = db.Ormer.Delete(&db.SellInfo{
+		tmp = db.SellInfo{
 			Id: rsp.SellInfoId,
+		}
+		err = db.Ormer.Read(&tmp)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.Good{
+			Id: tmp.GoodId,
 		})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&tmp)
+		So(err, ShouldBeNil)
 		var sc srvContent
 		var rspc sellinfo.ContentDeleteResponse
-		err := sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
+		err = sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
 			ContentId:    req.ContentId,
 			ContentToken: req.ContentToken,
 		}, &rspc)
@@ -135,10 +156,120 @@ func TestSrvInfoCreate(t *testing.T) {
 	})
 }
 
+func TestSrvInfoFind(t *testing.T) {
+	var s srvInfo
+	var req sellinfo.SellInfoFindRequest
+
+	info1 := db.SellInfo{
+		Id:          1000,
+		Status:      1,
+		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
+		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
+		UserId:      1000,
+		GoodId:      1000,
+	}
+	info2 := db.SellInfo{
+		Id:          1001,
+		Status:      2,
+		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
+		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
+		UserId:      1000,
+		GoodId:      1001,
+	}
+	info3 := db.SellInfo{
+		Id:          1002,
+		Status:      3,
+		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
+		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
+		UserId:      1001,
+		GoodId:      1002,
+	}
+	good1 := db.Good{
+		Id:          1000,
+		GoodName:    "good",
+		Description: "Very good!",
+		ContentId:   "123456789",
+	}
+	good2 := db.Good{
+		Id:          1001,
+		GoodName:    "good",
+		Description: "Very good!",
+		ContentId:   "123456789",
+	}
+	good3 := db.Good{
+		Id:          1002,
+		GoodName:    "good",
+		Description: "Very good!",
+		ContentId:   "123456789",
+	}
+
+	prepare := func() {
+		_, err := db.Ormer.Insert(&good1)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Insert(&good2)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Insert(&good3)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Insert(&info1)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Insert(&info2)
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Insert(&info3)
+		So(err, ShouldBeNil)
+	}
+	end := func() {
+		_, err := db.Ormer.Delete(&db.SellInfo{Id: 1000})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.SellInfo{Id: 1001})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.SellInfo{Id: 1002})
+		So(err, ShouldBeNil)
+
+		_, err = db.Ormer.Delete(&db.Good{Id: 1000})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.Good{Id: 1001})
+		So(err, ShouldBeNil)
+		_, err = db.Ormer.Delete(&db.Good{Id: 1002})
+		So(err, ShouldBeNil)
+	}
+	testLen := func(length int) {
+		var rsp sellinfo.SellInfoFindResponse
+
+		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(len(rsp.SellInfo), ShouldEqual, length)
+	}
+
+	Convey("Test SellInfo Find", t, func() {
+		testLen(0)
+
+		prepare()
+
+		testLen(3)
+
+		req.UserId = 1001
+		testLen(1)
+
+		req.UserId = 1000
+		testLen(2)
+
+		req.Limit = 1
+		testLen(1)
+
+		req.Offset = 1
+		testLen(1)
+
+		req.Offset = 2
+		testLen(0)
+
+		end()
+	})
+}
+
 func TestSrvContentCreate(t *testing.T) {
 	var s srvContent
 	var req sellinfo.ContentCreateRequest
 	var rsp sellinfo.ContentCreateResponse
+
 	Convey("Test SellInfo Content Create", t, func() {
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, sellinfo.ContentCreateResponse_INVALID_PARAM)
@@ -179,10 +310,95 @@ func TestSrvContentCreate(t *testing.T) {
 		var sc srvContent
 		var rspc sellinfo.ContentDeleteResponse
 		err := sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
-			ContentId:    req.ContentId,
-			ContentToken: req.ContentToken,
+			ContentId:    rsp.ContentId,
+			ContentToken: rsp.ContentToken,
 		}, &rspc)
 		So(err, ShouldBeNil)
+	})
+}
+
+func TestSrvContentDelete(t *testing.T) {
+	var s srvContent
+	var req sellinfo.ContentDeleteRequest
+	var rsp sellinfo.ContentDeleteResponse
+
+	upload := func() (string, string) {
+		collection := db.MongoDatabase.Collection("sellinfo")
+
+		bucket, err := gridfs.NewBucket(db.MongoDatabase)
+		So(err, ShouldBeNil)
+
+		objId, err := bucket.UploadFromStream("", bytes.NewReader([]byte{0, 10, 20, 30}))
+		So(err, ShouldBeNil)
+
+		token := uuid.NewV4().String()
+
+		res, err := collection.InsertOne(db.MongoContext, bson.M{
+			"token": token,
+			"files": bson.A{
+				bson.M{
+					"fileId": objId,
+					"type":   sellinfo.ContentCreateRequest_PICTURE,
+				}},
+		})
+		So(err, ShouldBeNil)
+
+		return res.InsertedID.(primitive.ObjectID).Hex(), token
+	}
+
+	check := func(id string, token string, error bool) {
+		collection := db.MongoDatabase.Collection("sellinfo")
+		rid, err := primitive.ObjectIDFromHex(id)
+
+		type files struct {
+			FileId primitive.ObjectID                 `bson:"fileId"`
+			Type   sellinfo.ContentCreateRequest_Type `bson:"type"`
+		}
+		type result struct {
+			Id    primitive.ObjectID `bson:"_id"`
+			Files []files            `bson:"files"`
+		}
+
+		var res result
+		err = collection.FindOne(db.MongoContext, bson.D{
+			{"_id", rid},
+			{"token", token},
+		}).Decode(&res)
+
+		if error {
+			So(err, ShouldNotBeNil)
+		} else {
+			So(err, ShouldBeNil)
+		}
+	}
+	Convey("Test SellInfo Content Delete", t, func() {
+		id, token := upload()
+		check(id, token, false)
+
+		So(s.Delete(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.ContentDeleteResponse_INVALID_PARAM)
+		check(id, token, false)
+
+		req.ContentId = id
+		So(s.Delete(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.ContentDeleteResponse_INVALID_PARAM)
+		check(id, token, false)
+
+		req.ContentId = ""
+		req.ContentToken = token
+		So(s.Delete(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.ContentDeleteResponse_INVALID_PARAM)
+		check(id, token, false)
+
+		req.ContentId = "1234"
+		So(s.Delete(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.ContentCreateResponse_INVALID_TOKEN)
+		check(id, token, false)
+
+		req.ContentId = id
+		So(s.Delete(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, sellinfo.ContentDeleteResponse_SUCCESS)
+		check(id, token, true)
 	})
 }
 

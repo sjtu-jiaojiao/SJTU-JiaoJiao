@@ -32,11 +32,6 @@ func (a *mockSrv) Auth(ctx context.Context, req *auth.AuthRequest, opts ...clien
 			ret.Token = "test_token"
 			ret.StudentId = "2000"
 			ret.StudentName = "down"
-		} else if req.Code == "admindown" {
-			ret.Status = auth.AuthResponse_SUCCESS
-			ret.Token = "test_token"
-			ret.StudentId = "2001"
-			ret.StudentName = "down"
 		} else {
 			ret.Status = auth.AuthResponse_INVALID_CODE
 		}
