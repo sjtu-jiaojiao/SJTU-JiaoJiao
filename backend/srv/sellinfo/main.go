@@ -251,7 +251,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 		return objId, nil
 	}
 
-	if req.Content == nil || req.Type == 0 {
+	if bytes.Equal(req.Content, []byte{0}) || req.Type == 0 {
 		rsp.Status = sellinfo.ContentCreateResponse_INVALID_PARAM
 	} else if req.ContentId == "" && req.ContentToken == "" {
 		objId, err := upload()
