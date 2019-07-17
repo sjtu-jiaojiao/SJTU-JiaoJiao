@@ -1474,7 +1474,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/admin",
+    "url": "/admin/:studentId",
     "title": "FindAdmin",
     "version": "1.0.0",
     "group": "User",
