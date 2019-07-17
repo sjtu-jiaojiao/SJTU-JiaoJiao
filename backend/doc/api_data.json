@@ -389,7 +389,7 @@
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid code</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid code <br> 3 for frozen user</p>"
           },
           {
             "group": "Success 200",

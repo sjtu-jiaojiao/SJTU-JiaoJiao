@@ -17,7 +17,10 @@ func TestUserCreate(t *testing.T) {
 		var rsp user.UserCreateResponse
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, status)
-		return rsp.User.UserId
+		if rsp.Status == user.UserCreateResponse_SUCCESS || rsp.Status == user.UserCreateResponse_USER_EXIST {
+			return rsp.User.UserId
+		}
+		return 0
 	}
 	Convey("Test User Create", t, func() {
 		tf(user.UserCreateResponse_INVALID_PARAM)
