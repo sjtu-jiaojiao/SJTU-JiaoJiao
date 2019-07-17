@@ -2,6 +2,9 @@ read -p 'Service name: ' srvname
 srvnamel=${srvname,,}
 cp -R ./template/api ./api/$srvnamel
 cp -R ./template/srv ./srv/$srvnamel
+rm ./api/$srvnamel/api.goconvey
+rm ./srv/$srvnamel/srv.goconvey
+rm ./srv/$srvnamel/mock/mock.goconvey
 
 sed -i "s/{{SERVICE_LNAME}}/$srvnamel/g" ./api/$srvnamel/Dockerfile
 sed -i "s/{{SERVICE_NAME}}/$srvname/g" ./api/$srvnamel/main.go

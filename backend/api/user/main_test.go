@@ -48,8 +48,8 @@ func Test_updateUser(t *testing.T) {
 	tf := func(code int, status int32) {
 		var data map[string]interface{}
 		r := utils.StartTestServer(setupRouter, "POST", "/user", strings.NewReader(v.Encode()), func(r *http.Request) {
-			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-			r.Header.Add("Authorization", "valid_user")
+			r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+			r.Header.Set("Authorization", "valid_user")
 		})
 		So(r.Code, ShouldEqual, code)
 		if r.Body.String() != "{}" {
@@ -63,7 +63,7 @@ func Test_updateUser(t *testing.T) {
 		So(r.Code, ShouldEqual, 400)
 
 		r = utils.StartTestServer(setupRouter, "POST", "/user", strings.NewReader(v.Encode()), func(r *http.Request) {
-			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+			r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 		})
 		So(r.Code, ShouldEqual, 403)
 
