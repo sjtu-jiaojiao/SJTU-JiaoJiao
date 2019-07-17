@@ -17,6 +17,7 @@ type struct {
 }
 
 /**
+ * @apiIgnore
  * @api {} /{{SERVICE_NAME}} 
  * @apiVersion 1.0.0
  * @apiGroup 

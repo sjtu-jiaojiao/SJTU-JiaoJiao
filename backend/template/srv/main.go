@@ -8,6 +8,7 @@ import (
 type srv struct{}
 
 /**
+ * @apiIgnore
  * @api {rpc} /rpc 
  * @apiVersion 1.0.0
  * @apiGroup Service
