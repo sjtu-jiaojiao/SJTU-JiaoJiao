@@ -39,7 +39,7 @@ before_script:
   - consul kv import @consul.json
 
 script:
-  - go list -f '{{if len .TestGoFiles}}"s=`echo {{.Dir}} | tail -c 6` && [ $s == "utils" ] && go test -tags=test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || ([ $s != "e/api" ] && [ $s != "e/srv" ] && go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}})"{{end}}' ./... | xargs -L 1 bash -c
+  - go list -f '{{if len .TestGoFiles}}"s=`echo {{.Dir}} | tail -c 6` && [ $s == "utils" ] && go test -tags=test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || ([ $s != "e/api" ] && [ $s != "e/srv" ] && go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || :)"{{end}}' ./... | xargs -L 1 bash -c
   - gover
   - goveralls -coverprofile=gover.coverprofile -service=travis-ci -repotoken $COVERALLS_TOKEN
   - cp config_deploy.json config.json
