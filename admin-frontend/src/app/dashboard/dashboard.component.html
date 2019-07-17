@@ -2,8 +2,8 @@
         <nz-card   nzTitle="系统状态">
                 <div nz-row [nzGutter]="8">
                   <div nz-col [nzSpan]="8">
-                    <nz-card  nzType="inner" nzTitle="总用户数">
-                            <p>12311</p>
+                    <nz-card *ngIf="userNum" nzType="inner" nzTitle="总用户数">
+                            <p>{{userNum}}</p>
                     </nz-card>
                   </div>
                   <div nz-col [nzSpan]="8">
@@ -20,8 +20,8 @@
         </nz-card>
         <nz-card nzTitle="活动日程安排">
                 <nz-timeline nzMode="alternate">
-                        <nz-timeline-item>创建网站 2019-07-01</nz-timeline-item>
-                        <nz-timeline-item nzColor="green">建立力导向图 2019-07-02</nz-timeline-item>
+                        <nz-timeline-item>项目开始 2019-07-01</nz-timeline-item>
+                        <nz-timeline-item nzColor="green">建立力导向图 2019-07-12</nz-timeline-item>
                         <nz-timeline-item [nzDot]="dotTemplate"
                           >完成所有后台管理系统UI原型</nz-timeline-item
                         >

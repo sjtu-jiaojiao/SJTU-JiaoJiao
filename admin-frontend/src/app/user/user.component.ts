@@ -42,7 +42,7 @@ export class UserComponent implements OnInit {
     this.count = this.current * this.size;
   }
   getusers(): void {
-    this.userService.getUsers(this.size, this.current*this.size-this.size)
+    this.userService.getPageUsers(this.size, this.current*this.size-this.size)
     .subscribe(users => {
       this.users = users.user;
       this.checkcount();

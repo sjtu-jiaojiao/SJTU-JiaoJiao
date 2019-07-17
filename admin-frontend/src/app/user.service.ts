@@ -15,14 +15,21 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   /** GET users from the server */
-  getUsers(limit:number, offset: number): Observable<UserResponse> {
+  getPageUsers(limit:number, offset: number): Observable<UserResponse> {
     const url = `${this.usersUrl}?limit=${limit}&offset=${offset}`;
     return this.http.get<UserResponse>(url,httpOptions)
       .pipe(
         catchError(this.handleError<UserResponse>('getUsers'))
       );
   }
-
+  /** GET users from the server */
+  getUsers(): Observable<UserResponse> {
+    const url = `${this.usersUrl}`;
+    return this.http.get<UserResponse>(url,httpOptions)
+      .pipe(
+        catchError(this.handleError<UserResponse>('getUsers'))
+      );
+  }
   /** GET user by id. Will 404 if id not found */
   getUser(id: string): Observable<User> {
     const url = `${this.usersUrl}/${id}`;

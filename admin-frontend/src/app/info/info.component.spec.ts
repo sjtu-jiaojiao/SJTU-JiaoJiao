@@ -79,18 +79,5 @@ describe('InfoComponent', () => {
     expect(c.getstate(2)).toEqual('已完成');
     expect(c.getstate(3)).toEqual('待评价');
     expect(c.getstate(4)).toEqual('强制结束');
-    c.infos =[new Info, new Info, new Info];
-    c.count =3;
-    c.size = 2;
-    c.current = 1;
-    c.Tthreshold = 1;
-    c.Ythreshold = 1;
-    c.pageChange(2);
-    expect(c.curinfos.length).toEqual(1);
-    c.sizeChange(2);
-    expect(c.curinfos.length).toEqual(2);
-    c.selectTag(['黑']);
-    c.selectType(1);
-    c.end();
   });
 });
