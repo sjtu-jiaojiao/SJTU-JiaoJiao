@@ -92,14 +92,20 @@ func getAuth(c *gin.Context) {
 
 				// sign token
 				if rsp3.Status == user.AdminUserResponse_NOT_FOUND {
-					c.JSON(200, gin.H{
-						"status": 1,
-						"token":  utils.JWTSign(rsp2.UserId, 1),
-					})
+					if rsp2.User.Status == 1 {
+						c.JSON(200, gin.H{
+							"status": 1,
+							"token":  utils.JWTSign(rsp2.User.UserId, 1),
+						})
+					} else {
+						c.JSON(200, gin.H{
+							"status": auth.AuthResponse_FROZEN_USER,
+						})
+					}
 				} else {
 					c.JSON(200, gin.H{
 						"status": 1,
-						"token":  utils.JWTSign(rsp2.UserId, 2),
+						"token":  utils.JWTSign(rsp2.User.UserId, 2),
 					})
 				}
 			} else {

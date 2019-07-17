@@ -41,7 +41,7 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
 			StudentName: req.StudentName,
 			Status:      1,
 		}
-		created, id, err := db.Ormer.ReadOrCreate(&usr, "StudentId")
+		created, _, err := db.Ormer.ReadOrCreate(&usr, "StudentId")
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
@@ -50,7 +50,8 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
 		} else {
 			rsp.Status = user.UserCreateResponse_USER_EXIST
 		}
-		rsp.UserId = int32(id)
+		rsp.User = new(user.UserInfo)
+		parseUser(&usr, rsp.User)
 	}
 	return nil
 }

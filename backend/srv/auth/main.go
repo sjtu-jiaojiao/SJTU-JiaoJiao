@@ -43,7 +43,7 @@ func (a *srv) Auth(ctx context.Context, req *auth.AuthRequest, rsp *auth.AuthRes
 		params.Add("client_secret", os.Getenv("JJ_CLIENTSECRET"))
 
 		tr := &http.Transport{
-			TLSClientConfig:    &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
 		client := &http.Client{Transport: tr}
 		resp, err := client.PostForm(utils.GetStringConfig("sys_config", "token_url"), params)
