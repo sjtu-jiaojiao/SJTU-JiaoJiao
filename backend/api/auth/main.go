@@ -81,21 +81,21 @@ func getAuth(c *gin.Context) {
 				}
 
 				// sign token
-				if rsp2.User.Role == user.UserInfo_USER {
-					if rsp2.User.Status == user.UserInfo_NORMAL {
+				if rsp2.User.Status == user.UserInfo_NORMAL {
+					if rsp2.User.Role == user.UserInfo_USER {
 						c.JSON(200, gin.H{
 							"status": auth.AuthResponse_SUCCESS,
 							"token":  utils.JWTSign(rsp2.User.UserId, user.UserInfo_USER),
 						})
 					} else {
 						c.JSON(200, gin.H{
-							"status": auth.AuthResponse_FROZEN_USER,
+							"status": auth.AuthResponse_SUCCESS,
+							"token":  utils.JWTSign(rsp2.User.UserId, user.UserInfo_ADMIN),
 						})
 					}
 				} else {
 					c.JSON(200, gin.H{
-						"status": auth.AuthResponse_SUCCESS,
-						"token":  utils.JWTSign(rsp2.User.UserId, user.UserInfo_ADMIN),
+						"status": auth.AuthResponse_FROZEN_USER,
 					})
 				}
 			} else {
