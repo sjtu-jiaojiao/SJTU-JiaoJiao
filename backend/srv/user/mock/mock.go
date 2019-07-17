@@ -155,6 +155,23 @@ func (a *mockAdminSrv) Find(ctx context.Context, req *user.AdminUserRequest, opt
 	return &rsp, nil
 }
 
+func (a *mockAdminSrv) Delete(ctx context.Context, req *user.AdminUserRequest, opts ...client.CallOption) (*user.AdminUserResponse, error) {
+	var rsp user.AdminUserResponse
+	if req.StudentId == "" {
+		rsp.Status = user.AdminUserResponse_INVALID_PARAM
+	} else {
+		if req.StudentId == "1000" {
+			rsp.Status = user.AdminUserResponse_SUCCESS
+			rsp.AdminId = 1
+		} else if req.StudentId == "2000" {
+			return &rsp, errors.New("")
+		} else {
+			rsp.Status = user.AdminUserResponse_NOT_FOUND
+		}
+	}
+	return &rsp, nil
+}
+
 func NewAdminUserService() user.AdminUserService {
 	return new(mockAdminSrv)
 }

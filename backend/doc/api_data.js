@@ -63,6 +63,34 @@ define({ "api": [
     "groupTitle": "Auth"
   },
   {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "D__PROGRAM_CPP_SJTU_JiaoJiao_backend_doc_main_js",
+    "groupTitle": "D__PROGRAM_CPP_SJTU_JiaoJiao_backend_doc_main_js",
+    "name": ""
+  },
+  {
     "type": "put",
     "url": "/content",
     "title": "AddContent",
@@ -855,6 +883,62 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
+    "title": "user.AdminUser.Delete",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "user_AdminUser_Delete",
+    "description": "<p>Delete admin user.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "studentId",
+            "description": "<p>student id.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "deleted",
+            "description": "<p>adminId</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/user/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
     "title": "user.AdminUser.Find",
     "version": "1.0.0",
     "group": "Service",
@@ -1228,6 +1312,60 @@ define({ "api": [
   },
   {
     "type": "put",
+    "url": "/admin",
+    "title": "AddAdmin",
+    "version": "1.0.0",
+    "group": "User",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "AddAdmin",
+    "description": "<p>Add admin</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Create\">User Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Create\">User Service</a> <br></p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "UserServiceDown",
+            "description": "<p>User service down</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/user/main.go",
+    "groupTitle": "User"
+  },
+  {
+    "type": "put",
     "url": "/user",
     "title": "AddUser",
     "version": "1.0.0",
@@ -1261,6 +1399,114 @@ define({ "api": [
             "optional": false,
             "field": "response",
             "description": "<p>see <a href=\"#api-Service-user_User_Create\">User Service</a> <br></p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "UserServiceDown",
+            "description": "<p>User service down</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/user/main.go",
+    "groupTitle": "User"
+  },
+  {
+    "type": "delete",
+    "url": "/admin",
+    "title": "DeleteAdmin",
+    "version": "1.0.0",
+    "group": "User",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "DeleteAdmin",
+    "description": "<p>Delete admin</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Delete\">User Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Delete\">User Service</a> <br></p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "UserServiceDown",
+            "description": "<p>User service down</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/user/main.go",
+    "groupTitle": "User"
+  },
+  {
+    "type": "get",
+    "url": "/admin/:studentId",
+    "title": "FindAdmin",
+    "version": "1.0.0",
+    "group": "User",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "FindAdmin",
+    "description": "<p>Find admin</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Find\">User Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Find\">User Service</a> <br></p>"
           }
         ]
       }
@@ -1450,33 +1696,5 @@ define({ "api": [
         ]
       }
     }
-  },
-  {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p>"
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "_home_imwxz_Documents_code_SJTU_JiaoJiao_backend_doc_main_js",
-    "groupTitle": "_home_imwxz_Documents_code_SJTU_JiaoJiao_backend_doc_main_js",
-    "name": ""
   }
 ] });

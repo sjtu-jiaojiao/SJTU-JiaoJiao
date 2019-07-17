@@ -10,6 +10,7 @@ service User {
 service AdminUser {
     rpc Create (AdminUserRequest) returns (AdminUserResponse);
     rpc Find (AdminUserRequest) returns (AdminUserResponse);
+    rpc Delete (AdminUserRequest) returns (AdminUserResponse);
 }
 
 message UserCreateRequest {
