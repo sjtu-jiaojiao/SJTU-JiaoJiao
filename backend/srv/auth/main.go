@@ -27,7 +27,7 @@ type idToken struct {
  * @apiDescription Check OAuth code.
  *
  * @apiParam {string} code OAuth code.
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid code
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid code <br> 3 for frozen user
  * @apiSuccess {string} token verified token when status=1
  * @apiError (Error 500) OAuthServerDown can't connect to OAuth server
  */
