@@ -17,9 +17,6 @@ func setupRouter() *gin.Engine {
 	rg.PUT("/user", addUser)
 	rg.POST("/user", updateUser)
 
-	rg.GET("/admin/:studentId", findAdmin)
-	rg.PUT("/admin", addAdmin)
-	rg.DELETE("/admin", deleteAdmin)
 	return router
 }
 
@@ -203,119 +200,6 @@ func updateUser(c *gin.Context) {
 			StudentName: usrInfo.StudentName,
 			Status:      usrInfo.Status,
 			ClearEmpty:  usrInfo.ClearEmpty,
-		})
-		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
-			c.JSON(500, err)
-			return
-		}
-		c.JSON(200, rsp)
-	} else {
-		c.AbortWithStatus(400)
-	}
-}
-
-type addAdminInfo struct {
-	StudentId string `form:"studentId"`
-}
-
-/**
- * @api {put} /admin AddAdmin
- * @apiVersion 1.0.0
- * @apiGroup User
- * @apiPermission admin
- * @apiName AddAdmin
- * @apiDescription Add admin
- *
- * @apiParam {--} Param see [User Service](#api-Service-user_AdminUser_Create)
- * @apiSuccess {Response} response see [User Service](#api-Service-user_AdminUser_Create) <br>
- * @apiError (Error 500) UserServiceDown User service down
- */
-func addAdmin(c *gin.Context) {
-	var info addAdminInfo
-
-	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
-		if !utils.CheckAdmin(c) {
-			c.AbortWithStatus(403)
-			return
-		}
-		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewAdminUserService(name, c) },
-			func() interface{} { return mock.NewAdminUserService() }).(user.AdminUserService)
-		rsp, err := srv.Create(context.TODO(), &user.AdminUserRequest{
-			StudentId: info.StudentId,
-		})
-		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
-			c.JSON(500, err)
-			return
-		}
-		c.JSON(200, rsp)
-	} else {
-		c.AbortWithStatus(400)
-	}
-}
-
-type findAdminInfo struct {
-	StudentId string `uri:"studentId" binding:"required,min=1"`
-}
-
-/**
- * @api {get} /admin/:studentId FindAdmin
- * @apiVersion 1.0.0
- * @apiGroup User
- * @apiPermission admin
- * @apiName FindAdmin
- * @apiDescription Find admin
- *
- * @apiParam {--} Param see [User Service](#api-Service-user_AdminUser_Find)
- * @apiSuccess {Response} response see [User Service](#api-Service-user_AdminUser_Find) <br>
- * @apiError (Error 500) UserServiceDown User service down
- */
-func findAdmin(c *gin.Context) {
-	var info findAdminInfo
-
-	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
-		if !utils.CheckAdmin(c) {
-			c.AbortWithStatus(403)
-			return
-		}
-		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewAdminUserService(name, c) },
-			func() interface{} { return mock.NewAdminUserService() }).(user.AdminUserService)
-		rsp, err := srv.Find(context.TODO(), &user.AdminUserRequest{
-			StudentId: info.StudentId,
-		})
-		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
-			c.JSON(500, err)
-			return
-		}
-		c.JSON(200, rsp)
-	} else {
-		c.AbortWithStatus(400)
-	}
-}
-
-/**
- * @api {delete} /admin DeleteAdmin
- * @apiVersion 1.0.0
- * @apiGroup User
- * @apiPermission admin
- * @apiName DeleteAdmin
- * @apiDescription Delete admin
- *
- * @apiParam {--} Param see [User Service](#api-Service-user_AdminUser_Delete)
- * @apiSuccess {Response} response see [User Service](#api-Service-user_AdminUser_Delete) <br>
- * @apiError (Error 500) UserServiceDown User service down
- */
-func deleteAdmin(c *gin.Context) {
-	var info addAdminInfo
-
-	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
-		if !utils.CheckAdmin(c) {
-			c.AbortWithStatus(403)
-			return
-		}
-		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewAdminUserService(name, c) },
-			func() interface{} { return mock.NewAdminUserService() }).(user.AdminUserService)
-		rsp, err := srv.Delete(context.TODO(), &user.AdminUserRequest{
-			StudentId: info.StudentId,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
 			c.JSON(500, err)
