@@ -134,7 +134,7 @@ type addInfo struct {
  * @apiDescription Add user, use default value.
  *
  * @apiParam {--} Param see [User Service](#api-Service-user_User_Create)
- * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Create) <br>
+ * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Create)
  * @apiError (Error 500) UserServiceDown User service down
  */
 func addUser(c *gin.Context) {

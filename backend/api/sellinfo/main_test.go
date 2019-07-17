@@ -63,6 +63,34 @@ func Test_deleteContent(t *testing.T) {
 	})
 }
 
-func Test_main(t *testing.T) {
+func Test_addContent(t *testing.T) {
+	tf := func(code int, cid string, ctoken string, content string, ctype string, status int32) {
+		var data map[string]interface{}
+		r := utils.StartTestServer(setupRouter, "PUT", "/content?contentId="+cid+"&contentToken="+ctoken+"&content="+content+"&type="+ctype,
+			nil, func(r *http.Request) {
+				r.Header.Set("Authorization", "valid_user")
+			})
+		So(r.Code, ShouldEqual, code)
+		if r.Code != 500 {
+			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
+			So(data["status"], ShouldEqual, status)
+		}
+	}
+	Convey("AddContent router test", t, func() {
+		r := utils.StartTestServer(setupRouter, "PUT", "/content", nil, nil)
+		So(r.Code, ShouldEqual, 403)
+		tf(200, "", "", "123", "", -1)
+		tf(200, "", "", "", "1", -1)
+		tf(200, "", "", "123", "1", 1)
+		tf(200, "123", "invalid_token", "123", "", 2)
+		tf(200, "123", "valid_token", "123", "", 1)
+		tf(500, "error", "", "123", "", 0)
+		tf(200, "123", "", "123", "1", -1)
+		tf(200, "", "token", "123", "1", -1)
+	})
+}
+
+func TestMain(m *testing.M) {
 	main()
+	m.Run()
 }

@@ -46,6 +46,7 @@ func Test_getAuth(t *testing.T) {
 	})
 }
 
-func Test_main(t *testing.T) {
+func TestMain(m *testing.M) {
 	main()
+	m.Run()
 }
