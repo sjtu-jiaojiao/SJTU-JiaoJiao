@@ -146,6 +146,7 @@ func (h *userHandler) Update(ctx context.Context, in *UserInfo, out *UserUpdateR
 type AdminUserService interface {
 	Create(ctx context.Context, in *AdminUserRequest, opts ...client.CallOption) (*AdminUserResponse, error)
 	Find(ctx context.Context, in *AdminUserRequest, opts ...client.CallOption) (*AdminUserResponse, error)
+	Delete(ctx context.Context, in *AdminUserRequest, opts ...client.CallOption) (*AdminUserResponse, error)
 }
 
 type adminUserService struct {
@@ -186,17 +187,29 @@ func (c *adminUserService) Find(ctx context.Context, in *AdminUserRequest, opts 
 	return out, nil
 }
 
+func (c *adminUserService) Delete(ctx context.Context, in *AdminUserRequest, opts ...client.CallOption) (*AdminUserResponse, error) {
+	req := c.c.NewRequest(c.name, "AdminUser.Delete", in)
+	out := new(AdminUserResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for AdminUser service
 
 type AdminUserHandler interface {
 	Create(context.Context, *AdminUserRequest, *AdminUserResponse) error
 	Find(context.Context, *AdminUserRequest, *AdminUserResponse) error
+	Delete(context.Context, *AdminUserRequest, *AdminUserResponse) error
 }
 
 func RegisterAdminUserHandler(s server.Server, hdlr AdminUserHandler, opts ...server.HandlerOption) error {
 	type adminUser interface {
 		Create(ctx context.Context, in *AdminUserRequest, out *AdminUserResponse) error
 		Find(ctx context.Context, in *AdminUserRequest, out *AdminUserResponse) error
+		Delete(ctx context.Context, in *AdminUserRequest, out *AdminUserResponse) error
 	}
 	type AdminUser struct {
 		adminUser
@@ -215,4 +228,8 @@ func (h *adminUserHandler) Create(ctx context.Context, in *AdminUserRequest, out
 
 func (h *adminUserHandler) Find(ctx context.Context, in *AdminUserRequest, out *AdminUserResponse) error {
 	return h.AdminUserHandler.Find(ctx, in, out)
+}
+
+func (h *adminUserHandler) Delete(ctx context.Context, in *AdminUserRequest, out *AdminUserResponse) error {
+	return h.AdminUserHandler.Delete(ctx, in, out)
 }

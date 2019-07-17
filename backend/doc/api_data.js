@@ -883,11 +883,11 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "user.AdminUser.Find",
+    "title": "user.AdminUser.Delete",
     "version": "1.0.0",
     "group": "Service",
-    "name": "user_AdminUser_Find",
-    "description": "<p>Find admin user.</p>",
+    "name": "user_AdminUser_Delete",
+    "description": "<p>Delete admin user.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -915,8 +915,8 @@ define({ "api": [
             "group": "Success 200",
             "type": "int32",
             "optional": false,
-            "field": "adminId",
-            "description": ""
+            "field": "deleted",
+            "description": "<p>adminId</p>"
           }
         ]
       }
@@ -1312,6 +1312,60 @@ define({ "api": [
   },
   {
     "type": "put",
+    "url": "/admin",
+    "title": "AddAdmin",
+    "version": "1.0.0",
+    "group": "User",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "AddAdmin",
+    "description": "<p>Add admin</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Create\">User Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Create\">User Service</a> <br></p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "UserServiceDown",
+            "description": "<p>User service down</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/user/main.go",
+    "groupTitle": "User"
+  },
+  {
+    "type": "put",
     "url": "/user",
     "title": "AddUser",
     "version": "1.0.0",
@@ -1345,6 +1399,114 @@ define({ "api": [
             "optional": false,
             "field": "response",
             "description": "<p>see <a href=\"#api-Service-user_User_Create\">User Service</a> <br></p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "UserServiceDown",
+            "description": "<p>User service down</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/user/main.go",
+    "groupTitle": "User"
+  },
+  {
+    "type": "delete",
+    "url": "/admin",
+    "title": "DeleteAdmin",
+    "version": "1.0.0",
+    "group": "User",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "DeleteAdmin",
+    "description": "<p>Delete admin</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Delete\">User Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Delete\">User Service</a> <br></p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "UserServiceDown",
+            "description": "<p>User service down</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/user/main.go",
+    "groupTitle": "User"
+  },
+  {
+    "type": "get",
+    "url": "/admin",
+    "title": "FindAdmin",
+    "version": "1.0.0",
+    "group": "User",
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
+    "name": "FindAdmin",
+    "description": "<p>Find admin</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Find\">User Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-user_AdminUser_Find\">User Service</a> <br></p>"
           }
         ]
       }
