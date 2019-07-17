@@ -80,22 +80,12 @@ func getAuth(c *gin.Context) {
 					return
 				}
 
-				srv3 := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewAdminUserService(name, c) },
-					func() interface{} { return mockuser.NewAdminUserService() }).(user.AdminUserService)
-				rsp3, err := srv3.Find(context.TODO(), &user.AdminUserRequest{
-					StudentId: rsp.StudentId,
-				})
-				if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
-					c.JSON(500, err)
-					return
-				}
-
 				// sign token
-				if rsp3.Status == user.AdminUserResponse_NOT_FOUND {
-					if rsp2.User.Status == 1 {
+				if rsp2.User.Role == user.UserInfo_USER {
+					if rsp2.User.Status == user.UserInfo_NORMAL {
 						c.JSON(200, gin.H{
-							"status": 1,
-							"token":  utils.JWTSign(rsp2.User.UserId, 1),
+							"status": auth.AuthResponse_SUCCESS,
+							"token":  utils.JWTSign(rsp2.User.UserId, user.UserInfo_USER),
 						})
 					} else {
 						c.JSON(200, gin.H{
@@ -104,8 +94,8 @@ func getAuth(c *gin.Context) {
 					}
 				} else {
 					c.JSON(200, gin.H{
-						"status": 1,
-						"token":  utils.JWTSign(rsp2.User.UserId, 2),
+						"status": auth.AuthResponse_SUCCESS,
+						"token":  utils.JWTSign(rsp2.User.UserId, user.UserInfo_ADMIN),
 					})
 				}
 			} else {
