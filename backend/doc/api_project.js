@@ -3,7 +3,7 @@ define({
   "version": "1.0.0",
   "description": "SJTU JiaoJiao backend API document",
   "title": "SJTU-JiaoJiao",
-  "url": "http://localhost:8080/v1",
+  "url": "http://202.120.40.8:30711/v1",
   "order": [
     "Auth",
     "User",
@@ -15,7 +15,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-07-17T03:11:18.918Z",
+    "time": "2019-07-17T10:37:12.479Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }
