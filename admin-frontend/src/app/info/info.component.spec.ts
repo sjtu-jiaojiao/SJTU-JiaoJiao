@@ -92,6 +92,5 @@ describe('InfoComponent', () => {
     c.selectTag(['黑']);
     c.selectType(1);
     c.end();
-    c.delete(new Info());
   });
 });

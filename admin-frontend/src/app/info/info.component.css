@@ -45,9 +45,6 @@ input{
  }
  
   
- .delete {
-  float: right;
-}
  .infoitem:hover {
    color: #607D8B;
    background-color: rgba(221, 221, 221, 0.548);

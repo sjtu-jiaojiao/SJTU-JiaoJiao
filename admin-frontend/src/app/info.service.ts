@@ -14,7 +14,7 @@ const httpOptions = {
 })
 export class InfoService {
 
-  private infosUrl = 'api/infos';  // URL to web api
+  private infosUrl = 'api/info';  // URL to web api
 
   constructor(private http: HttpClient) { }
 

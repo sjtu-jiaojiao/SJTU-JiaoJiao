@@ -69,11 +69,11 @@ export class DelonModule {
     NgxEchartsModule,
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(
-       InMemoryDataService, { dataEncapsulation: false }),
+    InMemoryDataService, { dataEncapsulation: false,passThruUnknownUrl: true }),
     BrowserAnimationsModule
   ],
   providers: [    
-    { provide: NZ_I18N, useValue: zh_CN } , { provide: NZ_ICONS, useValue: icons }],
+    { provide: NZ_I18N, useValue: zh_CN } , { provide: NZ_ICONS, useValue: icons },{ provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -32,7 +32,6 @@ export class WebsiteComponent implements OnInit {
       this.site.name = this.validateForm.controls.name.valid? this.validateForm.controls.name.value: this.site.name;
       this.site.cp = this.validateForm.controls.copyright.valid? this.validateForm.controls.copyright.value: this.site.cp;
       this.site.status = this.validateForm.controls.status.valid? this.validateForm.controls.status.value: this.site.status;
-      console.log(this.site);
       this.service.updateSite(this.site).subscribe();
      } );
   }

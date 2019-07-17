@@ -1,18 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 
 import { WebsiteService } from './website.service';
-import { HttpClient } from 'selenium-webdriver/http';
+import { HttpClient } from '@angular/common/http';
 
-describe('WebsiteService', () => {
-  let service: WebsiteService;
+let httpClientSpy: { get: jasmine.Spy, put: jasmine.Spy, post: jasmine.Spy, delete: jasmine.Spy };
+describe('UserService', () => {
   beforeEach(() => {
-    const httpClientSpy = jasmine.createSpyObj('HttpClient', ['get','put','post','delete']);
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'put', 'post', 'delete']);
     TestBed.configureTestingModule({
-    providers: [{provide: HttpClient, useValue: httpClientSpy} ]
-  });  
+      providers: [{ provide: HttpClient, useValue: httpClientSpy }]
+    });
+
+  });
 
   it('should be created', () => {
     const service: WebsiteService = TestBed.get(WebsiteService);
     expect(service).toBeTruthy();
   });
+
 });
