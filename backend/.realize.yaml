@@ -87,7 +87,7 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: bash generate.sh
+    - command: bash generate_proto.sh
       type: before
       path: ../../
       output: true
@@ -110,7 +110,7 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: bash generate.sh
+    - command: bash generate_proto.sh
       type: before
       path: ../../
       output: true
@@ -133,11 +133,11 @@ schema:
       - /
       - ../../utils
     scripts:
-      - command: bash generate.sh
-        type: before
-        path: ../../
-        output: true
-      - command: apidoc
-        type: after
-        path: ../../
-        output: true
+    - command: bash generate_proto.sh
+      type: before
+      path: ../../
+      output: true
+    - command: apidoc
+      type: after
+      path: ../../
+      output: true
