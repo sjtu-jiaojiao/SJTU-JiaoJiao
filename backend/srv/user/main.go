@@ -252,6 +252,38 @@ func (a *srvAdmin) Find(ctx context.Context, req *user.AdminUserRequest, rsp *us
 	return nil
 }
 
+/**
+ * @api {rpc} /rpc user.AdminUser.Delete
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName user.AdminUser.Delete
+ * @apiDescription Delete admin user.
+ *
+ * @apiParam {string} studentId student id.
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
+ * @apiSuccess {int32} deleted adminId
+ * @apiUse DBServerDown
+ */
+func (a *srvAdmin) Delete(ctx context.Context, req *user.AdminUserRequest, rsp *user.AdminUserResponse) error {
+	if req.StudentId == "" {
+		rsp.Status = user.AdminUserResponse_INVALID_PARAM
+	} else {
+		usr := db.AdminUser{
+			StudentId: req.StudentId,
+		}
+		id, err := db.Ormer.Delete(&usr, "StudentId")
+		if err == orm.ErrNoRows {
+			rsp.Status = user.AdminUserResponse_NOT_FOUND
+			return nil
+		} else if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+		rsp.Status = user.AdminUserResponse_SUCCESS
+		rsp.AdminId = int32(id)
+	}
+	return nil
+}
+
 func main() {
 	db.InitORM("userdb", new(db.User), new(db.AdminUser))
 	service := utils.InitMicroService("user")

@@ -939,6 +939,62 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
+    "title": "user.AdminUser.Find",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "user_AdminUser_Find",
+    "description": "<p>Find admin user.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "studentId",
+            "description": "<p>student id.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "adminId",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "filename": "./srv/user/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
     "title": "user.User.Create",
     "version": "1.0.0",
     "group": "Service",
