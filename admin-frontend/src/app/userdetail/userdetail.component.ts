@@ -30,6 +30,8 @@ export function fFormatter(params) {
 export class UserDetailComponent implements OnInit {
   option: any;
   @Input() user: User;
+  forbid : boolean;
+  userName : string;
   constructor(
   private route: ActivatedRoute,
   private userService: UserService,
@@ -45,10 +47,15 @@ export class UserDetailComponent implements OnInit {
     getuser(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.userService.getUser(id)
-      .subscribe(user => this.user = user);
+      .subscribe(user => {this.user = user; 
+        this.forbid = this.user.status === 2;
+        this.userName = this.user.userName;
+      });
   }
     save(): void {
-    this.userService.updateUser(this.user)
+    if(!this.user) return;
+    const status = this.forbid? 2: 1;
+    this.userService.updateUser({userId: this.user.userId, status: status, userName: this.userName})
       .subscribe(() => this.goBack());
   }
 

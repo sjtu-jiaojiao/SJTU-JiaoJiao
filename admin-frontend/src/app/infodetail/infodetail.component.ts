@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Info } from '../entity/info';
 import { Location } from '@angular/common';
 import { InfoService } from '../info.service';
+import { Format } from '../info/info.component';
 
 export function formatDate(params) {
     params = params[0];
@@ -22,6 +23,7 @@ export class InfoDetailComponent implements OnInit {
   now = new Date(1997, 9, 3);
   oneDay = 24 * 3600 * 1000;
   option: any;
+  deadLine: Date;
   value = Math.random() * 1000;
   @Input() info: Info ;
   constructor(
@@ -40,6 +42,10 @@ export class InfoDetailComponent implements OnInit {
         ]
     };
 }
+stringToDate(params) {
+    const date = new Date(params);
+    return Format(date,'yyyy-MM-dd HH:mm:ss');
+    }
 
   ngOnInit() {
       this.graph();
@@ -51,9 +57,14 @@ export class InfoDetailComponent implements OnInit {
     getinfo(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.infoService.getInfo(id)
-      .subscribe(info => this.info = info);
+      .subscribe(info => {
+          this.info = info;
+          this.deadLine = new Date(this.info.validTime);
+      });
   }
     save(): void {
+    if(!this.info) return;
+    this.info.validTime = this.deadLine.getTime().toString();
     this.infoService.updateInfo(this.info)
       .subscribe(() => this.goBack());
   }

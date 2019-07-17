@@ -26,10 +26,6 @@ import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { CallbackComponent } from './callback/callback.component';
 describe('AppComponent', () => {  
-  const rSpy = jasmine.createSpyObj('Router', ['navigateByUrl']);
-  const aSpy = jasmine.createSpyObj('AuthService', ['logout']);
-  const nSpy = jasmine.createSpyObj('NzNotificationService', ['create']);
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
@@ -61,16 +57,12 @@ describe('AppComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        {provide: Router, useValue: rSpy}, 
-        {provide: AuthService,useValue: aSpy},
-        {provide: NzNotificationService,useValue: nSpy}
       ]
     }).compileComponents();
   }));
 
   it('should deal with log out ', () => {
     const eg = new AppComponent(TestBed.get(Router), TestBed.get(AuthService),TestBed.get(NzNotificationService));
-    const auth: AuthService = TestBed.get(AuthService);
     eg.logout();
   })
 });

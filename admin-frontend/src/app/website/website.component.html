@@ -10,17 +10,22 @@
     </nz-form-item>
     <nz-form-item>
       <nz-form-control>
-        <nz-input-group>
+        <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
           <input type="text" nz-input formControlName="copyright" placeholder="版权认证信息">
+          
+          <ng-template #addOnBeforeTemplate>
+            <i nz-icon nzType="copyright" nzTheme="outline"></i>
+          </ng-template>
+       
         </nz-input-group>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-control>
-        <label nz-checkbox formControlName="open">
+        <label nz-checkbox formControlName="status">
           <span>Open to public</span>
         </label>
-        <button nz-button class="login-form-button" [nzType]="'primary'">提交</button>
+        <button (click) = 'update()' nz-button class="login-form-button" [nzType]="'primary'">提交</button>
       </nz-form-control>
     </nz-form-item>
   </form>

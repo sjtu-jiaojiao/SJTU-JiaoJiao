@@ -2,8 +2,8 @@
         <nz-card   nzTitle="系统状态">
                 <div nz-row [nzGutter]="8">
                   <div nz-col [nzSpan]="8">
-                    <nz-card  nzType="inner" nzTitle="总用户数">
-                            <p>12311</p>
+                    <nz-card *ngIf="userNum" nzType="inner" nzTitle="总用户数">
+                            <p>{{userNum}}</p>
                     </nz-card>
                   </div>
                   <div nz-col [nzSpan]="8">
@@ -20,8 +20,8 @@
         </nz-card>
         <nz-card nzTitle="活动日程安排">
                 <nz-timeline nzMode="alternate">
-                        <nz-timeline-item>创建网站 2019-07-01</nz-timeline-item>
-                        <nz-timeline-item nzColor="green">建立力导向图 2019-07-02</nz-timeline-item>
+                        <nz-timeline-item>项目开始 2019-07-01</nz-timeline-item>
+                        <nz-timeline-item nzColor="green">建立力导向图 2019-07-12</nz-timeline-item>
                         <nz-timeline-item [nzDot]="dotTemplate"
                           >完成所有后台管理系统UI原型</nz-timeline-item
                         >
@@ -34,26 +34,22 @@
                 </ng-template>
         </nz-card>
         
-        <nz-card nzTitle="站点信息">
+        <nz-card  *ngIf="site" nzTitle="站点信息">
                 <div nz-row [nzGutter]="8">
-                  <div nz-col [nzSpan]="6">
-                    <nz-card  nzType="inner" nzTitle="域名">
-                            <p>http://jiaojiao.sjtu.edu.cn</p>
-                    </nz-card>
-                  </div>
-                  <div nz-col [nzSpan]="6">
+                  <div nz-col [nzSpan]="8">
                         <nz-card  nzType="inner" nzTitle="网站名">
-                                <p>交大交交</p>
+                                <p>{{site.name}}</p>
                         </nz-card>
                   </div>
-                  <div nz-col [nzSpan]="6">
+                  <div nz-col [nzSpan]="8">
                     <nz-card nzType="inner" nzTitle="版权信息">
-                        <p>CopyRight@SE 2019</p>
+                        <p> <i nz-icon nzType="copyright" nzTheme="outline"></i>
+                          {{site.cp}}</p>
                     </nz-card>
                   </div>
-                  <div nz-col [nzSpan]="6">
+                  <div nz-col [nzSpan]="8">
                     <nz-card nzType="inner" nzTitle="网站状态">
-                        <p>不公开外网</p>
+                        <p>{{site.status?'正常':'维护'}}</p>
                     </nz-card>
                   </div>
                 </div>

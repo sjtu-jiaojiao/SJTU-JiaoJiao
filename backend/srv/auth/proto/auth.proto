@@ -14,6 +14,7 @@ message AuthResponse {
         INVALID_PARAM = -1;
         SUCCESS = 1;
         INVALID_CODE = 2;
+        FROZEN_USER = 3;
     }
     Status status = 1;
     string token = 2;
