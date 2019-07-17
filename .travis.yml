@@ -6,6 +6,9 @@ go:
 notifications:
   email: false
 
+addons:
+  ssh_known_hosts: 202.120.40.8:30710
+
 services:
   - docker
 
@@ -35,7 +38,6 @@ before_script:
   - consul agent  -bootstrap -server -bind=127.0.0.1 -data-dir=./data/ 2>&1 1>consul.log &
   - sleep 3
   - cd backend
-  - openssl aes-256-cbc -K $encrypted_3b095c6852fb_key -iv $encrypted_3b095c6852fb_iv -in private.key.enc -out private.key -d
   - consul kv import @consul.json
 
 script:
