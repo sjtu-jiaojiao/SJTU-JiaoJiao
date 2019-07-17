@@ -38,7 +38,8 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
 			AvatarId:    utils.GetStringConfig("srv_config", "default_avatar"),
 			StudentId:   req.StudentId,
 			StudentName: req.StudentName,
-			Status:      1,
+			Status:      int32(user.UserInfo_NORMAL),
+			Role:        int32(user.UserInfo_USER),
 		}
 		created, _, err := db.Ormer.ReadOrCreate(&usr, "StudentId")
 		if utils.LogContinue(err, utils.Warning) {
@@ -70,6 +71,7 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
  * @apiSuccess {string} studentId student id
  * @apiSuccess {string} studentName student name
  * @apiSuccess {int32} status user status, 1 for normal <br> 2 for frozen
+ * @apiSuccess {int32} role user role, 1 for user <br> 2 for admin
  * @apiUse DBServerDown
  */
 func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.UserInfo) error {
@@ -103,6 +105,7 @@ func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *us
  * @apiParam {string} [studentId] student id
  * @apiParam {string} [studentName] student name
  * @apiParam {int32} [status] user status, 1 for normal <br> 2 for frozen
+ * @apiParam {int32} [role] user role, 1 for user <br> 2 for admin
  * @apiParam {bool} clearEmpty=0 clear the empty field
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for user not found
  * @apiUse DBServerDown
@@ -127,6 +130,7 @@ func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.User
 		utils.AssignNotEmpty(&req.StudentId, &usr.StudentId)
 		utils.AssignNotEmpty(&req.StudentName, &usr.StudentName)
 		utils.AssignNotZero(&req.Status, &usr.Status)
+		utils.AssignNotZero(&req.Role, &usr.Role)
 		_, err := db.Ormer.Update(&usr)
 		if utils.LogContinue(err, utils.Warning) {
 			return err
@@ -179,7 +183,8 @@ func parseUser(s *db.User, d *user.UserInfo) {
 	d.Telephone = s.Telephone
 	d.StudentId = s.StudentId
 	d.StudentName = s.StudentName
-	d.Status = int32(s.Status)
+	d.Status = user.UserInfo_Status(s.Status)
+	d.Role = user.UserInfo_Role(s.Role)
 }
 
 func main() {

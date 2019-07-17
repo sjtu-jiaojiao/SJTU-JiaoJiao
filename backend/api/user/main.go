@@ -166,6 +166,7 @@ type updateInfo struct {
 	StudentId   string `form:"studentId"`
 	StudentName string `form:"studentName"`
 	Status      int32  `form:"status"`
+	Role        int32  `form:"role"`
 	ClearEmpty  bool   `form:"clearEmpty"`
 }
 
@@ -198,7 +199,8 @@ func updateUser(c *gin.Context) {
 			Telephone:   usrInfo.Telephone,
 			StudentId:   usrInfo.StudentId,
 			StudentName: usrInfo.StudentName,
-			Status:      usrInfo.Status,
+			Status:      user.UserInfo_Status(usrInfo.Status),
+			Role:        user.UserInfo_Role(usrInfo.Role),
 			ClearEmpty:  usrInfo.ClearEmpty,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {

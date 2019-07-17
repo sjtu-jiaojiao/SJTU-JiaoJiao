@@ -1024,6 +1024,13 @@
             "optional": false,
             "field": "status",
             "description": "<p>user status, 1 for normal <br> 2 for frozen</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "role",
+            "description": "<p>user role, 1 for user <br> 2 for admin</p>"
           }
         ]
       }
@@ -1102,6 +1109,13 @@
             "optional": true,
             "field": "status",
             "description": "<p>user status, 1 for normal <br> 2 for frozen</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": true,
+            "field": "role",
+            "description": "<p>user role, 1 for user <br> 2 for admin</p>"
           },
           {
             "group": "Parameter",
