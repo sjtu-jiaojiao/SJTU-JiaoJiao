@@ -1,4 +1,5 @@
 <h2>交易信息管理</h2> 
+<!--
 <nz-input-number
   [(ngModel)]="Tthreshold"
   [nzMin]="1"
@@ -13,85 +14,46 @@
 ></nz-input-number>
 <button nz-button [nzType]="'primary'">结束所有等待时间超过{{Tthreshold}}天且预约数小于{{Ythreshold}}的交易信息</button>
 
-<nz-input-group id='searchname' nzSearch [nzAddOnAfter]="suffixIconButton">
-  <input type="text" [(ngModel)]="searchUser" nz-input placeholder="输入用户ID" />
-</nz-input-group>
-<ng-template #suffixIconButton>
-  <button nz-button (click)='searchByUser()' nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
-</ng-template>
-
-<nz-select 
-id='type'
-[(ngModel)]="selectedType"
-nzPlaceHolder="Choose">
-  <nz-option [nzValue]="0" nzLabel="出售"></nz-option>
-  <nz-option [nzValue]="1" nzLabel="求购"></nz-option>
-  <nz-option [nzValue]="-1" nzLabel="All"></nz-option>
-</nz-select>
-
-
-<nz-select
-id = 'tag'
-nzMode="tags"
-[nzShowArrow]="false"
-[nzOpen]="false"	
-(ngModelChange)	="selectTag($event)"
-[nzTokenSeparators]="[',']"
-[(ngModel)]="searchTag"
-nzPlaceHolder="TagFilter">
-<nz-option *ngFor="let option of searchTag" [nzLabel]="option" [nzValue]="option"> </nz-option>
-</nz-select>
-
-
-<nz-list [nzDataSource]="infos" [nzRenderItem]="info" [nzGrid]="{gutter: 16, span: 6}">
-    <ng-template #info let-info>
-      <nz-list-item [nzContent]="nzContent">
-        <ng-template #nzContent>
-          <nz-card [nzTitle]="info.goodName">
-      <div>
-        <div class='infoitem'>
-            <span class="badge">交易名</span>{{info.goodName}}
-        </div>
-        <div class='infoitem'>
-              <span class="badge">交易ID</span>{{info.sellInfoId}}
-        </div>
-        <div class='infoitem'>
-              <span class="badge">交易类型</span>{{'出售'}}
-        </div>
-      <div class='infoitem'>
-        <span class="badge">发起用户</span>{{info.userId}}
-    </div>
-    <div class='infoitem'>
-        <span class="badge">发布日期</span>{{stringToDate(info.releaseTime)}}
-    </div>
-      <div class='infoitem'>
-          <span class="badge">截止日期</span>{{stringToDate(info.validTime)}}
-      </div>
-      <div class='infoitem'>
-          <span class="badge">状态</span>{{getstate(info.status)}}
-      </div>
-      <nz-tag
-        *ngFor="let tag of info.tags"
-      >
-        {{ tag }}
-      </nz-tag>
-      </div>
-              <a routerLink="/info/{{info.sellInfoId}}">
-              交易详情
-              <i nz-icon type="search"></i>
-               </a>
-          </nz-card>
-        </ng-template>
-      </nz-list-item>
-    </ng-template>
-  </nz-list>
+-->
   
-  <nz-pagination
-  [(nzPageIndex)]="current"
-  [(nzPageSize)]="size"
-  [nzPageSizeOptions]="[4,8,12,16,20,24,28,32]"	
-  [nzTotal]="count"
-  (nzPageIndexChange)	="onChange()"
-  (nzPageSizeChange)= "onChange()"
-  nzShowSizeChanger
-></nz-pagination>
+  <div nz-row [nzGutter]="8">
+    <div nz-col [nzSpan]="8">
+      <nz-select 
+      id='type'
+      [(ngModel)]="selectedType"
+      nzPlaceHolder="Choose">
+        <nz-option [nzValue]="0" nzLabel="出售"></nz-option>
+        <nz-option [nzValue]="1" nzLabel="求购"></nz-option>
+        <nz-option [nzValue]="-1" nzLabel="All"></nz-option>
+      </nz-select>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-input-group id='searchname' nzSearch [nzAddOnAfter]="suffixIconButton">
+        <input type="text" [(ngModel)]="searchUser" nz-input placeholder="输入用户ID" />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button (click)='searchByUser()' nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+      </ng-template>
+      
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-select
+      id = 'tag'
+      nzMode="tags"
+      [nzShowArrow]="false"
+      [nzOpen]="false"	
+      (ngModelChange)	="selectTag($event)"
+      [nzTokenSeparators]="[',']"
+      [(ngModel)]="searchTag"
+      nzPlaceHolder="TagFilter">
+      <nz-option *ngFor="let option of searchTag" [nzLabel]="option" [nzValue]="option"> </nz-option>
+      </nz-select>
+    </div>
+  </div>
+
+  <div *ngIf="selectedType!==1">
+    <app-sell-info></app-sell-info>
+  </div>
+  <div *ngIf="selectedType!==0">
+    <app-buy-info ></app-buy-info>
+  </div>

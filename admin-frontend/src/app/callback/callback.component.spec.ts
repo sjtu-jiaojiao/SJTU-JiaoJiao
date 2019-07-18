@@ -23,6 +23,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CallbackComponent } from './callback.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SocialService } from '@delon/auth';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
 
 describe('Callback', () => {
   let component: CallbackComponent;
@@ -47,10 +49,11 @@ describe('Callback', () => {
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
       imports: [   
-    //    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
         AppRoutingModule,    

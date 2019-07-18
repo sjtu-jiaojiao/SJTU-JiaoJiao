@@ -21,6 +21,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login.component';
 import { CallbackComponent } from '../callback/callback.component';
 import { ITokenService } from '@delon/auth';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -31,21 +33,23 @@ describe('LoginComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
+        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
-        CallbackComponent,
         LoginComponent,
         DashboardComponent,
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
-      imports: [   
-    //    DelonAuthModule,
+      imports: [
+        //    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
-        AppRoutingModule,    
+        AppRoutingModule,
         NgZorroAntdModule,
         FormsModule,
         NgxEchartsModule,

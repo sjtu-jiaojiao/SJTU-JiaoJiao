@@ -25,6 +25,8 @@ import { UserDetailComponent } from './userdetail/userdetail.component';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { CallbackComponent } from './callback/callback.component';
+import { SellInfoComponent } from './info/sell-info/sell-info.component';
+import { BuyInfoComponent } from './info/buy-info/buy-info.component';
 describe('AppComponent', () => {  
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -32,22 +34,23 @@ describe('AppComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
+        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
         LoginComponent,
         DashboardComponent,
         WebsiteComponent,
         ActivityComponent,
-        CallbackComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
-      imports: [   
-    //    DelonAuthModule,
+      imports: [
+        //    DelonAuthModule,
         ReactiveFormsModule,
-        RouterTestingModule,
         BrowserModule,
-        AppRoutingModule,    
+        AppRoutingModule,
         NgZorroAntdModule,
         FormsModule,
         NgxEchartsModule,
@@ -56,8 +59,6 @@ describe('AppComponent', () => {
           InMemoryDataService, { dataEncapsulation: false }),
         BrowserAnimationsModule
       ],
-      providers: [
-      ]
     }).compileComponents();
   }));
 
