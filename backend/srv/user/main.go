@@ -129,8 +129,8 @@ func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.User
 		}
 		utils.AssignNotEmpty(&req.StudentId, &usr.StudentId)
 		utils.AssignNotEmpty(&req.StudentName, &usr.StudentName)
-		utils.AssignNotZero(&req.Status, &usr.Status)
-		utils.AssignNotZero(&req.Role, &usr.Role)
+		utils.AssignNotZero((*int32)(&req.Status), &usr.Status)
+		utils.AssignNotZero((*int32)(&req.Role), &usr.Role)
 		_, err := db.Ormer.Update(&usr)
 		if utils.LogContinue(err, utils.Warning) {
 			return err

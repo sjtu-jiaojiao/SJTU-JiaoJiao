@@ -89,6 +89,89 @@ func TestUserQuery(t *testing.T) {
 	})
 }
 
+func TestUserUpdate(t *testing.T) {
+	var s srvUser
+	var req user.UserInfo
+	var rsp user.UserUpdateResponse
+	tf := func(uid int, uname string, avatar string,
+		telephone string, sid string, sname string, status user.UserInfo_Status, role user.UserInfo_Role) {
+		info := db.User{
+			Id: 2000,
+		}
+		err := db.Ormer.Read(&info)
+		So(err, ShouldBeNil)
+		So(info.Id, ShouldEqual, uid)
+		So(info.UserName, ShouldEqual, uname)
+		So(info.AvatarId, ShouldEqual, avatar)
+		So(info.Telephone, ShouldEqual, telephone)
+		So(info.StudentId, ShouldEqual, sid)
+		So(info.StudentName, ShouldEqual, sname)
+		So(info.Status, ShouldEqual, int32(status))
+		So(info.Role, ShouldEqual, int32(role))
+	}
+	Convey("Test User Update", t, func() {
+		_, err := db.Ormer.Insert(&db.User{
+			Id:          2000,
+			UserName:    "test1",
+			AvatarId:    "5d23ea2c32311335f935cd14",
+			Telephone:   "12345678901",
+			StudentId:   "1234",
+			StudentName: "jiang",
+			Status:      int32(user.UserInfo_NORMAL),
+			Role:        int32(user.UserInfo_USER),
+		})
+		So(err, ShouldBeNil)
+		tf(2000, "test1", "5d23ea2c32311335f935cd14", "12345678901", "1234", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
+
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_INVALID_PARAM)
+
+		req.UserId = 3000
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_NOT_FOUND)
+
+		req.UserId = 2000
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
+		tf(2000, "test1", "5d23ea2c32311335f935cd14", "12345678901", "1234", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
+
+		req.UserName = "test2"
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
+		tf(2000, "test2", "5d23ea2c32311335f935cd14", "12345678901", "1234", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
+
+		req.AvatarId = "1111ea2c32311335f935cd14"
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
+		tf(2000, "test2", "1111ea2c32311335f935cd14", "12345678901", "1234", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
+
+		req.Telephone = "56781234678"
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
+		tf(2000, "test2", "1111ea2c32311335f935cd14", "56781234678", "1234", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
+
+		req.StudentId = "5689"
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
+		tf(2000, "test2", "1111ea2c32311335f935cd14", "56781234678", "5689", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
+
+		req.StudentName = "xiaowang"
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
+		tf(2000, "test2", "1111ea2c32311335f935cd14", "56781234678", "5689", "xiaowang", user.UserInfo_NORMAL, user.UserInfo_USER)
+
+		req.Status = user.UserInfo_FROZEN
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
+		tf(2000, "test2", "1111ea2c32311335f935cd14", "56781234678", "5689", "xiaowang", user.UserInfo_FROZEN, user.UserInfo_USER)
+
+		req.Role = user.UserInfo_ADMIN
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
+		tf(2000, "test2", "1111ea2c32311335f935cd14", "56781234678", "5689", "xiaowang", user.UserInfo_FROZEN, user.UserInfo_ADMIN)
+	})
+}
+
 func TestUserFind(t *testing.T) {
 	var s srvUser
 	var req user.UserFindRequest

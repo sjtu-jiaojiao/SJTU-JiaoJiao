@@ -63,6 +63,34 @@ define({ "api": [
     "groupTitle": "Auth"
   },
   {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "D__PROGRAM_CPP_SJTU_JiaoJiao_backend_doc_main_js",
+    "groupTitle": "D__PROGRAM_CPP_SJTU_JiaoJiao_backend_doc_main_js",
+    "name": ""
+  },
+  {
     "type": "put",
     "url": "/content",
     "title": "AddContent",
@@ -1352,33 +1380,5 @@ define({ "api": [
         ]
       }
     }
-  },
-  {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p>"
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "_home_imwxz_Documents_code_SJTU_JiaoJiao_backend_doc_main_js",
-    "groupTitle": "_home_imwxz_Documents_code_SJTU_JiaoJiao_backend_doc_main_js",
-    "name": ""
   }
 ] });
