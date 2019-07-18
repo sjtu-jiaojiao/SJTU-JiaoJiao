@@ -8,7 +8,7 @@ import (
 	"jiaojiao/utils"
 	"time"
 
-	"github.com/astaxie/beego/orm"
+	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -42,25 +42,25 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 		return nil
 	}
 	info := db.SellInfo{
-		Id: req.SellInfoId,
+		ID: req.SellInfoId,
 	}
-	err := db.Ormer.Read(&info)
-	if err == orm.ErrNoRows {
+	err := db.Ormer.First(&info).Error
+	if gorm.IsRecordNotFoundError(err) {
 		return nil
 	} else if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
 	good := db.Good{
-		Id: info.GoodId,
+		ID: info.GoodId,
 	}
-	err = db.Ormer.Read(&good)
-	if err == orm.ErrNoRows {
+	err = db.Ormer.First(&good).Error
+	if gorm.IsRecordNotFoundError(err) {
 		return nil
 	} else if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
 
-	rsp.SellInfoId = info.Id
+	rsp.SellInfoId = info.ID
 	rsp.Status = info.Status
 	rsp.ReleaseTime = info.ReleaseTime.Unix()
 	rsp.ValidTime = info.ValidTime.Unix()
@@ -108,28 +108,28 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 	}
 
 	insert := func() (int32, error) {
-		err := db.Ormer.Begin()
+		tx := db.Ormer.Begin()
+		if utils.LogContinue(tx.Error, utils.Warning) {
+			return 0, tx.Error
+		}
+		err := tx.Create(&good).Error
 		if utils.LogContinue(err, utils.Warning) {
+			tx.Rollback()
 			return 0, err
 		}
-		id, err := db.Ormer.Insert(&good)
-		if id == 0 || utils.LogContinue(err, utils.Warning) {
-			utils.LogContinue(db.Ormer.Rollback(), utils.Warning)
-			return 0, err
-		}
-		info.GoodId = int32(id)
-		id, err = db.Ormer.Insert(&info)
-		if id == 0 || utils.LogContinue(err, utils.Warning) {
-			utils.LogContinue(db.Ormer.Rollback(), utils.Warning)
+		info.GoodId = good.ID
+		err = tx.Create(&info).Error
+		if utils.LogContinue(err, utils.Warning) {
+			tx.Rollback()
 			return 0, err
 		}
 
-		err = db.Ormer.Commit()
+		err = tx.Commit().Error
 		if utils.LogContinue(err, utils.Warning) {
-			utils.LogContinue(db.Ormer.Rollback(), utils.Warning)
+			tx.Rollback()
 			return 0, err
 		}
-		return int32(id), nil
+		return info.ID, nil
 	}
 
 	if req.ContentId == "" && req.ContentToken == "" {
@@ -187,20 +187,20 @@ func (a *srvInfo) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, r
 	}
 
 	var res []*db.SellInfo
-	tb := db.Ormer.QueryTable(&db.SellInfo{})
+	tb := db.Ormer
 	if req.UserId != 0 {
-		tb = tb.Filter("userId", req.UserId)
+		tb = tb.Where("user_id = ?", req.UserId)
 	}
-	_, err := tb.Limit(req.Limit, req.Offset).All(&res)
+	err := tb.Limit(req.Limit).Offset(req.Offset).Find(&res).Error
 	if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
 	for i, v := range res {
 		rsp.SellInfo = append(rsp.SellInfo, new(sellinfo.SellInfoMsg))
 		good := db.Good{
-			Id: v.GoodId,
+			ID: v.GoodId,
 		}
-		err = db.Ormer.Read(&good)
+		err = db.Ormer.First(&good).Error
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
@@ -210,7 +210,7 @@ func (a *srvInfo) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, r
 }
 
 func parseSellInfo(s *db.SellInfo, g *db.Good, d *sellinfo.SellInfoMsg) {
-	d.SellInfoId = s.Id
+	d.SellInfoId = s.ID
 	d.Status = s.Status
 	d.ReleaseTime = s.ReleaseTime.Unix()
 	d.ValidTime = s.ValidTime.Unix()
@@ -380,6 +380,7 @@ func (a *srvContent) Delete(ctx context.Context, req *sellinfo.ContentDeleteRequ
 
 func main() {
 	db.InitORM("sellinfodb", new(db.SellInfo), new(db.Good))
+	defer db.CloseORM()
 	db.InitMongoDB("sellinfomongo")
 	service := utils.InitMicroService("sellInfo")
 	utils.LogPanic(sellinfo.RegisterSellInfoHandler(service.Server(), new(srvInfo)))

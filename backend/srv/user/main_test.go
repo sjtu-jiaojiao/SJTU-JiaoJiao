@@ -39,10 +39,7 @@ func TestUserCreate(t *testing.T) {
 		id2 := tf(user.UserCreateResponse_USER_EXIST)
 		So(id, ShouldEqual, id2)
 
-		_, err := db.Ormer.Delete(&db.User{
-			Id: id,
-		})
-		So(err, ShouldBeNil)
+		So(db.Ormer.Delete(&db.User{ID: id}).Error, ShouldBeNil)
 	})
 }
 
@@ -64,15 +61,14 @@ func TestUserQuery(t *testing.T) {
 	}
 	Convey("Test User Query", t, func() {
 		tf(0, "", "", "", "", "", 0)
-		_, err := db.Ormer.Insert(&db.User{
-			Id:          1000,
+		err := db.Ormer.Create(&db.User{
+			ID:          1000,
 			UserName:    "jiang",
 			AvatarId:    "5d23ea2c32311335f935cd14",
 			Telephone:   "12345678901",
 			StudentId:   "1234",
 			StudentName: "jiang",
-			Status:      1,
-		})
+		}).Error
 
 		So(err, ShouldBeNil)
 		req.UserId = 1000
@@ -82,10 +78,7 @@ func TestUserQuery(t *testing.T) {
 		req.UserId = 1001
 		tf(0, "", "", "", "", "", 0)
 
-		_, err = db.Ormer.Delete(&db.User{
-			Id: 1000,
-		})
-		So(err, ShouldBeNil)
+		So(db.Ormer.Delete(&db.User{ID: 1000}).Error, ShouldBeNil)
 	})
 }
 
@@ -105,15 +98,15 @@ func TestUserFind(t *testing.T) {
 	}
 	Convey("Test User Find", t, func() {
 		req.UserName = "test"
-		_, err := db.Ormer.Insert(&db.User{
-			Id:          2000,
+		err := db.Ormer.Create(&db.User{
+			ID:          2000,
 			UserName:    "test1",
 			AvatarId:    "5d23ea2c32311335f935cd14",
 			Telephone:   "12345678901",
 			StudentId:   "1234",
 			StudentName: "jiang",
 			Status:      1,
-		})
+		}).Error
 		So(err, ShouldBeNil)
 
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
@@ -122,15 +115,15 @@ func TestUserFind(t *testing.T) {
 			"1234", "jiang", 1)
 		rsp.User = nil
 
-		_, err = db.Ormer.Insert(&db.User{
-			Id:          2001,
+		err = db.Ormer.Create(&db.User{
+			ID:          2001,
 			UserName:    "test2",
 			AvatarId:    "5d23ea2c32311335f935cd15",
 			Telephone:   "12345678902",
 			StudentId:   "12345",
 			StudentName: "jiangzm",
 			Status:      1,
-		})
+		}).Error
 		So(err, ShouldBeNil)
 
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
@@ -154,14 +147,8 @@ func TestUserFind(t *testing.T) {
 		tf(0, 2001, "test2", "5d23ea2c32311335f935cd15", "12345678902",
 			"12345", "jiangzm", 1)
 
-		_, err = db.Ormer.Delete(&db.User{
-			Id: 2000,
-		})
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Delete(&db.User{
-			Id: 2001,
-		})
-		So(err, ShouldBeNil)
+		So(db.Ormer.Delete(&db.User{ID: 2000}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.User{ID: 2001}).Error, ShouldBeNil)
 	})
 }
 
