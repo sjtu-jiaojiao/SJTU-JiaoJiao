@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 	"net/http"
 	"net/url"
@@ -10,6 +11,46 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 )
+
+func Test_addUser(t *testing.T) {
+	tf := func(code int, status user.UserCreateResponse_Status, path string, admin bool, studentId string, studentName string) map[string]interface{} {
+		var data map[string]interface{}
+		r := utils.StartTestServer(setupRouter, "PUT", path,
+			strings.NewReader(url.Values{
+				"studentId":   {studentId},
+				"studentName": {studentName},
+			}.Encode()),
+			func(r *http.Request) {
+				r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+				if admin {
+					r.Header.Set("Authorization", "admin")
+				}
+			})
+		So(r.Code, ShouldEqual, code)
+		if r.Body.String() != "{}" && r.Code == 200 {
+			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
+			So(data["status"], ShouldEqual, status)
+		}
+		return data
+	}
+	Convey("GetUserInfo router test", t, func() {
+		tf(404, user.UserCreateResponse_UNKNOWN, "/user/1000", true, "1000", "www")
+
+		tf(403, user.UserCreateResponse_UNKNOWN, "/user", false, "1000", "www")
+
+		tf(200, user.UserCreateResponse_INVALID_PARAM, "/user", true, "1000", "")
+
+		tf(200, user.UserCreateResponse_INVALID_PARAM, "/user", true, "", "www")
+
+		tf(200, user.UserCreateResponse_SUCCESS, "/user", true, "1000", "www")
+
+		tf(200, user.UserCreateResponse_SUCCESS, "/user", true, "1001", "www")
+
+		tf(200, user.UserCreateResponse_UNKNOWN, "/user", true, "2000", "www")
+
+		tf(200, user.UserCreateResponse_USER_EXIST, "/user", true, "3000", "www")
+	})
+}
 
 func Test_getUserInfo(t *testing.T) {
 	tf := func(code int, path string, admin bool) map[string]interface{} {
