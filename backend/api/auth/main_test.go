@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 	"os"
 	"testing"
@@ -10,38 +11,32 @@ import (
 )
 
 func Test_getAuth(t *testing.T) {
-	tf := func(code int, path string) map[string]interface{} {
+	tf := func(code int, param string, status int, id int, role user.UserInfo_Role) {
 		var data map[string]interface{}
-		r := utils.StartTestServer(setupRouter, "GET", path, nil, nil)
+		r := utils.StartTestServer(setupRouter, "GET", "/auth?code="+param, nil, nil)
 		So(r.Code, ShouldEqual, code)
-		if r.Body.String() != "{}" {
+		if r.Code != 500 {
 			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldBeNil)
+			So(data["status"], ShouldEqual, status)
+			if status == 1 {
+				t, err := utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
+				So(err, ShouldBeNil)
+				So(utils.JWTParse(t, "id"), ShouldEqual, id)
+				So(utils.JWTParse(t, "role"), ShouldEqual, role)
+			}
 		}
-		return data
 	}
 	Convey("Auth router test", t, func() {
 		r := utils.StartTestServer(setupRouter, "GET", "/auth", nil, nil)
 		So(r.Code, ShouldEqual, 301)
 
-		data := tf(200, "/auth?code=invalid")
-		So(data["status"], ShouldEqual, 2)
+		tf(200, "invalid", 2, 0, 0)
+		tf(200, "valid_user", 1, 1, user.UserInfo_USER)
+		tf(200, "valid_admin", 1, 2, user.UserInfo_ADMIN)
 
-		data = tf(200, "/auth?code=valid_user")
-		So(data["status"], ShouldEqual, 1)
-		t, err := utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
-		So(err, ShouldBeNil)
-		So(utils.JWTParse(t, "id"), ShouldEqual, 1)
-		So(utils.JWTParse(t, "role"), ShouldEqual, 1)
-
-		data = tf(200, "/auth?code=valid_admin")
-		So(data["status"], ShouldEqual, 1)
-		t, err = utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
-		So(err, ShouldBeNil)
-		So(utils.JWTParse(t, "id"), ShouldEqual, 1)
-		So(utils.JWTParse(t, "role"), ShouldEqual, 2)
-
-		tf(500, "/auth?code=down")
-		tf(500, "/auth?code=userdown")
+		tf(200, "frozen_user", 3, 0, 0)
+		tf(500, "down", 0, 0, 0)
+		tf(500, "userdown", 0, 0, 0)
 	})
 }
 

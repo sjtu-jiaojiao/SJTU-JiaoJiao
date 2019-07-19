@@ -25,6 +25,8 @@ func (a *mockSrv) Auth(ctx context.Context, req *auth.AuthRequest, opts ...clien
 			ret.Token = "test_token"
 			ret.StudentId = "1001"
 			ret.StudentName = "test"
+		} else if req.Code == "frozen_user" {
+			ret.Status = auth.AuthResponse_FROZEN_USER
 		} else if req.Code == "down" {
 			return &ret, errors.New("")
 		} else if req.Code == "userdown" {

@@ -34,9 +34,10 @@ message UserInfo {
         FROZEN = 2;
     }
     enum Role {
-        ROLE_UNKNOWN = 0;
+        GUEST = 0;
         USER = 1;
-        ADMIN = 2;
+        ADMIN = 10;
+        SELF = 99; // DO NOT USE IT!
     }
     int32 userId = 1;
     string userName = 2;

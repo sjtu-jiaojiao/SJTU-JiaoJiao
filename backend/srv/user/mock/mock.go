@@ -21,6 +21,12 @@ func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, o
 			rsp.User.UserId = 1
 			rsp.User.Status = user.UserInfo_NORMAL
 			rsp.User.Role = user.UserInfo_USER
+		} else if req.StudentId == "1001" {
+			rsp.Status = user.UserCreateResponse_SUCCESS
+			rsp.User = new(user.UserInfo)
+			rsp.User.UserId = 2
+			rsp.User.Status = user.UserInfo_NORMAL
+			rsp.User.Role = user.UserInfo_ADMIN
 		} else if req.StudentId == "2000" {
 			return &rsp, errors.New("")
 		} else {
