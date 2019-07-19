@@ -7,8 +7,8 @@ import (
 	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 
-	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"github.com/jinzhu/gorm"
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
 )
 
 type srvUser struct{}
@@ -216,6 +216,19 @@ func (a *srvAvatar) Create(ctx context.Context, req *user.AvatarCreateRequest, r
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
+
+		usr := db.User{
+			ID: req.UserId,
+		}
+		err = db.Ormer.First(&usr).Error
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+		err = db.Ormer.Model(&usr).Update("avatarId", id.Hex()).Error
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+
 		rsp.AvatarId = id.Hex()
 		rsp.Status = user.AvatarCreateResponse_SUCCESS
 	}
