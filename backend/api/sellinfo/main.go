@@ -63,8 +63,8 @@ func getSellInfo(c *gin.Context) {
 type addContentQuery struct {
 	ContentId    string `form:"contentId"`
 	ContentToken string `form:"contentToken"`
-	Content      []byte `form:"content"`
-	Type         int32  `form:"type"`
+	Content      []byte `form:"content" binding:"required"`
+	Type         int32  `form:"type" binding:"required"`
 }
 
 /**
@@ -105,8 +105,8 @@ func addContent(c *gin.Context) {
 }
 
 type deleteContentQuery struct {
-	ContentId    string `form:"contentId"`
-	ContentToken string `form:"contentToken"`
+	ContentId    string `form:"contentId" binding:"required"`
+	ContentToken string `form:"contentToken" binding:"required"`
 }
 
 /**
@@ -145,13 +145,13 @@ func deleteContent(c *gin.Context) {
 }
 
 type createSellInfoQuery struct {
-	ValidTime    int64   `form:"validTime"`
-	GoodName     string  `form:"goodName"`
+	ValidTime    int64   `form:"validTime" binding:"required"`
+	GoodName     string  `form:"goodName" binding:"required"`
 	Price        float64 `form:"price"`
 	Description  string  `form:"description"`
 	ContentId    string  `form:"contentId"`
 	ContentToken string  `form:"contentToken"`
-	UserId       int32   `form:"userId"`
+	UserId       int32   `form:"userId" binding:"required"`
 }
 
 /**

@@ -102,9 +102,9 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 		Description: req.Description,
 	}
 	info := db.SellInfo{
-		Status:    1,
-		ValidTime: time.Unix(req.ValidTime, 0),
-		UserId:    req.UserId,
+		ReleaseTime: time.Now(),
+		ValidTime:   time.Unix(req.ValidTime, 0),
+		UserId:      req.UserId,
 	}
 
 	insert := func() (int32, error) {

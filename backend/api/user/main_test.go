@@ -33,7 +33,7 @@ func Test_addUser(t *testing.T) {
 		}
 		return data
 	}
-	Convey("GetUserInfo router test", t, func() {
+	Convey("Add user router test", t, func() {
 		tf(404, user.UserCreateResponse_UNKNOWN, "/user/1000", true, "1000", "www")
 
 		tf(403, user.UserCreateResponse_UNKNOWN, "/user", false, "1000", "www")
