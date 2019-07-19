@@ -4,11 +4,14 @@ import (
 	"bytes"
 	"context"
 	db "jiaojiao/database"
+	"jiaojiao/srv/file/mock"
+	file "jiaojiao/srv/file/proto"
 	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 
+	"github.com/micro/go-micro/client"
+
 	"github.com/jinzhu/gorm"
-	"go.mongodb.org/mongo-driver/mongo/gridfs"
 )
 
 type srvUser struct{}
@@ -207,29 +210,29 @@ func (a *srvAvatar) Create(ctx context.Context, req *user.AvatarCreateRequest, r
 	if bytes.Equal(req.Content, []byte{0}) || req.UserId == 0 {
 		rsp.Status = user.AvatarCreateResponse_INVALID_PARAM
 	} else {
-		bucket, err := gridfs.NewBucket(db.MongoDatabase)
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-
-		id, err := bucket.UploadFromStream("", bytes.NewReader(req.Content))
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-
 		usr := db.User{
 			ID: req.UserId,
 		}
-		err = db.Ormer.First(&usr).Error
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-		err = db.Ormer.Model(&usr).Update("avatarId", id.Hex()).Error
+		err := db.Ormer.First(&usr).Error
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
 
-		rsp.AvatarId = id.Hex()
+		srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
+			func() interface{} { return mock.NewFileService() }).(file.FileService)
+		microRsp, err := srv.Create(context.TODO(), &file.FileCreateRequest{
+			Stream: req.Content,
+		})
+		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) || microRsp.Status != file.FileCreateResponse_SUCCESS {
+			return err
+		}
+
+		err = db.Ormer.Model(&usr).Update("avatarId", microRsp.FileId).Error
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+
+		rsp.AvatarId = microRsp.FileId
 		rsp.Status = user.AvatarCreateResponse_SUCCESS
 	}
 	return nil
@@ -240,5 +243,6 @@ func main() {
 	defer db.CloseORM()
 	service := utils.InitMicroService("user")
 	utils.LogPanic(user.RegisterUserHandler(service.Server(), new(srvUser)))
+	utils.LogPanic(user.RegisterAvatarHandler(service.Server(), new(srvAvatar)))
 	utils.RunMicroService(service)
 }
