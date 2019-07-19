@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	db "jiaojiao/database"
 	file "jiaojiao/srv/file/proto"
@@ -52,6 +53,37 @@ func (a *srvFile) Query(ctx context.Context, req *file.FileQueryRequest, rsp *fi
 			rsp.Stream = downloadBuffer
 			rsp.Status = file.FileQueryResponse_SUCCESS
 		}
+	}
+	return nil
+}
+
+/**
+ * @api {rpc} /rpc file.File.Create
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName file.File.Create
+ * @apiDescription Create file
+ *
+ * @apiParam {bytes} stream file stream bytes
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success
+ * @apiSuccess {string} fileId file id
+ * @apiUse DBServerDown
+ */
+func (a *srvFile) Create(ctx context.Context, req *file.FileCreateRequest, rsp *file.FileCreateResponse) error {
+	if bytes.Equal(req.Stream, []byte{0}) {
+		rsp.Status = file.FileCreateResponse_INVALID_PARAM
+	} else {
+		bucket, err := gridfs.NewBucket(db.MongoDatabase)
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+
+		objId, err := bucket.UploadFromStream("", bytes.NewReader(req.Stream))
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+		rsp.FileId = objId.Hex()
+		rsp.Status = file.FileCreateResponse_SUCCESS
 	}
 	return nil
 }

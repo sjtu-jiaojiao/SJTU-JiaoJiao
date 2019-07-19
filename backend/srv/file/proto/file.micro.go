@@ -35,6 +35,7 @@ var _ server.Option
 
 type FileService interface {
 	Query(ctx context.Context, in *FileQueryRequest, opts ...client.CallOption) (*FileQueryResponse, error)
+	Create(ctx context.Context, in *FileCreateRequest, opts ...client.CallOption) (*FileCreateResponse, error)
 }
 
 type fileService struct {
@@ -65,15 +66,27 @@ func (c *fileService) Query(ctx context.Context, in *FileQueryRequest, opts ...c
 	return out, nil
 }
 
+func (c *fileService) Create(ctx context.Context, in *FileCreateRequest, opts ...client.CallOption) (*FileCreateResponse, error) {
+	req := c.c.NewRequest(c.name, "File.Create", in)
+	out := new(FileCreateResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for File service
 
 type FileHandler interface {
 	Query(context.Context, *FileQueryRequest, *FileQueryResponse) error
+	Create(context.Context, *FileCreateRequest, *FileCreateResponse) error
 }
 
 func RegisterFileHandler(s server.Server, hdlr FileHandler, opts ...server.HandlerOption) error {
 	type file interface {
 		Query(ctx context.Context, in *FileQueryRequest, out *FileQueryResponse) error
+		Create(ctx context.Context, in *FileCreateRequest, out *FileCreateResponse) error
 	}
 	type File struct {
 		file
@@ -88,4 +101,8 @@ type fileHandler struct {
 
 func (h *fileHandler) Query(ctx context.Context, in *FileQueryRequest, out *FileQueryResponse) error {
 	return h.FileHandler.Query(ctx, in, out)
+}
+
+func (h *fileHandler) Create(ctx context.Context, in *FileCreateRequest, out *FileCreateResponse) error {
+	return h.FileHandler.Create(ctx, in, out)
 }
