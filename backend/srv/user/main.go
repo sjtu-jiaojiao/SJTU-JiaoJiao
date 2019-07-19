@@ -8,8 +8,7 @@ import (
 	"jiaojiao/utils"
 
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
-
-	"github.com/astaxie/beego/orm"
+	"github.com/jinzhu/gorm"
 )
 
 type srvUser struct{}
@@ -37,20 +36,19 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
 	if req.StudentId == "" || req.StudentName == "" {
 		rsp.Status = user.UserCreateResponse_INVALID_PARAM
 	} else {
-		usr := db.User{
-			UserName:    req.StudentName,
-			AvatarId:    utils.GetStringConfig("srv_config", "default_avatar"),
-			StudentId:   req.StudentId,
-			StudentName: req.StudentName,
-			Status:      int32(user.UserInfo_NORMAL),
-			Role:        int32(user.UserInfo_USER),
-		}
-		created, _, err := db.Ormer.ReadOrCreate(&usr, "StudentId")
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-		if created {
+		var usr db.User
+		err := db.Ormer.Where("student_id = ?", req.StudentId).First(&usr).Error
+		if gorm.IsRecordNotFoundError(err) {
+			usr = db.User{
+				UserName:    req.StudentName,
+				AvatarId:    utils.GetStringConfig("srv_config", "default_avatar"),
+				StudentId:   req.StudentId,
+				StudentName: req.StudentName,
+			}
+			utils.LogContinue(db.Ormer.Create(&usr).Error, utils.Warning)
 			rsp.Status = user.UserCreateResponse_SUCCESS
+		} else if utils.LogContinue(err, utils.Warning) {
+			return err
 		} else {
 			rsp.Status = user.UserCreateResponse_USER_EXIST
 		}
@@ -83,10 +81,10 @@ func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *us
 		return nil
 	}
 	usr := db.User{
-		Id: req.UserId,
+		ID: req.UserId,
 	}
-	err := db.Ormer.Read(&usr)
-	if err == orm.ErrNoRows {
+	err := db.Ormer.First(&usr).Error
+	if gorm.IsRecordNotFoundError(err) {
 		return nil
 	} else if utils.LogContinue(err, utils.Warning) {
 		return err
@@ -121,9 +119,10 @@ func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.User
 	}
 
 	usr := db.User{
-		Id: req.UserId,
+		ID: req.UserId,
 	}
-	if err := db.Ormer.Read(&usr); err == nil {
+	err := db.Ormer.First(&usr).Error
+	if err == nil {
 		utils.AssignNotEmpty(&req.UserName, &usr.UserName)
 		utils.AssignNotEmpty(&req.AvatarId, &usr.AvatarId)
 		if req.ClearEmpty {
@@ -135,12 +134,12 @@ func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.User
 		utils.AssignNotEmpty(&req.StudentName, &usr.StudentName)
 		utils.AssignNotZero((*int32)(&req.Status), &usr.Status)
 		utils.AssignNotZero((*int32)(&req.Role), &usr.Role)
-		_, err := db.Ormer.Update(&usr)
+		err := db.Ormer.Save(&usr).Error
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
 		rsp.Status = user.UserUpdateResponse_SUCCESS
-	} else if err == orm.ErrNoRows {
+	} else if gorm.IsRecordNotFoundError(err) {
 		rsp.Status = user.UserUpdateResponse_NOT_FOUND
 		return nil
 	} else {
@@ -169,7 +168,7 @@ func (a *srvUser) Find(ctx context.Context, req *user.UserFindRequest, rsp *user
 	}
 
 	var res []*db.User
-	_, err := db.Ormer.QueryTable(&db.User{}).Filter("UserName__icontains", req.UserName).Limit(req.Limit, req.Offset).All(&res)
+	err := db.Ormer.Where("user_name LIKE ?", "%"+req.UserName+"%").Limit(req.Limit).Offset(req.Offset).Find(&res).Error
 	if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
@@ -181,7 +180,7 @@ func (a *srvUser) Find(ctx context.Context, req *user.UserFindRequest, rsp *user
 }
 
 func parseUser(s *db.User, d *user.UserInfo) {
-	d.UserId = int32(s.Id)
+	d.UserId = int32(s.ID)
 	d.UserName = s.UserName
 	d.AvatarId = s.AvatarId
 	d.Telephone = s.Telephone
@@ -225,6 +224,7 @@ func (a *srvAvatar) Create(ctx context.Context, req *user.AvatarCreateRequest, r
 
 func main() {
 	db.InitORM("userdb", new(db.User))
+	defer db.CloseORM()
 	service := utils.InitMicroService("user")
 	utils.LogPanic(user.RegisterUserHandler(service.Server(), new(srvUser)))
 	utils.RunMicroService(service)

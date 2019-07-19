@@ -3,14 +3,15 @@ package main
 import (
 	"bytes"
 	"context"
-	uuid "github.com/satori/go.uuid"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	db "jiaojiao/database"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
 	"testing"
 	"time"
+
+	uuid "github.com/satori/go.uuid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -20,7 +21,7 @@ func TestSrvInfoQuery(t *testing.T) {
 	var req sellinfo.SellInfoQueryRequest
 
 	info := db.SellInfo{
-		Id:          1000,
+		ID:          1000,
 		Status:      1,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
@@ -28,7 +29,7 @@ func TestSrvInfoQuery(t *testing.T) {
 		GoodId:      1000,
 	}
 	good := db.Good{
-		Id:          1000,
+		ID:          1000,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
@@ -45,10 +46,8 @@ func TestSrvInfoQuery(t *testing.T) {
 	Convey("Test SellInfo Query", t, func() {
 		tf(0, "", "", "", 0)
 
-		_, err := db.Ormer.Insert(&good)
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Insert(&info)
-		So(err, ShouldBeNil)
+		So(db.Ormer.Create(&good).Error, ShouldBeNil)
+		So(db.Ormer.Create(&info).Error, ShouldBeNil)
 
 		req.SellInfoId = 1000
 		tf(1000, "good", "Very good!", "123456789", 1000)
@@ -56,15 +55,8 @@ func TestSrvInfoQuery(t *testing.T) {
 		req.SellInfoId = 1001
 		tf(0, "", "", "", 0)
 
-		_, err = db.Ormer.Delete(&db.SellInfo{
-			Id: 1000,
-		})
-		So(err, ShouldBeNil)
-
-		_, err = db.Ormer.Delete(&db.Good{
-			Id: 1000,
-		})
-		So(err, ShouldBeNil)
+		So(db.Ormer.Delete(&db.SellInfo{ID: 1000}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1000}).Error, ShouldBeNil)
 	})
 
 }
@@ -97,7 +89,7 @@ func TestSrvInfoCreate(t *testing.T) {
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
 
-		req.ValidTime = 19087982694
+		req.ValidTime = 1893427200
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
 
@@ -107,16 +99,11 @@ func TestSrvInfoCreate(t *testing.T) {
 		So(rsp.SellInfoId, ShouldNotEqual, 0)
 
 		tmp := db.SellInfo{
-			Id: rsp.SellInfoId,
+			ID: rsp.SellInfoId,
 		}
-		err := db.Ormer.Read(&tmp)
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Delete(&db.Good{
-			Id: tmp.GoodId,
-		})
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Delete(&tmp)
-		So(err, ShouldBeNil)
+		So(db.Ormer.First(&tmp).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: tmp.GoodId}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&tmp).Error, ShouldBeNil)
 
 		req.ContentId = "123456789abc123456789abc"
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
@@ -136,19 +123,14 @@ func TestSrvInfoCreate(t *testing.T) {
 		So(rsp.SellInfoId, ShouldNotEqual, 0)
 
 		tmp = db.SellInfo{
-			Id: rsp.SellInfoId,
+			ID: rsp.SellInfoId,
 		}
-		err = db.Ormer.Read(&tmp)
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Delete(&db.Good{
-			Id: tmp.GoodId,
-		})
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Delete(&tmp)
-		So(err, ShouldBeNil)
+		So(db.Ormer.First(&tmp).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: tmp.GoodId}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&tmp).Error, ShouldBeNil)
 		var sc srvContent
 		var rspc sellinfo.ContentDeleteResponse
-		err = sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
+		err := sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
 			ContentId:    req.ContentId,
 			ContentToken: req.ContentToken,
 		}, &rspc)
@@ -161,7 +143,7 @@ func TestSrvInfoFind(t *testing.T) {
 	var req sellinfo.SellInfoFindRequest
 
 	info1 := db.SellInfo{
-		Id:          1000,
+		ID:          1000,
 		Status:      1,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
@@ -169,7 +151,7 @@ func TestSrvInfoFind(t *testing.T) {
 		GoodId:      1000,
 	}
 	info2 := db.SellInfo{
-		Id:          1001,
+		ID:          1001,
 		Status:      2,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
@@ -177,7 +159,7 @@ func TestSrvInfoFind(t *testing.T) {
 		GoodId:      1001,
 	}
 	info3 := db.SellInfo{
-		Id:          1002,
+		ID:          1002,
 		Status:      3,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
@@ -185,52 +167,40 @@ func TestSrvInfoFind(t *testing.T) {
 		GoodId:      1002,
 	}
 	good1 := db.Good{
-		Id:          1000,
+		ID:          1000,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
 	}
 	good2 := db.Good{
-		Id:          1001,
+		ID:          1001,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
 	}
 	good3 := db.Good{
-		Id:          1002,
+		ID:          1002,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
 	}
 
 	prepare := func() {
-		_, err := db.Ormer.Insert(&good1)
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Insert(&good2)
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Insert(&good3)
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Insert(&info1)
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Insert(&info2)
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Insert(&info3)
-		So(err, ShouldBeNil)
+		So(db.Ormer.Create(&good1).Error, ShouldBeNil)
+		So(db.Ormer.Create(&good2).Error, ShouldBeNil)
+		So(db.Ormer.Create(&good3).Error, ShouldBeNil)
+		So(db.Ormer.Create(&info1).Error, ShouldBeNil)
+		So(db.Ormer.Create(&info2).Error, ShouldBeNil)
+		So(db.Ormer.Create(&info3).Error, ShouldBeNil)
 	}
 	end := func() {
-		_, err := db.Ormer.Delete(&db.SellInfo{Id: 1000})
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Delete(&db.SellInfo{Id: 1001})
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Delete(&db.SellInfo{Id: 1002})
-		So(err, ShouldBeNil)
+		So(db.Ormer.Delete(&db.SellInfo{ID: 1000}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.SellInfo{ID: 1001}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.SellInfo{ID: 1002}).Error, ShouldBeNil)
 
-		_, err = db.Ormer.Delete(&db.Good{Id: 1000})
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Delete(&db.Good{Id: 1001})
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Delete(&db.Good{Id: 1002})
-		So(err, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1000}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1001}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1002}).Error, ShouldBeNil)
 	}
 	testLen := func(length int) {
 		var rsp sellinfo.SellInfoFindResponse

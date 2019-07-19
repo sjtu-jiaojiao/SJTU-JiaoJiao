@@ -37,8 +37,11 @@ func Test_getAuth(t *testing.T) {
 		So(data["status"], ShouldEqual, 1)
 		t, err = utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
 		So(err, ShouldBeNil)
-		So(utils.JWTParse(t, "id"), ShouldEqual, 1)
+		So(utils.JWTParse(t, "id"), ShouldEqual, 2)
 		So(utils.JWTParse(t, "role"), ShouldEqual, 2)
+
+		data = tf(200, "/auth?code=frozen")
+		So(data["status"], ShouldEqual, 3)
 
 		tf(500, "/auth?code=down")
 		tf(500, "/auth?code=userdown")
