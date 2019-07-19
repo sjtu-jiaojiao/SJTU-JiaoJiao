@@ -23,6 +23,8 @@ import { UserService } from '../user.service';
 import { User } from '../entity/user';
 import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
 
 describe('UserComponent', () => {
   let component: UserComponent;
@@ -34,21 +36,23 @@ describe('UserComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
+        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
         LoginComponent,
         DashboardComponent,
         WebsiteComponent,
-        CallbackComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
-      imports: [   
-    //    DelonAuthModule,
+      imports: [
+        //    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
-        AppRoutingModule,    
+        AppRoutingModule,
         NgZorroAntdModule,
         FormsModule,
         NgxEchartsModule,

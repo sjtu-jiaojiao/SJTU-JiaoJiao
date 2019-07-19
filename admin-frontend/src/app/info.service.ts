@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { Info, InfoResponse } from './entity/info';
+import { sellInfo, buyInfo, InfoResponse } from './entity/info';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -14,38 +14,38 @@ const httpOptions = {
 })
 export class InfoService {
 
-  private infosUrl = 'api/sellInfo';  // URL to web api
-
+  private sellinfoUrl = 'api/sellInfo';  // URL to web api
+  private buyinfoUrl = 'api/buyInfo';
   constructor(private http: HttpClient) { }
 
   /** GET infos from the server */
-  getInfos(): Observable<InfoResponse> {
-    return this.http.get<InfoResponse>(this.infosUrl)
+  getSellInfos(): Observable<InfoResponse> {
+    return this.http.get<InfoResponse>(this.sellinfoUrl)
       .pipe(
-        catchError(this.handleError<InfoResponse>('getInfos'))
+        catchError(this.handleError<InfoResponse>('getSellInfos'))
       );
   }
 
   /** GET infos from the server */
-  getPageInfos(limit:number, offset: number): Observable<InfoResponse> {    
-    const url = `${this.infosUrl}?limit=${limit}&offset=${offset}`;
+  getPageSellInfos(limit:number, offset: number): Observable<InfoResponse> {    
+    const url = `${this.sellinfoUrl}?limit=${limit}&offset=${offset}`;
     return this.http.get<InfoResponse>(url)
       .pipe(
-        catchError(this.handleError<InfoResponse>('getInfos'))
+        catchError(this.handleError<InfoResponse>('getPageSellInfos'))
       );
   }
 
   /** GET info by id. Will 404 if id not found */
-  getInfo(id: string): Observable<Info> {
-    const url = `${this.infosUrl}/${id}`;
-    return this.http.get<Info>(url).pipe(
-      catchError(this.handleError<Info>(`getInfo id=${id}`))
+  getSellInfo(id: string): Observable<sellInfo> {
+    const url = `${this.sellinfoUrl}/${id}`;
+    return this.http.get<sellInfo>(url).pipe(
+      catchError(this.handleError<sellInfo>(`getInfo id=${id}`))
     );
   }
 
   /** GET infos from the server */
-  searchInfos(term: string,limit:number, offset: number): Observable<InfoResponse> {    
-    const url = `${this.infosUrl}?userId=${term}&limit=${limit}&offset=${offset}`;
+  searchSellInfos(term: string,limit:number, offset: number): Observable<InfoResponse> {    
+    const url = `${this.sellinfoUrl}?userId=${term}&limit=${limit}&offset=${offset}`;
     return this.http.get<InfoResponse>(url)
       .pipe(
         catchError(this.handleError<InfoResponse>('getInfos'))
@@ -53,9 +53,50 @@ export class InfoService {
   }
 
   /** PUT: update the info on the server */
-  updateInfo(info: any): Observable<any> {
-    return this.http.post(this.infosUrl, info, httpOptions).pipe(
-      catchError(this.handleError<any>('updateInfo'))
+  updateSellInfo(info: any): Observable<any> {
+    return this.http.post(this.sellinfoUrl, info, httpOptions).pipe(
+      catchError(this.handleError<any>('updateSellInfo'))
+    );
+  }
+
+  /** GET infos from the server */
+  getBuyInfos(): Observable<InfoResponse> {
+    return this.http.get<InfoResponse>(this.buyinfoUrl)
+      .pipe(
+        catchError(this.handleError<InfoResponse>('getBuyInfos'))
+      );
+  }
+
+  /** GET infos from the server */
+  getPageBuyInfos(limit:number, offset: number): Observable<InfoResponse> {    
+    const url = `${this.buyinfoUrl}?limit=${limit}&offset=${offset}`;
+    return this.http.get<InfoResponse>(url)
+      .pipe(
+        catchError(this.handleError<InfoResponse>('getPageBuyInfos'))
+      );
+  }
+
+  /** GET info by id. Will 404 if id not found */
+  getBuyInfo(id: string): Observable<buyInfo> {
+    const url = `${this.buyinfoUrl}/${id}`;
+    return this.http.get<buyInfo>(url).pipe(
+      catchError(this.handleError<buyInfo>(`getBuy id=${id}`))
+    );
+  }
+
+  /** GET infos from the server */
+  searchBuyInfos(term: string,limit:number, offset: number): Observable<InfoResponse> {    
+    const url = `${this.buyinfoUrl}?userId=${term}&limit=${limit}&offset=${offset}`;
+    return this.http.get<InfoResponse>(url)
+      .pipe(
+        catchError(this.handleError<InfoResponse>('getBuyInfos'))
+      );
+  }
+
+  /** PUT: update the info on the server */
+  updateBuyInfo(info: any): Observable<any> {
+    return this.http.post(this.buyinfoUrl, info, httpOptions).pipe(
+      catchError(this.handleError<any>('updateBuyInfo'))
     );
   }
 

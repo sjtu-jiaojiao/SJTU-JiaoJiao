@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Info } from '../entity/info';
+import { sellInfo } from '../entity/info';
 import { Location } from '@angular/common';
 import { InfoService } from '../info.service';
-import { Format } from '../info/info.component';
+import { Format } from '../Formatter/format';
 
 export function formatDate(params) {
     params = params[0];
@@ -19,13 +19,14 @@ export class InfoDetailComponent implements OnInit {
 
   d = [];
   fnoption: any;
+  type :string;
   state: number =0;
   now = new Date(1997, 9, 3);
   oneDay = 24 * 3600 * 1000;
   option: any;
   deadLine: Date;
   value = Math.random() * 1000;
-  @Input() info: Info ;
+  @Input() info: any ;
   constructor(
   private route: ActivatedRoute,
   private infoService: InfoService,
@@ -49,6 +50,7 @@ stringToDate(params) {
 
   ngOnInit() {
       this.graph();
+      this.type = this.route.snapshot.paramMap.get('type');
       this.getinfo();
   }
     goBack(): void {
@@ -56,18 +58,31 @@ stringToDate(params) {
   }
     getinfo(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.infoService.getInfo(id)
+    if(this.type === 'sellInfo')
+    this.infoService.getSellInfo(id)
+      .subscribe(info => {
+          this.info = info;
+          this.deadLine = new Date(this.info.validTime);
+      });
+    else if(this.type === 'buyInfo')
+    this.infoService.getBuyInfo(id)
       .subscribe(info => {
           this.info = info;
           this.deadLine = new Date(this.info.validTime);
       });
   }
+
     save(): void {
     if(!this.info) return;
     this.info.validTime = this.deadLine.getTime().toString();
-    this.infoService.updateInfo(this.info)
-      .subscribe(() => this.goBack());
-  }
+    if(this.type==='sellInfo')
+    this.infoService.updateSellInfo(this.info)
+        .subscribe(() => this.goBack());
+    else if(this.type ==='buyInfo')
+    this.infoService.updateBuyInfo(this.info)
+        .subscribe(() => this.goBack());
+    }
+
   graph() {
       
     for (let i = 0; i < 1000; i++) {

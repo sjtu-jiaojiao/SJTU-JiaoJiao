@@ -22,6 +22,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard.component';
 import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -41,7 +43,9 @@ describe('DashboardComponent', () => {
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
       imports: [
         //    DelonAuthModule,

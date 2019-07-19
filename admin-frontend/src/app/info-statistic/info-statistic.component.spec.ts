@@ -22,6 +22,8 @@ import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import 'echarts-wordcloud';
 import { CallbackComponent } from '../callback/callback.component';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
 describe('InfoStatisticComponent', () => {
   let component: InfoStatisticComponent;
   let fixture: ComponentFixture<InfoStatisticComponent>;
@@ -32,21 +34,23 @@ describe('InfoStatisticComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
+        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
         LoginComponent,
-        CallbackComponent,
         DashboardComponent,
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
-      imports: [   
-    //    DelonAuthModule,
+      imports: [
+        //    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
-        AppRoutingModule,    
+        AppRoutingModule,
         NgZorroAntdModule,
         FormsModule,
         NgxEchartsModule,
