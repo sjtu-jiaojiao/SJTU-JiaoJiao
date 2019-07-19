@@ -89,11 +89,11 @@ func TestUserUpdate(t *testing.T) {
 	tf := func(uid int, uname string, avatar string,
 		telephone string, sid string, sname string, status user.UserInfo_Status, role user.UserInfo_Role) {
 		info := db.User{
-			Id: 2000,
+			ID: 2000,
 		}
-		err := db.Ormer.Read(&info)
+		err := db.Ormer.First(&info).Error
 		So(err, ShouldBeNil)
-		So(info.Id, ShouldEqual, uid)
+		So(info.ID, ShouldEqual, uid)
 		So(info.UserName, ShouldEqual, uname)
 		So(info.AvatarId, ShouldEqual, avatar)
 		So(info.Telephone, ShouldEqual, telephone)
@@ -103,8 +103,8 @@ func TestUserUpdate(t *testing.T) {
 		So(info.Role, ShouldEqual, int32(role))
 	}
 	Convey("Test User Update", t, func() {
-		_, err := db.Ormer.Insert(&db.User{
-			Id:          2000,
+		err := db.Ormer.Create(&db.User{
+			ID:          2000,
 			UserName:    "test1",
 			AvatarId:    "5d23ea2c32311335f935cd14",
 			Telephone:   "12345678901",
@@ -112,7 +112,7 @@ func TestUserUpdate(t *testing.T) {
 			StudentName: "jiang",
 			Status:      int32(user.UserInfo_NORMAL),
 			Role:        int32(user.UserInfo_USER),
-		})
+		}).Error
 		So(err, ShouldBeNil)
 		tf(2000, "test1", "5d23ea2c32311335f935cd14", "12345678901", "1234", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
 
@@ -182,7 +182,7 @@ func TestUserFind(t *testing.T) {
 	Convey("Test User Find", t, func() {
 		req.UserName = "test"
 		err := db.Ormer.Create(&db.User{
-			ID:          2000,
+			ID:          2500,
 			UserName:    "test1",
 			AvatarId:    "5d23ea2c32311335f935cd14",
 			Telephone:   "12345678901",
@@ -194,12 +194,12 @@ func TestUserFind(t *testing.T) {
 
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 1)
-		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
+		tf(0, 2500, "test1", "5d23ea2c32311335f935cd14", "12345678901",
 			"1234", "jiang", 1)
 		rsp.User = nil
 
 		err = db.Ormer.Create(&db.User{
-			ID:          2001,
+			ID:          2501,
 			UserName:    "test2",
 			AvatarId:    "5d23ea2c32311335f935cd15",
 			Telephone:   "12345678902",
@@ -211,27 +211,27 @@ func TestUserFind(t *testing.T) {
 
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 2)
-		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
+		tf(0, 2500, "test1", "5d23ea2c32311335f935cd14", "12345678901",
 			"1234", "jiang", 1)
-		tf(1, 2001, "test2", "5d23ea2c32311335f935cd15", "12345678902",
+		tf(1, 2501, "test2", "5d23ea2c32311335f935cd15", "12345678902",
 			"12345", "jiangzm", 1)
 		rsp.User = nil
 
 		req.Limit = 1
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 1)
-		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
+		tf(0, 2500, "test1", "5d23ea2c32311335f935cd14", "12345678901",
 			"1234", "jiang", 1)
 		rsp.User = nil
 
 		req.Offset = 1
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, 1)
-		tf(0, 2001, "test2", "5d23ea2c32311335f935cd15", "12345678902",
+		tf(0, 2501, "test2", "5d23ea2c32311335f935cd15", "12345678902",
 			"12345", "jiangzm", 1)
 
-		So(db.Ormer.Delete(&db.User{ID: 2000}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.User{ID: 2001}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.User{ID: 2500}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.User{ID: 2501}).Error, ShouldBeNil)
 	})
 }
 

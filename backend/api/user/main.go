@@ -118,8 +118,8 @@ func findUser(c *gin.Context) {
 }
 
 type addInfo struct {
-	StudentId   string `form:"studentId"`
-	StudentName string `form:"studentName"`
+	StudentId   string `form:"studentId" binding:"required"`
+	StudentName string `form:"studentName" binding:"required"`
 }
 
 /**

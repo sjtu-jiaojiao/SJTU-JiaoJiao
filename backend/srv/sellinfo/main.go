@@ -4,9 +4,13 @@ import (
 	"bytes"
 	"context"
 	db "jiaojiao/database"
+	"jiaojiao/srv/file/mock"
+	file "jiaojiao/srv/file/proto"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
 	"jiaojiao/utils"
 	"time"
+
+	"github.com/micro/go-micro/client"
 
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
@@ -102,9 +106,9 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 		Description: req.Description,
 	}
 	info := db.SellInfo{
-		Status:    1,
-		ValidTime: time.Unix(req.ValidTime, 0),
-		UserId:    req.UserId,
+		ReleaseTime: time.Now(),
+		ValidTime:   time.Unix(req.ValidTime, 0),
+		UserId:      req.UserId,
 	}
 
 	insert := func() (int32, error) {
@@ -239,16 +243,21 @@ func parseSellInfo(s *db.SellInfo, g *db.Good, d *sellinfo.SellInfoMsg) {
  */
 func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequest, rsp *sellinfo.ContentCreateResponse) error {
 	upload := func() (primitive.ObjectID, error) {
-		bucket, err := gridfs.NewBucket(db.MongoDatabase)
-		if utils.LogContinue(err, utils.Warning) {
+		srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
+			func() interface{} { return mock.NewFileService() }).(file.FileService)
+		rsp, err := srv.Create(context.TODO(), &file.FileCreateRequest{
+			Stream: req.Content,
+		})
+		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) || rsp.Status != file.FileCreateResponse_SUCCESS {
 			return primitive.ObjectID{}, err
 		}
 
-		objId, err := bucket.UploadFromStream("", bytes.NewReader(req.Content))
-		if utils.LogContinue(err, utils.Warning) {
+		fid, err := primitive.ObjectIDFromHex(rsp.FileId)
+		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) {
 			return primitive.ObjectID{}, err
 		}
-		return objId, nil
+
+		return fid, nil
 	}
 
 	if bytes.Equal(req.Content, []byte{0}) || req.Type == 0 {

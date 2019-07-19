@@ -15,11 +15,7 @@ import (
 func Test_addUser(t *testing.T) {
 	tf := func(code int, status user.UserCreateResponse_Status, path string, admin bool, studentId string, studentName string) map[string]interface{} {
 		var data map[string]interface{}
-		r := utils.StartTestServer(setupRouter, "PUT", path,
-			strings.NewReader(url.Values{
-				"studentId":   {studentId},
-				"studentName": {studentName},
-			}.Encode()),
+		r := utils.StartTestServer(setupRouter, "PUT", path+"?studentId="+studentId+"&studentName="+studentName, nil,
 			func(r *http.Request) {
 				r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 				if admin {
@@ -33,14 +29,14 @@ func Test_addUser(t *testing.T) {
 		}
 		return data
 	}
-	Convey("GetUserInfo router test", t, func() {
+	Convey("Add user router test", t, func() {
 		tf(404, user.UserCreateResponse_UNKNOWN, "/user/1000", true, "1000", "www")
 
-		tf(403, user.UserCreateResponse_UNKNOWN, "/user", false, "1000", "www")
+		tf(400, user.UserCreateResponse_UNKNOWN, "/user", false, "1000", "www")
 
-		tf(200, user.UserCreateResponse_INVALID_PARAM, "/user", true, "1000", "")
+		tf(400, user.UserCreateResponse_INVALID_PARAM, "/user", true, "1000", "")
 
-		tf(200, user.UserCreateResponse_INVALID_PARAM, "/user", true, "", "www")
+		tf(400, user.UserCreateResponse_INVALID_PARAM, "/user", true, "", "www")
 
 		tf(200, user.UserCreateResponse_SUCCESS, "/user", true, "1000", "www")
 

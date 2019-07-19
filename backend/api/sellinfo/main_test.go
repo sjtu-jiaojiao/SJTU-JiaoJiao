@@ -43,7 +43,7 @@ func Test_addSellInfo(t *testing.T) {
 				r.Header.Set("Authorization", "valid_user")
 			})
 		So(r.Code, ShouldEqual, code)
-		if r.Code != 500 {
+		if r.Code == 200 {
 			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
 			So(data["status"], ShouldEqual, status)
 		}
@@ -57,7 +57,7 @@ func Test_addSellInfo(t *testing.T) {
 			})
 		So(r.Code, ShouldEqual, 403)
 
-		tf(200, "/sellInfo", -1)
+		tf(400, "/sellInfo", -1)
 		tf(200, "/sellInfo?validTime=12345&goodName=good&userId=1", 1)
 		tf(200, "/sellInfo?validTime=12345&goodName=good&userId=1&contentId=1234&contentToken=invalid_token", 2)
 		tf(200, "/sellInfo?validTime=12345&goodName=good&userId=1&contentId=1234&contentToken=valid", 1)
@@ -75,7 +75,7 @@ func Test_deleteContent(t *testing.T) {
 				r.Header.Set("Authorization", "admin")
 			})
 		So(r.Code, ShouldEqual, code)
-		if r.Code != 500 {
+		if r.Code == 200 {
 			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
 			So(data["status"], ShouldEqual, status)
 		}
@@ -84,9 +84,9 @@ func Test_deleteContent(t *testing.T) {
 		r := utils.StartTestServer(setupRouter, "DELETE", "/content?contentId=1000&contentToken=valid_token", nil, nil)
 		So(r.Code, ShouldEqual, 403)
 
-		tf(200, "", "", -1)
-		tf(200, "1000", "", -1)
-		tf(200, "", "valid_token", -1)
+		tf(400, "", "", -1)
+		tf(400, "1000", "", -1)
+		tf(400, "", "valid_token", -1)
 		tf(200, "1000", "valid_token", 1)
 		tf(200, "1000", "invalid_token", 2)
 		tf(200, "1001", "valid_token", 2)
@@ -103,15 +103,15 @@ func Test_addContent(t *testing.T) {
 				r.Header.Set("Authorization", "user")
 			})
 		So(r.Code, ShouldEqual, code)
-		if r.Code != 500 {
+		if r.Code == 200 {
 			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
 			So(data["status"], ShouldEqual, status)
 		}
 	}
 	Convey("AddContent router test", t, func() {
-		r := utils.StartTestServer(setupRouter, "PUT", "/content", nil, nil)
+		r := utils.StartTestServer(setupRouter, "PUT", "/content?content=123&type=1", nil, nil)
 		So(r.Code, ShouldEqual, 403)
-		tf(200, "", "", "123", "", -1)
+		tf(400, "", "", "123", "", -1)
 		tf(200, "", "", "", "1", -1)
 		tf(200, "", "", "123", "1", 1)
 		tf(200, "123", "invalid_token", "123", "1", 2)
