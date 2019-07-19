@@ -9,6 +9,7 @@ import (
 )
 
 type mockUserSrv struct{}
+type mockAvatarSrv struct{}
 
 func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, opts ...client.CallOption) (*user.UserCreateResponse, error) {
 	var rsp user.UserCreateResponse
@@ -135,6 +136,13 @@ func (a *mockUserSrv) Update(ctx context.Context, req *user.UserInfo, opts ...cl
 	return &rsp, nil
 }
 
+func (a *mockAvatarSrv) Create(ctx context.Context, in *user.AvatarCreateRequest, opts ...client.CallOption) (*user.AvatarCreateResponse, error) {
+	panic("implement me")
+}
+
 func NewUserService() user.UserService {
 	return new(mockUserSrv)
+}
+func NewAvatarService() user.AvatarService {
+	return new(mockAvatarSrv)
 }

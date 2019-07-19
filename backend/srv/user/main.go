@@ -1,15 +1,18 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	db "jiaojiao/database"
 	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"github.com/jinzhu/gorm"
 )
 
 type srvUser struct{}
+type srvAvatar struct{}
 
 /**
  * @apiDefine DBServerDown
@@ -129,8 +132,8 @@ func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.User
 		}
 		utils.AssignNotEmpty(&req.StudentId, &usr.StudentId)
 		utils.AssignNotEmpty(&req.StudentName, &usr.StudentName)
-		utils.AssignNotZero(&req.Status, &usr.Status)
-		utils.AssignNotZero(&req.Role, &usr.Role)
+		utils.AssignNotZero((*int32)(&req.Status), &usr.Status)
+		utils.AssignNotZero((*int32)(&req.Role), &usr.Role)
 		err := db.Ormer.Save(&usr).Error
 		if utils.LogContinue(err, utils.Warning) {
 			return err
@@ -185,6 +188,38 @@ func parseUser(s *db.User, d *user.UserInfo) {
 	d.StudentName = s.StudentName
 	d.Status = user.UserInfo_Status(s.Status)
 	d.Role = user.UserInfo_Role(s.Role)
+}
+
+/**
+ * @api {rpc} /rpc user.Avatar.Create
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName user.Avatar.Create
+ * @apiDescription create user avatar and return avatarId.
+ *
+ * @apiParam {int32} userId user id
+ * @apiParam {bytes} content binary content
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
+ * @apiSuccess {int32} avatarId new avatar id
+ * @apiUse DBServerDown
+ */
+func (a *srvAvatar) Create(ctx context.Context, req *user.AvatarCreateRequest, rsp *user.AvatarCreateResponse) error {
+	if bytes.Equal(req.Content, []byte{0}) || req.UserId == 0 {
+		rsp.Status = user.AvatarCreateResponse_INVALID_PARAM
+	} else {
+		bucket, err := gridfs.NewBucket(db.MongoDatabase)
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+
+		id, err := bucket.UploadFromStream("", bytes.NewReader(req.Content))
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+		rsp.AvatarId = id.Hex()
+		rsp.Status = user.AvatarCreateResponse_SUCCESS
+	}
+	return nil
 }
 
 func main() {
