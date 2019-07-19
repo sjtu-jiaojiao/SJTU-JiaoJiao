@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵConsole, ViewChild } from '@angular/core';
+import { Component, OnInit, ɵConsole, ViewChild, AfterViewInit } from '@angular/core';
 import { sellInfo,buyInfo } from '../entity/info';
 import { InfoService } from '../info.service';
 import { filter } from 'rxjs/operators';
@@ -15,30 +15,29 @@ export class InfoComponent implements OnInit {
   selectedType: number=0;
   searchUser: string;
   @ViewChild(SellInfoComponent, {static: false})
-  private schild: SellInfoComponent;
+  schild: SellInfoComponent;
   @ViewChild(BuyInfoComponent, {static: false})
-  private bchild: BuyInfoComponent;
+  bchild: BuyInfoComponent;
   constructor() { }
 
   ngOnInit() {
   }
-
   searchByUser(){
-    if(this.selectedType!==1){
+    if(this.selectedType!==0){
     this.bchild.searchUser=this.searchUser;
     this.bchild.searchByUser();
     }
     
-    if(this.selectedType!==0){
+    if(this.selectedType!==1){
     this.schild.searchUser= this.searchUser;
     this.schild.searchByUser(); 
     }
   }
   
   selectTag(tag: string[]){
-    if(this.selectedType!==1)
-    this.bchild.searchTag =tag;
     if(this.selectedType!==0)
+    this.bchild.searchTag =tag;
+    if(this.selectedType!==1)
     this.schild.searchTag =tag;
   }
 }

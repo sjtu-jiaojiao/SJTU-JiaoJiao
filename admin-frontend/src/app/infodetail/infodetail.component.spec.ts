@@ -86,6 +86,10 @@ describe('InfodetailComponent', () => {
     component.save();
     component.goBack();
     expect(typeof(component.randomData().name)).toEqual('string');
-    expect(component.stringToDate(new Date(1563134054))).toEqual('1970-01-19 10:12:14')
+    expect(component.stringToDate(new Date(1563134054))).toEqual('1970-01-19 10:12:14');
+    component.type = 'sellInfo';
+    component.getinfo();
+    component.type = 'buyInfo';
+    component.getinfo();
   });
 });
