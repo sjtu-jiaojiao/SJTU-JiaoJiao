@@ -34,6 +34,17 @@ export class InfoComponent implements OnInit {
     this.schild.searchByUser(); 
     }
   }
+
+  getColor(item ){
+    switch(item.type){
+      case 0:
+        return 'blue';
+      case 1:
+        return 'green';
+      case -1:
+        return 'red';
+    }
+  }
   
   selectTag(tag: string[]){
     if(this.selectedType!==1)

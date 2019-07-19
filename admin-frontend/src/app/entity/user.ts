@@ -7,6 +7,7 @@ export class User
    studentId: string;
    studentName: string;
    status: number;
+   role: number;
 }
 
 export class UserResponse

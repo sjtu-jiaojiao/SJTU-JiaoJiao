@@ -68,7 +68,7 @@ export class DelonModule {
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,    
-    NgZorroAntdModule.forRoot(),
+    NgZorroAntdModule,
     FormsModule,
     NgxEchartsModule,
     HttpClientModule,

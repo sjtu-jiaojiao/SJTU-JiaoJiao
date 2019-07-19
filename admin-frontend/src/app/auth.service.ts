@@ -16,8 +16,6 @@ export class AuthService {
 
   login(res): void {
     //JWTTokenModely
-    //这里会自动补全payload,然而测试不认账，nmdwsm
-
     this.tokenService.set(res);
     const jwt :JWTTokenModel =  this.tokenService.get<JWTTokenModel>(JWTTokenModel);
     if(jwt.payload.role !== 1) {

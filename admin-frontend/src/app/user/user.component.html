@@ -33,6 +33,9 @@
       <div class='useritem'>
           <span class="badge">电话号码</span>{{user.telephone}}
       </div>
+      <div class= 'useritem'>
+        <span class="badge">权限</span>{{user.role==2?'管理':'用户'}}
+      </div>
       </div>
               <a routerLink="/user/{{user.userId}}">
               用户详情
