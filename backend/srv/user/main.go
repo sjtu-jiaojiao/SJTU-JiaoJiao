@@ -1,7 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	db "jiaojiao/database"
 	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
@@ -10,6 +14,7 @@ import (
 )
 
 type srvUser struct{}
+type srvAvatar struct{}
 
 /**
  * @apiDefine DBServerDown
@@ -185,6 +190,77 @@ func parseUser(s *db.User, d *user.UserInfo) {
 	d.StudentName = s.StudentName
 	d.Status = user.UserInfo_Status(s.Status)
 	d.Role = user.UserInfo_Role(s.Role)
+}
+
+/**
+ * @api {rpc} /rpc user.Avatar.Create
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName user.Avatar.Create
+ * @apiDescription create user avatar and return avatarId, if exists update it
+ *
+ * @apiParam {string} avatarId 24 bytes avatar id
+ * @apiParam {bytes} content binary content
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
+ * @apiSuccess {int32} avatarId the same as request avatarId as normal <br> differ when status shows not found
+ * @apiUse DBServerDown
+ */
+func (a *srvAvatar) Create(ctx context.Context, req *user.AvatarCreateRequest, rsp *user.AvatarCreateResponse) error {
+	upload := func() (primitive.ObjectID, error) {
+		bucket, err := gridfs.NewBucket(db.MongoDatabase)
+		if utils.LogContinue(err, utils.Warning) {
+			return primitive.ObjectID{}, err
+		}
+
+		objId, err := bucket.UploadFromStream("", bytes.NewReader(req.Content))
+		if utils.LogContinue(err, utils.Warning) {
+			return primitive.ObjectID{}, err
+		}
+		return objId, nil
+	}
+
+	if bytes.Equal(req.Content, []byte{0}) || req.AvatarId == "" {
+		rsp.Status = user.AvatarCreateResponse_INVALID_PARAM
+	} else {
+		objId, err := upload()
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+
+		collection := db.MongoDatabase.Collection("avatar")
+		rid, err1 := primitive.ObjectIDFromHex(req.AvatarId)
+		_, err2 := collection.FindOne(db.MongoContext, bson.D{
+			{"_id", rid},
+		}).DecodeBytes()
+		if err1 != nil || err2 != nil {
+			res, err := collection.InsertOne(db.MongoContext, bson.M{
+				"fileId": objId,
+			})
+			if utils.LogContinue(err, utils.Warning) {
+				return err
+			}
+
+			rsp.AvatarId = res.InsertedID.(primitive.ObjectID).Hex()
+			rsp.Status = user.AvatarCreateResponse_NOT_FOUND
+		} else {
+			_, err = collection.UpdateOne(db.MongoContext, bson.D{
+				{"_id", rid},
+			},
+				bson.D{
+					{"$set", bson.D{
+						{"files", bson.D{
+							{"fileId", objId},
+						}},
+					}},
+				})
+			if utils.LogContinue(err, utils.Warning) {
+				return err
+			}
+			rsp.AvatarId = req.AvatarId
+			rsp.Status = user.AvatarCreateResponse_SUCCESS
+		}
+	}
+	return nil
 }
 
 func main() {

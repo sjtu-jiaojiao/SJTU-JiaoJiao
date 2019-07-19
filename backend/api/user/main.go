@@ -16,7 +16,7 @@ func setupRouter() *gin.Engine {
 	rg.GET("/user", findUser)
 	rg.PUT("/user", addUser)
 	rg.POST("/user", updateUser)
-
+	rg.POST("/avatar", addAvatar)
 	return router
 }
 
@@ -204,6 +204,46 @@ func updateUser(c *gin.Context) {
 			ClearEmpty:  usrInfo.ClearEmpty,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
+			c.JSON(500, err)
+			return
+		}
+		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+type avatarCont struct {
+	AvatarId string `form:"avatarId"`
+	Content  []byte `form:"content"`
+}
+
+/**
+ * @api {post} /avatar AddAvatar
+ * @apiVersion 1.0.0
+ * @apiGroup User
+ * @apiPermission self
+ * @apiName AddAvatar
+ * @apiDescription Add user avatar
+ *
+ * @apiParam {--} Param see [User Service](#api-Service-user_Avatar_Create)
+ * @apiSuccess {Response} response see [User Service](#api-Service-user_Avatar_Create)
+ * @apiUse UserServiceDown
+ */
+func addAvatar(c *gin.Context) {
+	var cont avatarCont
+	if !utils.LogContinue(c.ShouldBindQuery(&cont), utils.Warning) {
+		if !utils.CheckUser(c) {
+			c.AbortWithStatus(403)
+			return
+		}
+		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewAvatarService(name, c) },
+			func() interface{} { return mock.NewAvatarService() }).(user.AvatarService)
+		rsp, err := srv.Create(context.TODO(), &user.AvatarCreateRequest{
+			AvatarId: cont.AvatarId,
+			Content:  cont.Content,
+		})
+		if utils.LogContinue(err, utils.Warning, "Avatar service error: %v", err) {
 			c.JSON(500, err)
 			return
 		}

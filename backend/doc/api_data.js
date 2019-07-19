@@ -827,6 +827,69 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
+    "title": "user.Avatar.Create",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "user_Avatar_Create",
+    "description": "<p>create user avatar and return avatarId, if exists update it</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "avatarId",
+            "description": "<p>24 bytes avatar id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "bytes",
+            "optional": false,
+            "field": "content",
+            "description": "<p>binary content</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "avatarId",
+            "description": "<p>the same as request avatarId as normal <br> differ when status shows not found</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/user/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
     "title": "user.User.Create",
     "version": "1.0.0",
     "group": "Service",
@@ -1151,6 +1214,60 @@ define({ "api": [
             "optional": false,
             "field": "DBServerDown",
             "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "post",
+    "url": "/avatar",
+    "title": "AddAvatar",
+    "version": "1.0.0",
+    "group": "User",
+    "permission": [
+      {
+        "name": "self"
+      }
+    ],
+    "name": "AddAvatar",
+    "description": "<p>Add user avatar</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-user_Avatar_Create\">User Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-user_Avatar_Create\">User Service</a></p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/user/main.go",
+    "groupTitle": "User",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "UserServiceDown",
+            "description": "<p>User service down</p>"
           }
         ]
       }
