@@ -74,7 +74,7 @@ message UserUpdateResponse {
 }
 
 message AvatarCreateRequest{
-    string avatarId = 1;
+    int32 userId = 1;
     bytes content = 2;
 
 }
@@ -84,7 +84,6 @@ message AvatarCreateResponse{
         UNKNOWN = 0;
         INVALID_PARAM = -1;
         SUCCESS = 1;
-        NOT_FOUND = 2;
     }
     Status status = 1;
     string avatarId = 2;

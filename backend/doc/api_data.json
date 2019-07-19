@@ -63,34 +63,6 @@
     "groupTitle": "Auth"
   },
   {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p>"
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "D__PROGRAM_CPP_SJTU_JiaoJiao_backend_doc_main_js",
-    "groupTitle": "D__PROGRAM_CPP_SJTU_JiaoJiao_backend_doc_main_js",
-    "name": ""
-  },
-  {
     "type": "put",
     "url": "/content",
     "title": "AddContent",
@@ -831,16 +803,16 @@
     "version": "1.0.0",
     "group": "Service",
     "name": "user_Avatar_Create",
-    "description": "<p>create user avatar and return avatarId, if exists update it</p>",
+    "description": "<p>create user avatar and return avatarId.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "string",
+            "type": "int32",
             "optional": false,
-            "field": "avatarId",
-            "description": "<p>24 bytes avatar id</p>"
+            "field": "userId",
+            "description": "<p>user id</p>"
           },
           {
             "group": "Parameter",
@@ -867,7 +839,7 @@
             "type": "int32",
             "optional": false,
             "field": "avatarId",
-            "description": "<p>the same as request avatarId as normal <br> differ when status shows not found</p>"
+            "description": "<p>new avatar id</p>"
           }
         ]
       }
@@ -1497,5 +1469,33 @@
         ]
       }
     }
+  },
+  {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "_home_imwxz_Documents_code_SJTU_JiaoJiao_backend_doc_main_js",
+    "groupTitle": "_home_imwxz_Documents_code_SJTU_JiaoJiao_backend_doc_main_js",
+    "name": ""
   }
 ]

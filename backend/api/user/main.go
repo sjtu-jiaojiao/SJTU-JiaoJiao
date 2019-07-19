@@ -214,8 +214,8 @@ func updateUser(c *gin.Context) {
 }
 
 type avatarCont struct {
-	AvatarId string `form:"avatarId"`
-	Content  []byte `form:"content"`
+	UserId  int32  `form:"userId" binding:"required,min=1"`
+	Content []byte `form:"content" binding:"required"`
 }
 
 /**
@@ -233,15 +233,15 @@ type avatarCont struct {
 func addAvatar(c *gin.Context) {
 	var cont avatarCont
 	if !utils.LogContinue(c.ShouldBindQuery(&cont), utils.Warning) {
-		if !utils.CheckUser(c) {
+		if !utils.CheckUserId(c, cont.UserId) {
 			c.AbortWithStatus(403)
 			return
 		}
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewAvatarService(name, c) },
 			func() interface{} { return mock.NewAvatarService() }).(user.AvatarService)
 		rsp, err := srv.Create(context.TODO(), &user.AvatarCreateRequest{
-			AvatarId: cont.AvatarId,
-			Content:  cont.Content,
+			UserId:  cont.UserId,
+			Content: cont.Content,
 		})
 		if utils.LogContinue(err, utils.Warning, "Avatar service error: %v", err) {
 			c.JSON(500, err)
