@@ -30,29 +30,6 @@ export default class UserInfoScreen extends Component {
         return length === 11 && /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1})|)+\d{8})$/.test(this.changeTelephone);
     }
 
-    updateUserInfo() {
-        let formData = new FormData();
-        formData.append('userId', 1);
-        formData.append('telephone', '15221278083');
-        formData.append('status', 1);
-
-        fetch('http://202.120.40.8:30711/v1/user', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                Authorization: ('Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjM1MTY2NTIsImlkIjoxLCJyb2xlIjoxfQ.3llkSLhJ-SK1-d_JGGCuBPA4eEQ3N0tAj6tgthueHpM'),
-            },
-            body: 'userId=1&telephone=15221278083',
-        })
-            .then((response) => {
-                console.warn(response);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
     render() {
         return (
             <View>
@@ -116,11 +93,49 @@ export default class UserInfoScreen extends Component {
                                         )
                                     }
                                     else {
-                                        this.setState({
-                                            telephone: this.changeTelephone,
-                                            isChangeTelephoneVisible: false
-                                        });
-                                        this.changeTelephone='';
+                                        fetch((Config.fetchPrefix + 'user'), {
+                                            method: 'POST',
+                                            headers: {
+                                                Accept: 'application/json',
+                                                'Content-Type': 'application/x-www-form-urlencoded',
+                                                Authorization: ('Bearer ' + Config.JaccountToken.token),
+                                            },
+                                            body: ('userId=1&telephone=' + this.changeTelephone),
+                                        })
+                                            .then((response) => {
+                                                if(response.ok) {
+                                                    Alert.alert(
+                                                        '修改成功',
+                                                        '成功将电话号码修改为：' + this.changeTelephone,
+                                                        [
+                                                            {text: '好', onPress: () => {
+                                                                    this.setState({isChangeTelephoneVisible: false})
+                                                                }}
+                                                        ],
+                                                        {cancelable: false},
+                                                    )
+                                                    this.setState({
+                                                        telephone: this.changeTelephone,
+                                                        isChangeTelephoneVisible: false
+                                                    });
+                                                    this.changeTelephone='';
+                                                } else {
+                                                    this.changeTelephone='';
+                                                    Alert.alert(
+                                                        '出错啦',
+                                                        '网络可能出了问题，请再试一次吧',
+                                                        [
+                                                            {text: '好', onPress: () => {
+                                                                    this.setState({isChangeTelephoneVisible: false})
+                                                                }}
+                                                        ],
+                                                        {cancelable: false},
+                                                    )
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                console.error(error);
+                                            });
                                     }
                                 }}
                             />
@@ -187,11 +202,49 @@ export default class UserInfoScreen extends Component {
                                         )
                                     }
                                     else {
-                                        this.setState({
-                                            userName: this.changeUserName,
-                                            isChangeUserNameVisible: false
-                                        });
-                                        this.changeUserName='';
+                                        fetch((Config.fetchPrefix + 'user'), {
+                                            method: 'POST',
+                                            headers: {
+                                                Accept: 'application/json',
+                                                'Content-Type': 'application/x-www-form-urlencoded',
+                                                Authorization: ('Bearer ' + Config.JaccountToken.token),
+                                            },
+                                            body: ('userId=1&userName=' + this.changeUserName),
+                                        })
+                                            .then((response) => {
+                                                if(response.ok) {
+                                                    Alert.alert(
+                                                        '修改成功',
+                                                        '成功将用户名修改为：' + this.changeUserName,
+                                                        [
+                                                            {text: '好', onPress: () => {
+                                                                    this.setState({isChangeUserNameVisible: false})
+                                                                }}
+                                                        ],
+                                                        {cancelable: false},
+                                                    )
+                                                    this.setState({
+                                                        userName: this.changeUserName,
+                                                        isChangeUserNameVisible: false
+                                                    });
+                                                    this.changeUserName='';
+                                                } else {
+                                                    this.changeUserName='';
+                                                    Alert.alert(
+                                                        '出错啦',
+                                                        '网络可能出了问题，请再试一次吧',
+                                                        [
+                                                            {text: '好', onPress: () => {
+                                                                    this.setState({isChangeUserNameVisible: false})
+                                                                }}
+                                                        ],
+                                                        {cancelable: false},
+                                                    )
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                console.error(error);
+                                            });
                                     }
                                 }}
                             />
