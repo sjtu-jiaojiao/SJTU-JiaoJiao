@@ -9,6 +9,7 @@ import (
 )
 
 type mockUserSrv struct{}
+type mockAvatarSrv struct{}
 
 func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, opts ...client.CallOption) (*user.UserCreateResponse, error) {
 	var rsp user.UserCreateResponse
@@ -29,6 +30,12 @@ func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, o
 			rsp.User.Role = user.UserInfo_ADMIN
 		} else if req.StudentId == "2000" {
 			return &rsp, errors.New("")
+		} else if req.StudentId == "3000" {
+			rsp.Status = user.UserCreateResponse_SUCCESS
+			rsp.User = new(user.UserInfo)
+			rsp.User.UserId = 3
+			rsp.User.Status = user.UserInfo_FROZEN
+			rsp.User.Role = user.UserInfo_USER
 		} else {
 			rsp.Status = user.UserCreateResponse_USER_EXIST
 			rsp.User = new(user.UserInfo)
@@ -129,6 +136,13 @@ func (a *mockUserSrv) Update(ctx context.Context, req *user.UserInfo, opts ...cl
 	return &rsp, nil
 }
 
+func (a *mockAvatarSrv) Create(ctx context.Context, in *user.AvatarCreateRequest, opts ...client.CallOption) (*user.AvatarCreateResponse, error) {
+	panic("implement me")
+}
+
 func NewUserService() user.UserService {
 	return new(mockUserSrv)
+}
+func NewAvatarService() user.AvatarService {
+	return new(mockAvatarSrv)
 }

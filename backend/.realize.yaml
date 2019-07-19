@@ -141,3 +141,85 @@ schema:
       type: after
       path: ../../
       output: true
+- name: api-buyinfo
+  path: api/buyinfo
+  args:
+    - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+      - go
+    paths:
+      - /
+      - ../../utils
+    scripts:
+    - command: apidoc
+      type: after
+      path: ../../
+      output: true
+- name: srv-buyinfo
+  path: srv/buyinfo
+  args:
+  - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+    - proto
+    - go
+    paths:
+    - /
+    - ../../utils
+    scripts:
+    - command: bash generate_proto.sh
+      type: before
+      path: ../../
+      output: true
+    - command: apidoc
+      type: after
+      path: ../../
+      output: true
+- name: api-file
+  path: api/file
+  args:
+    - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+      - go
+    paths:
+      - /
+      - ../../utils
+    scripts:
+    - command: apidoc
+      type: after
+      path: ../../
+      output: true
+- name: srv-file
+  path: srv/file
+  args:
+  - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+    - proto
+    - go
+    paths:
+    - /
+    - ../../utils
+    scripts:
+    - command: bash generate_proto.sh
+      type: before
+      path: ../../
+      output: true
+    - command: apidoc
+      type: after
+      path: ../../
+      output: true
