@@ -5,7 +5,7 @@ import Config from "../../Config";
 import {NavigationActions} from "react-navigation";
 
 
-export default class ContactScreen extends Component {
+export default class Overlay extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -14,11 +14,8 @@ export default class ContactScreen extends Component {
         this.inputValue = '';
     }
 
-    static navigationOptions = {
-        headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23, textAlign: 'center'}}>消息</Text>)
-    };
-
     render() {
+        let updateType = this.props.updateType
         return (
             <View>
                 <Overlay
