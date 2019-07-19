@@ -12,7 +12,7 @@ export class InMemoryDataService implements InMemoryDbService {
     {id: 1, description: '第一次迭代', time: '2019-07-12', type: 1},
     {id: 2, description: '第二次迭代', time: '2019-07-23', type: 1},
     {id: 3, description: '紧急维护', time: '', type: -1}
-  ]
+  ];
     return { site , history};
   }
 }

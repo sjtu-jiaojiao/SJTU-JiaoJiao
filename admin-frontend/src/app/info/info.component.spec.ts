@@ -75,6 +75,16 @@ describe('InfoComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should deal with page', () => {
+  it('should deal with select', () => {
+    const stmp = TestBed.createComponent(SellInfoComponent).componentInstance;
+    const btmp = TestBed.createComponent(BuyInfoComponent).componentInstance;
+
+    component.schild=stmp;
+    component.bchild=btmp;
+    component.selectedType=-1;
+    component.searchTag=['黑'];
+    component.searchUser='林';
+    component.searchByUser();
+    component.selectTag(['黑']);
   });
 });

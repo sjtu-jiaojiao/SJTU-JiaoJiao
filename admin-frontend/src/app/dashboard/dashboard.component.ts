@@ -4,6 +4,7 @@ import { UserService } from './../user.service';
 import { InfoService } from '../info.service';
 import { sellInfo } from './../entity/info';
 import { getCurrencySymbol } from '@angular/common';
+import { trigger, transition, style, state, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-dashboard',

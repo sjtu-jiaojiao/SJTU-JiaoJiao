@@ -73,7 +73,12 @@ describe('DashboardComponent', () => {
   it('should create', () => {
     const service: AuthService = TestBed.get(AuthService);
     service.login({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMzMzk3MDYsImlkIjozLCJyb2xlIjoyfQ.woB67gYA8hTMljeg6lqwG_3fSJm4Q7SD6Ln8w2Ol4xk' });
-
+    expect(component.getColor({type:-1})).toEqual('red');
+    expect(component.getColor({type: 0})).toEqual('blue');
+    expect(component.getColor({type: 1})).toEqual('green');
+    component.hst= [ {description: '1'},{description: ''}];
+    component.save();
+    component.add();
     expect(component).toBeTruthy();
   });
 });

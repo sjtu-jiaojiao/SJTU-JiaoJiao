@@ -15,9 +15,9 @@ export class InfoComponent implements OnInit {
   selectedType: number=0;
   searchUser: string;
   @ViewChild(SellInfoComponent, {static: false})
-  private schild: SellInfoComponent;
+  schild: SellInfoComponent;
   @ViewChild(BuyInfoComponent, {static: false})
-  private bchild: BuyInfoComponent;
+  bchild: BuyInfoComponent;
   constructor() { }
 
   ngOnInit() {
@@ -32,17 +32,6 @@ export class InfoComponent implements OnInit {
     if(this.selectedType!==0){
     this.schild.searchUser= this.searchUser;
     this.schild.searchByUser(); 
-    }
-  }
-
-  getColor(item ){
-    switch(item.type){
-      case 0:
-        return 'blue';
-      case 1:
-        return 'green';
-      case -1:
-        return 'red';
     }
   }
   
