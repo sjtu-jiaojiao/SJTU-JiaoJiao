@@ -101,10 +101,10 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "Response",
+            "type": "File",
             "optional": false,
-            "field": "response",
-            "description": "<p>see <a href=\"#api-Service-file_File_Query\">File Service</a></p>"
+            "field": "file",
+            "description": "<p>file itself</p>"
           }
         ]
       }
@@ -648,6 +648,13 @@ define({ "api": [
             "optional": false,
             "field": "file",
             "description": "<p>file stream</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int64",
+            "optional": false,
+            "field": "size",
+            "description": "<p>file size</p>"
           }
         ]
       }
