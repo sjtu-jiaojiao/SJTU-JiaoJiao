@@ -13,6 +13,9 @@ import (
 
 // CreateAPIGroup create an API router group
 func CreateAPIGroup() (*gin.Engine, *gin.RouterGroup) {
+	if LocalConf.Deploy == "product" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	router := gin.Default()
 	rg := router.Group("/" + GetStringConfig("api_config", "version"))
 	return router, rg
@@ -68,5 +71,8 @@ func CallMicroService(name string, f func(name string, c client.Client) interfac
 		return m()
 	}
 	Info("Calling micro service \"%s\"", name)
-	return f(GetServiceName(name), client.DefaultClient)
+	c := client.NewClient(
+		client.RequestTimeout(time.Second * 10),
+	)
+	return f(GetServiceName(name), c)
 }

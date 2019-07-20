@@ -16,7 +16,6 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo/gridfs"
 )
 
 type srvInfo struct{}
@@ -246,7 +245,7 @@ func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequ
 		srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
 			func() interface{} { return mock.NewFileService() }).(file.FileService)
 		rsp, err := srv.Create(context.TODO(), &file.FileCreateRequest{
-			Stream: req.Content,
+			File: req.Content,
 		})
 		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) || rsp.Status != file.FileCreateResponse_SUCCESS {
 			return primitive.ObjectID{}, err
@@ -373,13 +372,13 @@ func (a *srvContent) Delete(ctx context.Context, req *sellinfo.ContentDeleteRequ
 		return nil
 	}
 
+	srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
+		func() interface{} { return mock.NewFileService() }).(file.FileService)
 	for _, v := range res.Files {
-		bucket, err := gridfs.NewBucket(db.MongoDatabase)
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-		err = bucket.Delete(v.FileId)
-		if utils.LogContinue(err, utils.Warning) {
+		microRsp, err := srv.Delete(context.TODO(), &file.FileRequest{
+			FileId: v.FileId.Hex(),
+		})
+		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) || microRsp.Status != file.FileDeleteResponse_SUCCESS {
 			return err
 		}
 	}

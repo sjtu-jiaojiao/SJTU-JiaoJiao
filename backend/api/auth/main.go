@@ -26,6 +26,11 @@ type authCode struct {
 }
 
 /**
+ * @apiDefine InvalidParam
+ * @apiError (Error 400) InvalidParam Invalid param
+ */
+
+/**
  * @api {get} /auth GetAuth
  * @apiVersion 1.0.0
  * @apiGroup Auth
@@ -36,6 +41,7 @@ type authCode struct {
  * @apiParam {string} [code]  OAuth code callback, DO NOT call it by yourself
  * @apiSuccess (No param - Redirect 301) {Redirect} url Redirect to OAuth url
  * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth)
+ * @apiUse InvalidParam
  * @apiError (Error 500) AuthServiceDown Auth service down
  */
 func getAuth(c *gin.Context) {
@@ -80,6 +86,7 @@ func getAuth(c *gin.Context) {
 					return
 				}
 
+				utils.Error(rsp2.User.Status)
 				// sign token
 				if rsp2.User.Status == user.UserInfo_NORMAL {
 					if rsp2.User.Role == user.UserInfo_USER {

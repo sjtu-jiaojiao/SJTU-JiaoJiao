@@ -11,6 +11,7 @@ require (
 	github.com/gin-gonic/gin v1.4.0
 	github.com/golang/protobuf v1.3.1
 	github.com/gopherjs/gopherjs v0.0.0-20190430165422-3e4dfb77656c // indirect
+	github.com/h2non/filetype v1.0.8
 	github.com/jinzhu/gorm v1.9.10
 	github.com/micro/go-micro v1.7.0
 	github.com/nats-io/nats-server/v2 v2.0.0 // indirect

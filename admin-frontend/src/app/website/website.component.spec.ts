@@ -21,6 +21,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WebsiteComponent } from './website.component';
 import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
 
 describe('WebsiteComponent', () => {
   let component: WebsiteComponent;
@@ -32,21 +34,23 @@ describe('WebsiteComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
-        InfoComponent,
         CallbackComponent,
+        InfoComponent,
         InfoDetailComponent,
         LoginComponent,
         DashboardComponent,
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
-      imports: [   
-    //    DelonAuthModule,
+      imports: [
+        //    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
-        AppRoutingModule,    
+        AppRoutingModule,
         NgZorroAntdModule,
         FormsModule,
         NgxEchartsModule,

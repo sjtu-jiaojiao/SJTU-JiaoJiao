@@ -14,14 +14,10 @@ func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
 	rg.GET("/user/:userId", getUserInfo)
 	rg.GET("/user", findUser)
-	rg.PUT("/user", addUser)
-	rg.POST("/user", updateUser)
+	rg.POST("/user", addUser)
+	rg.PUT("/user", updateUser)
 	rg.POST("/avatar", addAvatar)
 	return router
-}
-
-type userInfo struct {
-	UserId int32 `uri:"userId" binding:"required,min=1"`
 }
 
 /**
@@ -33,30 +29,36 @@ type userInfo struct {
  * @api {get} /user/:userId GetUserInfo
  * @apiVersion 1.0.0
  * @apiGroup User
- * @apiPermission none/self
+ * @apiPermission none/self/admin
  * @apiName GetUserInfo
  * @apiDescription Get user info
  *
  * @apiParam {--} Param see [User Service](#api-Service-user_User_Query)
  * @apiSuccess (None - Success 200) {Response} response see [User Service](#api-Service-user_User_Query) <br>
  * 											   studentId: hidden <br> studentName: hidden
- * @apiSuccess (Self - Success 200) {Response} response see [User Service](#api-Service-user_User_Query)
+ * @apiSuccess (Self/Admin - Success 200) {Response} response see [User Service](#api-Service-user_User_Query)
+ * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */
 func getUserInfo(c *gin.Context) {
-	var info userInfo
+	type param struct {
+		UserId int32 `uri:"userId" binding:"required,min=1"`
+	}
+	var p param
 
-	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
+	if !utils.LogContinue(c.ShouldBindUri(&p), utils.Warning) {
+		role := utils.GetRoleID(c, p.UserId)
+
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 			func() interface{} { return mock.NewUserService() }).(user.UserService)
 		rsp, err := srv.Query(context.TODO(), &user.UserQueryRequest{
-			UserId: info.UserId,
+			UserId: p.UserId,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
 			c.JSON(500, err)
 			return
 		}
-		if !utils.CheckUserId(c, info.UserId) {
+		if role != user.UserInfo_SELF && role != user.UserInfo_ADMIN {
 			rsp.StudentId = ""
 			rsp.StudentName = ""
 		}
@@ -64,12 +66,6 @@ func getUserInfo(c *gin.Context) {
 	} else {
 		c.AbortWithStatus(400)
 	}
-}
-
-type findCond struct {
-	UserName string `form:"userName"`
-	Limit    uint32 `form:"limit"`
-	Offset   uint32 `form:"offset"`
 }
 
 /**
@@ -83,29 +79,35 @@ type findCond struct {
  * @apiParam {--} Param see [User Service](#api-Service-user_User_Find) <br> No param need admin permission!
  * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Find) <br>
  * 											   None - studentId: hidden <br> None - studentName: hidden
+ * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */
 func findUser(c *gin.Context) {
-	var cond findCond
-	p := utils.CheckAdmin(c)
+	type param struct {
+		UserName string `form:"userName"`
+		Limit    uint32 `form:"limit"`
+		Offset   uint32 `form:"offset"`
+	}
+	var p param
+	role := utils.GetRole(c)
 
-	if !utils.LogContinue(c.ShouldBindQuery(&cond), utils.Warning) {
-		if cond.UserName == "" && !p {
+	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
+		if p.UserName == "" && role != user.UserInfo_ADMIN {
 			c.AbortWithStatus(403)
 			return
 		}
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 			func() interface{} { return mock.NewUserService() }).(user.UserService)
 		rsp, err := srv.Find(context.TODO(), &user.UserFindRequest{
-			UserName: cond.UserName,
-			Limit:    cond.Limit,
-			Offset:   cond.Offset,
+			UserName: p.UserName,
+			Limit:    p.Limit,
+			Offset:   p.Offset,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
 			c.JSON(500, err)
 			return
 		}
-		if !p {
+		if role != user.UserInfo_ADMIN {
 			for _, v := range rsp.User {
 				v.StudentId = ""
 				v.StudentName = ""
@@ -117,13 +119,8 @@ func findUser(c *gin.Context) {
 	}
 }
 
-type addInfo struct {
-	StudentId   string `form:"studentId" binding:"required"`
-	StudentName string `form:"studentName" binding:"required"`
-}
-
 /**
- * @api {put} /user AddUser
+ * @api {post} /user AddUser
  * @apiVersion 1.0.0
  * @apiGroup User
  * @apiPermission admin
@@ -132,21 +129,27 @@ type addInfo struct {
  *
  * @apiParam {--} Param see [User Service](#api-Service-user_User_Create)
  * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Create)
- * @apiError (Error 500) UserServiceDown User service down
+ * @apiUse InvalidParam
+ * @apiUse UserServiceDown
  */
 func addUser(c *gin.Context) {
-	var info addInfo
+	type param struct {
+		StudentId   string `form:"studentId" binding:"required"`
+		StudentName string `form:"studentName" binding:"required"`
+	}
+	var p param
+	role := utils.GetRole(c)
 
-	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
-		if !utils.CheckAdmin(c) {
+	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+		if role != user.UserInfo_ADMIN {
 			c.AbortWithStatus(403)
 			return
 		}
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 			func() interface{} { return mock.NewUserService() }).(user.UserService)
 		rsp, err := srv.Create(context.TODO(), &user.UserCreateRequest{
-			StudentId:   info.StudentId,
-			StudentName: info.StudentName,
+			StudentId:   p.StudentId,
+			StudentName: p.StudentName,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
 			c.JSON(500, err)
@@ -158,50 +161,58 @@ func addUser(c *gin.Context) {
 	}
 }
 
-type updateInfo struct {
-	UserId      int32  `form:"userId" binding:"required,min=1"`
-	UserName    string `form:"userName"`
-	AvatarId    string `form:"avatarId"`
-	Telephone   string `form:"telephone"`
-	StudentId   string `form:"studentId"`
-	StudentName string `form:"studentName"`
-	Status      int32  `form:"status"`
-	Role        int32  `form:"role"`
-	ClearEmpty  bool   `form:"clearEmpty"`
-}
-
 /**
- * @api {post} /user UpdateUser
+ * @api {put} /user UpdateUser
  * @apiVersion 1.0.0
  * @apiGroup User
  * @apiPermission self/admin
  * @apiName UpdateUser
  * @apiDescription Update user
  *
- * @apiParam {--} Param see [User Service](#api-Service-user_User_Update)
+ * @apiParam {--} Param see [User Service](#api-Service-user_User_Update) <br> self not allow edit StudentId,StudentName,Status,Role
  * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Update)
+ * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */
 func updateUser(c *gin.Context) {
-	var usrInfo updateInfo
+	type param struct {
+		UserId      int32  `form:"userId" binding:"required,min=1"`
+		UserName    string `form:"userName"`
+		AvatarId    string `form:"avatarId"`
+		Telephone   string `form:"telephone"`
+		StudentId   string `form:"studentId"`
+		StudentName string `form:"studentName"`
+		Status      int32  `form:"status"`
+		Role        int32  `form:"role"`
+		ClearEmpty  bool   `form:"clearEmpty"`
+	}
+	var p param
 
-	if !utils.LogContinue(c.ShouldBind(&usrInfo), utils.Warning) {
-		if !utils.CheckAdmin(c) && !utils.CheckUserId(c, usrInfo.UserId) {
+	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+		role := utils.GetRoleID(c, p.UserId)
+
+		if role != user.UserInfo_SELF && role != user.UserInfo_ADMIN {
 			c.AbortWithStatus(403)
 			return
+		}
+		if role != user.UserInfo_ADMIN { // only admin allow change these fields
+			p.StudentId = ""
+			p.StudentName = ""
+			p.Status = 0
+			p.Role = 0
 		}
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 			func() interface{} { return mock.NewUserService() }).(user.UserService)
 		rsp, err := srv.Update(context.TODO(), &user.UserInfo{
-			UserId:      usrInfo.UserId,
-			UserName:    usrInfo.UserName,
-			AvatarId:    usrInfo.AvatarId,
-			Telephone:   usrInfo.Telephone,
-			StudentId:   usrInfo.StudentId,
-			StudentName: usrInfo.StudentName,
-			Status:      user.UserInfo_Status(usrInfo.Status),
-			Role:        user.UserInfo_Role(usrInfo.Role),
-			ClearEmpty:  usrInfo.ClearEmpty,
+			UserId:      p.UserId,
+			UserName:    p.UserName,
+			AvatarId:    p.AvatarId,
+			Telephone:   p.Telephone,
+			StudentId:   p.StudentId,
+			StudentName: p.StudentName,
+			Status:      user.UserInfo_Status(p.Status),
+			Role:        user.UserInfo_Role(p.Role),
+			ClearEmpty:  p.ClearEmpty,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
 			c.JSON(500, err)
@@ -213,35 +224,57 @@ func updateUser(c *gin.Context) {
 	}
 }
 
-type avatarCont struct {
-	UserId  int32  `form:"userId" binding:"required,min=1"`
-	Content []byte `form:"content" binding:"required"`
-}
-
 /**
  * @api {post} /avatar AddAvatar
  * @apiVersion 1.0.0
  * @apiGroup User
- * @apiPermission self
+ * @apiPermission self/admin
  * @apiName AddAvatar
  * @apiDescription Add user avatar
  *
- * @apiParam {--} Param see [User Service](#api-Service-user_Avatar_Create)
+ * @apiParam {--} Param see [User Service](#api-Service-user_Avatar_Create) <br> Max size is 5M
  * @apiSuccess {Response} response see [User Service](#api-Service-user_Avatar_Create)
+ * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */
 func addAvatar(c *gin.Context) {
-	var cont avatarCont
-	if !utils.LogContinue(c.ShouldBindQuery(&cont), utils.Warning) {
-		if !utils.CheckUserId(c, cont.UserId) {
+	type param struct {
+		UserId int32 `form:"userId" binding:"required,min=1"`
+	}
+	var p param
+
+	file, err := c.FormFile("file")
+	if err == nil && !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
+		if file.Size > 1024*1024*5 { // 5M
+			c.AbortWithStatus(413)
+			return
+		}
+
+		role := utils.GetRoleID(c, p.UserId)
+
+		if role != user.UserInfo_SELF && role != user.UserInfo_ADMIN {
 			c.AbortWithStatus(403)
 			return
 		}
+
+		f, err := file.Open()
+		if utils.LogContinue(err, utils.Warning) {
+			c.JSON(500, err)
+			return
+		}
+		defer f.Close()
+		data := make([]byte, file.Size)
+		_, err = f.Read(data)
+		if utils.LogContinue(err, utils.Warning) {
+			c.JSON(500, err)
+			return
+		}
+
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewAvatarService(name, c) },
 			func() interface{} { return mock.NewAvatarService() }).(user.AvatarService)
 		rsp, err := srv.Create(context.TODO(), &user.AvatarCreateRequest{
-			UserId:  cont.UserId,
-			Content: cont.Content,
+			UserId: p.UserId,
+			File:   data,
 		})
 		if utils.LogContinue(err, utils.Warning, "Avatar service error: %v", err) {
 			c.JSON(500, err)

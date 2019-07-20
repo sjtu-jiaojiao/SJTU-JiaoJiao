@@ -47,20 +47,14 @@ func TestUserQuery(t *testing.T) {
 	var s srvUser
 	var req user.UserQueryRequest
 
-	tf := func(uid int, uname string, avatar string,
-		telephone string, sid string, sname string, status int) {
+	tf := func(uid int, sid string) {
 		var rsp user.UserInfo
 		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.UserId, ShouldEqual, uid)
-		So(rsp.UserName, ShouldEqual, uname)
-		So(rsp.AvatarId, ShouldEqual, avatar)
-		So(rsp.Telephone, ShouldEqual, telephone)
 		So(rsp.StudentId, ShouldEqual, sid)
-		So(rsp.StudentName, ShouldEqual, sname)
-		So(rsp.Status, ShouldEqual, status)
 	}
 	Convey("Test User Query", t, func() {
-		tf(0, "", "", "", "", "", 0)
+		tf(0, "")
 		err := db.Ormer.Create(&db.User{
 			ID:          1000,
 			UserName:    "jiang",
@@ -72,22 +66,24 @@ func TestUserQuery(t *testing.T) {
 
 		So(err, ShouldBeNil)
 		req.UserId = 1000
-		tf(1000, "jiang", "5d23ea2c32311335f935cd14",
-			"12345678901", "1234", "jiang", 1)
+		tf(1000, "1234")
 
 		req.UserId = 1001
-		tf(0, "", "", "", "", "", 0)
+		tf(0, "")
 
 		So(db.Ormer.Delete(&db.User{ID: 1000}).Error, ShouldBeNil)
 	})
 }
 
 func TestUserUpdate(t *testing.T) {
-	var s srvUser
 	var req user.UserInfo
-	var rsp user.UserUpdateResponse
-	tf := func(uid int, uname string, avatar string,
-		telephone string, sid string, sname string, status user.UserInfo_Status, role user.UserInfo_Role) {
+
+	tf := func(status user.UserUpdateResponse_Status, uid int, uname string, telephone string) {
+		var s srvUser
+		var rsp user.UserUpdateResponse
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, status)
+
 		info := db.User{
 			ID: 2000,
 		}
@@ -95,18 +91,13 @@ func TestUserUpdate(t *testing.T) {
 		So(err, ShouldBeNil)
 		So(info.ID, ShouldEqual, uid)
 		So(info.UserName, ShouldEqual, uname)
-		So(info.AvatarId, ShouldEqual, avatar)
 		So(info.Telephone, ShouldEqual, telephone)
-		So(info.StudentId, ShouldEqual, sid)
-		So(info.StudentName, ShouldEqual, sname)
-		So(info.Status, ShouldEqual, int32(status))
-		So(info.Role, ShouldEqual, int32(role))
 	}
 	Convey("Test User Update", t, func() {
 		err := db.Ormer.Create(&db.User{
 			ID:          2000,
 			UserName:    "test1",
-			AvatarId:    "5d23ea2c32311335f935cd14",
+			AvatarId:    "1234",
 			Telephone:   "12345678901",
 			StudentId:   "1234",
 			StudentName: "jiang",
@@ -114,77 +105,44 @@ func TestUserUpdate(t *testing.T) {
 			Role:        int32(user.UserInfo_USER),
 		}).Error
 		So(err, ShouldBeNil)
-		tf(2000, "test1", "5d23ea2c32311335f935cd14", "12345678901", "1234", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
 
-		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_INVALID_PARAM)
+		tf(user.UserUpdateResponse_INVALID_PARAM, 2000, "test1", "12345678901")
 
 		req.UserId = 3000
-		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_NOT_FOUND)
+		tf(user.UserUpdateResponse_NOT_FOUND, 2000, "test1", "12345678901")
 
 		req.UserId = 2000
-		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
-		tf(2000, "test1", "5d23ea2c32311335f935cd14", "12345678901", "1234", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
+		tf(user.UserUpdateResponse_SUCCESS, 2000, "test1", "12345678901")
 
 		req.UserName = "test2"
-		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
-		tf(2000, "test2", "5d23ea2c32311335f935cd14", "12345678901", "1234", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
-
-		req.AvatarId = "1111ea2c32311335f935cd14"
-		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
-		tf(2000, "test2", "1111ea2c32311335f935cd14", "12345678901", "1234", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
+		tf(user.UserUpdateResponse_SUCCESS, 2000, "test2", "12345678901")
 
 		req.Telephone = "56781234678"
-		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
-		tf(2000, "test2", "1111ea2c32311335f935cd14", "56781234678", "1234", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
+		tf(user.UserUpdateResponse_SUCCESS, 2000, "test2", "56781234678")
 
-		req.StudentId = "5689"
-		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
-		tf(2000, "test2", "1111ea2c32311335f935cd14", "56781234678", "5689", "jiang", user.UserInfo_NORMAL, user.UserInfo_USER)
+		req.ClearEmpty = true
+		req.Telephone = ""
+		tf(user.UserUpdateResponse_SUCCESS, 2000, "test2", "")
 
-		req.StudentName = "xiaowang"
-		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
-		tf(2000, "test2", "1111ea2c32311335f935cd14", "56781234678", "5689", "xiaowang", user.UserInfo_NORMAL, user.UserInfo_USER)
-
-		req.Status = user.UserInfo_FROZEN
-		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
-		tf(2000, "test2", "1111ea2c32311335f935cd14", "56781234678", "5689", "xiaowang", user.UserInfo_FROZEN, user.UserInfo_USER)
-
-		req.Role = user.UserInfo_ADMIN
-		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, user.UserUpdateResponse_SUCCESS)
-		tf(2000, "test2", "1111ea2c32311335f935cd14", "56781234678", "5689", "xiaowang", user.UserInfo_FROZEN, user.UserInfo_ADMIN)
+		So(db.Ormer.Delete(&db.User{ID: 2000}).Error, ShouldBeNil)
 	})
 }
 
 func TestUserFind(t *testing.T) {
-	var s srvUser
 	var req user.UserFindRequest
-	var rsp user.UserFindResponse
-	tf := func(index int, uid int, uname string, avatar string,
-		telephone string, sid string, sname string, status int) {
+	tf := func(cnt int, index int, uid int, sid string) {
+		var s srvUser
+		var rsp user.UserFindResponse
+		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(len(rsp.User), ShouldEqual, cnt)
 		So(rsp.User[index].UserId, ShouldEqual, uid)
-		So(rsp.User[index].UserName, ShouldEqual, uname)
-		So(rsp.User[index].AvatarId, ShouldEqual, avatar)
-		So(rsp.User[index].Telephone, ShouldEqual, telephone)
 		So(rsp.User[index].StudentId, ShouldEqual, sid)
-		So(rsp.User[index].StudentName, ShouldEqual, sname)
-		So(rsp.User[index].Status, ShouldEqual, status)
 	}
 	Convey("Test User Find", t, func() {
-		req.UserName = "test"
 		err := db.Ormer.Create(&db.User{
 			ID:          2500,
 			UserName:    "test1",
-			AvatarId:    "5d23ea2c32311335f935cd14",
+			AvatarId:    "123123",
 			Telephone:   "12345678901",
 			StudentId:   "1234",
 			StudentName: "jiang",
@@ -192,16 +150,12 @@ func TestUserFind(t *testing.T) {
 		}).Error
 		So(err, ShouldBeNil)
 
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(len(rsp.User), ShouldEqual, 1)
-		tf(0, 2500, "test1", "5d23ea2c32311335f935cd14", "12345678901",
-			"1234", "jiang", 1)
-		rsp.User = nil
+		tf(1, 0, 2500, "1234")
 
 		err = db.Ormer.Create(&db.User{
 			ID:          2501,
 			UserName:    "test2",
-			AvatarId:    "5d23ea2c32311335f935cd15",
+			AvatarId:    "123123",
 			Telephone:   "12345678902",
 			StudentId:   "12345",
 			StudentName: "jiangzm",
@@ -209,30 +163,21 @@ func TestUserFind(t *testing.T) {
 		}).Error
 		So(err, ShouldBeNil)
 
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(len(rsp.User), ShouldEqual, 2)
-		tf(0, 2500, "test1", "5d23ea2c32311335f935cd14", "12345678901",
-			"1234", "jiang", 1)
-		tf(1, 2501, "test2", "5d23ea2c32311335f935cd15", "12345678902",
-			"12345", "jiangzm", 1)
-		rsp.User = nil
+		tf(2, 1, 2501, "12345")
 
 		req.Limit = 1
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(len(rsp.User), ShouldEqual, 1)
-		tf(0, 2500, "test1", "5d23ea2c32311335f935cd14", "12345678901",
-			"1234", "jiang", 1)
-		rsp.User = nil
+		tf(1, 0, 2500, "1234")
 
 		req.Offset = 1
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(len(rsp.User), ShouldEqual, 1)
-		tf(0, 2501, "test2", "5d23ea2c32311335f935cd15", "12345678902",
-			"12345", "jiangzm", 1)
+		tf(1, 0, 2501, "12345")
 
 		So(db.Ormer.Delete(&db.User{ID: 2500}).Error, ShouldBeNil)
 		So(db.Ormer.Delete(&db.User{ID: 2501}).Error, ShouldBeNil)
 	})
+}
+
+func TestAvatarCreate(t *testing.T) {
+	// TODOs
 }
 
 func TestMain(m *testing.M) {
