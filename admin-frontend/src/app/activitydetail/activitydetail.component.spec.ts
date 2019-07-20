@@ -22,6 +22,9 @@ import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
+import { DelonAuthModule } from '@delon/auth';
 
 describe('ActivitydetailComponent', () => {
   let component: ActivitydetailComponent;
@@ -41,10 +44,13 @@ describe('ActivitydetailComponent', () => {
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
       imports: [   
-    //    DelonAuthModule,
+    //import { BuyInfoComponent } from './../info/buy-info/buy-info.component';
+      DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
         AppRoutingModule,    

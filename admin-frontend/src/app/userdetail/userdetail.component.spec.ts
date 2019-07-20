@@ -23,6 +23,9 @@ import { UserDetailComponent, fAnimationDelay, fSymbolSize, fFormatter } from '.
 import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
 import { User } from '../entity/user';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
+import { DelonAuthModule } from '@delon/auth';
 
 describe('UserdetailComponent', () => {
   let component: UserDetailComponent;
@@ -42,10 +45,13 @@ describe('UserdetailComponent', () => {
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
       imports: [   
-    //    DelonAuthModule,
+    //import { BuyInfoComponent } from './../info/buy-info/buy-info.component';
+    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
         AppRoutingModule,    

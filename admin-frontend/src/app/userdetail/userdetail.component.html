@@ -11,13 +11,24 @@
           </div>
           <div class='useritem'>
               <span class="badge">封禁</span><label nz-checkbox [(ngModel)]="forbid"></label>
-
           </div>
           <div class='useritem'>
               <span class="badge">电话号码</span>{{user.telephone}}
           </div>
           <div class='useritem'>
               <span class="badge">头像</span>{{user.avatarId}}
+          </div>
+          <div class='infoitem'>
+              <span class="badge">权限</span>
+              <nz-select
+              id='role'
+                nzShowSearch 
+                nzPlaceHolder="Select a state"
+                [(ngModel)]="user.role"
+              >
+                <nz-option nzLabel="用户" [nzValue]="1" ></nz-option>
+                <nz-option nzLabel="管理" [nzValue]="2"></nz-option>
+              </nz-select>
           </div>
         </nz-card>
         <nz-card nzType="inner" nzTitle="用户简介">     

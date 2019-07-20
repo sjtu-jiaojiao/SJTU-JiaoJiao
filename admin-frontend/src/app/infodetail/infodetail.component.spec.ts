@@ -24,6 +24,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
 import { User } from '../entity/user';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
 
 describe('InfodetailComponent', () => {
   let component: InfoDetailComponent;
@@ -35,21 +37,23 @@ describe('InfodetailComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
+        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
         LoginComponent,
-        CallbackComponent,
         DashboardComponent,
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
-      imports: [   
-    //    DelonAuthModule,
+      imports: [
+        //    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
-        AppRoutingModule,    
+        AppRoutingModule,
         NgZorroAntdModule,
         FormsModule,
         NgxEchartsModule,
@@ -82,6 +86,10 @@ describe('InfodetailComponent', () => {
     component.save();
     component.goBack();
     expect(typeof(component.randomData().name)).toEqual('string');
-    expect(component.stringToDate(new Date(1563134054))).toEqual('1970-01-19 10:12:14')
+    expect(component.stringToDate(new Date(1563134054))).toEqual('1970-01-19 10:12:14');
+    component.type = 'sellInfo';
+    component.getinfo();
+    component.type = 'buyInfo';
+    component.getinfo();
   });
 });
