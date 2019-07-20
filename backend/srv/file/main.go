@@ -26,6 +26,7 @@ type srvFile struct{}
  * @apiParam {string} fileId file id.
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
  * @apiSuccess {bytes} file file stream
+ * @apiSuccess {int64} size file size
  * @apiUse DBServerDown
  */
 func (a *srvFile) Query(ctx context.Context, req *file.FileRequest, rsp *file.FileQueryResponse) error {
