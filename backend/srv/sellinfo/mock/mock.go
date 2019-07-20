@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"github.com/micro/go-micro/client"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
+
+	"github.com/micro/go-micro/client"
 )
 
 type mockSellInfoSrv struct{}
@@ -21,14 +22,15 @@ func (a *mockSellInfoSrv) Create(ctx context.Context, req *sellinfo.SellInfoCrea
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
 		rsp.SellInfoId = 1000
 	} else if req.ContentId != "" && req.ContentToken != "" {
+		if req.ContentId == "error" {
+			return nil, errors.New("")
+		}
 		if req.ContentToken == "invalid_token" {
 			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_TOKEN
 			return &rsp, nil
 		}
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
 		rsp.SellInfoId = 1000
-	} else if req.ContentId == "error" {
-		return nil, errors.New("")
 	} else {
 		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 	}
@@ -64,13 +66,14 @@ func (a *mockContentSrv) Create(ctx context.Context, req *sellinfo.ContentCreate
 	} else if req.ContentId == "" && req.ContentToken == "" {
 		rsp.Status = sellinfo.ContentCreateResponse_SUCCESS
 	} else if req.ContentId != "" && req.ContentToken != "" {
+		if req.ContentId == "error" {
+			return nil, errors.New("")
+		}
 		if req.ContentToken == "invalid_token" {
 			rsp.Status = sellinfo.ContentCreateResponse_INVALID_TOKEN
 		} else {
 			rsp.Status = sellinfo.ContentCreateResponse_SUCCESS
 		}
-	} else if req.ContentId == "error" {
-		return nil, errors.New("")
 	} else {
 		rsp.Status = sellinfo.ContentCreateResponse_INVALID_PARAM
 	}

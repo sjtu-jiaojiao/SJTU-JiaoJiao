@@ -37,6 +37,7 @@ func setupRouter() *gin.Engine {
  * @apiSuccess (None - Success 200) {Response} response see [User Service](#api-Service-user_User_Query) <br>
  * 											   studentId: hidden <br> studentName: hidden
  * @apiSuccess (Self/Admin - Success 200) {Response} response see [User Service](#api-Service-user_User_Query)
+ * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */
 func getUserInfo(c *gin.Context) {
@@ -78,6 +79,7 @@ func getUserInfo(c *gin.Context) {
  * @apiParam {--} Param see [User Service](#api-Service-user_User_Find) <br> No param need admin permission!
  * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Find) <br>
  * 											   None - studentId: hidden <br> None - studentName: hidden
+ * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */
 func findUser(c *gin.Context) {
@@ -127,7 +129,8 @@ func findUser(c *gin.Context) {
  *
  * @apiParam {--} Param see [User Service](#api-Service-user_User_Create)
  * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Create)
- * @apiError (Error 500) UserServiceDown User service down
+ * @apiUse InvalidParam
+ * @apiUse UserServiceDown
  */
 func addUser(c *gin.Context) {
 	type param struct {
@@ -166,8 +169,9 @@ func addUser(c *gin.Context) {
  * @apiName UpdateUser
  * @apiDescription Update user
  *
- * @apiParam {--} Param see [User Service](#api-Service-user_User_Update)
+ * @apiParam {--} Param see [User Service](#api-Service-user_User_Update) <br> self not allow edit StudentId,StudentName,Status,Role
  * @apiSuccess {Response} response see [User Service](#api-Service-user_User_Update)
+ * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */
 func updateUser(c *gin.Context) {
@@ -220,35 +224,57 @@ func updateUser(c *gin.Context) {
 	}
 }
 
-type avatarCont struct {
-	UserId  int32  `form:"userId" binding:"required,min=1"`
-	Content []byte `form:"content" binding:"required"`
-}
-
 /**
  * @api {post} /avatar AddAvatar
  * @apiVersion 1.0.0
  * @apiGroup User
- * @apiPermission self
+ * @apiPermission self/admin
  * @apiName AddAvatar
  * @apiDescription Add user avatar
  *
- * @apiParam {--} Param see [User Service](#api-Service-user_Avatar_Create)
+ * @apiParam {--} Param see [User Service](#api-Service-user_Avatar_Create) <br> Max size is 5M
  * @apiSuccess {Response} response see [User Service](#api-Service-user_Avatar_Create)
+ * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */
 func addAvatar(c *gin.Context) {
-	var cont avatarCont
-	if !utils.LogContinue(c.ShouldBindQuery(&cont), utils.Warning) {
-		if !utils.CheckUserId(c, cont.UserId) {
+	type param struct {
+		UserId int32 `form:"userId" binding:"required,min=1"`
+	}
+	var p param
+
+	file, err := c.FormFile("file")
+	if err == nil && !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
+		if file.Size > 1024*1024*5 { // 5M
+			c.AbortWithStatus(413)
+			return
+		}
+
+		role := utils.GetRoleID(c, p.UserId)
+
+		if role != user.UserInfo_SELF && role != user.UserInfo_ADMIN {
 			c.AbortWithStatus(403)
 			return
 		}
+
+		f, err := file.Open()
+		if utils.LogContinue(err, utils.Warning) {
+			c.JSON(500, err)
+			return
+		}
+		defer f.Close()
+		data := make([]byte, file.Size)
+		_, err = f.Read(data)
+		if utils.LogContinue(err, utils.Warning) {
+			c.JSON(500, err)
+			return
+		}
+
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewAvatarService(name, c) },
 			func() interface{} { return mock.NewAvatarService() }).(user.AvatarService)
 		rsp, err := srv.Create(context.TODO(), &user.AvatarCreateRequest{
-			UserId:  cont.UserId,
-			Content: cont.Content,
+			UserId: p.UserId,
+			File:   data,
 		})
 		if utils.LogContinue(err, utils.Warning, "Avatar service error: %v", err) {
 			c.JSON(500, err)

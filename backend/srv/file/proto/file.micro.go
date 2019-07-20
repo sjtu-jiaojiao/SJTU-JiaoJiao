@@ -34,8 +34,9 @@ var _ server.Option
 // Client API for File service
 
 type FileService interface {
-	Query(ctx context.Context, in *FileQueryRequest, opts ...client.CallOption) (*FileQueryResponse, error)
+	Query(ctx context.Context, in *FileRequest, opts ...client.CallOption) (*FileQueryResponse, error)
 	Create(ctx context.Context, in *FileCreateRequest, opts ...client.CallOption) (*FileCreateResponse, error)
+	Delete(ctx context.Context, in *FileRequest, opts ...client.CallOption) (*FileDeleteResponse, error)
 }
 
 type fileService struct {
@@ -56,7 +57,7 @@ func NewFileService(name string, c client.Client) FileService {
 	}
 }
 
-func (c *fileService) Query(ctx context.Context, in *FileQueryRequest, opts ...client.CallOption) (*FileQueryResponse, error) {
+func (c *fileService) Query(ctx context.Context, in *FileRequest, opts ...client.CallOption) (*FileQueryResponse, error) {
 	req := c.c.NewRequest(c.name, "File.Query", in)
 	out := new(FileQueryResponse)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -76,17 +77,29 @@ func (c *fileService) Create(ctx context.Context, in *FileCreateRequest, opts ..
 	return out, nil
 }
 
+func (c *fileService) Delete(ctx context.Context, in *FileRequest, opts ...client.CallOption) (*FileDeleteResponse, error) {
+	req := c.c.NewRequest(c.name, "File.Delete", in)
+	out := new(FileDeleteResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for File service
 
 type FileHandler interface {
-	Query(context.Context, *FileQueryRequest, *FileQueryResponse) error
+	Query(context.Context, *FileRequest, *FileQueryResponse) error
 	Create(context.Context, *FileCreateRequest, *FileCreateResponse) error
+	Delete(context.Context, *FileRequest, *FileDeleteResponse) error
 }
 
 func RegisterFileHandler(s server.Server, hdlr FileHandler, opts ...server.HandlerOption) error {
 	type file interface {
-		Query(ctx context.Context, in *FileQueryRequest, out *FileQueryResponse) error
+		Query(ctx context.Context, in *FileRequest, out *FileQueryResponse) error
 		Create(ctx context.Context, in *FileCreateRequest, out *FileCreateResponse) error
+		Delete(ctx context.Context, in *FileRequest, out *FileDeleteResponse) error
 	}
 	type File struct {
 		file
@@ -99,10 +112,14 @@ type fileHandler struct {
 	FileHandler
 }
 
-func (h *fileHandler) Query(ctx context.Context, in *FileQueryRequest, out *FileQueryResponse) error {
+func (h *fileHandler) Query(ctx context.Context, in *FileRequest, out *FileQueryResponse) error {
 	return h.FileHandler.Query(ctx, in, out)
 }
 
 func (h *fileHandler) Create(ctx context.Context, in *FileCreateRequest, out *FileCreateResponse) error {
 	return h.FileHandler.Create(ctx, in, out)
+}
+
+func (h *fileHandler) Delete(ctx context.Context, in *FileRequest, out *FileDeleteResponse) error {
+	return h.FileHandler.Delete(ctx, in, out)
 }

@@ -10,11 +10,21 @@ import (
 type mockFileSrv struct{}
 
 func (a *mockFileSrv) Create(ctx context.Context, in *file.FileCreateRequest, opts ...client.CallOption) (*file.FileCreateResponse, error) {
-	panic("implement me")
+	var rsp file.FileCreateResponse
+	// TODO
+	return &rsp, nil
 }
 
-func (a *mockFileSrv) Query(ctx context.Context, in *file.FileQueryRequest, opts ...client.CallOption) (*file.FileQueryResponse, error) {
-	panic("implement me")
+func (a *mockFileSrv) Query(ctx context.Context, in *file.FileRequest, opts ...client.CallOption) (*file.FileQueryResponse, error) {
+	var rsp file.FileQueryResponse
+	// TODO
+	return &rsp, nil
+}
+
+func (a *mockFileSrv) Delete(ctx context.Context, in *file.FileRequest, opts ...client.CallOption) (*file.FileDeleteResponse, error) {
+	var rsp file.FileDeleteResponse
+	// TODO
+	return &rsp, nil
 }
 
 func NewFileService() file.FileService {
