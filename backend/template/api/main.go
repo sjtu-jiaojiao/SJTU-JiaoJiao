@@ -12,10 +12,6 @@ func setupRouter() *gin.Engine {
 	return router
 }
 
-type struct {
-	string `form:""`
-}
-
 /**
  * @apiIgnore
  * @api {} /{{SERVICE_NAME}} 
@@ -30,6 +26,9 @@ type struct {
  * @apiError (Error 500) 
  */
 func (c *gin.Context) {
+	type param struct {
+		string `form:""`
+	}
 	var p param
 
 	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {

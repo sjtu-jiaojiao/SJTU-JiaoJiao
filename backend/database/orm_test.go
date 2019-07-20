@@ -7,25 +7,23 @@ import (
 )
 
 func TestOrm(t *testing.T) {
-	InitORM("testdb", new(Test))
+	InitORM("testdb", new(Test), new(User), new(SellInfo), new(Good))
+	defer CloseORM()
 	Convey("Load orm test", t, func() {
 		test := Test{TestName: "tester"}
 
 		// insert
-		_, err := Ormer.Insert(&test)
-		So(err, ShouldBeNil)
+		So(Ormer.Create(&test).Error, ShouldBeNil)
 
 		// update
 		test.TestName = "jiang"
-		_, err = Ormer.Update(&test)
-		So(err, ShouldBeNil)
+		So(Ormer.Save(&test).Error, ShouldBeNil)
 
 		// read one
-		u := Test{Id: test.Id}
-		So(Ormer.Read(&u), ShouldBeNil)
+		u := Test{ID: test.ID}
+		So(Ormer.First(&u).Error, ShouldBeNil)
 
 		// delete
-		_, err = Ormer.Delete(&u)
-		So(err, ShouldBeNil)
+		So(Ormer.Delete(&u).Error, ShouldBeNil)
 	})
 }

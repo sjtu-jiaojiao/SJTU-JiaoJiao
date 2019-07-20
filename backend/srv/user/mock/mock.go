@@ -9,6 +9,7 @@ import (
 )
 
 type mockUserSrv struct{}
+type mockAvatarSrv struct{}
 
 func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, opts ...client.CallOption) (*user.UserCreateResponse, error) {
 	var rsp user.UserCreateResponse
@@ -21,8 +22,20 @@ func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, o
 			rsp.User.UserId = 1
 			rsp.User.Status = user.UserInfo_NORMAL
 			rsp.User.Role = user.UserInfo_USER
+		} else if req.StudentId == "1001" {
+			rsp.Status = user.UserCreateResponse_SUCCESS
+			rsp.User = new(user.UserInfo)
+			rsp.User.UserId = 2
+			rsp.User.Status = user.UserInfo_NORMAL
+			rsp.User.Role = user.UserInfo_ADMIN
 		} else if req.StudentId == "2000" {
-			return &rsp, errors.New("")
+			return nil, errors.New("")
+		} else if req.StudentId == "3000" {
+			rsp.Status = user.UserCreateResponse_SUCCESS
+			rsp.User = new(user.UserInfo)
+			rsp.User.UserId = 3
+			rsp.User.Status = user.UserInfo_FROZEN
+			rsp.User.Role = user.UserInfo_USER
 		} else {
 			rsp.Status = user.UserCreateResponse_USER_EXIST
 			rsp.User = new(user.UserInfo)
@@ -56,7 +69,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 		UserName:    "test1",
 		AvatarId:    "5d23ea2c32311335f935cd14",
 		Telephone:   "12345224232",
-		StudentId:   "517397299873",
+		StudentId:   "1",
 		StudentName: "Xiao Ming",
 		Status:      1,
 	}
@@ -65,7 +78,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 		UserName:    "test2",
 		AvatarId:    "jksfa0980923jkjoifu92323",
 		Telephone:   "67307269876",
-		StudentId:   "517234731342",
+		StudentId:   "2",
 		StudentName: "Xiao Huang",
 		Status:      1,
 	}
@@ -74,7 +87,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 		UserName:    "test2",
 		AvatarId:    "yuwry981hkjbgmxnlaud9u34352",
 		Telephone:   "16539896792",
-		StudentId:   "517357253234",
+		StudentId:   "3",
 		StudentName: "Xiao Bai",
 		Status:      1,
 	}
@@ -112,9 +125,9 @@ func (a *mockUserSrv) Update(ctx context.Context, req *user.UserInfo, opts ...cl
 	if req.UserId == 0 {
 		rsp.Status = user.UserUpdateResponse_INVALID_PARAM
 	} else {
-		if req.UserId == 1001 {
+		if req.UserId == 1000 {
 			rsp.Status = user.UserUpdateResponse_SUCCESS
-		} else if req.UserId == 2001 {
+		} else if req.UserId == 2000 {
 			return &rsp, errors.New("")
 		} else {
 			rsp.Status = user.UserUpdateResponse_NOT_FOUND
@@ -123,6 +136,13 @@ func (a *mockUserSrv) Update(ctx context.Context, req *user.UserInfo, opts ...cl
 	return &rsp, nil
 }
 
+func (a *mockAvatarSrv) Create(ctx context.Context, in *user.AvatarCreateRequest, opts ...client.CallOption) (*user.AvatarCreateResponse, error) {
+	panic("implement me")
+}
+
 func NewUserService() user.UserService {
 	return new(mockUserSrv)
+}
+func NewAvatarService() user.AvatarService {
+	return new(mockAvatarSrv)
 }

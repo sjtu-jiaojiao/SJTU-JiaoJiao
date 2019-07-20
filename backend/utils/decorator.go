@@ -3,6 +3,7 @@
 package utils
 
 import (
+	user "jiaojiao/srv/user/proto"
 	"os"
 	"strings"
 
@@ -23,47 +24,30 @@ func parseHeader(c *gin.Context) *jwt.Token {
 	return t
 }
 
-func CheckAdmin(c *gin.Context) bool {
+func GetRoleID(c *gin.Context, id int32) user.UserInfo_Role {
+	ret := user.UserInfo_GUEST
 	if CheckInTest() {
-		if c.Request.Header.Get("Authorization") == "admin" {
-			return true
-		} else {
-			return false
+		h := c.Request.Header.Get("Authorization")
+		switch h {
+		case "user":
+			ret = user.UserInfo_USER
+		case "self":
+			ret = user.UserInfo_SELF
+		case "admin":
+			ret = user.UserInfo_ADMIN
+		}
+	} else {
+		t := parseHeader(c)
+		if t != nil {
+			ret = user.UserInfo_Role(JWTParse(t, "role").(float64))
+			if id != 0 && JWTParse(t, "id").(float64) == float64(id) {
+				ret = user.UserInfo_SELF
+			}
 		}
 	}
-	t := parseHeader(c)
-	if t != nil {
-		return JWTParse(t, "role").(float64) == 2
-	}
-	return false
+	return ret
 }
 
-func CheckUser(c *gin.Context) bool {
-	if CheckInTest() {
-		if c.Request.Header.Get("Authorization") == "user" {
-			return true
-		} else {
-			return false
-		}
-	}
-	t := parseHeader(c)
-	if t != nil {
-		return true
-	}
-	return false
-}
-
-func CheckUserId(c *gin.Context, id int32) bool {
-	if CheckInTest() {
-		if c.Request.Header.Get("Authorization") == "valid_user" {
-			return true
-		} else {
-			return false
-		}
-	}
-	t := parseHeader(c)
-	if t != nil {
-		return JWTParse(t, "id").(float64) == float64(id)
-	}
-	return false
+func GetRole(c *gin.Context) user.UserInfo_Role {
+	return GetRoleID(c, 0)
 }
