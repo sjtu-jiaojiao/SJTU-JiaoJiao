@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Text, View, TextInput, Alert} from 'react-native';
 import {ListItem, Avatar, Button, Icon, Overlay} from "react-native-elements";
 import Config from "../../Config";
-import {NavigationActions} from "react-navigation";
+import {NavigationActions, HeaderBackButton } from "react-navigation";
 
 export default class UserInfoScreen extends Component {
     constructor(props) {
@@ -21,8 +21,11 @@ export default class UserInfoScreen extends Component {
         this.changeUserName = '';
     }
 
-    static navigationOptions = {
-        headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23}}>个人信息</Text>)
+    static navigationOptions = ({navigation}) => {
+        return{
+            headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23}}>个人信息</Text>),
+            headerLeft:(<HeaderBackButton onPress={()=> navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0)}/>),
+        }
     };
 
     isTelephoneValid() {
