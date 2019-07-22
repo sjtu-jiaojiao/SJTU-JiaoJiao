@@ -7,10 +7,6 @@ service User {
     rpc Update (UserInfo) returns (UserUpdateResponse);
 }
 
-service Avatar {
-    rpc Create (AvatarCreateRequest) returns (AvatarCreateResponse);
-}
-
 message UserCreateRequest {
     string studentId = 1;
     string studentName = 2;
@@ -72,21 +68,4 @@ message UserUpdateResponse {
         NOT_FOUND = 2;
     }
     Status status = 1;
-}
-
-message AvatarCreateRequest {
-    int32 userId = 1;
-    bytes file = 2;
-}
-
-message AvatarCreateResponse {
-    enum Status {
-        UNKNOWN = 0;
-        INVALID_PARAM = -1;
-        SUCCESS = 1;
-        NOT_FOUND = 2;
-        INVALID_TYPE = 3;
-    }
-    Status status = 1;
-    string avatarId = 2;
 }

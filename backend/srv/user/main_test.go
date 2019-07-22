@@ -10,7 +10,7 @@ import (
 )
 
 func TestUserCreate(t *testing.T) {
-	var s srvUser
+	var s srv
 	var req user.UserCreateRequest
 
 	tf := func(status user.UserCreateResponse_Status) int32 {
@@ -44,7 +44,7 @@ func TestUserCreate(t *testing.T) {
 }
 
 func TestUserQuery(t *testing.T) {
-	var s srvUser
+	var s srv
 	var req user.UserQueryRequest
 
 	tf := func(uid int, sid string) {
@@ -79,7 +79,7 @@ func TestUserUpdate(t *testing.T) {
 	var req user.UserInfo
 
 	tf := func(status user.UserUpdateResponse_Status, uid int, uname string, telephone string) {
-		var s srvUser
+		var s srv
 		var rsp user.UserUpdateResponse
 		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, status)
@@ -131,7 +131,7 @@ func TestUserUpdate(t *testing.T) {
 func TestUserFind(t *testing.T) {
 	var req user.UserFindRequest
 	tf := func(cnt int, index int, uid int, sid string) {
-		var s srvUser
+		var s srv
 		var rsp user.UserFindResponse
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(len(rsp.User), ShouldEqual, cnt)
@@ -174,10 +174,6 @@ func TestUserFind(t *testing.T) {
 		So(db.Ormer.Delete(&db.User{ID: 2500}).Error, ShouldBeNil)
 		So(db.Ormer.Delete(&db.User{ID: 2501}).Error, ShouldBeNil)
 	})
-}
-
-func TestAvatarCreate(t *testing.T) {
-	// TODOs
 }
 
 func TestMain(m *testing.M) {

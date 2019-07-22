@@ -6,11 +6,6 @@ service SellInfo {
     rpc Find (SellInfoFindRequest) returns (SellInfoFindResponse);
 }
 
-service Content {
-    rpc Create (ContentCreateRequest) returns (ContentCreateResponse);
-    rpc Delete (ContentDeleteRequest) returns (ContentDeleteResponse);
-}
-
 message SellInfoMsg {
     int32 sellInfoId = 1;
     int32 status = 2;
@@ -48,45 +43,6 @@ message SellInfoCreateResponse {
     }
     Status status = 1;
     int32 sellInfoId = 2;
-}
-
-message ContentCreateRequest {
-    string contentId = 1;
-    string contentToken = 2;
-    bytes content = 3;
-    enum Type {
-        UNKNOWN = 0;
-        PICTURE = 1;
-        VIDEO = 2;
-    }
-    Type type = 4;
-}
-
-message ContentCreateResponse {
-    enum Status {
-        UNKNOWN = 0;
-        INVALID_PARAM = -1;
-        SUCCESS = 1;
-        INVALID_TOKEN = 2;
-    }
-    Status status = 1;
-    string contentId = 2;
-    string contentToken = 3;
-}
-
-message ContentDeleteRequest {
-    string contentId = 1;
-    string contentToken = 2;
-}
-
-message ContentDeleteResponse {
-    enum Status {
-        UNKNOWN = 0;
-        INVALID_PARAM = -1;
-        SUCCESS = 1;
-        INVALID_TOKEN = 2;
-    }
-    Status status = 1;
 }
 
 message SellInfoFindRequest {
