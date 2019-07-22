@@ -3,13 +3,15 @@ package main
 import (
 	"context"
 	db "jiaojiao/database"
+	"jiaojiao/srv/content/mock"
+	content "jiaojiao/srv/content/proto"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
 	"jiaojiao/utils"
 	"time"
 
+	"github.com/micro/go-micro/client"
+
 	"github.com/jinzhu/gorm"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type srv struct{}
@@ -136,17 +138,22 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
 		rsp.SellInfoId = id
 	} else if req.ContentId != "" && req.ContentToken != "" {
-		collection := db.MongoDatabase.Collection("sellinfo")
-		rid, err := primitive.ObjectIDFromHex(req.ContentId)
+		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} {
+			return content.NewContentService(name, c)
+		}, func() interface{} {
+			return mock.NewContentService()
+		}).(content.ContentService)
+		microRsp, err := srv.Check(context.TODO(), &content.ContentCheckRequest{
+			ContentId:    req.ContentId,
+			ContentToken: req.ContentToken,
+		})
 		if err != nil {
+			return err
+		}
+		if microRsp.Status == content.ContentCheckResponse_INVALID_PARAM {
 			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 			return nil
-		}
-		_, err = collection.FindOne(db.MongoContext, bson.D{
-			{"_id", rid},
-			{"token", req.ContentToken},
-		}).DecodeBytes()
-		if err != nil {
+		} else if microRsp.Status == content.ContentCheckResponse_INVALID {
 			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_TOKEN
 			return nil
 		}

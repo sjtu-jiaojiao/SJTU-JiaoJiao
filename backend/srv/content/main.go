@@ -179,6 +179,102 @@ func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp
 	return nil
 }
 
+/**
+ * @api {rpc} /rpc Content.Query
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName Content.Query
+ * @apiDescription query sell info content
+ *
+ * @apiParam {string} contentId 24 bytes content id
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
+ * @apiSuccess {list} files {string} fileId : file id <br> {int32} type : file type 1 for picture, 2 for video
+ * @apiUse DBServerDown
+ */
+func (a *srv) Query(ctx context.Context, req *content.ContentQueryRequest, rsp *content.ContentQueryResponse) error {
+	if req.ContentId == "" {
+		rsp.Status = content.ContentQueryResponse_INVALID_PARAM
+		return nil
+	}
+	type files struct {
+		FileId primitive.ObjectID      `bson:"fileId"`
+		Type   content.ContentMsg_Type `bson:"type"`
+	}
+	type result struct {
+		Id    primitive.ObjectID `bson:"_id"`
+		Files []files            `bson:"files"`
+	}
+
+	collection := db.MongoDatabase.Collection("sellinfo")
+	rid, err := primitive.ObjectIDFromHex(req.ContentId)
+	if err != nil {
+		rsp.Status = content.ContentQueryResponse_INVALID_PARAM
+		return nil
+	}
+	var res result
+	err = collection.FindOne(db.MongoContext, bson.D{
+		{"_id", rid},
+	}).Decode(&res)
+	if err != nil {
+		rsp.Status = content.ContentQueryResponse_NOT_FOUND
+		return nil
+	}
+
+	for _, v := range res.Files {
+		rsp.Files = append(rsp.Files, &content.ContentMsg{
+			FileId: v.FileId.Hex(),
+			Type:   v.Type,
+		})
+	}
+	rsp.Status = content.ContentQueryResponse_SUCCESS
+	return nil
+}
+
+/**
+ * @api {rpc} /rpc Content.Check
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName Content.Check
+ * @apiDescription check sell info content
+ *
+ * @apiParam {string} contentId 24 bytes content id
+ * @apiParam {string} contentToken content token
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for valid <br> 2 for invalid
+ * @apiUse DBServerDown
+ */
+func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *content.ContentCheckResponse) error {
+	if req.ContentId == "" || req.ContentToken == "" {
+		rsp.Status = content.ContentCheckResponse_INVALID_PARAM
+		return nil
+	}
+	type files struct {
+		FileId primitive.ObjectID      `bson:"fileId"`
+		Type   content.ContentMsg_Type `bson:"type"`
+	}
+	type result struct {
+		Id    primitive.ObjectID `bson:"_id"`
+		Files []files            `bson:"files"`
+	}
+
+	collection := db.MongoDatabase.Collection("sellinfo")
+	rid, err := primitive.ObjectIDFromHex(req.ContentId)
+	if err != nil {
+		rsp.Status = content.ContentCheckResponse_INVALID_PARAM
+		return nil
+	}
+	var res result
+	err = collection.FindOne(db.MongoContext, bson.D{
+		{"_id", rid},
+	}).Decode(&res)
+	if err != nil {
+		rsp.Status = content.ContentCheckResponse_INVALID
+		return nil
+	}
+
+	rsp.Status = content.ContentCheckResponse_VALID
+	return nil
+}
+
 func main() {
 	db.InitMongoDB("sellinfomongo")
 	service := utils.InitMicroService("content")

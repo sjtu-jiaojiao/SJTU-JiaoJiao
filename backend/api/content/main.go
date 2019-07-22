@@ -51,7 +51,7 @@ func addContent(c *gin.Context) {
 			c.AbortWithStatus(403)
 			return
 		}
-		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
+		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
 		rsp, err := srv.Create(context.TODO(), &content.ContentCreateRequest{
 			ContentId:    p.ContentId,
@@ -95,7 +95,7 @@ func deleteContent(c *gin.Context) {
 			c.AbortWithStatus(403)
 			return
 		}
-		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
+		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
 		rsp, err := srv.Delete(context.TODO(), &content.ContentDeleteRequest{
 			ContentId:    q.ContentId,

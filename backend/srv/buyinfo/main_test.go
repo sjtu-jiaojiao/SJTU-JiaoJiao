@@ -151,10 +151,6 @@ func TestSrvInfoFind(t *testing.T) {
 	})
 }
 
-func TestSrvContentDelete(t *testing.T) {
-	// TODO
-}
-
 func TestMain(m *testing.M) {
 	main()
 	m.Run()
