@@ -54,6 +54,7 @@ func (a *mockSrv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, o
 
 func (a *mockSrv) Find(ctx context.Context, req *buyinfo.BuyInfoFindRequest, opts ...client.CallOption) (*buyinfo.BuyInfoFindResponse, error) {
 	var rsp buyinfo.BuyInfoFindResponse
+	// TODO
 	return &rsp, nil
 }
 

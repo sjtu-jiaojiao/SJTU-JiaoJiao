@@ -22,34 +22,32 @@ func TestSrvInfoQuery(t *testing.T) {
 		GoodId:      1000,
 	}
 	good := db.Good{
-		ID:          1000,
+		ID:          1001,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
 	}
-	tf := func(sellId int, goodName string, description string, contentId string, userId int) {
+	tf := func(sellId int, contentId string, userId int) {
 		var rsp sellinfo.SellInfoMsg
 		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.SellInfoId, ShouldEqual, sellId)
-		So(rsp.GoodName, ShouldEqual, goodName)
-		So(rsp.Description, ShouldEqual, description)
 		So(rsp.ContentId, ShouldEqual, contentId)
 		So(rsp.UserId, ShouldEqual, userId)
 	}
 	Convey("Test SellInfo Query", t, func() {
-		tf(0, "", "", "", 0)
+		tf(0, "", 0)
 
 		So(db.Ormer.Create(&good).Error, ShouldBeNil)
 		So(db.Ormer.Create(&info).Error, ShouldBeNil)
 
 		req.SellInfoId = 1000
-		tf(1000, "good", "Very good!", "123456789", 1000)
+		tf(1000, "123456789", 1000)
 
 		req.SellInfoId = 1001
-		tf(0, "", "", "", 0)
+		tf(0, "", 0)
 
 		So(db.Ormer.Delete(&db.SellInfo{ID: 1000}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 1000}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1001}).Error, ShouldBeNil)
 	})
 
 }
@@ -161,19 +159,19 @@ func TestSrvInfoFind(t *testing.T) {
 		GoodId:      1002,
 	}
 	good1 := db.Good{
-		ID:          1000,
+		ID:          1010,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
 	}
 	good2 := db.Good{
-		ID:          1001,
+		ID:          1011,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
 	}
 	good3 := db.Good{
-		ID:          1002,
+		ID:          1012,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
@@ -192,9 +190,9 @@ func TestSrvInfoFind(t *testing.T) {
 		So(db.Ormer.Delete(&db.SellInfo{ID: 1001}).Error, ShouldBeNil)
 		So(db.Ormer.Delete(&db.SellInfo{ID: 1002}).Error, ShouldBeNil)
 
-		So(db.Ormer.Delete(&db.Good{ID: 1000}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 1001}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 1002}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1010}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1011}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1012}).Error, ShouldBeNil)
 	}
 	testLen := func(length int) {
 		var rsp sellinfo.SellInfoFindResponse

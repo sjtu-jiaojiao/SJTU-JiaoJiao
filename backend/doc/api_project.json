@@ -8,6 +8,7 @@
     "Auth",
     "User",
     "SellInfo",
+    "BuyInfo",
     "Content",
     "Avatar",
     "File",
@@ -18,7 +19,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-07-22T09:19:51.749Z",
+    "time": "2019-07-22T12:19:25.597Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

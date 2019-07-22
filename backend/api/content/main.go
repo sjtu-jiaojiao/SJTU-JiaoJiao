@@ -22,6 +22,7 @@ func setupRouter() *gin.Engine {
  * @apiDefine ContentServiceDown
  * @apiError (Error 500) ContentServiceDown Content service down
  */
+
 /**
  * @api {post} /content AddContent
  * @apiVersion 1.0.0
@@ -133,14 +134,14 @@ func updateContent(c *gin.Context) {
 		ContentId    string `form:"contentId" binding:"required"`
 		ContentToken string `form:"contentToken" binding:"required"`
 		FileId       string `form:"fileId" binding:"required"`
-		Content      []byte `form:"content"`
-		Type         int32  `form:"type"`
+		Content      []byte `form:"content" binding:"required"`
+		Type         int32  `form:"type" binding:"required"`
 	}
 	var q param
 	role := utils.GetRole(c)
 
 	if !utils.LogContinue(c.ShouldBindQuery(&q), utils.Warning) {
-		if role != user.UserInfo_USER && role != user.UserInfo_ADMIN {
+		if !role.User && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}

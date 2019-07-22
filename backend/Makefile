@@ -60,7 +60,7 @@ add:
 
 	@sed -i "s/{{SERVICE_LNAME}}/$$srvnamel/g" ./api/$$srvnamel/Dockerfile
 	@sed -i "s/{{SERVICE_NAME}}/$$srvname/g" ./api/$$srvnamel/main.go
-	@mv ./srv/$$srvnamel/proto/NAME.proto ./srv/$$srvnamel/proto/$$srvnamel.proto 
+	@mv ./srv/$$srvnamel/proto/NAME.proto ./srv/$$srvnamel/proto/$$srvnamel.proto
 	@sed -i "s/{{SERVICE_LNAME}}/$$srvnamel/g" ./srv/$$srvnamel/Dockerfile
 	@sed -i "s/{{SERVICE_NAME}}/$$srvname/g" ./srv/$$srvnamel/main.go
 

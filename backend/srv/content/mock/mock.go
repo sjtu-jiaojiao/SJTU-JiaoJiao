@@ -13,16 +13,19 @@ type mockSrv struct{}
 
 func (a *mockSrv) Update(ctx context.Context, in *content.ContentUpdateRequest, opts ...client.CallOption) (*content.ContentUpdateResponse, error) {
 	var rsp content.ContentUpdateResponse
+	// TODO
 	return &rsp, nil
 }
 
 func (a *mockSrv) Query(ctx context.Context, in *content.ContentQueryRequest, opts ...client.CallOption) (*content.ContentQueryResponse, error) {
 	var rsp content.ContentQueryResponse
+	// TODO
 	return &rsp, nil
 }
 
 func (a *mockSrv) Check(ctx context.Context, in *content.ContentCheckRequest, opts ...client.CallOption) (*content.ContentCheckResponse, error) {
 	var rsp content.ContentCheckResponse
+	// TODO
 	return &rsp, nil
 }
 

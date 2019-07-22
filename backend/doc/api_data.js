@@ -886,7 +886,7 @@ define({ "api": [
     "version": "1.0.0",
     "group": "Service",
     "name": "BuyInfo_Create",
-    "description": "<p>create buy info</p>",
+    "description": "<p>Create buy info</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -895,7 +895,7 @@ define({ "api": [
             "type": "int32",
             "optional": false,
             "field": "userId",
-            "description": "<p>buyinfo userid</p>"
+            "description": "<p>user id</p>"
           },
           {
             "group": "Parameter",
@@ -1000,30 +1000,30 @@ define({ "api": [
             "type": "int32",
             "optional": true,
             "field": "status",
-            "description": "<p>status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired</p>"
+            "description": "<p>status 1 for waiting <br> 2 for reserved <br> 3 for done <br> 4 for expired</p>"
           },
           {
             "group": "Parameter",
-            "type": "int32",
+            "type": "string",
             "optional": true,
             "field": "goodName",
             "description": "<p>good name(fuzzy)</p>"
           },
           {
             "group": "Parameter",
-            "type": "int32",
+            "type": "double",
             "optional": false,
             "field": "lowPrice",
             "defaultValue": "0",
-            "description": "<p>low bound of price</p>"
+            "description": "<p>low bound of price, included</p>"
           },
           {
             "group": "Parameter",
-            "type": "int32",
+            "type": "double",
             "optional": false,
             "field": "highPrice",
             "defaultValue": "inf",
-            "description": "<p>high bound of price</p>"
+            "description": "<p>high bound of price, included</p>"
           },
           {
             "group": "Parameter",
@@ -1052,7 +1052,7 @@ define({ "api": [
             "type": "list",
             "optional": false,
             "field": "buyInfo",
-            "description": "<p>see <a href=\"#api-Service-buyinfo_BuyInfo_Query\">BuyInfo Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-BuyInfo_Query\">BuyInfo Service</a></p>"
           }
         ]
       }
@@ -1464,16 +1464,16 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "bytes",
-            "optional": true,
+            "optional": false,
             "field": "content",
-            "description": "<p>binary content (note: only delete the file if empty)</p>"
+            "description": "<p>binary content</p>"
           },
           {
             "group": "Parameter",
             "type": "int32",
-            "optional": true,
+            "optional": false,
             "field": "type",
-            "description": "<p>1 for picture <br> 2 for video (note: only delete the file if empty)</p>"
+            "description": "<p>1 for picture <br> 2 for video</p>"
           }
         ]
       }
@@ -1487,13 +1487,6 @@ define({ "api": [
             "optional": false,
             "field": "status",
             "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for not found <br> 4 for failed</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": true,
-            "field": "fileId",
-            "description": "<p>24 bytes updated file id (note: new file id differs from old one, meaningful only if content and type are not empty)</p>"
           }
         ]
       }
@@ -1806,14 +1799,14 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "int32",
+            "type": "string",
             "optional": true,
             "field": "goodName",
             "description": "<p>good name(fuzzy)</p>"
           },
           {
             "group": "Parameter",
-            "type": "int32",
+            "type": "double",
             "optional": false,
             "field": "lowPrice",
             "defaultValue": "0",
@@ -1821,7 +1814,7 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "int32",
+            "type": "double",
             "optional": false,
             "field": "highPrice",
             "defaultValue": "inf",

@@ -4,7 +4,6 @@ import (
 	"context"
 	"jiaojiao/srv/buyinfo/mock"
 	buyinfo "jiaojiao/srv/buyinfo/proto"
-	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 
 	"github.com/micro/go-micro/client"
@@ -91,7 +90,7 @@ func addBuyInfo(c *gin.Context) {
 
 		role := utils.GetRoleID(c, p.UserId)
 
-		if role != user.UserInfo_SELF && role != user.UserInfo_ADMIN {
+		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}
@@ -131,9 +130,13 @@ func addBuyInfo(c *gin.Context) {
  */
 func findBuyInfo(c *gin.Context) {
 	type param struct {
-		UserId int32  `form:"userId"`
-		Limit  uint32 `form:"limit"`
-		Offset uint32 `form:"offset"`
+		UserId    int32   `form:"userId"`
+		Status    int32   `form:"status"`
+		GoodName  string  `form:"goodName"`
+		LowPrice  float64 `form:"lowPrice"`
+		HighPrice float64 `form:"highPrice"`
+		Limit     uint32  `form:"limit"`
+		Offset    uint32  `form:"offset"`
 	}
 	var p param
 
@@ -141,9 +144,13 @@ func findBuyInfo(c *gin.Context) {
 		srv := utils.CallMicroService("buyInfo", func(name string, c client.Client) interface{} { return buyinfo.NewBuyInfoService(name, c) },
 			func() interface{} { return mock.NewBuyInfoService() }).(buyinfo.BuyInfoService)
 		rsp, err := srv.Find(context.TODO(), &buyinfo.BuyInfoFindRequest{
-			UserId: p.UserId,
-			Limit:  p.Limit,
-			Offset: p.Offset,
+			UserId:    p.UserId,
+			Status:    p.Status,
+			GoodName:  p.GoodName,
+			LowPrice:  p.LowPrice,
+			HighPrice: p.HighPrice,
+			Limit:     p.Limit,
+			Offset:    p.Offset,
 		})
 		if utils.LogContinue(err, utils.Warning, "BuyInfo service error: %v", err) {
 			c.JSON(500, err)

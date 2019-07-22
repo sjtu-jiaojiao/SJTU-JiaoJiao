@@ -278,10 +278,10 @@ schema:
       - /
       - ../../utils
     scripts:
-    - command: apidoc
-      type: after
-      path: ../../
-      output: true
+      - command: make doc
+        type: after
+        path: ../../
+        output: true
 - name: srv-buyinfo
   path: srv/buyinfo
   args:
@@ -297,11 +297,11 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: bash generate_proto.sh
+    - command: make proto
       type: before
       path: ../../
       output: true
-    - command: apidoc
+    - command: make doc
       type: after
       path: ../../
       output: true
