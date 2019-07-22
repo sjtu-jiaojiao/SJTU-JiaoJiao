@@ -124,6 +124,97 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 }
 
 /**
+ * @api {rpc} /rpc Content.Update
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName Content.Update
+ * @apiDescription update sell info content
+ *
+ * @apiParam {string} contentId 24 bytes content id
+ * @apiParam {string} contentToken content token
+ * @apiParam {string} fileId 24 bytes file id
+ * @apiParam {bytes} [content] binary content (note: only delete the file if empty)
+ * @apiParam {int32} [type] 1 for picture <br> 2 for video (note: only delete the file if empty)
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for not found <br> 4 for failed
+ * @apiSuccess {string} [fileId] 24 bytes updated file id (note: new file id differs from old one, meaningful only if content and type are not empty)
+ * @apiUse DBServerDown
+ */
+func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp *content.ContentUpdateResponse) error {
+	srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
+		func() interface{} { return mock.NewFileService() }).(file.FileService)
+
+	if req.ContentId == "" || req.ContentToken == "" || req.FileId == "" {
+		rsp.Status = content.ContentUpdateResponse_INVALID_PARAM
+		return nil
+	} else {
+		//check token
+		collection := db.MongoDatabase.Collection("sellinfo")
+		rid, err := primitive.ObjectIDFromHex(req.ContentId)
+		if err != nil {
+			rsp.Status = content.ContentUpdateResponse_INVALID_PARAM
+			return nil
+		}
+		_, err = collection.FindOne(db.MongoContext, bson.D{
+			{"_id", rid},
+			{"token", req.ContentToken},
+		}).DecodeBytes()
+		if err != nil {
+			rsp.Status = content.ContentUpdateResponse_INVALID_TOKEN
+			return nil
+		}
+
+		//delete old file
+		_, err = collection.UpdateOne(db.MongoContext, bson.D{
+			{"_id", rid},
+			{"token", req.ContentToken},
+		}, bson.D{
+			{"$pull", bson.D{
+				{"files", bson.D{
+					{"fileId", req.FileId},
+				}},
+			}},
+		})
+		if err != nil {
+			rsp.Status = content.ContentUpdateResponse_NOT_FOUND
+			return nil
+		}
+
+		microDeleteRsp, err := srv.Delete(context.TODO(), &file.FileRequest{
+			FileId: req.FileId,
+		})
+		if err != nil || microDeleteRsp.Status != file.FileDeleteResponse_SUCCESS {
+			rsp.Status = content.ContentUpdateResponse_NOT_FOUND
+			return nil
+		}
+
+		//add new file
+		if !bytes.Equal(req.Content, []byte{0}) && !(req.Type == 0) {
+			microCreateRsp, err := srv.Create(context.TODO(), &file.FileCreateRequest{
+				File: req.Content,
+			})
+			if err != nil || microDeleteRsp.Status != file.FileDeleteResponse_SUCCESS {
+				rsp.Status = content.ContentUpdateResponse_FAILED
+				return nil
+			}
+			_, err = collection.UpdateOne(db.MongoContext, bson.D{
+				{"_id", rid},
+				{"token", req.ContentToken},
+			}, bson.D{
+				{"$push", bson.D{
+					{"files", bson.D{
+						{"fileId", microCreateRsp.FileId},
+						{"type", req.Type.String()},
+					}},
+				}},
+			})
+			rsp.FileId = microCreateRsp.FileId
+		}
+		rsp.Status = content.ContentUpdateResponse_SUCCESS
+	}
+	return nil
+}
+
+/**
  * @api {rpc} /rpc Content.Delete
  * @apiVersion 1.0.0
  * @apiGroup Service
@@ -265,6 +356,7 @@ func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *
 	var res result
 	err = collection.FindOne(db.MongoContext, bson.D{
 		{"_id", rid},
+		{"token", req.ContentToken},
 	}).Decode(&res)
 	if err != nil {
 		rsp.Status = content.ContentCheckResponse_INVALID

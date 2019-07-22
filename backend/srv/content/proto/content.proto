@@ -2,6 +2,7 @@ syntax = "proto3";
 
 service Content {
     rpc Create (ContentCreateRequest) returns (ContentCreateResponse);
+    rpc Update (ContentUpdateRequest) returns (ContentUpdateResponse);
     rpc Delete (ContentDeleteRequest) returns (ContentDeleteResponse);
     rpc Query (ContentQueryRequest) returns (ContentQueryResponse);
     rpc Check (ContentCheckRequest) returns (ContentCheckResponse);
@@ -29,6 +30,33 @@ message ContentCreateResponse {
     Status status = 1;
     string contentId = 2;
     string contentToken = 3;
+    string fileId = 4;
+}
+
+message ContentUpdateRequest {
+    enum Type {
+        UNKNOWN = 0;
+        PICTURE = 1;
+        VIDEO = 2;
+    }
+    string contentId = 1;
+    string contentToken = 2;
+    string fileId = 3;
+    bytes content = 4;
+    Type type = 5;
+}
+
+message ContentUpdateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        INVALID_TOKEN = 2;
+        NOT_FOUND = 3;
+        FAILED = 4;
+    }
+    Status status = 1;
+    string fileId = 2;
 }
 
 message ContentDeleteRequest {
