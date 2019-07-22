@@ -54,13 +54,16 @@ add:
 
 	@cp -R ./template/api ./api/$$srvnamel
 	@cp -R ./template/srv ./srv/$$srvnamel
-	@rm ./api/$$srvnamel/api.goconvey
-	@rm ./srv/$$srvnamel/srv.goconvey
-	@rm ./srv/$$srvnamel/mock/mock.goconvey
+
+	@mv ./api/$$srvnamel/main_test.tpl ./api/$$srvnamel/main_test.go
+	@mv ./api/$$srvnamel/main.tpl ./api/$$srvnamel/main.go
+	@mv ./srv/$$srvnamel/main_test.tpl ./srv/$$srvnamel/main_test.go
+	@mv ./srv/$$srvnamel/main.tpl ./srv/$$srvnamel/main.go
+	@mv ./srv/$$srvnamel/mock/mock.tpl ./srv/$$srvnamel/mock/mock.go
+	@mv ./srv/$$srvnamel/proto/NAME.proto ./srv/$$srvnamel/proto/$$srvnamel.proto
 
 	@sed -i "s/{{SERVICE_LNAME}}/$$srvnamel/g" ./api/$$srvnamel/Dockerfile
 	@sed -i "s/{{SERVICE_NAME}}/$$srvname/g" ./api/$$srvnamel/main.go
-	@mv ./srv/$$srvnamel/proto/NAME.proto ./srv/$$srvnamel/proto/$$srvnamel.proto
 	@sed -i "s/{{SERVICE_LNAME}}/$$srvnamel/g" ./srv/$$srvnamel/Dockerfile
 	@sed -i "s/{{SERVICE_NAME}}/$$srvname/g" ./srv/$$srvnamel/main.go
 
