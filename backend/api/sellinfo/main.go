@@ -4,7 +4,6 @@ import (
 	"context"
 	"jiaojiao/srv/sellinfo/mock"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
-	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 
 	"github.com/micro/go-micro/client"
@@ -91,7 +90,7 @@ func addSellInfo(c *gin.Context) {
 
 		role := utils.GetRoleID(c, p.UserId)
 
-		if role != user.UserInfo_SELF && role != user.UserInfo_ADMIN {
+		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}
