@@ -42,9 +42,18 @@ export class InfoService {
       catchError(this.handleError<sellInfo>(`getInfo id=${id}`))
     );
   }
+  /** GET infos from the server */
+  searchSellInfos(term: string): Observable<InfoResponse> {    
+    const url = `${this.sellinfoUrl}?userId=${term}`;
+    return this.http.get<InfoResponse>(url)
+      .pipe(
+        catchError(this.handleError<InfoResponse>('getInfos'))
+      );
+  }
+
 
   /** GET infos from the server */
-  searchSellInfos(term: string,limit:number, offset: number): Observable<InfoResponse> {    
+  searchPageSellInfos(term: string,limit:number, offset: number): Observable<InfoResponse> {    
     const url = `${this.sellinfoUrl}?userId=${term}&limit=${limit}&offset=${offset}`;
     return this.http.get<InfoResponse>(url)
       .pipe(
@@ -54,7 +63,7 @@ export class InfoService {
 
   /** PUT: update the info on the server */
   updateSellInfo(info: any): Observable<any> {
-    return this.http.post(this.sellinfoUrl, info, httpOptions).pipe(
+    return this.http.put(this.sellinfoUrl, info, httpOptions).pipe(
       catchError(this.handleError<any>('updateSellInfo'))
     );
   }
@@ -95,7 +104,7 @@ export class InfoService {
 
   /** PUT: update the info on the server */
   updateBuyInfo(info: any): Observable<any> {
-    return this.http.post(this.buyinfoUrl, info, httpOptions).pipe(
+    return this.http.put(this.buyinfoUrl, info, httpOptions).pipe(
       catchError(this.handleError<any>('updateBuyInfo'))
     );
   }

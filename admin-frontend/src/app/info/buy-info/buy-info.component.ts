@@ -10,7 +10,7 @@ import { Format } from 'src/app/Formatter/format';
   styleUrls: ['./buy-info.component.css']
 })
 export class BuyInfoComponent implements OnInit {
-
+  tags = ['测试','数据'];
   searchTag: string[]=[];
   buyinfos: buyInfo[];
   current : number = 1;
