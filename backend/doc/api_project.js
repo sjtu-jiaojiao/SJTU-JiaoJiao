@@ -8,6 +8,8 @@ define({
     "Auth",
     "User",
     "SellInfo",
+    "Content",
+    "Avatar",
     "File",
     "Service"
   ],
@@ -16,7 +18,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-07-20T10:12:32.726Z",
+    "time": "2019-07-22T02:16:08.457Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

@@ -8,6 +8,8 @@
         "Auth",
         "User",
         "SellInfo",
+        "Content",
+        "Avatar",
         "File",
         "Service"
     ]

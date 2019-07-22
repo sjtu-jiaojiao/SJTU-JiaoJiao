@@ -1,31 +1,24 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	db "jiaojiao/database"
-	"jiaojiao/srv/file/mock"
-	file "jiaojiao/srv/file/proto"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
 	"jiaojiao/utils"
 	"time"
 
-	"github.com/micro/go-micro/client"
-
 	"github.com/jinzhu/gorm"
-	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type srvInfo struct{}
-type srvContent struct{}
+type srv struct{}
 
 /**
- * @api {rpc} /rpc sellinfo.SellInfo.Query
+ * @api {rpc} /rpc SellInfo.Query
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName sellinfo.SellInfo.Query
+ * @apiName SellInfo.Query
  * @apiDescription Query sell info
  *
  * @apiParam {int32} sellInfoId sellInfo id.
@@ -40,7 +33,7 @@ type srvContent struct{}
  * @apiSuccess {int32} userId userId
  * @apiUse DBServerDown
  */
-func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoMsg) error {
+func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoMsg) error {
 	if req.SellInfoId == 0 {
 		return nil
 	}
@@ -76,10 +69,10 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 }
 
 /**
- * @api {rpc} /rpc sellinfo.SellInfo.Create
+ * @api {rpc} /rpc SellInfo.Create
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName sellinfo.SellInfo.Create
+ * @apiName SellInfo.Create
  * @apiDescription create sell info
  *
  * @apiParam {int32} userId sellinfo userid
@@ -93,7 +86,7 @@ func (a *srvInfo) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
  * @apiSuccess {int32} sellInfoId created sellInfoId
  * @apiUse DBServerDown
  */
-func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
+func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
 	if req.ValidTime == 0 || req.GoodName == "" || req.UserId == 0 {
 		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 		return nil
@@ -172,10 +165,10 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 }
 
 /**
- * @api {rpc} /rpc sellinfo.SellInfo.Find
+ * @api {rpc} /rpc SellInfo.Find
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName sellinfo.SellInfo.Find
+ * @apiName SellInfo.Find
  * @apiDescription Find SellInfo.
  *
  * @apiParam {int32} [userId] userId
@@ -184,7 +177,7 @@ func (a *srvInfo) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
  * @apiSuccess {list} sellInfo see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
  * @apiUse DBServerDown
  */
-func (a *srvInfo) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *sellinfo.SellInfoFindResponse) error {
+func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *sellinfo.SellInfoFindResponse) error {
 	if req.Limit == 0 {
 		req.Limit = 100
 	}
@@ -224,174 +217,10 @@ func parseSellInfo(s *db.SellInfo, g *db.Good, d *sellinfo.SellInfoMsg) {
 	d.UserId = s.UserId
 }
 
-/**
- * @api {rpc} /rpc sellinfo.Content.Create
- * @apiVersion 1.0.0
- * @apiGroup Service
- * @apiName sellinfo.Content.Create
- * @apiDescription create sell info content
- *
- * @apiParam {string} [contentId] 24 bytes content id, left empty for first upload
- * @apiParam {string} [contentToken] content token, left empty for first upload
- * @apiParam {bytes} content binary content
- * @apiParam {int32} type 1 for picture <br> 2 for video
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
- * @apiSuccess {string} contentId 24 bytes contentId
- * @apiSuccess {string} contentToken random uuid content token
- * @apiUse DBServerDown
- */
-func (a *srvContent) Create(ctx context.Context, req *sellinfo.ContentCreateRequest, rsp *sellinfo.ContentCreateResponse) error {
-	upload := func() (primitive.ObjectID, error) {
-		srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
-			func() interface{} { return mock.NewFileService() }).(file.FileService)
-		rsp, err := srv.Create(context.TODO(), &file.FileCreateRequest{
-			File: req.Content,
-		})
-		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) || rsp.Status != file.FileCreateResponse_SUCCESS {
-			return primitive.ObjectID{}, err
-		}
-
-		fid, err := primitive.ObjectIDFromHex(rsp.FileId)
-		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) {
-			return primitive.ObjectID{}, err
-		}
-
-		return fid, nil
-	}
-
-	if bytes.Equal(req.Content, []byte{0}) || req.Type == 0 {
-		rsp.Status = sellinfo.ContentCreateResponse_INVALID_PARAM
-	} else if req.ContentId == "" && req.ContentToken == "" {
-		objId, err := upload()
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-
-		token := uuid.NewV4().String()
-		collection := db.MongoDatabase.Collection("sellinfo")
-		res, err := collection.InsertOne(db.MongoContext, bson.M{
-			"token": token,
-			"files": bson.A{
-				bson.M{
-					"fileId": objId,
-					"type":   req.Type.String(),
-				}},
-		})
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-
-		rsp.ContentId = res.InsertedID.(primitive.ObjectID).Hex()
-		rsp.ContentToken = token
-		rsp.Status = sellinfo.ContentCreateResponse_SUCCESS
-	} else if req.ContentId != "" && req.ContentToken != "" {
-		//check token
-		collection := db.MongoDatabase.Collection("sellinfo")
-		rid, err := primitive.ObjectIDFromHex(req.ContentId)
-		if err != nil {
-			rsp.Status = sellinfo.ContentCreateResponse_INVALID_TOKEN
-			return nil
-		}
-		_, err = collection.FindOne(db.MongoContext, bson.D{
-			{"_id", rid},
-			{"token", req.ContentToken},
-		}).DecodeBytes()
-		if err != nil {
-			rsp.Status = sellinfo.ContentCreateResponse_INVALID_TOKEN
-			return nil
-		}
-
-		objId, err := upload()
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-
-		_, err = collection.UpdateOne(db.MongoContext, bson.D{
-			{"_id", rid},
-			{"token", req.ContentToken},
-		},
-			bson.D{
-				{"$push", bson.D{
-					{"files", bson.D{
-						{"fileId", objId},
-						{"type", req.Type.String()},
-					}},
-				}},
-			})
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-		rsp.ContentId = req.ContentId
-		rsp.ContentToken = req.ContentToken
-		rsp.Status = sellinfo.ContentCreateResponse_SUCCESS
-	} else {
-		rsp.Status = sellinfo.ContentCreateResponse_INVALID_PARAM
-	}
-	return nil
-}
-
-/**
- * @api {rpc} /rpc sellinfo.Content.Delete
- * @apiVersion 1.0.0
- * @apiGroup Service
- * @apiName sellinfo.Content.Delete
- * @apiDescription delete sell info content
- *
- * @apiParam {string} contentId 24 bytes content id
- * @apiParam {string} contentToken content token
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
- * @apiUse DBServerDown
- */
-func (a *srvContent) Delete(ctx context.Context, req *sellinfo.ContentDeleteRequest, rsp *sellinfo.ContentDeleteResponse) error {
-	if req.ContentId == "" || req.ContentToken == "" {
-		rsp.Status = sellinfo.ContentDeleteResponse_INVALID_PARAM
-		return nil
-	}
-	type files struct {
-		FileId primitive.ObjectID                 `bson:"fileId"`
-		Type   sellinfo.ContentCreateRequest_Type `bson:"type"`
-	}
-	type result struct {
-		Id    primitive.ObjectID `bson:"_id"`
-		Files []files            `bson:"files"`
-	}
-
-	collection := db.MongoDatabase.Collection("sellinfo")
-	rid, err := primitive.ObjectIDFromHex(req.ContentId)
-	if err != nil {
-		rsp.Status = sellinfo.ContentDeleteResponse_INVALID_TOKEN
-		return nil
-	}
-	var res result
-	err = collection.FindOneAndDelete(db.MongoContext, bson.D{
-		{"_id", rid},
-		{"token", req.ContentToken},
-	}).Decode(&res)
-	if err != nil {
-		rsp.Status = sellinfo.ContentDeleteResponse_INVALID_TOKEN
-		return nil
-	}
-
-	srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
-		func() interface{} { return mock.NewFileService() }).(file.FileService)
-	for _, v := range res.Files {
-		microRsp, err := srv.Delete(context.TODO(), &file.FileRequest{
-			FileId: v.FileId.Hex(),
-		})
-		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) || microRsp.Status != file.FileDeleteResponse_SUCCESS {
-			return err
-		}
-	}
-	rsp.Status = sellinfo.ContentDeleteResponse_SUCCESS
-	return nil
-}
-
 func main() {
 	db.InitORM("sellinfodb", new(db.SellInfo), new(db.Good))
 	defer db.CloseORM()
-	db.InitMongoDB("sellinfomongo")
 	service := utils.InitMicroService("sellInfo")
-	utils.LogPanic(sellinfo.RegisterSellInfoHandler(service.Server(), new(srvInfo)))
-	utils.LogPanic(sellinfo.RegisterContentHandler(service.Server(), new(srvContent)))
+	utils.LogPanic(sellinfo.RegisterSellInfoHandler(service.Server(), new(srv)))
 	utils.RunMicroService(service)
 }

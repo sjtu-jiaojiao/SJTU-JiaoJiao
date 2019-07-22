@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/client"
+	"github.com/micro/go-micro/selector"
 	"github.com/micro/go-micro/web"
 )
 
@@ -72,7 +73,8 @@ func CallMicroService(name string, f func(name string, c client.Client) interfac
 	}
 	Info("Calling micro service \"%s\"", name)
 	c := client.NewClient(
-		client.RequestTimeout(time.Second * 10),
+		client.RequestTimeout(time.Second*10),
+		client.Selector(selector.DefaultSelector),
 	)
 	return f(GetServiceName(name), c)
 }

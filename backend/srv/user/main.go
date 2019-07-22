@@ -1,22 +1,15 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	db "jiaojiao/database"
-	"jiaojiao/srv/file/mock"
-	file "jiaojiao/srv/file/proto"
 	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
-
-	"github.com/h2non/filetype"
-	"github.com/micro/go-micro/client"
 
 	"github.com/jinzhu/gorm"
 )
 
-type srvUser struct{}
-type srvAvatar struct{}
+type srv struct{}
 
 /**
  * @apiDefine DBServerDown
@@ -24,10 +17,10 @@ type srvAvatar struct{}
  */
 
 /**
- * @api {rpc} /rpc user.User.Create
+ * @api {rpc} /rpc User.Create
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName user.User.Create
+ * @apiName User.Create
  * @apiDescription Create new user.
  *
  * @apiParam {string} studentId student id.
@@ -36,7 +29,7 @@ type srvAvatar struct{}
  * @apiSuccess {Response} user see [User Service](#api-Service-user_User_Query)
  * @apiUse DBServerDown
  */
-func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user.UserCreateResponse) error {
+func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user.UserCreateResponse) error {
 	if req.StudentId == "" || req.StudentName == "" {
 		rsp.Status = user.UserCreateResponse_INVALID_PARAM
 	} else {
@@ -63,10 +56,10 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
 }
 
 /**
- * @api {rpc} /rpc user.User.Query
+ * @api {rpc} /rpc User.Query
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName user.User.Query
+ * @apiName User.Query
  * @apiDescription Query user info.
  *
  * @apiParam {int32} userId user id
@@ -80,7 +73,7 @@ func (a *srvUser) Create(ctx context.Context, req *user.UserCreateRequest, rsp *
  * @apiSuccess {int32} role user role, 1 for user <br> 2 for admin
  * @apiUse DBServerDown
  */
-func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.UserInfo) error {
+func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.UserInfo) error {
 	if req.UserId == 0 {
 		return nil
 	}
@@ -98,10 +91,10 @@ func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *us
 }
 
 /**
- * @api {rpc} /rpc user.User.Update
+ * @api {rpc} /rpc User.Update
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName user.User.Update
+ * @apiName User.Update
  * @apiDescription Update user info, only update provided field. If clearEmpty=1 and param support allow clear, clear the field when not provided.
  *
  * @apiParam {int32} userId user id
@@ -116,7 +109,7 @@ func (a *srvUser) Query(ctx context.Context, req *user.UserQueryRequest, rsp *us
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for user not found
  * @apiUse DBServerDown
  */
-func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.UserUpdateResponse) error {
+func (a *srv) Update(ctx context.Context, req *user.UserInfo, rsp *user.UserUpdateResponse) error {
 	if req.UserId == 0 {
 		rsp.Status = user.UserUpdateResponse_INVALID_PARAM
 		return nil
@@ -154,10 +147,10 @@ func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.User
 }
 
 /**
- * @api {rpc} /rpc user.User.Find
+ * @api {rpc} /rpc User.Find
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName user.User.Find
+ * @apiName User.Find
  * @apiDescription Find user(fuzzy).
  *
  * @apiParam {string} [userName] username
@@ -166,7 +159,7 @@ func (a *srvUser) Update(ctx context.Context, req *user.UserInfo, rsp *user.User
  * @apiSuccess {list} user see [User Service](#api-Service-user_User_Query)
  * @apiUse DBServerDown
  */
-func (a *srvUser) Find(ctx context.Context, req *user.UserFindRequest, rsp *user.UserFindResponse) error {
+func (a *srv) Find(ctx context.Context, req *user.UserFindRequest, rsp *user.UserFindResponse) error {
 	if req.Limit == 0 {
 		req.Limit = 100
 	}
@@ -194,66 +187,10 @@ func parseUser(s *db.User, d *user.UserInfo) {
 	d.Role = user.UserInfo_Role(s.Role)
 }
 
-/**
- * @api {rpc} /rpc user.Avatar.Create
- * @apiVersion 1.0.0
- * @apiGroup Service
- * @apiName user.Avatar.Create
- * @apiDescription Create user avatar and return avatarId.
- *
- * @apiParam {int32} userId user id
- * @apiParam {bytes} file accept [file type](https://github.com/h2non/filetype#image)
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found <br> 3 for invalid file type
- * @apiSuccess {int32} avatarId new avatar id
- * @apiUse DBServerDown
- */
-func (a *srvAvatar) Create(ctx context.Context, req *user.AvatarCreateRequest, rsp *user.AvatarCreateResponse) error {
-	if bytes.Equal(req.File, []byte{0}) || req.UserId == 0 {
-		rsp.Status = user.AvatarCreateResponse_INVALID_PARAM
-	} else {
-		if !filetype.IsImage(req.File) {
-			rsp.Status = user.AvatarCreateResponse_INVALID_TYPE
-			return nil
-		}
-
-		usr := db.User{
-			ID: req.UserId,
-		}
-		err := db.Ormer.First(&usr).Error
-		if gorm.IsRecordNotFoundError(err) {
-			rsp.Status = user.AvatarCreateResponse_NOT_FOUND
-			return nil
-		} else if utils.LogContinue(err, utils.Warning) {
-			return err
-
-		}
-
-		srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
-			func() interface{} { return mock.NewFileService() }).(file.FileService)
-		microRsp, err := srv.Create(context.TODO(), &file.FileCreateRequest{
-			File: req.File,
-		})
-		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) || microRsp.Status != file.FileCreateResponse_SUCCESS {
-			return err
-		}
-
-		usr.AvatarId = microRsp.FileId
-		err = db.Ormer.Save(&usr).Error
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-
-		rsp.AvatarId = microRsp.FileId
-		rsp.Status = user.AvatarCreateResponse_SUCCESS
-	}
-	return nil
-}
-
 func main() {
 	db.InitORM("userdb", new(db.User))
 	defer db.CloseORM()
 	service := utils.InitMicroService("user")
-	utils.LogPanic(user.RegisterUserHandler(service.Server(), new(srvUser)))
-	utils.LogPanic(user.RegisterAvatarHandler(service.Server(), new(srvAvatar)))
+	utils.LogPanic(user.RegisterUserHandler(service.Server(), new(srv)))
 	utils.RunMicroService(service)
 }
