@@ -26,6 +26,7 @@ message ContentCreateResponse {
         INVALID_PARAM = -1;
         SUCCESS = 1;
         INVALID_TOKEN = 2;
+        INVALID_TYPE = 3;
     }
     Status status = 1;
     string contentId = 2;
@@ -53,8 +54,11 @@ message ContentUpdateResponse {
         SUCCESS = 1;
         INVALID_TOKEN = 2;
         NOT_FOUND = 3;
+        FAILED = 4;
+        INVALID_TYPE = 5;
     }
     Status status = 1;
+    string fileId = 2;
 }
 
 message ContentDeleteRequest {
@@ -72,7 +76,7 @@ message ContentDeleteResponse {
     Status status = 1;
 }
 
-message ContentMsg{
+message ContentMsg {
     enum Type {
         UNKNOWN = 0;
         PICTURE = 1;
@@ -82,11 +86,11 @@ message ContentMsg{
     Type type = 2;
 }
 
-message ContentQueryRequest{
+message ContentQueryRequest {
     string contentId = 1;
 }
 
-message ContentQueryResponse{
+message ContentQueryResponse {
     enum Status {
         UNKNOWN = 0;
         INVALID_PARAM = -1;
@@ -97,12 +101,12 @@ message ContentQueryResponse{
     repeated ContentMsg files = 2;
 }
 
-message ContentCheckRequest{
+message ContentCheckRequest {
     string contentId = 1;
     string contentToken = 2;
 }
 
-message ContentCheckResponse{
+message ContentCheckResponse {
     enum Status {
         UNKNOWN = 0;
         INVALID_PARAM = -1;

@@ -77,6 +77,8 @@ func Test_addContent(t *testing.T) {
 		tf(200, content.ContentCreateResponse_INVALID_TOKEN)
 		v.Set("contentId", "error")
 		tf(500, 0)
+		v.Set("contentId", "invalid")
+		tf(200, content.ContentCreateResponse_INVALID_TYPE)
 	})
 }
 

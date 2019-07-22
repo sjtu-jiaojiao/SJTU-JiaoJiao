@@ -31,7 +31,7 @@ func setupRouter() *gin.Engine {
  * @apiName AddContent
  * @apiDescription Add sell info content
  *
- * @apiParam {--} Param see [Content Service](#api-Service-Content_Create)
+ * @apiParam {--} Param see [Content Service](#api-Service-Content_Create) <br> Max size is 50M
  * @apiSuccess (Success 200) {Response} response see [Content Service](#api-Service-Content_Create)
  * @apiUse InvalidParam
  * @apiUse ContentServiceDown
@@ -40,13 +40,19 @@ func addContent(c *gin.Context) {
 	type param struct {
 		ContentId    string `form:"contentId"`
 		ContentToken string `form:"contentToken"`
-		Content      []byte `form:"content" binding:"required"`
 		Type         int32  `form:"type" binding:"required"`
 	}
 	var p param
 	role := utils.GetRole(c)
+	data, code, err := utils.GetQueryFile(c, "content", 1024*1024*50) // 50M
 
-	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+	if err == nil && !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+		// check param&role
+		if code != 200 {
+			c.AbortWithStatus(code)
+			return
+		}
+
 		if (p.ContentId == "" && p.ContentToken != "") || (p.ContentId != "" && p.ContentToken == "") {
 			c.AbortWithStatus(400)
 			return
@@ -56,12 +62,13 @@ func addContent(c *gin.Context) {
 			c.AbortWithStatus(403)
 			return
 		}
+
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
 		rsp, err := srv.Create(context.TODO(), &content.ContentCreateRequest{
 			ContentId:    p.ContentId,
 			ContentToken: p.ContentToken,
-			Content:      p.Content,
+			Content:      data,
 			Type:         content.ContentCreateRequest_Type(p.Type),
 		})
 		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
@@ -92,10 +99,10 @@ func deleteContent(c *gin.Context) {
 		ContentId    string `form:"contentId" binding:"required"`
 		ContentToken string `form:"contentToken" binding:"required"`
 	}
-	var q param
+	var p param
 	role := utils.GetRole(c)
 
-	if !utils.LogContinue(c.ShouldBindQuery(&q), utils.Warning) {
+	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
 		if !role.User && !role.Admin {
 			c.AbortWithStatus(403)
 			return
@@ -103,8 +110,8 @@ func deleteContent(c *gin.Context) {
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
 		rsp, err := srv.Delete(context.TODO(), &content.ContentDeleteRequest{
-			ContentId:    q.ContentId,
-			ContentToken: q.ContentToken,
+			ContentId:    p.ContentId,
+			ContentToken: p.ContentToken,
 		})
 		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
 			c.JSON(500, err)
@@ -124,7 +131,7 @@ func deleteContent(c *gin.Context) {
  * @apiName UpdateContent
  * @apiDescription Update sell info content
  *
- * @apiParam {--} Param see [Content Service](#api-Service-Content_Update)
+ * @apiParam {--} Param see [Content Service](#api-Service-Content_Update) <br> Max size is 50M
  * @apiSuccess (Success 200) {Response} response see [Content Service](#api-Service-Content_Update)
  * @apiUse InvalidParam
  * @apiUse ContentServiceDown
@@ -134,25 +141,31 @@ func updateContent(c *gin.Context) {
 		ContentId    string `form:"contentId" binding:"required"`
 		ContentToken string `form:"contentToken" binding:"required"`
 		FileId       string `form:"fileId" binding:"required"`
-		Content      []byte `form:"content" binding:"required"`
-		Type         int32  `form:"type" binding:"required"`
+		Type         int32  `form:"type"`
 	}
-	var q param
+	var p param
 	role := utils.GetRole(c)
+	data, code, err := utils.GetQueryFile(c, "content", 1024*1024*50) // 50M
 
-	if !utils.LogContinue(c.ShouldBindQuery(&q), utils.Warning) {
+	if err == nil && !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
+		if code != 200 {
+			c.AbortWithStatus(code)
+			return
+		}
+
 		if !role.User && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}
+
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
 		rsp, err := srv.Update(context.TODO(), &content.ContentUpdateRequest{
-			ContentId:    q.ContentId,
-			ContentToken: q.ContentToken,
-			FileId:       q.FileId,
-			Content:      q.Content,
-			Type:         content.ContentUpdateRequest_Type(q.Type),
+			ContentId:    p.ContentId,
+			ContentToken: p.ContentToken,
+			FileId:       p.FileId,
+			Content:      data,
+			Type:         content.ContentUpdateRequest_Type(p.Type),
 		})
 		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
 			c.JSON(500, err)
