@@ -57,7 +57,7 @@ export default class MySellInfoScreen extends Component {
     fetchData() {
         //console.warn(Config.userInfo);
         //let obj = { userId: Config.userInfo.userId };
-        let obj = { userId: 2 };
+        let obj = { userId: Config.userInfo.userId };
         //console.warn(obj);
         Http.get('/sellInfo', obj)
             .then((response) => {
@@ -76,6 +76,20 @@ export default class MySellInfoScreen extends Component {
 
     keyExtractor = (item, index) => index.toString();
 
+    parseStatus = (status) => {
+        let Prefix = '商品状态：';
+        switch (status) {
+            case 1:
+                return (Prefix + '出售中');
+            case 2:
+                return (Prefix + '已预约');
+            case 3:
+                return (Prefix + '已出售');
+            case 4:
+                return (Prefix + '已过期 (不再出售)');
+        }
+    };
+
     renderItem = ({ item }) => (
         <ListItem
             bottomDivider
@@ -85,11 +99,12 @@ export default class MySellInfoScreen extends Component {
             }
             subtitle={
                 <View style={styles.subtitleView}>
-                    <Text numberOfLines={1} style={styles.ratingText}>商品状态：{item.status}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>{this.parseStatus(item.status)}</Text>
                     <Text numberOfLines={1} style={styles.ratingText}>商品描述：{item.description}</Text>
                     <Text numberOfLines={1} style={styles.ratingText}>出售价格：￥{item.price}</Text>
                     <Text numberOfLines={1} style={styles.ratingText}>发布时间：{item.releaseTime}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>成交时间：{item.validTime}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>有效时间：{item.validTime}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>商品标签：暂无</Text>
                 </View>
             }
         />
@@ -103,7 +118,7 @@ export default class MySellInfoScreen extends Component {
                 </View>
             )
         }
-        else if (this.state.SellInfoList == undefined) {
+        else if (this.state.SellInfoList === undefined) {
             return (
                 <View style={styles.container}>
                     <Text>您暂时没有发布任何出售信息</Text>
