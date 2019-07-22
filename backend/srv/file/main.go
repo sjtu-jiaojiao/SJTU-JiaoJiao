@@ -17,10 +17,10 @@ import (
 type srvFile struct{}
 
 /**
- * @api {rpc} /rpc file.File.Query
+ * @api {rpc} /rpc File.Query
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName file.File.Query
+ * @apiName File.Query
  * @apiDescription Query file stream
  *
  * @apiParam {string} fileId file id.
@@ -59,10 +59,10 @@ func (a *srvFile) Query(ctx context.Context, req *file.FileRequest, rsp *file.Fi
 }
 
 /**
- * @api {rpc} /rpc file.File.Create
+ * @api {rpc} /rpc File.Create
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName file.File.Create
+ * @apiName File.Create
  * @apiDescription Create file
  *
  * @apiParam {bytes} file file stream bytes
@@ -90,10 +90,10 @@ func (a *srvFile) Create(ctx context.Context, req *file.FileCreateRequest, rsp *
 }
 
 /**
- * @api {rpc} /rpc file.File.Delete
+ * @api {rpc} /rpc File.Delete
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName file.File.Delete
+ * @apiName File.Delete
  * @apiDescription Delete file
  *
  * @apiParam {string} fileId file id.

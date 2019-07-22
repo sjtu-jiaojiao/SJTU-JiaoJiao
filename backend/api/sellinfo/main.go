@@ -17,8 +17,6 @@ func setupRouter() *gin.Engine {
 	rg.GET("/sellInfo/:sellInfoId", getSellInfo)
 	rg.GET("/sellInfo", findSellInfo)
 	rg.POST("/sellInfo", addSellInfo)
-	rg.POST("/content", addContent)
-	rg.DELETE("/content", deleteContent)
 	return router
 }
 
@@ -35,8 +33,8 @@ func setupRouter() *gin.Engine {
  * @apiName GetSellInfo
  * @apiDescription Get sell info
  *
- * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
- * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
+ * @apiParam {--} Param see [SellInfo Service](#api-Service-SellInfo_Query)
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-SellInfo_Query)
  * @apiUse InvalidParam
  * @apiUse SellInfoServiceDown
  */
@@ -62,99 +60,6 @@ func getSellInfo(c *gin.Context) {
 }
 
 /**
- * @api {post} /content AddContent
- * @apiVersion 1.0.0
- * @apiGroup SellInfo
- * @apiPermission user/admin
- * @apiName AddContent
- * @apiDescription Add sell info content
- *
- * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_Content_Create)
- * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_Content_Create)
- * @apiUse InvalidParam
- * @apiUse SellInfoServiceDown
- */
-func addContent(c *gin.Context) {
-	type param struct {
-		ContentId    string `form:"contentId"`
-		ContentToken string `form:"contentToken"`
-		Content      []byte `form:"content" binding:"required"`
-		Type         int32  `form:"type" binding:"required"`
-	}
-	var p param
-	role := utils.GetRole(c)
-
-	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
-		if (p.ContentId == "" && p.ContentToken != "") || (p.ContentId != "" && p.ContentToken == "") {
-			c.AbortWithStatus(400)
-			return
-		}
-
-		if role != user.UserInfo_USER && role != user.UserInfo_ADMIN {
-			c.AbortWithStatus(403)
-			return
-		}
-		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewContentService(name, c) },
-			func() interface{} { return mock.NewContentService() }).(sellinfo.ContentService)
-		rsp, err := srv.Create(context.TODO(), &sellinfo.ContentCreateRequest{
-			ContentId:    p.ContentId,
-			ContentToken: p.ContentToken,
-			Content:      p.Content,
-			Type:         sellinfo.ContentCreateRequest_Type(p.Type),
-		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
-			c.JSON(500, err)
-			return
-		}
-		c.JSON(200, rsp)
-	} else {
-		c.AbortWithStatus(400)
-	}
-}
-
-/**
- * @api {delete} /content DeleteContent
- * @apiVersion 1.0.0
- * @apiGroup SellInfo
- * @apiPermission user/admin
- * @apiName DeleteContent
- * @apiDescription Delete sell info content
- *
- * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_Content_Delete)
- * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_Content_Delete)
- * @apiUse InvalidParam
- * @apiUse SellInfoServiceDown
- */
-func deleteContent(c *gin.Context) {
-	type param struct {
-		ContentId    string `form:"contentId" binding:"required"`
-		ContentToken string `form:"contentToken" binding:"required"`
-	}
-	var q param
-	role := utils.GetRole(c)
-
-	if !utils.LogContinue(c.ShouldBindQuery(&q), utils.Warning) {
-		if role != user.UserInfo_USER && role != user.UserInfo_ADMIN {
-			c.AbortWithStatus(403)
-			return
-		}
-		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewContentService(name, c) },
-			func() interface{} { return mock.NewContentService() }).(sellinfo.ContentService)
-		rsp, err := srv.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
-			ContentId:    q.ContentId,
-			ContentToken: q.ContentToken,
-		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
-			c.JSON(500, err)
-			return
-		}
-		c.JSON(200, rsp)
-	} else {
-		c.AbortWithStatus(400)
-	}
-}
-
-/**
  * @api {post} /sellInfo AddSellInfo
  * @apiVersion 1.0.0
  * @apiGroup SellInfo
@@ -162,8 +67,8 @@ func deleteContent(c *gin.Context) {
  * @apiName AddSellInfo
  * @apiDescription Add sell info
  *
- * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_SellInfo_Create)
- * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Create)
+ * @apiParam {--} Param see [SellInfo Service](#api-Service-SellInfo_Create)
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-SellInfo_Create)
  * @apiUse InvalidParam
  * @apiUse SellInfoServiceDown
  */
@@ -219,8 +124,8 @@ func addSellInfo(c *gin.Context) {
  * @apiName FindSellInfo
  * @apiDescription Find sell info
  *
- * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_SellInfo_Find)
- * @apiSuccess {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Find)
+ * @apiParam {--} Param see [SellInfo Service](#api-Service-SellInfo_Find)
+ * @apiSuccess {Response} response see [SellInfo Service](#api-Service-SellInfo_Find)
  * @apiUse InvalidParam
  * @apiUse SellInfoServiceDown
  */

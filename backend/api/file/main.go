@@ -31,7 +31,7 @@ func setupRouter() *gin.Engine {
  * @apiName GetFile
  * @apiDescription Get file
  *
- * @apiParam {--} Param see [File Service](#api-Service-file_File_Query)
+ * @apiParam {--} Param see [File Service](#api-Service-File_Query)
  * @apiSuccess (Success 200) {File} file file itself
  * @apiUse InvalidParam
  * @apiError (Error 404) FileNotFound file not found

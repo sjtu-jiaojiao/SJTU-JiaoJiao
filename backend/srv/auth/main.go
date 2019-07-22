@@ -20,10 +20,10 @@ type idToken struct {
 }
 
 /**
- * @api {rpc} /rpc auth.Auth.Auth
+ * @api {rpc} /rpc Auth.Auth
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName auth.Auth.Auth
+ * @apiName Auth.Auth
  * @apiDescription Check OAuth code.
  *
  * @apiParam {string} code OAuth code.

@@ -11,7 +11,7 @@ import (
 )
 
 func TestSrvInfoQuery(t *testing.T) {
-	var s srvInfo
+	var s srv
 	var req sellinfo.SellInfoQueryRequest
 
 	info := db.SellInfo{
@@ -55,7 +55,7 @@ func TestSrvInfoQuery(t *testing.T) {
 }
 
 func TestSrvInfoCreate(t *testing.T) {
-	var s srvInfo
+	var s srv
 	var req sellinfo.SellInfoCreateRequest
 
 	getToken := func() (string, string) {
@@ -133,7 +133,7 @@ func TestSrvInfoCreate(t *testing.T) {
 }
 
 func TestSrvInfoFind(t *testing.T) {
-	var s srvInfo
+	var s srv
 	var req sellinfo.SellInfoFindRequest
 
 	info1 := db.SellInfo{
