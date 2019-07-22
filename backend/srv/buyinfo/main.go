@@ -3,31 +3,29 @@ package main
 import (
 	"context"
 	db "jiaojiao/database"
-	"jiaojiao/srv/content/mock"
-	content "jiaojiao/srv/content/proto"
-	sellinfo "jiaojiao/srv/sellinfo/proto"
+	buyinfo "jiaojiao/srv/buyinfo/proto"
 	"jiaojiao/utils"
 	"time"
 
-	"github.com/micro/go-micro/client"
-
 	"github.com/jinzhu/gorm"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type srv struct{}
 
 /**
- * @api {rpc} /rpc SellInfo.Query
+ * @api {rpc} /rpc BuyInfo.Query
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName SellInfo.Query
- * @apiDescription Query sell info
+ * @apiName BuyInfo.Query
+ * @apiDescription Query buy info
  *
- * @apiParam {int32} sellInfoId sellInfo id.
- * @apiSuccess {int32} sellInfoId sellInfoId
- * @apiSuccess {int32} status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
- * @apiSuccess {int64} releaseTime sellInfo release time
- * @apiSuccess {int64} validTime sellInfo validate time
+ * @apiParam {int32} buyInfoId buyInfo id.
+ * @apiSuccess {int32} buyInfoId buyInfoId
+ * @apiSuccess {int32} status 1 for buying <br> 2 for reserved <br> 3 for done <br> 4 for expired
+ * @apiSuccess {int64} releaseTime buyInfo release time
+ * @apiSuccess {int64} validTime buyInfo validate time
  * @apiSuccess {string} goodName good name
  * @apiSuccess {double} price good price
  * @apiSuccess {string} description good description
@@ -35,12 +33,12 @@ type srv struct{}
  * @apiSuccess {int32} userId userId
  * @apiUse DBServerDown
  */
-func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoMsg) error {
-	if req.SellInfoId == 0 {
+func (a *srv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, rsp *buyinfo.BuyInfoMsg) error {
+	if req.BuyInfoId == 0 {
 		return nil
 	}
-	info := db.SellInfo{
-		ID: req.SellInfoId,
+	info := db.BuyInfo{
+		ID: req.BuyInfoId,
 	}
 	err := db.Ormer.First(&info).Error
 	if gorm.IsRecordNotFoundError(err) {
@@ -58,7 +56,7 @@ func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp
 		return err
 	}
 
-	rsp.SellInfoId = info.ID
+	rsp.BuyInfoId = info.ID
 	rsp.Status = info.Status
 	rsp.ReleaseTime = info.ReleaseTime.Unix()
 	rsp.ValidTime = info.ValidTime.Unix()
@@ -71,13 +69,13 @@ func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp
 }
 
 /**
- * @api {rpc} /rpc SellInfo.Create
+ * @api {rpc} /rpc BuyInfo.Create
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName SellInfo.Create
- * @apiDescription create sell info
+ * @apiName BuyInfo.Create
+ * @apiDescription Create buy info
  *
- * @apiParam {int32} userId sellinfo userid
+ * @apiParam {int32} userId user id
  * @apiParam {int64} validTime valid timestamp
  * @apiParam {string} goodName good name
  * @apiParam {string} [description] description for good
@@ -85,12 +83,12 @@ func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp
  * @apiParam {string} [contentId] content id of good
  * @apiParam {string} [contentToken] content token
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
- * @apiSuccess {int32} sellInfoId created sellInfoId
+ * @apiSuccess {int32} buyInfoId created buyInfoId
  * @apiUse DBServerDown
  */
-func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
+func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp *buyinfo.BuyInfoCreateResponse) error {
 	if req.ValidTime == 0 || req.GoodName == "" || req.UserId == 0 {
-		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
+		rsp.Status = buyinfo.BuyInfoCreateResponse_INVALID_PARAM
 		return nil
 	}
 
@@ -99,7 +97,7 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 		Price:       req.Price,
 		Description: req.Description,
 	}
-	info := db.SellInfo{
+	info := db.BuyInfo{
 		ReleaseTime: time.Now(),
 		ValidTime:   time.Unix(req.ValidTime, 0),
 		UserId:      req.UserId,
@@ -135,26 +133,21 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 		if err != nil || id == 0 {
 			return nil
 		}
-		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
-		rsp.SellInfoId = id
+		rsp.Status = buyinfo.BuyInfoCreateResponse_SUCCESS
+		rsp.BuyInfoId = id
 	} else if req.ContentId != "" && req.ContentToken != "" {
-		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} {
-			return content.NewContentService(name, c)
-		}, func() interface{} {
-			return mock.NewContentService()
-		}).(content.ContentService)
-		microRsp, err := srv.Check(context.TODO(), &content.ContentCheckRequest{
-			ContentId:    req.ContentId,
-			ContentToken: req.ContentToken,
-		})
+		collection := db.MongoDatabase.Collection("buyinfo")
+		rid, err := primitive.ObjectIDFromHex(req.ContentId)
 		if err != nil {
-			return err
-		}
-		if microRsp.Status == content.ContentCheckResponse_INVALID_PARAM {
-			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
+			rsp.Status = buyinfo.BuyInfoCreateResponse_INVALID_PARAM
 			return nil
-		} else if microRsp.Status == content.ContentCheckResponse_INVALID {
-			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_TOKEN
+		}
+		_, err = collection.FindOne(db.MongoContext, bson.D{
+			{"_id", rid},
+			{"token", req.ContentToken},
+		}).DecodeBytes()
+		if err != nil {
+			rsp.Status = buyinfo.BuyInfoCreateResponse_INVALID_TOKEN
 			return nil
 		}
 
@@ -163,34 +156,34 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 		if err != nil || id == 0 {
 			return nil
 		}
-		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
-		rsp.SellInfoId = id
+		rsp.Status = buyinfo.BuyInfoCreateResponse_SUCCESS
+		rsp.BuyInfoId = id
 	} else {
-		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
+		rsp.Status = buyinfo.BuyInfoCreateResponse_INVALID_PARAM
 	}
 	return nil
 }
 
 /**
- * @api {rpc} /rpc SellInfo.Find
+ * @api {rpc} /rpc BuyInfo.Find
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName SellInfo.Find
- * @apiDescription Find SellInfo.
+ * @apiName BuyInfo.Find
+ * @apiDescription Find BuyInfo.
  *
  * @apiParam {int32} [userId] userId
- * @apiParam {int32} [status] status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
+ * @apiParam {int32} [status] status 1 for waiting <br> 2 for reserved <br> 3 for done <br> 4 for expired
  * @apiParam {string} [goodName] good name(fuzzy)
- * @apiParam {double} lowPrice=0 low bound of price
- * @apiParam {double} highPrice=inf high bound of price
+ * @apiParam {double} lowPrice=0 low bound of price, included
+ * @apiParam {double} highPrice=inf high bound of price, included
  * @apiParam {uint32} limit=100 row limit
  * @apiParam {uint32} offset=0 row offset
- * @apiSuccess {list} sellInfo see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
+ * @apiSuccess {list} buyInfo see [BuyInfo Service](#api-Service-BuyInfo_Query)
  * @apiUse DBServerDown
  */
-func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *sellinfo.SellInfoFindResponse) error {
+func (a *srv) Find(ctx context.Context, req *buyinfo.BuyInfoFindRequest, rsp *buyinfo.BuyInfoFindResponse) error {
 	type result struct {
-		SellInfoId  int32
+		BuyInfoId   int32
 		Status      int32
 		ReleaseTime time.Time
 		ValidTime   time.Time
@@ -212,8 +205,8 @@ func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *
 	}
 
 	var res []*result
-	tb := db.Ormer.Table("sell_infos, goods").Select("sell_infos.id as sell_info_id, status, release_time, " +
-		"valid_time, good_name, price, description, content_id, user_id").Where("sell_infos.good_id = goods.id")
+	tb := db.Ormer.Table("buy_infos, goods").Select("buy_infos.id as buy_info_id, status, release_time, " +
+		"valid_time, good_name, price, description, content_id, user_id").Where("buy_infos.good_id = goods.id")
 	if req.UserId != 0 {
 		tb = tb.Where("user_id = ?", req.UserId)
 	}
@@ -235,8 +228,8 @@ func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *
 		return err
 	}
 	for _, v := range res {
-		rsp.SellInfo = append(rsp.SellInfo, &sellinfo.SellInfoMsg{
-			SellInfoId:  v.SellInfoId,
+		rsp.BuyInfo = append(rsp.BuyInfo, &buyinfo.BuyInfoMsg{
+			BuyInfoId:   v.BuyInfoId,
 			Status:      v.Status,
 			ReleaseTime: v.ReleaseTime.Unix(),
 			ValidTime:   v.ValidTime.Unix(),
@@ -251,9 +244,9 @@ func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *
 }
 
 func main() {
-	db.InitORM("sellinfodb", new(db.SellInfo), new(db.Good))
+	db.InitORM("buyinfodb", new(db.BuyInfo), new(db.Good))
 	defer db.CloseORM()
-	service := utils.InitMicroService("sellInfo")
-	utils.LogPanic(sellinfo.RegisterSellInfoHandler(service.Server(), new(srv)))
+	service := utils.InitMicroService("buyInfo")
+	utils.LogPanic(buyinfo.RegisterBuyInfoHandler(service.Server(), new(srv)))
 	utils.RunMicroService(service)
 }

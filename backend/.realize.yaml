@@ -32,7 +32,30 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: apidoc
+    - command: make doc
+      type: after
+      path: ../../
+      output: true
+- name: srv-auth
+  path: srv/auth
+  args:
+  - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+    - proto
+    - go
+    paths:
+    - /
+    - ../../utils
+    scripts:
+    - command: make proto
+      type: before
+      path: ../../
+      output: true
+    - command: make doc
       type: after
       path: ../../
       output: true
@@ -50,51 +73,10 @@ schema:
       - /
       - ../../utils
     scripts:
-      - command: apidoc
+      - command: make doc
         type: after
         path: ../../
         output: true
-- name: api-sellinfo
-  path: api/sellinfo
-  args:
-    - --registry=consul
-  commands:
-    run:
-      status: true
-  watcher:
-    extensions:
-      - go
-    paths:
-      - /
-      - ../../utils
-    scripts:
-      - command: apidoc
-        type: after
-        path: ../../
-        output: true
-- name: srv-auth
-  path: srv/auth
-  args:
-  - --registry=consul
-  commands:
-    run:
-      status: true
-  watcher:
-    extensions:
-    - proto
-    - go
-    paths:
-    - /
-    - ../../utils
-    scripts:
-    - command: bash generate_proto.sh
-      type: before
-      path: ../../
-      output: true
-    - command: apidoc
-      type: after
-      path: ../../
-      output: true
 - name: srv-user
   path: srv/user
   args:
@@ -110,14 +92,32 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: bash generate_proto.sh
+    - command: make proto
       type: before
       path: ../../
       output: true
-    - command: apidoc
+    - command: make doc
       type: after
       path: ../../
       output: true
+- name: api-sellinfo
+  path: api/sellinfo
+  args:
+    - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+      - go
+    paths:
+      - /
+      - ../../utils
+    scripts:
+      - command: make doc
+        type: after
+        path: ../../
+        output: true
 - name: srv-sellinfo
   path: srv/sellinfo
   args:
@@ -133,11 +133,11 @@ schema:
       - /
       - ../../utils
     scripts:
-    - command: bash generate_proto.sh
+    - command: make proto
       type: before
       path: ../../
       output: true
-    - command: apidoc
+    - command: make doc
       type: after
       path: ../../
       output: true
@@ -155,7 +155,7 @@ schema:
       - /
       - ../../utils
     scripts:
-    - command: apidoc
+    - command: make doc
       type: after
       path: ../../
       output: true
@@ -174,11 +174,11 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: bash generate_proto.sh
+    - command: make proto
       type: before
       path: ../../
       output: true
-    - command: apidoc
+    - command: make doc
       type: after
       path: ../../
       output: true
@@ -196,7 +196,7 @@ schema:
       - /
       - ../../utils
     scripts:
-    - command: apidoc
+    - command: make doc
       type: after
       path: ../../
       output: true
@@ -215,11 +215,11 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: bash generate_proto.sh
+    - command: make proto
       type: before
       path: ../../
       output: true
-    - command: apidoc
+    - command: make doc
       type: after
       path: ../../
       output: true
@@ -237,7 +237,7 @@ schema:
       - /
       - ../../utils
     scripts:
-    - command: apidoc
+    - command: make doc
       type: after
       path: ../../
       output: true
@@ -256,11 +256,52 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: bash generate_proto.sh
+    - command: make proto
       type: before
       path: ../../
       output: true
-    - command: apidoc
+    - command: make doc
+      type: after
+      path: ../../
+      output: true
+- name: api-buyinfo
+  path: api/buyinfo
+  args:
+    - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+      - go
+    paths:
+      - /
+      - ../../utils
+    scripts:
+      - command: make doc
+        type: after
+        path: ../../
+        output: true
+- name: srv-buyinfo
+  path: srv/buyinfo
+  args:
+  - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+    - proto
+    - go
+    paths:
+    - /
+    - ../../utils
+    scripts:
+    - command: make proto
+      type: before
+      path: ../../
+      output: true
+    - command: make doc
       type: after
       path: ../../
       output: true

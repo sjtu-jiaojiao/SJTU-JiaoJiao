@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-service SellInfo {
-    rpc Query (SellInfoQueryRequest) returns (SellInfoMsg);
-    rpc Create (SellInfoCreateRequest) returns (SellInfoCreateResponse);
-    rpc Find (SellInfoFindRequest) returns (SellInfoFindResponse);
+service BuyInfo {
+    rpc Query (BuyInfoQueryRequest) returns (BuyInfoMsg);
+    rpc Create (BuyInfoCreateRequest) returns (BuyInfoCreateResponse);
+    rpc Find (BuyInfoFindRequest) returns (BuyInfoFindResponse);
 }
 
-message SellInfoMsg {
-    int32 sellInfoId = 1;
+message BuyInfoMsg {
+    int32 buyInfoId = 1;
     int32 status = 2;
     int64 releaseTime = 3;
     int64 validTime = 4;
@@ -20,11 +20,11 @@ message SellInfoMsg {
     bool clearEmpty = 99;
 }
 
-message SellInfoQueryRequest {
-    int32 sellInfoId = 1;
+message BuyInfoQueryRequest {
+    int32 buyInfoId = 1;
 }
 
-message SellInfoCreateRequest {
+message BuyInfoCreateRequest {
     int64 validTime = 1;
     string goodName = 2;
     double price = 3;
@@ -34,7 +34,7 @@ message SellInfoCreateRequest {
     int32 userId = 7;
 }
 
-message SellInfoCreateResponse {
+message BuyInfoCreateResponse {
     enum Status {
         UNKNOWN = 0;
         INVALID_PARAM = -1;
@@ -42,10 +42,10 @@ message SellInfoCreateResponse {
         INVALID_TOKEN = 2;
     }
     Status status = 1;
-    int32 sellInfoId = 2;
+    int32 buyInfoId = 2;
 }
 
-message SellInfoFindRequest {
+message BuyInfoFindRequest {
     int32 userId = 1;
     int32 status = 2;
     string goodName = 3;
@@ -55,6 +55,6 @@ message SellInfoFindRequest {
     uint32 offset = 7;
 }
 
-message SellInfoFindResponse {
-    repeated SellInfoMsg sellInfo = 1;
+message BuyInfoFindResponse {
+    repeated BuyInfoMsg buyInfo = 1;
 }

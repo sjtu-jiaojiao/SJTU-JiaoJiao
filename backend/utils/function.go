@@ -1,4 +1,8 @@
+//+build !test
+
 package utils
+
+import "github.com/gin-gonic/gin"
 
 func AssignNotEmpty(src *string, dst *string) {
 	if *src != "" {
@@ -23,4 +27,30 @@ func AssignNotZero(src interface{}, dst interface{}) {
 	default:
 		panic("wrong type")
 	}
+}
+
+func GetQueryFile(c *gin.Context, name string, maxsize int64) ([]byte, int, error) {
+	if CheckInTest() {
+		return []byte("test_file"), 200, nil
+	}
+
+	file, err := c.FormFile(name)
+	if err == nil {
+		if file.Size > maxsize {
+			return nil, 413, nil
+		}
+
+		f, err := file.Open()
+		if LogContinue(err, Warning) {
+			return nil, 500, err
+		}
+		defer f.Close()
+		data := make([]byte, file.Size)
+		_, err = f.Read(data)
+		if LogContinue(err, Warning) {
+			return nil, 500, err
+		}
+		return data, 200, nil
+	}
+	return nil, 500, err
 }
