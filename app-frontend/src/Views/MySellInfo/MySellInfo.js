@@ -90,7 +90,7 @@ export default class MySellInfoScreen extends Component {
                 return (Prefix + '已过期 (不再出售)');
         }
     };
-    
+
     parseTimeStamp = (TimeStamp) => {
         let date = TimeStamptoDate(TimeStamp);
         return ('发布时间：' + date);
