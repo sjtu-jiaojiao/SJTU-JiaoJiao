@@ -7,7 +7,7 @@ SRVLIST = ./srvlist.list
 all: help
 
 ## build: Build binary file.
-build:
+build: proto
 	@export GOFLAGS=-mod=vendor
 	@while read -r line;do 				\
 		echo Building api-$$line...;	\
@@ -39,8 +39,8 @@ docker: build
 deploy:
 	@echo "$$DOCKER_PASSWORD" | docker login -u "$$DOCKER_USERNAME" --password-stdin
 	@while read -r line;do		\
-		sudo docker push sjtujj/api-$$line	\
-		sudo docker push sjtujj/srv-$$line	\
+		sudo docker push sjtujj/api-$$line;	\
+		sudo docker push sjtujj/srv-$$line;	\
 	done < "$(SRVLIST)"
 	@openssl aes-256-cbc -K $$encrypted_3b095c6852fb_key -iv $$encrypted_3b095c6852fb_iv -in private.key.enc -out private.key -d
 	@chmod 400 private.key
