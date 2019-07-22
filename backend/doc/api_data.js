@@ -42,7 +42,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Response",
-            "description": "<p>see <a href=\"#api-Service-auth_Auth_Auth\">Auth service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-Auth_Auth\">Auth service</a></p>"
           }
         ]
       }
@@ -71,6 +71,192 @@ define({ "api": [
     "groupTitle": "Auth"
   },
   {
+    "type": "post",
+    "url": "/avatar",
+    "title": "AddAvatar",
+    "version": "1.0.0",
+    "group": "Avatar",
+    "permission": [
+      {
+        "name": "self/admin"
+      }
+    ],
+    "name": "AddAvatar",
+    "description": "<p>Add avatar</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-Avatar_Create\">Avatar Service</a> <br> Max size is 5M</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-Avatar_Create\">Avatar Service</a></p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/avatar/main.go",
+    "groupTitle": "Avatar",
+    "error": {
+      "fields": {
+        "Error 400": [
+          {
+            "group": "Error 400",
+            "optional": false,
+            "field": "InvalidParam",
+            "description": "<p>Invalid param</p>"
+          }
+        ],
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "UserServiceDown",
+            "description": "<p>User service down</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "post",
+    "url": "/content",
+    "title": "AddContent",
+    "version": "1.0.0",
+    "group": "Content",
+    "permission": [
+      {
+        "name": "user/admin"
+      }
+    ],
+    "name": "AddContent",
+    "description": "<p>Add sell info content</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-Content_Create\">Content Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-Content_Create\">Content Service</a></p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/content/main.go",
+    "groupTitle": "Content",
+    "error": {
+      "fields": {
+        "Error 400": [
+          {
+            "group": "Error 400",
+            "optional": false,
+            "field": "InvalidParam",
+            "description": "<p>Invalid param</p>"
+          }
+        ],
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "SellInfoServiceDown",
+            "description": "<p>SellInfo service down</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "delete",
+    "url": "/content",
+    "title": "DeleteContent",
+    "version": "1.0.0",
+    "group": "Content",
+    "permission": [
+      {
+        "name": "user/admin"
+      }
+    ],
+    "name": "DeleteContent",
+    "description": "<p>Delete sell info content</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-Content_Delete\">Content Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-Content_Delete\">Content Service</a></p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/content/main.go",
+    "groupTitle": "Content",
+    "error": {
+      "fields": {
+        "Error 400": [
+          {
+            "group": "Error 400",
+            "optional": false,
+            "field": "InvalidParam",
+            "description": "<p>Invalid param</p>"
+          }
+        ],
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "SellInfoServiceDown",
+            "description": "<p>SellInfo service down</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "get",
     "url": "/file/:fileId",
     "title": "GetFile",
@@ -91,7 +277,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-file_File_Query\">File Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-File_Query\">File Service</a></p>"
           }
         ]
       }
@@ -142,68 +328,6 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/content",
-    "title": "AddContent",
-    "version": "1.0.0",
-    "group": "SellInfo",
-    "permission": [
-      {
-        "name": "user/admin"
-      }
-    ],
-    "name": "AddContent",
-    "description": "<p>Add sell info content</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "--",
-            "optional": false,
-            "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_Content_Create\">SellInfo Service</a></p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Response",
-            "optional": false,
-            "field": "response",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_Content_Create\">SellInfo Service</a></p>"
-          }
-        ]
-      }
-    },
-    "filename": "./api/sellinfo/main.go",
-    "groupTitle": "SellInfo",
-    "error": {
-      "fields": {
-        "Error 400": [
-          {
-            "group": "Error 400",
-            "optional": false,
-            "field": "InvalidParam",
-            "description": "<p>Invalid param</p>"
-          }
-        ],
-        "Error 500": [
-          {
-            "group": "Error 500",
-            "optional": false,
-            "field": "SellInfoServiceDown",
-            "description": "<p>SellInfo service down</p>"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "post",
     "url": "/sellInfo",
     "title": "AddSellInfo",
     "version": "1.0.0",
@@ -223,7 +347,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Create\">SellInfo Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-SellInfo_Create\">SellInfo Service</a></p>"
           }
         ]
       }
@@ -236,69 +360,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Create\">SellInfo Service</a></p>"
-          }
-        ]
-      }
-    },
-    "filename": "./api/sellinfo/main.go",
-    "groupTitle": "SellInfo",
-    "error": {
-      "fields": {
-        "Error 400": [
-          {
-            "group": "Error 400",
-            "optional": false,
-            "field": "InvalidParam",
-            "description": "<p>Invalid param</p>"
-          }
-        ],
-        "Error 500": [
-          {
-            "group": "Error 500",
-            "optional": false,
-            "field": "SellInfoServiceDown",
-            "description": "<p>SellInfo service down</p>"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "delete",
-    "url": "/content",
-    "title": "DeleteContent",
-    "version": "1.0.0",
-    "group": "SellInfo",
-    "permission": [
-      {
-        "name": "user/admin"
-      }
-    ],
-    "name": "DeleteContent",
-    "description": "<p>Delete sell info content</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "--",
-            "optional": false,
-            "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_Content_Delete\">SellInfo Service</a></p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Response",
-            "optional": false,
-            "field": "response",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_Content_Delete\">SellInfo Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-SellInfo_Create\">SellInfo Service</a></p>"
           }
         ]
       }
@@ -347,7 +409,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Find\">SellInfo Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-SellInfo_Find\">SellInfo Service</a></p>"
           }
         ]
       }
@@ -360,7 +422,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Find\">SellInfo Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-SellInfo_Find\">SellInfo Service</a></p>"
           }
         ]
       }
@@ -409,7 +471,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Query\">SellInfo Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-SellInfo_Query\">SellInfo Service</a></p>"
           }
         ]
       }
@@ -422,7 +484,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Query\">SellInfo Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-SellInfo_Query\">SellInfo Service</a></p>"
           }
         ]
       }
@@ -453,10 +515,10 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "auth.Auth.Auth",
+    "title": "Auth.Auth",
     "version": "1.0.0",
     "group": "Service",
-    "name": "auth_Auth_Auth",
+    "name": "Auth_Auth",
     "description": "<p>Check OAuth code.</p>",
     "parameter": {
       "fields": {
@@ -509,20 +571,27 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "file.File.Create",
+    "title": "Avatar.Create",
     "version": "1.0.0",
     "group": "Service",
-    "name": "file_File_Create",
-    "description": "<p>Create file</p>",
+    "name": "Avatar_Create",
+    "description": "<p>Create avatar and return avatarId.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>user id</p>"
+          },
           {
             "group": "Parameter",
             "type": "bytes",
             "optional": false,
             "field": "file",
-            "description": "<p>file stream bytes</p>"
+            "description": "<p>accept <a href=\"https://github.com/h2non/filetype#image\">file type</a></p>"
           }
         ]
       }
@@ -535,19 +604,19 @@ define({ "api": [
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found <br> 3 for invalid file type</p>"
           },
           {
             "group": "Success 200",
-            "type": "string",
+            "type": "int32",
             "optional": false,
-            "field": "fileId",
-            "description": "<p>file id</p>"
+            "field": "avatarId",
+            "description": "<p>new avatar id</p>"
           }
         ]
       }
     },
-    "filename": "./srv/file/main.go",
+    "filename": "./srv/avatar/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -565,122 +634,10 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "file.File.Delete",
+    "title": "Content.Create",
     "version": "1.0.0",
     "group": "Service",
-    "name": "file_File_Delete",
-    "description": "<p>Delete file</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "fileId",
-            "description": "<p>file id.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int32",
-            "optional": false,
-            "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
-          }
-        ]
-      }
-    },
-    "filename": "./srv/file/main.go",
-    "groupTitle": "Service",
-    "error": {
-      "fields": {
-        "Error 500": [
-          {
-            "group": "Error 500",
-            "optional": false,
-            "field": "DBServerDown",
-            "description": "<p>can't connect to database server</p>"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "rpc",
-    "url": "/rpc",
-    "title": "file.File.Query",
-    "version": "1.0.0",
-    "group": "Service",
-    "name": "file_File_Query",
-    "description": "<p>Query file stream</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "fileId",
-            "description": "<p>file id.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int32",
-            "optional": false,
-            "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "bytes",
-            "optional": false,
-            "field": "file",
-            "description": "<p>file stream</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int64",
-            "optional": false,
-            "field": "size",
-            "description": "<p>file size</p>"
-          }
-        ]
-      }
-    },
-    "filename": "./srv/file/main.go",
-    "groupTitle": "Service",
-    "error": {
-      "fields": {
-        "Error 500": [
-          {
-            "group": "Error 500",
-            "optional": false,
-            "field": "DBServerDown",
-            "description": "<p>can't connect to database server</p>"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "rpc",
-    "url": "/rpc",
-    "title": "sellinfo.Content.Create",
-    "version": "1.0.0",
-    "group": "Service",
-    "name": "sellinfo_Content_Create",
+    "name": "Content_Create",
     "description": "<p>create sell info content</p>",
     "parameter": {
       "fields": {
@@ -743,7 +700,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/sellinfo/main.go",
+    "filename": "./srv/content/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -761,10 +718,10 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "sellinfo.Content.Delete",
+    "title": "Content.Delete",
     "version": "1.0.0",
     "group": "Service",
-    "name": "sellinfo_Content_Delete",
+    "name": "Content_Delete",
     "description": "<p>delete sell info content</p>",
     "parameter": {
       "fields": {
@@ -799,7 +756,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/sellinfo/main.go",
+    "filename": "./srv/content/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -817,10 +774,178 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "sellinfo.SellInfo.Create",
+    "title": "File.Create",
     "version": "1.0.0",
     "group": "Service",
-    "name": "sellinfo_SellInfo_Create",
+    "name": "File_Create",
+    "description": "<p>Create file</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "bytes",
+            "optional": false,
+            "field": "file",
+            "description": "<p>file stream bytes</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "fileId",
+            "description": "<p>file id</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/file/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
+    "title": "File.Delete",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "File_Delete",
+    "description": "<p>Delete file</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "fileId",
+            "description": "<p>file id.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/file/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
+    "title": "File.Query",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "File_Query",
+    "description": "<p>Query file stream</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "fileId",
+            "description": "<p>file id.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "bytes",
+            "optional": false,
+            "field": "file",
+            "description": "<p>file stream</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int64",
+            "optional": false,
+            "field": "size",
+            "description": "<p>file size</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/file/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
+    "title": "SellInfo.Create",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "SellInfo_Create",
     "description": "<p>create sell info</p>",
     "parameter": {
       "fields": {
@@ -915,10 +1040,10 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "sellinfo.SellInfo.Find",
+    "title": "SellInfo.Find",
     "version": "1.0.0",
     "group": "Service",
-    "name": "sellinfo_SellInfo_Find",
+    "name": "SellInfo_Find",
     "description": "<p>Find SellInfo.</p>",
     "parameter": {
       "fields": {
@@ -980,10 +1105,10 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "sellinfo.SellInfo.Query",
+    "title": "SellInfo.Query",
     "version": "1.0.0",
     "group": "Service",
-    "name": "sellinfo_SellInfo_Query",
+    "name": "SellInfo_Query",
     "description": "<p>Query sell info</p>",
     "parameter": {
       "fields": {
@@ -1085,73 +1210,10 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "user.Avatar.Create",
+    "title": "User.Create",
     "version": "1.0.0",
     "group": "Service",
-    "name": "user_Avatar_Create",
-    "description": "<p>Create user avatar and return avatarId.</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "int32",
-            "optional": false,
-            "field": "userId",
-            "description": "<p>user id</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "bytes",
-            "optional": false,
-            "field": "file",
-            "description": "<p>accept <a href=\"https://github.com/h2non/filetype#image\">file type</a></p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int32",
-            "optional": false,
-            "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found <br> 3 for invalid file type</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int32",
-            "optional": false,
-            "field": "avatarId",
-            "description": "<p>new avatar id</p>"
-          }
-        ]
-      }
-    },
-    "filename": "./srv/user/main.go",
-    "groupTitle": "Service",
-    "error": {
-      "fields": {
-        "Error 500": [
-          {
-            "group": "Error 500",
-            "optional": false,
-            "field": "DBServerDown",
-            "description": "<p>can't connect to database server</p>"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "rpc",
-    "url": "/rpc",
-    "title": "user.User.Create",
-    "version": "1.0.0",
-    "group": "Service",
-    "name": "user_User_Create",
+    "name": "User_Create",
     "description": "<p>Create new user.</p>",
     "parameter": {
       "fields": {
@@ -1211,10 +1273,10 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "user.User.Find",
+    "title": "User.Find",
     "version": "1.0.0",
     "group": "Service",
-    "name": "user_User_Find",
+    "name": "User_Find",
     "description": "<p>Find user(fuzzy).</p>",
     "parameter": {
       "fields": {
@@ -1276,10 +1338,10 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "user.User.Query",
+    "title": "User.Query",
     "version": "1.0.0",
     "group": "Service",
-    "name": "user_User_Query",
+    "name": "User_Query",
     "description": "<p>Query user info.</p>",
     "parameter": {
       "fields": {
@@ -1374,10 +1436,10 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "user.User.Update",
+    "title": "User.Update",
     "version": "1.0.0",
     "group": "Service",
-    "name": "user_User_Update",
+    "name": "User_Update",
     "description": "<p>Update user info, only update provided field. If clearEmpty=1 and param support allow clear, clear the field when not provided.</p>",
     "parameter": {
       "fields": {
@@ -1479,68 +1541,6 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/avatar",
-    "title": "AddAvatar",
-    "version": "1.0.0",
-    "group": "User",
-    "permission": [
-      {
-        "name": "self/admin"
-      }
-    ],
-    "name": "AddAvatar",
-    "description": "<p>Add user avatar</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "--",
-            "optional": false,
-            "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-user_Avatar_Create\">User Service</a> <br> Max size is 5M</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Response",
-            "optional": false,
-            "field": "response",
-            "description": "<p>see <a href=\"#api-Service-user_Avatar_Create\">User Service</a></p>"
-          }
-        ]
-      }
-    },
-    "filename": "./api/user/main.go",
-    "groupTitle": "User",
-    "error": {
-      "fields": {
-        "Error 400": [
-          {
-            "group": "Error 400",
-            "optional": false,
-            "field": "InvalidParam",
-            "description": "<p>Invalid param</p>"
-          }
-        ],
-        "Error 500": [
-          {
-            "group": "Error 500",
-            "optional": false,
-            "field": "UserServiceDown",
-            "description": "<p>User service down</p>"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "post",
     "url": "/user",
     "title": "AddUser",
     "version": "1.0.0",
@@ -1560,7 +1560,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-user_User_Create\">User Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-User_Create\">User Service</a></p>"
           }
         ]
       }
@@ -1573,7 +1573,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-user_User_Create\">User Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-User_Create\">User Service</a></p>"
           }
         ]
       }
@@ -1622,7 +1622,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-user_User_Find\">User Service</a> <br> No param need admin permission!</p>"
+            "description": "<p>see <a href=\"#api-Service-User_Find\">User Service</a> <br> No param need admin permission!</p>"
           }
         ]
       }
@@ -1635,7 +1635,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-user_User_Find\">User Service</a> <br> None - studentId: hidden <br> None - studentName: hidden</p>"
+            "description": "<p>see <a href=\"#api-Service-User_Find\">User Service</a> <br> None - studentId: hidden <br> None - studentName: hidden</p>"
           }
         ]
       }
@@ -1684,7 +1684,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-user_User_Query\">User Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-User_Query\">User Service</a></p>"
           }
         ]
       }
@@ -1697,7 +1697,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-user_User_Query\">User Service</a> <br> studentId: hidden <br> studentName: hidden</p>"
+            "description": "<p>see <a href=\"#api-Service-User_Query\">User Service</a> <br> studentId: hidden <br> studentName: hidden</p>"
           }
         ],
         "Self/Admin - Success 200": [
@@ -1706,7 +1706,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-user_User_Query\">User Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-User_Query\">User Service</a></p>"
           }
         ]
       }
@@ -1755,7 +1755,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-user_User_Update\">User Service</a> <br> self not allow edit StudentId,StudentName,Status,Role</p>"
+            "description": "<p>see <a href=\"#api-Service-User_Update\">User Service</a> <br> self not allow edit StudentId,StudentName,Status,Role</p>"
           }
         ]
       }
@@ -1768,7 +1768,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-user_User_Update\">User Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-User_Update\">User Service</a></p>"
           }
         ]
       }
