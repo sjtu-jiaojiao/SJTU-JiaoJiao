@@ -67,7 +67,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/auth/main.go",
+    "filename": "api/auth/main.go",
     "groupTitle": "Auth"
   },
   {
@@ -109,7 +109,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/avatar/main.go",
+    "filename": "api/avatar/main.go",
     "groupTitle": "Avatar",
     "error": {
       "fields": {
@@ -171,7 +171,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/content/main.go",
+    "filename": "api/content/main.go",
     "groupTitle": "Content",
     "error": {
       "fields": {
@@ -233,7 +233,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/content/main.go",
+    "filename": "api/content/main.go",
     "groupTitle": "Content",
     "error": {
       "fields": {
@@ -323,7 +323,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/file/main.go",
+    "filename": "api/file/main.go",
     "groupTitle": "File"
   },
   {
@@ -365,7 +365,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/sellinfo/main.go",
+    "filename": "api/sellinfo/main.go",
     "groupTitle": "SellInfo",
     "error": {
       "fields": {
@@ -427,7 +427,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/sellinfo/main.go",
+    "filename": "api/sellinfo/main.go",
     "groupTitle": "SellInfo",
     "error": {
       "fields": {
@@ -489,7 +489,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/sellinfo/main.go",
+    "filename": "api/sellinfo/main.go",
     "groupTitle": "SellInfo",
     "error": {
       "fields": {
@@ -565,7 +565,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/auth/main.go",
+    "filename": "srv/auth/main.go",
     "groupTitle": "Service"
   },
   {
@@ -616,7 +616,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/avatar/main.go",
+    "filename": "srv/avatar/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -700,7 +700,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/content/main.go",
+    "filename": "srv/content/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -756,7 +756,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/content/main.go",
+    "filename": "srv/content/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -812,7 +812,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/file/main.go",
+    "filename": "srv/file/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -861,7 +861,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/file/main.go",
+    "filename": "srv/file/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -924,7 +924,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/file/main.go",
+    "filename": "srv/file/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -1022,7 +1022,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/sellinfo/main.go",
+    "filename": "srv/sellinfo/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -1087,7 +1087,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/sellinfo/main.go",
+    "filename": "srv/sellinfo/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -1192,7 +1192,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/sellinfo/main.go",
+    "filename": "srv/sellinfo/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -1255,7 +1255,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/user/main.go",
+    "filename": "srv/user/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -1320,7 +1320,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/user/main.go",
+    "filename": "srv/user/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -1418,7 +1418,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/user/main.go",
+    "filename": "srv/user/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -1524,7 +1524,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./srv/user/main.go",
+    "filename": "srv/user/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -1578,7 +1578,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/user/main.go",
+    "filename": "api/user/main.go",
     "groupTitle": "User",
     "error": {
       "fields": {
@@ -1640,7 +1640,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/user/main.go",
+    "filename": "api/user/main.go",
     "groupTitle": "User",
     "error": {
       "fields": {
@@ -1711,7 +1711,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/user/main.go",
+    "filename": "api/user/main.go",
     "groupTitle": "User",
     "error": {
       "fields": {
@@ -1773,7 +1773,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./api/user/main.go",
+    "filename": "api/user/main.go",
     "groupTitle": "User",
     "error": {
       "fields": {
@@ -1795,33 +1795,5 @@ define({ "api": [
         ]
       }
     }
-  },
-  {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p>"
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "_home_imwxz_Documents_code_SJTU_JiaoJiao_backend_doc_main_js",
-    "groupTitle": "_home_imwxz_Documents_code_SJTU_JiaoJiao_backend_doc_main_js",
-    "name": ""
   }
 ] });

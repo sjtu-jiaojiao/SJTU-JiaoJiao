@@ -105,6 +105,7 @@ github.com/micro/go-micro/server
 github.com/micro/go-micro
 github.com/micro/go-micro/config
 github.com/micro/go-micro/config/source/consul
+github.com/micro/go-micro/selector
 github.com/micro/go-micro/web
 github.com/micro/go-micro/broker
 github.com/micro/go-micro/codec
@@ -117,7 +118,6 @@ github.com/micro/go-micro/codec/protorpc
 github.com/micro/go-micro/errors
 github.com/micro/go-micro/metadata
 github.com/micro/go-micro/registry
-github.com/micro/go-micro/selector
 github.com/micro/go-micro/transport
 github.com/micro/go-micro/server/debug
 github.com/micro/go-micro/util/addr
@@ -130,10 +130,10 @@ github.com/micro/go-micro/config/reader/json
 github.com/micro/go-micro/config/source
 github.com/micro/go-micro/config/source/file
 github.com/micro/go-micro/config/encoder
+github.com/micro/go-micro/registry/cache
 github.com/micro/go-micro/util/http
 github.com/micro/go-micro/util/net
 github.com/micro/go-micro/util/tls
-github.com/micro/go-micro/registry/cache
 github.com/micro/go-micro/server/debug/proto
 github.com/micro/go-micro/broker/http
 github.com/micro/go-micro/broker/memory
@@ -206,9 +206,9 @@ github.com/xdg/stringprep
 go.mongodb.org/mongo-driver/mongo
 go.mongodb.org/mongo-driver/mongo/options
 go.mongodb.org/mongo-driver/mongo/readpref
+go.mongodb.org/mongo-driver/bson
 go.mongodb.org/mongo-driver/bson/primitive
 go.mongodb.org/mongo-driver/mongo/gridfs
-go.mongodb.org/mongo-driver/bson
 go.mongodb.org/mongo-driver/bson/bsoncodec
 go.mongodb.org/mongo-driver/bson/bsontype
 go.mongodb.org/mongo-driver/event
