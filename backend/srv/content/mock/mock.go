@@ -11,6 +11,21 @@ import (
 
 type mockSrv struct{}
 
+func (a *mockSrv) Update(ctx context.Context, in *content.ContentUpdateRequest, opts ...client.CallOption) (*content.ContentUpdateResponse, error) {
+	var rsp content.ContentUpdateResponse
+	return &rsp, nil
+}
+
+func (a *mockSrv) Query(ctx context.Context, in *content.ContentQueryRequest, opts ...client.CallOption) (*content.ContentQueryResponse, error) {
+	var rsp content.ContentQueryResponse
+	return &rsp, nil
+}
+
+func (a *mockSrv) Check(ctx context.Context, in *content.ContentCheckRequest, opts ...client.CallOption) (*content.ContentCheckResponse, error) {
+	var rsp content.ContentCheckResponse
+	return &rsp, nil
+}
+
 func (a *mockSrv) Create(ctx context.Context, req *content.ContentCreateRequest, opts ...client.CallOption) (*content.ContentCreateResponse, error) {
 	var rsp content.ContentCreateResponse
 	if bytes.Equal(req.Content, []byte{0}) || req.Type == 0 {

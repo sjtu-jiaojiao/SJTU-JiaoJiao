@@ -14,9 +14,14 @@ func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
 	rg.POST("/content", addContent)
 	rg.DELETE("/content", deleteContent)
+	rg.PUT("/content", updateContent)
 	return router
 }
 
+/**
+ * @apiDefine ContentServiceDown
+ * @apiError (Error 500) ContentServiceDown Content service down
+ */
 /**
  * @api {post} /content AddContent
  * @apiVersion 1.0.0
@@ -28,7 +33,7 @@ func setupRouter() *gin.Engine {
  * @apiParam {--} Param see [Content Service](#api-Service-Content_Create)
  * @apiSuccess (Success 200) {Response} response see [Content Service](#api-Service-Content_Create)
  * @apiUse InvalidParam
- * @apiUse SellInfoServiceDown
+ * @apiUse ContentServiceDown
  */
 func addContent(c *gin.Context) {
 	type param struct {
@@ -50,7 +55,7 @@ func addContent(c *gin.Context) {
 			c.AbortWithStatus(403)
 			return
 		}
-		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
+		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
 		rsp, err := srv.Create(context.TODO(), &content.ContentCreateRequest{
 			ContentId:    p.ContentId,
@@ -58,7 +63,7 @@ func addContent(c *gin.Context) {
 			Content:      p.Content,
 			Type:         content.ContentCreateRequest_Type(p.Type),
 		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
 			c.JSON(500, err)
 			return
 		}
@@ -79,7 +84,7 @@ func addContent(c *gin.Context) {
  * @apiParam {--} Param see [Content Service](#api-Service-Content_Delete)
  * @apiSuccess (Success 200) {Response} response see [Content Service](#api-Service-Content_Delete)
  * @apiUse InvalidParam
- * @apiUse SellInfoServiceDown
+ * @apiUse ContentServiceDown
  */
 func deleteContent(c *gin.Context) {
 	type param struct {
@@ -94,13 +99,61 @@ func deleteContent(c *gin.Context) {
 			c.AbortWithStatus(403)
 			return
 		}
-		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
+		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
 		rsp, err := srv.Delete(context.TODO(), &content.ContentDeleteRequest{
 			ContentId:    q.ContentId,
 			ContentToken: q.ContentToken,
 		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
+			c.JSON(500, err)
+			return
+		}
+		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+/**
+ * @api {update} /content UpdateContent
+ * @apiVersion 1.0.0
+ * @apiGroup Content
+ * @apiPermission user/admin
+ * @apiName UpdateContent
+ * @apiDescription Update sell info content
+ *
+ * @apiParam {--} Param see [Content Service](#api-Service-Content_Update)
+ * @apiSuccess (Success 200) {Response} response see [Content Service](#api-Service-Content_Update)
+ * @apiUse InvalidParam
+ * @apiUse ContentServiceDown
+ */
+func updateContent(c *gin.Context) {
+	type param struct {
+		ContentId    string `form:"contentId" binding:"required"`
+		ContentToken string `form:"contentToken" binding:"required"`
+		FileId       string `form:"fileId" binding:"required"`
+		Content      []byte `form:"content"`
+		Type         int32  `form:"type"`
+	}
+	var q param
+	role := utils.GetRole(c)
+
+	if !utils.LogContinue(c.ShouldBindQuery(&q), utils.Warning) {
+		if role != user.UserInfo_USER && role != user.UserInfo_ADMIN {
+			c.AbortWithStatus(403)
+			return
+		}
+		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
+			func() interface{} { return mock.NewContentService() }).(content.ContentService)
+		rsp, err := srv.Update(context.TODO(), &content.ContentUpdateRequest{
+			ContentId:    q.ContentId,
+			ContentToken: q.ContentToken,
+			FileId:       q.FileId,
+			Content:      q.Content,
+			Type:         content.ContentUpdateRequest_Type(q.Type),
+		})
+		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
 			c.JSON(500, err)
 			return
 		}

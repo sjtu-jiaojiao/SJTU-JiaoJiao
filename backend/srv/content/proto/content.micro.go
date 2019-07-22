@@ -35,7 +35,10 @@ var _ server.Option
 
 type ContentService interface {
 	Create(ctx context.Context, in *ContentCreateRequest, opts ...client.CallOption) (*ContentCreateResponse, error)
+	Update(ctx context.Context, in *ContentUpdateRequest, opts ...client.CallOption) (*ContentUpdateResponse, error)
 	Delete(ctx context.Context, in *ContentDeleteRequest, opts ...client.CallOption) (*ContentDeleteResponse, error)
+	Query(ctx context.Context, in *ContentQueryRequest, opts ...client.CallOption) (*ContentQueryResponse, error)
+	Check(ctx context.Context, in *ContentCheckRequest, opts ...client.CallOption) (*ContentCheckResponse, error)
 }
 
 type contentService struct {
@@ -66,9 +69,39 @@ func (c *contentService) Create(ctx context.Context, in *ContentCreateRequest, o
 	return out, nil
 }
 
+func (c *contentService) Update(ctx context.Context, in *ContentUpdateRequest, opts ...client.CallOption) (*ContentUpdateResponse, error) {
+	req := c.c.NewRequest(c.name, "Content.Update", in)
+	out := new(ContentUpdateResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *contentService) Delete(ctx context.Context, in *ContentDeleteRequest, opts ...client.CallOption) (*ContentDeleteResponse, error) {
 	req := c.c.NewRequest(c.name, "Content.Delete", in)
 	out := new(ContentDeleteResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentService) Query(ctx context.Context, in *ContentQueryRequest, opts ...client.CallOption) (*ContentQueryResponse, error) {
+	req := c.c.NewRequest(c.name, "Content.Query", in)
+	out := new(ContentQueryResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentService) Check(ctx context.Context, in *ContentCheckRequest, opts ...client.CallOption) (*ContentCheckResponse, error) {
+	req := c.c.NewRequest(c.name, "Content.Check", in)
+	out := new(ContentCheckResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -80,13 +113,19 @@ func (c *contentService) Delete(ctx context.Context, in *ContentDeleteRequest, o
 
 type ContentHandler interface {
 	Create(context.Context, *ContentCreateRequest, *ContentCreateResponse) error
+	Update(context.Context, *ContentUpdateRequest, *ContentUpdateResponse) error
 	Delete(context.Context, *ContentDeleteRequest, *ContentDeleteResponse) error
+	Query(context.Context, *ContentQueryRequest, *ContentQueryResponse) error
+	Check(context.Context, *ContentCheckRequest, *ContentCheckResponse) error
 }
 
 func RegisterContentHandler(s server.Server, hdlr ContentHandler, opts ...server.HandlerOption) error {
 	type content interface {
 		Create(ctx context.Context, in *ContentCreateRequest, out *ContentCreateResponse) error
+		Update(ctx context.Context, in *ContentUpdateRequest, out *ContentUpdateResponse) error
 		Delete(ctx context.Context, in *ContentDeleteRequest, out *ContentDeleteResponse) error
+		Query(ctx context.Context, in *ContentQueryRequest, out *ContentQueryResponse) error
+		Check(ctx context.Context, in *ContentCheckRequest, out *ContentCheckResponse) error
 	}
 	type Content struct {
 		content
@@ -103,6 +142,18 @@ func (h *contentHandler) Create(ctx context.Context, in *ContentCreateRequest, o
 	return h.ContentHandler.Create(ctx, in, out)
 }
 
+func (h *contentHandler) Update(ctx context.Context, in *ContentUpdateRequest, out *ContentUpdateResponse) error {
+	return h.ContentHandler.Update(ctx, in, out)
+}
+
 func (h *contentHandler) Delete(ctx context.Context, in *ContentDeleteRequest, out *ContentDeleteResponse) error {
 	return h.ContentHandler.Delete(ctx, in, out)
+}
+
+func (h *contentHandler) Query(ctx context.Context, in *ContentQueryRequest, out *ContentQueryResponse) error {
+	return h.ContentHandler.Query(ctx, in, out)
+}
+
+func (h *contentHandler) Check(ctx context.Context, in *ContentCheckRequest, out *ContentCheckResponse) error {
+	return h.ContentHandler.Check(ctx, in, out)
 }
