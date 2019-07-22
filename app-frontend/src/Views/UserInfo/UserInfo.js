@@ -33,6 +33,10 @@ export default class UserInfoScreen extends Component {
         return length === 11 && /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1})|)+\d{8})$/.test(this.changeTelephone);
     }
 
+    isUserNameValid() {
+        return /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){0,31}$/.test(this.changeUserName);
+    }
+
     render() {
         return (
             <View>
@@ -159,6 +163,7 @@ export default class UserInfoScreen extends Component {
                 >
                     <View style={{width: 300,}}>
                         <Text style={{fontSize: 17}}>请输入新的用户名</Text>
+                        <Text style={{fontSize: 13}}>不超过32位，且以字母开头、可带数字、“_”、“.”</Text>
                         <TextInput
                             autoFocus={true}
                             style={{borderWidth: 1, borderColor: 'black', textAlign: 'center'}}
@@ -205,6 +210,18 @@ export default class UserInfoScreen extends Component {
                                             {cancelable: false},
                                         )
                                     }
+                                    else if(this.isUserNameValid() === false) {
+                                        Alert.alert(
+                                            '用户名不合法',
+                                            '要求用户名不超过32位，且以字母开头、可带数字、“_”、“.”',
+                                            [
+                                                {text: '好', onPress: () => {
+                                                        this.setState({isChangeUserNameVisible: true})
+                                                    }}
+                                            ],
+                                            {cancelable: false},
+                                        )
+                                    }
                                     else {
                                         fetch((Config.fetchPrefix + 'user'), {
                                             method: 'PUT',
@@ -226,7 +243,7 @@ export default class UserInfoScreen extends Component {
                                                                 }}
                                                         ],
                                                         {cancelable: false},
-                                                    )
+                                                    );
                                                     this.setState({
                                                         userName: this.changeUserName,
                                                         isChangeUserNameVisible: false
