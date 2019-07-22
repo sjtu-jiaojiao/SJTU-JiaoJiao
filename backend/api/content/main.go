@@ -4,7 +4,6 @@ import (
 	"context"
 	"jiaojiao/srv/content/mock"
 	content "jiaojiao/srv/content/proto"
-	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 
 	"github.com/gin-gonic/gin"
@@ -47,7 +46,7 @@ func addContent(c *gin.Context) {
 			return
 		}
 
-		if role != user.UserInfo_USER && role != user.UserInfo_ADMIN {
+		if !role.User && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}
@@ -91,7 +90,7 @@ func deleteContent(c *gin.Context) {
 	role := utils.GetRole(c)
 
 	if !utils.LogContinue(c.ShouldBindQuery(&q), utils.Warning) {
-		if role != user.UserInfo_USER && role != user.UserInfo_ADMIN {
+		if !role.User && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}

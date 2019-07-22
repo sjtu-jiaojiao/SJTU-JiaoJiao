@@ -37,7 +37,6 @@ message UserInfo {
         GUEST = 0;
         USER = 1;
         ADMIN = 10;
-        SELF = 99; // DO NOT USE IT!
     }
     int32 userId = 1;
     string userName = 2;

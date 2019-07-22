@@ -57,7 +57,7 @@ func getUserInfo(c *gin.Context) {
 			c.JSON(500, err)
 			return
 		}
-		if role != user.UserInfo_SELF && role != user.UserInfo_ADMIN {
+		if !role.Self && !role.Admin {
 			rsp.StudentId = ""
 			rsp.StudentName = ""
 		}
@@ -91,7 +91,7 @@ func findUser(c *gin.Context) {
 	role := utils.GetRole(c)
 
 	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
-		if p.UserName == "" && role != user.UserInfo_ADMIN {
+		if p.UserName == "" && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}
@@ -106,7 +106,7 @@ func findUser(c *gin.Context) {
 			c.JSON(500, err)
 			return
 		}
-		if role != user.UserInfo_ADMIN {
+		if !role.Admin {
 			for _, v := range rsp.User {
 				v.StudentId = ""
 				v.StudentName = ""
@@ -140,7 +140,7 @@ func addUser(c *gin.Context) {
 	role := utils.GetRole(c)
 
 	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
-		if role != user.UserInfo_ADMIN {
+		if !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}
@@ -190,11 +190,11 @@ func updateUser(c *gin.Context) {
 	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
 		role := utils.GetRoleID(c, p.UserId)
 
-		if role != user.UserInfo_SELF && role != user.UserInfo_ADMIN {
+		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}
-		if role != user.UserInfo_ADMIN { // only admin allow change these fields
+		if !role.Admin { // only admin allow change these fields
 			p.StudentId = ""
 			p.StudentName = ""
 			p.Status = 0
