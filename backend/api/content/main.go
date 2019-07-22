@@ -124,7 +124,7 @@ func deleteContent(c *gin.Context) {
 }
 
 /**
- * @api {update} /content UpdateContent
+ * @api {put} /content UpdateContent
  * @apiVersion 1.0.0
  * @apiGroup Content
  * @apiPermission user/admin

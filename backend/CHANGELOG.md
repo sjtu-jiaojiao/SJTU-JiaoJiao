@@ -1,4 +1,19 @@
 # 后端API更新日志
+## v0.1.3 2019-07-23
+### 恢复
+1. `AddContent`、`DeleteContent`、`AddAvatar`接口恢复使用
+
+### 新增
+1. `POST /buyInfo` 添加求购信息
+2. `GET /buyInfo/:buyInfoId` 查询求购信息详情
+3. `GET /buyInfo` 按条件查询求购信息
+4. `PUT /content` 修改content
+5. `GET /sellInfo` 支持更多查询条件
+
+### 参数修改
+1. 图片上传大小限制为5M
+2. 视频上传大小限制为50M
+
 ## v0.1.2 2019-07-20
 ### 禁用
 1. `AddContent`、`DeleteContent`、`AddAvatar`接口已声明但功能暂不可用

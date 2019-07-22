@@ -443,7 +443,7 @@ define({ "api": [
     }
   },
   {
-    "type": "update",
+    "type": "put",
     "url": "/content",
     "title": "UpdateContent",
     "version": "1.0.0",
