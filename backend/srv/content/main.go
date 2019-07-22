@@ -368,7 +368,7 @@ func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *
 }
 
 func main() {
-	db.InitMongoDB("sellinfomongo")
+	db.InitMongoDB("contentmongo")
 	service := utils.InitMicroService("content")
 	utils.LogPanic(content.RegisterContentHandler(service.Server(), new(srv)))
 	utils.RunMicroService(service)

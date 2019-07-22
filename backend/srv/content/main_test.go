@@ -67,7 +67,19 @@ func TestSrvContentCreate(t *testing.T) {
 	})
 }
 
+func TestSrvContentUpdate(t *testing.T) {
+	// TODO
+}
+
 func TestSrvContentDelete(t *testing.T) {
+	// TODO
+}
+
+func TestSrvContentQuery(t *testing.T) {
+	// TODO
+}
+
+func TestSrvContentCheck(t *testing.T) {
 	// TODO
 }
 

@@ -54,6 +54,9 @@ func TestSrvInfoQuery(t *testing.T) {
 
 }
 
+func TestSrvInfoCreate(t *testing.T) {
+	// TODO
+}
 func TestSrvInfoFind(t *testing.T) {
 	var s srv
 	var req buyinfo.BuyInfoFindRequest

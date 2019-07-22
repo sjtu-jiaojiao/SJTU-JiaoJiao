@@ -373,8 +373,8 @@ define({ "api": [
           {
             "group": "Error 500",
             "optional": false,
-            "field": "SellInfoServiceDown",
-            "description": "<p>SellInfo service down</p>"
+            "field": "ContentServiceDown",
+            "description": "<p>Content service down</p>"
           }
         ]
       }
@@ -435,8 +435,70 @@ define({ "api": [
           {
             "group": "Error 500",
             "optional": false,
-            "field": "SellInfoServiceDown",
-            "description": "<p>SellInfo service down</p>"
+            "field": "ContentServiceDown",
+            "description": "<p>Content service down</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "update",
+    "url": "/content",
+    "title": "UpdateContent",
+    "version": "1.0.0",
+    "group": "Content",
+    "permission": [
+      {
+        "name": "user/admin"
+      }
+    ],
+    "name": "UpdateContent",
+    "description": "<p>Update sell info content</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-Content_Update\">Content Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-Content_Update\">Content Service</a></p>"
+          }
+        ]
+      }
+    },
+    "filename": "./api/content/main.go",
+    "groupTitle": "Content",
+    "error": {
+      "fields": {
+        "Error 400": [
+          {
+            "group": "Error 400",
+            "optional": false,
+            "field": "InvalidParam",
+            "description": "<p>Invalid param</p>"
+          }
+        ],
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "ContentServiceDown",
+            "description": "<p>Content service down</p>"
           }
         ]
       }
@@ -1116,6 +1178,62 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
+    "title": "Content.Check",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "Content_Check",
+    "description": "<p>check sell info content</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "contentId",
+            "description": "<p>24 bytes content id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "contentToken",
+            "description": "<p>content token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for valid <br> 2 for invalid</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/content/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
     "title": "Content.Create",
     "version": "1.0.0",
     "group": "Service",
@@ -1234,6 +1352,146 @@ define({ "api": [
             "optional": false,
             "field": "status",
             "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/content/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
+    "title": "Content.Query",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "Content_Query",
+    "description": "<p>query sell info content</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "contentId",
+            "description": "<p>24 bytes content id</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "list",
+            "optional": false,
+            "field": "files",
+            "description": "<p>{string} fileId : file id <br> {int32} type : file type 1 for picture, 2 for video</p>"
+          }
+        ]
+      }
+    },
+    "filename": "./srv/content/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
+    "title": "Content.Update",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "Content_Update",
+    "description": "<p>update sell info content</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "contentId",
+            "description": "<p>24 bytes content id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "contentToken",
+            "description": "<p>content token</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "fileId",
+            "description": "<p>24 bytes file id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "bytes",
+            "optional": true,
+            "field": "content",
+            "description": "<p>binary content (note: only delete the file if empty)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": true,
+            "field": "type",
+            "description": "<p>1 for picture <br> 2 for video (note: only delete the file if empty)</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for not found <br> 4 for failed</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": true,
+            "field": "fileId",
+            "description": "<p>24 bytes updated file id (note: new file id differs from old one, meaningful only if content and type are not empty)</p>"
           }
         ]
       }

@@ -80,6 +80,10 @@ func Test_addContent(t *testing.T) {
 	})
 }
 
+func Test_updateContent(t *testing.T) {
+	// TODO
+}
+
 func TestMain(m *testing.M) {
 	main()
 	m.Run()
