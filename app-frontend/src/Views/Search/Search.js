@@ -227,7 +227,7 @@ export default class SearchScreen extends Component {
                         disabledTextStyle={{fontSize: 17}}
                         selectedTextStyle={{fontSize: 17, fontWeight: 'bold'}}
                     />
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={{flexDirection: 'row', backgroundColor: 'white'}}>
                         <SearchBar
                             searchIcon={false}
                             lightTheme={true}
