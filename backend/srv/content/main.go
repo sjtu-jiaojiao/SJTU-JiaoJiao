@@ -78,18 +78,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 		rsp.ContentToken = token
 		rsp.Status = content.ContentCreateResponse_SUCCESS
 	} else if req.ContentId != "" && req.ContentToken != "" {
-		//check token
-		collection := db.MongoDatabase.Collection("sellinfo")
-		rid, err := primitive.ObjectIDFromHex(req.ContentId)
-		if err != nil {
-			rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
-			return nil
-		}
-		_, err = collection.FindOne(db.MongoContext, bson.D{
-			{"_id", rid},
-			{"token", req.ContentToken},
-		}).DecodeBytes()
-		if err != nil {
+		if !validCheck(req.ContentId, req.ContentToken) {
 			rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
 			return nil
 		}
@@ -99,6 +88,8 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 			return err
 		}
 
+		collection := db.MongoDatabase.Collection("sellinfo")
+		rid, err := primitive.ObjectIDFromHex(req.ContentId)
 		_, err = collection.UpdateOne(db.MongoContext, bson.D{
 			{"_id", rid},
 			{"token", req.ContentToken},
@@ -144,17 +135,7 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 		return nil
 	} else {
 		// check token
-		collection := db.MongoDatabase.Collection("sellinfo")
-		rid, err := primitive.ObjectIDFromHex(req.ContentId)
-		if err != nil {
-			rsp.Status = content.ContentUpdateResponse_INVALID_PARAM
-			return nil
-		}
-		_, err = collection.FindOne(db.MongoContext, bson.D{
-			{"_id", rid},
-			{"token", req.ContentToken},
-		}).DecodeBytes()
-		if err != nil {
+		if !validCheck(req.ContentId, req.ContentToken) {
 			rsp.Status = content.ContentUpdateResponse_INVALID_TOKEN
 			return nil
 		}
@@ -293,6 +274,19 @@ func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *
 		rsp.Status = content.ContentCheckResponse_INVALID_PARAM
 		return nil
 	}
+	if !validCheck(req.ContentId, req.ContentToken) {
+		rsp.Status = content.ContentCheckResponse_INVALID
+		return nil
+	}
+
+	rsp.Status = content.ContentCheckResponse_VALID
+	return nil
+}
+
+func validCheck(contentId string, contentToken string) bool {
+	if contentId == "" || contentToken == "" {
+		return false
+	}
 	type files struct {
 		FileId primitive.ObjectID      `bson:"fileId"`
 		Type   content.ContentMsg_Type `bson:"type"`
@@ -303,23 +297,20 @@ func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *
 	}
 
 	collection := db.MongoDatabase.Collection("sellinfo")
-	rid, err := primitive.ObjectIDFromHex(req.ContentId)
+	rid, err := primitive.ObjectIDFromHex(contentId)
 	if err != nil {
-		rsp.Status = content.ContentCheckResponse_INVALID_PARAM
-		return nil
+		return false
 	}
 	var res result
 	err = collection.FindOne(db.MongoContext, bson.D{
 		{"_id", rid},
-		{"token", req.ContentToken},
+		{"token", contentToken},
 	}).Decode(&res)
 	if err != nil {
-		rsp.Status = content.ContentCheckResponse_INVALID
-		return nil
+		return false
 	}
 
-	rsp.Status = content.ContentCheckResponse_VALID
-	return nil
+	return true
 }
 
 func main() {

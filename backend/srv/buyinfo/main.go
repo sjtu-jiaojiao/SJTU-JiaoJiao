@@ -4,12 +4,14 @@ import (
 	"context"
 	db "jiaojiao/database"
 	buyinfo "jiaojiao/srv/buyinfo/proto"
+	"jiaojiao/srv/content/mock"
+	content "jiaojiao/srv/content/proto"
 	"jiaojiao/utils"
 	"time"
 
+	"github.com/micro/go-micro/client"
+
 	"github.com/jinzhu/gorm"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type srv struct{}
@@ -136,17 +138,16 @@ func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp
 		rsp.Status = buyinfo.BuyInfoCreateResponse_SUCCESS
 		rsp.BuyInfoId = id
 	} else if req.ContentId != "" && req.ContentToken != "" {
-		collection := db.MongoDatabase.Collection("buyinfo")
-		rid, err := primitive.ObjectIDFromHex(req.ContentId)
-		if err != nil {
-			rsp.Status = buyinfo.BuyInfoCreateResponse_INVALID_PARAM
-			return nil
-		}
-		_, err = collection.FindOne(db.MongoContext, bson.D{
-			{"_id", rid},
-			{"token", req.ContentToken},
-		}).DecodeBytes()
-		if err != nil {
+		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} {
+			return content.NewContentService(name, c)
+		}, func() interface{} {
+			return mock.NewContentService()
+		}).(content.ContentService)
+		microRsp, err := srv.Check(context.TODO(), &content.ContentCheckRequest{
+			ContentId:    req.ContentId,
+			ContentToken: req.ContentToken,
+		})
+		if err != nil || microRsp.Status != content.ContentCheckResponse_VALID {
 			rsp.Status = buyinfo.BuyInfoCreateResponse_INVALID_TOKEN
 			return nil
 		}
