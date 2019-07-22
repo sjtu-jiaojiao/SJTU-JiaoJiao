@@ -26,10 +26,8 @@
       <div class='infoitem'>
           <span class="badge">状态</span>{{getstate(info.status)}}
       </div>
-      <nz-tag
-        *ngFor="let tag of info.tags"
-      >
-        {{ tag }}
+      <nz-tag *ngFor="let tag of tags">
+        {{tag}}
       </nz-tag>
       </div>
               <a routerLink="/info/buyInfo/{{info.buyInfoId}}">
