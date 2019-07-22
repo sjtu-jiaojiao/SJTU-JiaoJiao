@@ -5,6 +5,7 @@ docker build ./api/sellinfo -t sjtujj/api-sellinfo
 sudo docker build ./api/file -t sjtujj/api-file
 sudo docker build ./api/avatar -t sjtujj/api-avatar
 sudo docker build ./api/content -t sjtujj/api-content
+sudo docker build ./api/buyinfo -t sjtujj/api-buyinfo
 # docker api insert before this
 docker build ./srv/auth -t sjtujj/srv-auth
 docker build ./srv/user -t sjtujj/srv-user
@@ -12,4 +13,5 @@ docker build ./srv/sellinfo -t sjtujj/srv-sellinfo
 sudo docker build ./srv/file -t sjtujj/srv-file
 sudo docker build ./srv/avatar -t sjtujj/srv-avatar
 sudo docker build ./srv/content -t sjtujj/srv-content
+sudo docker build ./srv/buyinfo -t sjtujj/srv-buyinfo
 # docker srv insert before this 

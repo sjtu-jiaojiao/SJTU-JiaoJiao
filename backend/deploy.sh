@@ -6,6 +6,7 @@ docker push sjtujj/api-sellinfo
 sudo docker push sjtujj/api-file
 sudo docker push sjtujj/api-avatar
 sudo docker push sjtujj/api-content
+sudo docker push sjtujj/api-buyinfo
 # docker api insert before this
 docker push sjtujj/srv-auth
 docker push sjtujj/srv-user
@@ -13,6 +14,7 @@ docker push sjtujj/srv-sellinfo
 sudo docker push sjtujj/srv-file
 sudo docker push sjtujj/srv-avatar
 sudo docker push sjtujj/srv-content
+sudo docker push sjtujj/srv-buyinfo
 # docker srv insert before this
 
 openssl aes-256-cbc -K $encrypted_3b095c6852fb_key -iv $encrypted_3b095c6852fb_iv -in private.key.enc -out private.key -d
