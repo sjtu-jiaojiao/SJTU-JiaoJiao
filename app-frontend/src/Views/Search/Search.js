@@ -117,8 +117,10 @@ export default class SearchScreen extends Component {
                     }, () => {  });
                 })
                 .catch((error) => console.error(error));
+        } else if (this.state.selectedIndex === 1) {
+            console.warn('Search SellInfo');
         } else {
-            console.warn('Search goods');
+            console.warn('Search BuyInfo')
         }
         // 注意，如果返回的list为空，要提示用户没有他想要的！
     };

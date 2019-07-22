@@ -10,10 +10,6 @@ export default class ReleaseScreen extends Component {
     };
 
     render() {
-
-        // 有一个比较严重的bug，如果先登录，进入发布界面，之后再退出，这里的Config.userInfo.userId是不会变回-1的！
-        // 要想办法使这里重新加载Config，或者使用Redux
-
         if (Config.userInfo.userId === -1) {
             Alert.alert(
                 '未登录',
