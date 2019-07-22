@@ -7,7 +7,7 @@ SRVLIST = ./srvlist.list
 all: help
 
 ## build: Build binary file.
-build: proto
+build:
 	@export GOFLAGS=-mod=vendor
 	@while read -r line;do 				\
 		echo Building api-$$line...;	\
