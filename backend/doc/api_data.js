@@ -339,7 +339,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Content_Create\">Content Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-Content_Create\">Content Service</a> <br> Max size is 50M</p>"
           }
         ]
       }
@@ -463,7 +463,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Content_Update\">Content Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-Content_Update\">Content Service</a> <br> Max size is 50M</p>"
           }
         ]
       }
@@ -1283,7 +1283,7 @@ define({ "api": [
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 2 for invalid type</p>"
           },
           {
             "group": "Success 200",
@@ -1466,7 +1466,7 @@ define({ "api": [
             "type": "bytes",
             "optional": true,
             "field": "content",
-            "description": "<p>binary content (note: only delete the file if empty)</p>"
+            "description": "<p>binary bytes, file accept <a href=\"https://github.com/h2non/filetype#image\">image</a> and <a href=\"https://github.com/h2non/filetype#video\">video</a> (note: only delete the file if empty)</p>"
           },
           {
             "group": "Parameter",
@@ -1486,7 +1486,7 @@ define({ "api": [
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for not found <br> 4 for failed</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for not found <br> 4 for failed <br> 5 for invalid type</p>"
           },
           {
             "group": "Success 200",
