@@ -20,7 +20,7 @@ export default class LoginScreen extends Component {
                     Config.JaccountToken = JSON.parse(event.nativeEvent.data);
                     //console.warn(Config.JaccountToken);
                     //console.warn(Config.JaccountToken.status);
-                    fetch((Config.fetchPrefix + 'user/1'),{
+                    fetch((Config.fetchPrefix + 'user/3'),{
                         headers: {
                             Authorization: ('Bearer ' + Config.JaccountToken.token),
                         }

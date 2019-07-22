@@ -1,70 +1,43 @@
 import React, { Component } from "react";
 import {Alert, Text, View, TextInput} from "react-native";
-import { Button, Overlay } from "react-native-elements";
+import { Button, Overlay, ButtonGroup } from "react-native-elements";
 import Config from "../../Config";
 import {NavigationActions} from "react-navigation";
 
 
 export default class ContactScreen extends Component {
-    constructor(props) {
-        super(props);
+    constructor () {
+        super()
         this.state = {
-            isVisible: false,
+            selectedIndex: 1
         };
-        this.inputValue = '';
+        this.updateIndex = this.updateIndex.bind(this);
     }
 
-    static navigationOptions = {
-        headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23, textAlign: 'center'}}>消息</Text>)
-    };
+    updateIndex (selectedIndex) {
+        this.setState({selectedIndex})
+    }
 
-    render() {
+    render () {
+        const buttons = ['用户', '出售信息', '求购信息'];
+        const { selectedIndex } = this.state;
+
         return (
             <View>
-                <Overlay
-                    isVisible={this.state.isVisible}
-                    windowBackgroundColor="rgba(255, 255, 255, .5)"
-                    overlayBackgroundColor='#EFEFF5'
-                    width="auto"
-                    height="auto"
-                    onBackdropPress={() => this.setState({ isVisible: false })}
-                >
-                    <View style={{width: 300}}>
-                        <TextInput
-                            style={{borderWidth: 1, borderColor: '#cccccc', textAlign: 'center'}}
-                            onChangeText={text => this.inputValue = text}
-                        />
-                        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                            <Button
-                                title='取消'
-                                titleStyle={{color: 'red', fontSize: 17, fontWeight: 'bold'}}
-                                buttonStyle={{backgroundColor: '#EFEFF5'}}
-                                raised={true}
-                                onPress={() => this.setState({isVisible: false})}
-                            />
-                            <Button
-                                title='确认修改'
-                                titleStyle={{color: '#298BFF', fontSize: 17, fontWeight: 'bold'}}
-                                buttonStyle={{backgroundColor: '#EFEFF5'}}
-                                raised={true}
-                                onPress={() => this.setState({ isVisible: false })}
-                            />
-                        </View>
-                    </View>
-                </Overlay>
-                <Text>
-                    这是信息界面
-                </Text>
-                <Button
-                    title='show'
-                    titleStyle={{color: 'white', fontSize: 17}}
-                    buttonStyle={{backgroundColor: 'red'}}
-                    containerStyle={{width: 160, marginLeft: 120}}
-                    raised={true}
-                    onPress={() => this.setState({isVisible: true})}
+                <ButtonGroup
+                    onPress={this.updateIndex}
+                    selectedIndex={selectedIndex}
+                    buttons={buttons}
+                    containerStyle={{height: 30}}
                 />
+                <Text>
+                    {this.state.selectedIndex}
+                </Text>
+                <Text>
+                    {buttons[this.state.selectedIndex]}
+                </Text>
             </View>
-        );
+        )
     }
 }
 
