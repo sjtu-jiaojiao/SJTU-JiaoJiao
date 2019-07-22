@@ -91,7 +91,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Avatar_Create\">Avatar Service</a> <br> Max size is 5M</p>"
+            "description": "<p>see <a href=\"#api-Service-Avatar_Create\">Avatar Service</a> <br> file accept <a href=\"https://github.com/h2non/filetype#image\">file type</a> <br> Max size is 5M</p>"
           }
         ]
       }
@@ -591,7 +591,7 @@ define({ "api": [
             "type": "bytes",
             "optional": false,
             "field": "file",
-            "description": "<p>accept <a href=\"https://github.com/h2non/filetype#image\">file type</a></p>"
+            "description": "<p>file bytes</p>"
           }
         ]
       }

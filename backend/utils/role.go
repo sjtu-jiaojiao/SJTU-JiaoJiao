@@ -24,30 +24,43 @@ func parseHeader(c *gin.Context) *jwt.Token {
 	return t
 }
 
-func GetRoleID(c *gin.Context, id int32) user.UserInfo_Role {
-	ret := user.UserInfo_GUEST
+type Role struct {
+	Guest bool
+	User  bool
+	Self  bool
+	Admin bool
+}
+
+func GetRoleID(c *gin.Context, id int32) Role {
+	ret := Role{Guest: true}
 	if CheckInTest() {
 		h := c.Request.Header.Get("Authorization")
 		switch h {
 		case "user":
-			ret = user.UserInfo_USER
+			ret.User = true
 		case "self":
-			ret = user.UserInfo_SELF
+			ret.User = true
+			ret.Self = true
 		case "admin":
-			ret = user.UserInfo_ADMIN
+			ret.Admin = true
 		}
 	} else {
 		t := parseHeader(c)
 		if t != nil {
-			ret = user.UserInfo_Role(JWTParse(t, "role").(float64))
+			switch user.UserInfo_Role(JWTParse(t, "role").(float64)) {
+			case user.UserInfo_USER:
+				ret.User = true
+			case user.UserInfo_ADMIN:
+				ret.Admin = true
+			}
 			if id != 0 && JWTParse(t, "id").(float64) == float64(id) {
-				ret = user.UserInfo_SELF
+				ret.Self = true
 			}
 		}
 	}
 	return ret
 }
 
-func GetRole(c *gin.Context) user.UserInfo_Role {
+func GetRole(c *gin.Context) Role {
 	return GetRoleID(c, 0)
 }

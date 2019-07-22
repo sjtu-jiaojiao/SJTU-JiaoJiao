@@ -4,7 +4,6 @@ import (
 	"context"
 	"jiaojiao/srv/avatar/mock"
 	avatar "jiaojiao/srv/avatar/proto"
-	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +24,8 @@ func setupRouter() *gin.Engine {
  * @apiName AddAvatar
  * @apiDescription Add avatar
  *
- * @apiParam {--} Param see [Avatar Service](#api-Service-Avatar_Create) <br> Max size is 5M
+ * @apiParam {--} Param see [Avatar Service](#api-Service-Avatar_Create) <br>
+ *						file accept [file type](https://github.com/h2non/filetype#image) <br> Max size is 5M
  * @apiSuccess {Response} response see [Avatar Service](#api-Service-Avatar_Create)
  * @apiUse InvalidParam
  * @apiUse UserServiceDown
@@ -45,7 +45,7 @@ func addAvatar(c *gin.Context) {
 
 		role := utils.GetRoleID(c, p.UserId)
 
-		if role != user.UserInfo_SELF && role != user.UserInfo_ADMIN {
+		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}

@@ -24,7 +24,7 @@ type srv struct{}
  * @apiDescription Create avatar and return avatarId.
  *
  * @apiParam {int32} userId user id
- * @apiParam {bytes} file accept [file type](https://github.com/h2non/filetype#image)
+ * @apiParam {bytes} file file bytes
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found <br> 3 for invalid file type
  * @apiSuccess {int32} avatarId new avatar id
  * @apiUse DBServerDown
