@@ -131,7 +131,8 @@ export default class UserScreen extends Component {
                             source={require('../../assets/icons/right.png')}
                             overlayContainerStyle={{backgroundColor: 'white'}}
                         />}
-                        title={this.state.userName}
+                        //title={this.state.userName}
+                        title={Config.userInfo.userName}
                         titleStyle={{ color: 'black', fontSize: 25 }}
                         subtitle={this.state.telephone}
                         subtitleStyle={{ color: 'black', fontSize: 15 }}

@@ -94,13 +94,13 @@ export default class UserInfoScreen extends Component {
                                     }
                                     else {
                                         fetch((Config.fetchPrefix + 'user'), {
-                                            method: 'POST',
+                                            method: 'PUT',
                                             headers: {
                                                 Accept: 'application/json',
                                                 'Content-Type': 'application/x-www-form-urlencoded',
                                                 Authorization: ('Bearer ' + Config.JaccountToken.token),
                                             },
-                                            body: ('userId=1&telephone=' + this.changeTelephone),
+                                            body: ('userId=3&telephone=' + this.changeTelephone),
                                         })
                                             .then((response) => {
                                                 if(response.ok) {
@@ -118,6 +118,7 @@ export default class UserInfoScreen extends Component {
                                                         telephone: this.changeTelephone,
                                                         isChangeTelephoneVisible: false
                                                     });
+                                                    Config.userInfo.telephone = this.changeTelephone;
                                                     this.changeTelephone='';
                                                 } else {
                                                     this.changeTelephone='';
@@ -203,13 +204,13 @@ export default class UserInfoScreen extends Component {
                                     }
                                     else {
                                         fetch((Config.fetchPrefix + 'user'), {
-                                            method: 'POST',
+                                            method: 'PUT',
                                             headers: {
                                                 Accept: 'application/json',
                                                 'Content-Type': 'application/x-www-form-urlencoded',
                                                 Authorization: ('Bearer ' + Config.JaccountToken.token),
                                             },
-                                            body: ('userId=1&userName=' + this.changeUserName),
+                                            body: ('userId=3&userName=' + this.changeUserName),
                                         })
                                             .then((response) => {
                                                 if(response.ok) {
@@ -227,6 +228,7 @@ export default class UserInfoScreen extends Component {
                                                         userName: this.changeUserName,
                                                         isChangeUserNameVisible: false
                                                     });
+                                                    Config.userInfo.userName = this.changeUserName;
                                                     this.changeUserName='';
                                                 } else {
                                                     this.changeUserName='';
