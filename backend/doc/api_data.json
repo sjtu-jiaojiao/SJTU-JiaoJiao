@@ -1025,6 +1025,36 @@
           },
           {
             "group": "Parameter",
+            "type": "int32",
+            "optional": true,
+            "field": "status",
+            "description": "<p>status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": true,
+            "field": "goodName",
+            "description": "<p>good name(fuzzy)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "lowPrice",
+            "defaultValue": "0",
+            "description": "<p>low bound of price</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "highPrice",
+            "defaultValue": "inf",
+            "description": "<p>high bound of price</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "uint32",
             "optional": false,
             "field": "limit",
@@ -1794,6 +1824,36 @@
             "optional": true,
             "field": "userId",
             "description": "<p>userId</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": true,
+            "field": "status",
+            "description": "<p>status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": true,
+            "field": "goodName",
+            "description": "<p>good name(fuzzy)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "lowPrice",
+            "defaultValue": "0",
+            "description": "<p>low bound of price</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "highPrice",
+            "defaultValue": "inf",
+            "description": "<p>high bound of price</p>"
           },
           {
             "group": "Parameter",

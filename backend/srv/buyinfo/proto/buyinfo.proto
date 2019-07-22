@@ -47,8 +47,12 @@ message BuyInfoCreateResponse {
 
 message BuyInfoFindRequest {
     int32 userId = 1;
-    uint32 limit = 2;
-    uint32 offset = 3;
+    int32 status = 2;
+    string goodName = 3;
+    double lowPrice = 4;
+    double highPrice = 5;
+    uint32 limit = 6;
+    uint32 offset = 7;
 }
 
 message BuyInfoFindResponse {

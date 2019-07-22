@@ -179,6 +179,10 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
  * @apiDescription Find SellInfo.
  *
  * @apiParam {int32} [userId] userId
+ * @apiParam {int32} [status] status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
+ * @apiParam {int32} [goodName] good name(fuzzy)
+ * @apiParam {int32} lowPrice=0 low bound of price
+ * @apiParam {int32} highPrice=inf high bound of price
  * @apiParam {uint32} limit=100 row limit
  * @apiParam {uint32} offset=0 row offset
  * @apiSuccess {list} sellInfo see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
@@ -188,12 +192,26 @@ func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *
 	if req.Limit == 0 {
 		req.Limit = 100
 	}
+	if req.LowPrice < 0 {
+		req.LowPrice = 0
+	}
 
 	var res []*db.SellInfo
-	tb := db.Ormer
+	tb := db.Ormer.Table("sell_infos").Joins("JOIN goods ON sell_infos.good_id=goods.id")
 	if req.UserId != 0 {
 		tb = tb.Where("user_id = ?", req.UserId)
 	}
+	if req.Status != 0 {
+		tb = tb.Where("status = ?", req.Status)
+	}
+	if req.GoodName != "" {
+		tb = tb.Where("good_name LIKE ?", "%"+req.GoodName+"%")
+	}
+	tb = tb.Where("price >= ?", req.LowPrice)
+	if req.HighPrice != 0 {
+		tb = tb.Where("price <= ?", req.HighPrice)
+	}
+
 	err := tb.Limit(req.Limit).Offset(req.Offset).Find(&res).Error
 	if utils.LogContinue(err, utils.Warning) {
 		return err
