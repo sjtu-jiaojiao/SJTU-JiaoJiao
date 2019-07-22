@@ -11,6 +11,24 @@ import (
 
 type mockSrv struct{}
 
+func (a *mockSrv) Update(ctx context.Context, in *content.ContentUpdateRequest, opts ...client.CallOption) (*content.ContentUpdateResponse, error) {
+	var rsp content.ContentUpdateResponse
+	// TODO
+	return &rsp, nil
+}
+
+func (a *mockSrv) Query(ctx context.Context, in *content.ContentQueryRequest, opts ...client.CallOption) (*content.ContentQueryResponse, error) {
+	var rsp content.ContentQueryResponse
+	// TODO
+	return &rsp, nil
+}
+
+func (a *mockSrv) Check(ctx context.Context, in *content.ContentCheckRequest, opts ...client.CallOption) (*content.ContentCheckResponse, error) {
+	var rsp content.ContentCheckResponse
+	// TODO
+	return &rsp, nil
+}
+
 func (a *mockSrv) Create(ctx context.Context, req *content.ContentCreateRequest, opts ...client.CallOption) (*content.ContentCreateResponse, error) {
 	var rsp content.ContentCreateResponse
 	if bytes.Equal(req.Content, []byte{0}) || req.Type == 0 {
@@ -18,6 +36,10 @@ func (a *mockSrv) Create(ctx context.Context, req *content.ContentCreateRequest,
 	} else if req.ContentId == "" && req.ContentToken == "" {
 		rsp.Status = content.ContentCreateResponse_SUCCESS
 	} else if req.ContentId != "" && req.ContentToken != "" {
+		if req.ContentId == "invalid" {
+			rsp.Status = content.ContentCreateResponse_INVALID_TYPE
+			return &rsp, nil
+		}
 		if req.ContentId == "error" {
 			return nil, errors.New("")
 		}

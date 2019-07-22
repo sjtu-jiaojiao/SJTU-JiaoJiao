@@ -31,6 +31,12 @@ allprojects {
             // Android JSC is installed from npm
             url("$rootDir/../node_modules/jsc-android/dist")
         }
+		
+		// ADD FOR react-native-image-crop-picker 
+		maven { url 'https://maven.google.com' }
+
+		// ADD FOR react-native-image-crop-picker 
+		maven { url "https://jitpack.io" }
 
         google()
         jcenter()

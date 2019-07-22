@@ -15,121 +15,118 @@ func TestSrvInfoQuery(t *testing.T) {
 	var req sellinfo.SellInfoQueryRequest
 
 	info := db.SellInfo{
-		ID:          1000,
+		ID:          1100,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1000,
-		GoodId:      1000,
+		GoodId:      1101,
 	}
 	good := db.Good{
-		ID:          1000,
+		ID:          1101,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
 	}
-	tf := func(sellId int, goodName string, description string, contentId string, userId int) {
+	tf := func(sellId int, contentId string, userId int) {
 		var rsp sellinfo.SellInfoMsg
 		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.SellInfoId, ShouldEqual, sellId)
-		So(rsp.GoodName, ShouldEqual, goodName)
-		So(rsp.Description, ShouldEqual, description)
 		So(rsp.ContentId, ShouldEqual, contentId)
 		So(rsp.UserId, ShouldEqual, userId)
 	}
 	Convey("Test SellInfo Query", t, func() {
-		tf(0, "", "", "", 0)
+		tf(0, "", 0)
 
 		So(db.Ormer.Create(&good).Error, ShouldBeNil)
 		So(db.Ormer.Create(&info).Error, ShouldBeNil)
 
-		req.SellInfoId = 1000
-		tf(1000, "good", "Very good!", "123456789", 1000)
+		req.SellInfoId = 1100
+		tf(1100, "123456789", 1000)
 
-		req.SellInfoId = 1001
-		tf(0, "", "", "", 0)
+		req.SellInfoId = 1101
+		tf(0, "", 0)
 
-		So(db.Ormer.Delete(&db.SellInfo{ID: 1000}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 1000}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.SellInfo{ID: 1100}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1101}).Error, ShouldBeNil)
 	})
-
 }
 
 func TestSrvInfoCreate(t *testing.T) {
-	var s srv
-	var req sellinfo.SellInfoCreateRequest
-
-	getToken := func() (string, string) {
-		var sc srvContent
-		var reqc sellinfo.ContentCreateRequest
-		var rspc sellinfo.ContentCreateResponse
-
-		reqc.Content = []byte{1, 2, 3, 4, 5, 6}
-		reqc.Type = sellinfo.ContentCreateRequest_PICTURE
-		So(sc.Create(context.TODO(), &reqc, &rspc), ShouldBeNil)
-		So(rspc.Status, ShouldEqual, sellinfo.ContentCreateResponse_SUCCESS)
-		So(rspc.ContentId, ShouldNotBeBlank)
-		So(rspc.ContentToken, ShouldNotBeBlank)
-
-		return rspc.ContentId, rspc.ContentToken
-	}
-
-	tf := func(status sellinfo.SellInfoCreateResponse_Status, success bool) int32 {
-		var rsp sellinfo.SellInfoCreateResponse
-		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, status)
-		if success {
-			So(rsp.SellInfoId, ShouldNotEqual, 0)
-		} else {
-			So(rsp.SellInfoId, ShouldEqual, 0)
-		}
-		return rsp.SellInfoId
-	}
-
-	Convey("Test SellInfo Create", t, func() {
-		tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
-
-		req.GoodName = "good"
-		tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
-
-		req.ValidTime = 1893427200
-		tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
-
-		req.UserId = 1000
-		id := tf(sellinfo.SellInfoCreateResponse_SUCCESS, true)
-
-		tmp := db.SellInfo{
-			ID: id,
-		}
-		So(db.Ormer.First(&tmp).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: tmp.GoodId}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&tmp).Error, ShouldBeNil)
-
-		req.ContentId = "123456789abc123456789abc"
-		tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
-
-		req.ContentToken = "jlkfjaoiu2709429-98247ksf"
-		tf(sellinfo.SellInfoCreateResponse_INVALID_TOKEN, false)
-
-		req.ContentId = "1234"
-		tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
-
-		req.ContentId, req.ContentToken = getToken()
-		id = tf(sellinfo.SellInfoCreateResponse_SUCCESS, true)
-
-		tmp = db.SellInfo{
-			ID: id,
-		}
-		So(db.Ormer.First(&tmp).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: tmp.GoodId}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&tmp).Error, ShouldBeNil)
-		var sc srvContent
-		var rspc sellinfo.ContentDeleteResponse
-		err := sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
-			ContentId:    req.ContentId,
-			ContentToken: req.ContentToken,
-		}, &rspc)
-		So(err, ShouldBeNil)
-	})
+	// TODO
+	//var s srv
+	//var req sellinfo.SellInfoCreateRequest
+	//srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
+	//	func() interface{} { return mock.NewContentService() }).(content.ContentService)
+	//
+	//getToken := func() (string, string) {
+	//	rsp, err := srv.Create(context.TODO(), &content.ContentCreateRequest{
+	//		Content: []byte{1, 2, 3, 4, 5, 6},
+	//		Type:    content.ContentCreateRequest_PICTURE,
+	//	})
+	//	So(err, ShouldBeNil)
+	//	So(rsp.Status, ShouldEqual, content.ContentCreateResponse_SUCCESS)
+	//	So(rsp.ContentId, ShouldNotBeBlank)
+	//	So(rsp.ContentToken, ShouldNotBeBlank)
+	//
+	//	return rsp.ContentId, rsp.ContentToken
+	//}
+	//
+	//tf := func(status sellinfo.SellInfoCreateResponse_Status, success bool) int32 {
+	//	var rsp sellinfo.SellInfoCreateResponse
+	//	So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
+	//	So(rsp.Status, ShouldEqual, status)
+	//	if success {
+	//		So(rsp.SellInfoId, ShouldNotEqual, 0)
+	//	} else {
+	//		So(rsp.SellInfoId, ShouldEqual, 0)
+	//	}
+	//	return rsp.SellInfoId
+	//}
+	//
+	//Convey("Test SellInfo Create", t, func() {
+	//	tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
+	//
+	//	req.GoodName = "good"
+	//	tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
+	//
+	//	req.ValidTime = 1893427200
+	//	tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
+	//
+	//	req.UserId = 1000
+	//	id := tf(sellinfo.SellInfoCreateResponse_SUCCESS, true)
+	//
+	//	tmp := db.SellInfo{
+	//		ID: id,
+	//	}
+	//	So(db.Ormer.First(&tmp).Error, ShouldBeNil)
+	//	So(db.Ormer.Delete(&db.Good{ID: tmp.GoodId}).Error, ShouldBeNil)
+	//	So(db.Ormer.Delete(&tmp).Error, ShouldBeNil)
+	//
+	//	req.ContentId = "123456789abc123456789abc"
+	//	tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
+	//
+	//	req.ContentToken = "jlkfjaoiu2709429-98247ksf"
+	//	tf(sellinfo.SellInfoCreateResponse_INVALID_TOKEN, false)
+	//
+	//	req.ContentId = "1234"
+	//	tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
+	//
+	//	req.ContentId, req.ContentToken = getToken()
+	//	id = tf(sellinfo.SellInfoCreateResponse_SUCCESS, true)
+	//
+	//	tmp = db.SellInfo{
+	//		ID: id,
+	//	}
+	//	So(db.Ormer.First(&tmp).Error, ShouldBeNil)
+	//	So(db.Ormer.Delete(&db.Good{ID: tmp.GoodId}).Error, ShouldBeNil)
+	//	So(db.Ormer.Delete(&tmp).Error, ShouldBeNil)
+	//
+	//	_, err := srv.Delete(context.TODO(), &content.ContentDeleteRequest{
+	//		ContentId:    req.ContentId,
+	//		ContentToken: req.ContentToken,
+	//	})
+	//	So(err, ShouldBeNil)
+	//})
 }
 
 func TestSrvInfoFind(t *testing.T) {
@@ -142,7 +139,7 @@ func TestSrvInfoFind(t *testing.T) {
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1000,
-		GoodId:      1000,
+		GoodId:      1010,
 	}
 	info2 := db.SellInfo{
 		ID:          1001,
@@ -150,7 +147,7 @@ func TestSrvInfoFind(t *testing.T) {
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1000,
-		GoodId:      1001,
+		GoodId:      1011,
 	}
 	info3 := db.SellInfo{
 		ID:          1002,
@@ -158,22 +155,22 @@ func TestSrvInfoFind(t *testing.T) {
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1001,
-		GoodId:      1002,
+		GoodId:      1012,
 	}
 	good1 := db.Good{
-		ID:          1000,
+		ID:          1010,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
 	}
 	good2 := db.Good{
-		ID:          1001,
+		ID:          1011,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
 	}
 	good3 := db.Good{
-		ID:          1002,
+		ID:          1012,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
@@ -192,9 +189,9 @@ func TestSrvInfoFind(t *testing.T) {
 		So(db.Ormer.Delete(&db.SellInfo{ID: 1001}).Error, ShouldBeNil)
 		So(db.Ormer.Delete(&db.SellInfo{ID: 1002}).Error, ShouldBeNil)
 
-		So(db.Ormer.Delete(&db.Good{ID: 1000}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 1001}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 1002}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1010}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1011}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1012}).Error, ShouldBeNil)
 	}
 	testLen := func(length int) {
 		var rsp sellinfo.SellInfoFindResponse
@@ -227,69 +224,6 @@ func TestSrvInfoFind(t *testing.T) {
 
 		end()
 	})
-}
-
-func TestSrvContentCreate(t *testing.T) {
-	var req sellinfo.ContentCreateRequest
-
-	tf := func(status sellinfo.ContentCreateResponse_Status, success bool) (string, string) {
-		var s srvContent
-		var rsp sellinfo.ContentCreateResponse
-		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, status)
-		if success {
-			So(rsp.ContentId, ShouldNotBeBlank)
-			So(rsp.ContentToken, ShouldNotBeBlank)
-		} else {
-			So(rsp.ContentId, ShouldBeBlank)
-			So(rsp.ContentToken, ShouldBeBlank)
-		}
-		return rsp.ContentId, rsp.ContentToken
-	}
-
-	Convey("Test SellInfo Content Create", t, func() {
-		req.Content = []byte{0}
-		tf(sellinfo.ContentCreateResponse_INVALID_PARAM, false)
-
-		req.Type = sellinfo.ContentCreateRequest_PICTURE
-		tf(sellinfo.ContentCreateResponse_INVALID_PARAM, false)
-		req.Type = 0
-		req.Content = []byte{1, 2, 3, 4, 5, 6}
-		tf(sellinfo.ContentCreateResponse_INVALID_PARAM, false)
-		req.Type = sellinfo.ContentCreateRequest_PICTURE
-		req.ContentId = "1234"
-		tf(sellinfo.ContentCreateResponse_INVALID_PARAM, false)
-		req.ContentId = ""
-		req.ContentToken = "12463-25897fsfs-5232"
-		tf(sellinfo.ContentCreateResponse_INVALID_PARAM, false)
-
-		req.ContentId = "1234"
-		tf(sellinfo.ContentCreateResponse_INVALID_TOKEN, false)
-
-		req.ContentId = ""
-		req.ContentToken = ""
-		id, token := tf(sellinfo.ContentCreateResponse_SUCCESS, true)
-
-		req.ContentId = id
-		req.ContentToken = token
-		tf(sellinfo.ContentCreateResponse_SUCCESS, true)
-		tf(sellinfo.ContentCreateResponse_SUCCESS, true)
-
-		req.ContentToken = "12463-25897fsfs-5232"
-		tf(sellinfo.ContentCreateResponse_INVALID_TOKEN, false)
-
-		var sc srvContent
-		var rspc sellinfo.ContentDeleteResponse
-		err := sc.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
-			ContentId:    id,
-			ContentToken: token,
-		}, &rspc)
-		So(err, ShouldBeNil)
-	})
-}
-
-func TestSrvContentDelete(t *testing.T) {
-	// TODO
 }
 
 func TestMain(m *testing.M) {

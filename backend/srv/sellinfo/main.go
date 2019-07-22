@@ -3,13 +3,15 @@ package main
 import (
 	"context"
 	db "jiaojiao/database"
+	"jiaojiao/srv/content/mock"
+	content "jiaojiao/srv/content/proto"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
 	"jiaojiao/utils"
 	"time"
 
+	"github.com/micro/go-micro/client"
+
 	"github.com/jinzhu/gorm"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type srv struct{}
@@ -136,17 +138,22 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
 		rsp.SellInfoId = id
 	} else if req.ContentId != "" && req.ContentToken != "" {
-		collection := db.MongoDatabase.Collection("sellinfo")
-		rid, err := primitive.ObjectIDFromHex(req.ContentId)
+		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} {
+			return content.NewContentService(name, c)
+		}, func() interface{} {
+			return mock.NewContentService()
+		}).(content.ContentService)
+		microRsp, err := srv.Check(context.TODO(), &content.ContentCheckRequest{
+			ContentId:    req.ContentId,
+			ContentToken: req.ContentToken,
+		})
 		if err != nil {
+			return err
+		}
+		if microRsp.Status == content.ContentCheckResponse_INVALID_PARAM {
 			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 			return nil
-		}
-		_, err = collection.FindOne(db.MongoContext, bson.D{
-			{"_id", rid},
-			{"token", req.ContentToken},
-		}).DecodeBytes()
-		if err != nil {
+		} else if microRsp.Status == content.ContentCheckResponse_INVALID {
 			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_TOKEN
 			return nil
 		}
@@ -172,49 +179,75 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
  * @apiDescription Find SellInfo.
  *
  * @apiParam {int32} [userId] userId
+ * @apiParam {int32} [status] status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
+ * @apiParam {string} [goodName] good name(fuzzy)
+ * @apiParam {double} lowPrice=0 low bound of price
+ * @apiParam {double} highPrice=inf high bound of price
  * @apiParam {uint32} limit=100 row limit
  * @apiParam {uint32} offset=0 row offset
  * @apiSuccess {list} sellInfo see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
  * @apiUse DBServerDown
  */
 func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *sellinfo.SellInfoFindResponse) error {
+	type result struct {
+		SellInfoId  int32
+		Status      int32
+		ReleaseTime time.Time
+		ValidTime   time.Time
+		GoodName    string
+		Price       float64
+		Description string
+		ContentId   string
+		UserId      int32
+	}
+
 	if req.Limit == 0 {
 		req.Limit = 100
 	}
+	if req.LowPrice < 0 {
+		req.LowPrice = 0
+	}
+	if req.HighPrice < 0 {
+		req.HighPrice = 0
+	}
 
-	var res []*db.SellInfo
-	tb := db.Ormer
+	var res []*result
+	tb := db.Ormer.Table("sell_infos, goods").Select("sell_infos.id as sell_info_id, status, release_time, " +
+		"valid_time, good_name, price, description, content_id, user_id").Where("sell_infos.good_id = goods.id")
 	if req.UserId != 0 {
 		tb = tb.Where("user_id = ?", req.UserId)
 	}
+	if req.Status != 0 {
+		tb = tb.Where("status = ?", req.Status)
+	}
+	if req.GoodName != "" {
+		tb = tb.Where("good_name LIKE ?", "%"+req.GoodName+"%")
+	}
+	if req.LowPrice != 0 {
+		tb = tb.Where("price >= ?", req.LowPrice)
+	}
+	if req.HighPrice != 0 {
+		tb = tb.Where("price <= ?", req.HighPrice)
+	}
+
 	err := tb.Limit(req.Limit).Offset(req.Offset).Find(&res).Error
 	if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
-	for i, v := range res {
-		rsp.SellInfo = append(rsp.SellInfo, new(sellinfo.SellInfoMsg))
-		good := db.Good{
-			ID: v.GoodId,
-		}
-		err = db.Ormer.First(&good).Error
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-		parseSellInfo(v, &good, rsp.SellInfo[i])
+	for _, v := range res {
+		rsp.SellInfo = append(rsp.SellInfo, &sellinfo.SellInfoMsg{
+			SellInfoId:  v.SellInfoId,
+			Status:      v.Status,
+			ReleaseTime: v.ReleaseTime.Unix(),
+			ValidTime:   v.ValidTime.Unix(),
+			GoodName:    v.GoodName,
+			Price:       v.Price,
+			Description: v.Description,
+			ContentId:   v.ContentId,
+			UserId:      v.UserId,
+		})
 	}
 	return nil
-}
-
-func parseSellInfo(s *db.SellInfo, g *db.Good, d *sellinfo.SellInfoMsg) {
-	d.SellInfoId = s.ID
-	d.Status = s.Status
-	d.ReleaseTime = s.ReleaseTime.Unix()
-	d.ValidTime = s.ValidTime.Unix()
-	d.GoodName = g.GoodName
-	d.Price = g.Price
-	d.Description = g.Description
-	d.ContentId = g.ContentId
-	d.UserId = s.UserId
 }
 
 func main() {

@@ -4,7 +4,6 @@ import (
 	"context"
 	"jiaojiao/srv/avatar/mock"
 	avatar "jiaojiao/srv/avatar/proto"
-	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 
 	"github.com/gin-gonic/gin"
@@ -37,7 +36,7 @@ func addAvatar(c *gin.Context) {
 	var p param
 
 	file, err := c.FormFile("file")
-	if err == nil && !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
+	if err == nil && !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
 		if file.Size > 1024*1024*5 { // 5M
 			c.AbortWithStatus(413)
 			return
@@ -45,7 +44,7 @@ func addAvatar(c *gin.Context) {
 
 		role := utils.GetRoleID(c, p.UserId)
 
-		if role != user.UserInfo_SELF && role != user.UserInfo_ADMIN {
+		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}
@@ -63,7 +62,7 @@ func addAvatar(c *gin.Context) {
 			return
 		}
 
-		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return avatar.NewAvatarService(name, c) },
+		srv := utils.CallMicroService("avatar", func(name string, c client.Client) interface{} { return avatar.NewAvatarService(name, c) },
 			func() interface{} { return mock.NewAvatarService() }).(avatar.AvatarService)
 		rsp, err := srv.Create(context.TODO(), &avatar.AvatarCreateRequest{
 			UserId: p.UserId,

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Text, View, TextInput, Alert} from 'react-native';
 import {ListItem, Avatar, Button, Icon, Overlay} from "react-native-elements";
 import Config from "../../Config";
-import {NavigationActions} from "react-navigation";
+import {NavigationActions, HeaderBackButton } from "react-navigation";
 
 export default class UserInfoScreen extends Component {
     constructor(props) {
@@ -21,13 +21,20 @@ export default class UserInfoScreen extends Component {
         this.changeUserName = '';
     }
 
-    static navigationOptions = {
-        headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23}}>个人信息</Text>)
+    static navigationOptions = ({navigation}) => {
+        return{
+            headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23}}>个人信息</Text>),
+            headerLeft:(<HeaderBackButton onPress={()=> navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0)}/>),
+        }
     };
 
     isTelephoneValid() {
         let length = this.changeTelephone.length;
         return length === 11 && /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1})|)+\d{8})$/.test(this.changeTelephone);
+    }
+
+    isUserNameValid() {
+        return /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){0,31}$/.test(this.changeUserName);
     }
 
     render() {
@@ -94,13 +101,13 @@ export default class UserInfoScreen extends Component {
                                     }
                                     else {
                                         fetch((Config.fetchPrefix + 'user'), {
-                                            method: 'POST',
+                                            method: 'PUT',
                                             headers: {
                                                 Accept: 'application/json',
                                                 'Content-Type': 'application/x-www-form-urlencoded',
                                                 Authorization: ('Bearer ' + Config.JaccountToken.token),
                                             },
-                                            body: ('userId=1&telephone=' + this.changeTelephone),
+                                            body: ('userId=3&telephone=' + this.changeTelephone),
                                         })
                                             .then((response) => {
                                                 if(response.ok) {
@@ -118,6 +125,7 @@ export default class UserInfoScreen extends Component {
                                                         telephone: this.changeTelephone,
                                                         isChangeTelephoneVisible: false
                                                     });
+                                                    Config.userInfo.telephone = this.changeTelephone;
                                                     this.changeTelephone='';
                                                 } else {
                                                     this.changeTelephone='';
@@ -155,6 +163,7 @@ export default class UserInfoScreen extends Component {
                 >
                     <View style={{width: 300,}}>
                         <Text style={{fontSize: 17}}>请输入新的用户名</Text>
+                        <Text style={{fontSize: 13}}>不超过32位，且以字母开头、可带数字、“_”、“.”</Text>
                         <TextInput
                             autoFocus={true}
                             style={{borderWidth: 1, borderColor: 'black', textAlign: 'center'}}
@@ -201,15 +210,27 @@ export default class UserInfoScreen extends Component {
                                             {cancelable: false},
                                         )
                                     }
+                                    else if(this.isUserNameValid() === false) {
+                                        Alert.alert(
+                                            '用户名不合法',
+                                            '要求用户名不超过32位，且以字母开头、可带数字、“_”、“.”',
+                                            [
+                                                {text: '好', onPress: () => {
+                                                        this.setState({isChangeUserNameVisible: true})
+                                                    }}
+                                            ],
+                                            {cancelable: false},
+                                        )
+                                    }
                                     else {
                                         fetch((Config.fetchPrefix + 'user'), {
-                                            method: 'POST',
+                                            method: 'PUT',
                                             headers: {
                                                 Accept: 'application/json',
                                                 'Content-Type': 'application/x-www-form-urlencoded',
                                                 Authorization: ('Bearer ' + Config.JaccountToken.token),
                                             },
-                                            body: ('userId=1&userName=' + this.changeUserName),
+                                            body: ('userId=3&userName=' + this.changeUserName),
                                         })
                                             .then((response) => {
                                                 if(response.ok) {
@@ -222,11 +243,12 @@ export default class UserInfoScreen extends Component {
                                                                 }}
                                                         ],
                                                         {cancelable: false},
-                                                    )
+                                                    );
                                                     this.setState({
                                                         userName: this.changeUserName,
                                                         isChangeUserNameVisible: false
                                                     });
+                                                    Config.userInfo.userName = this.changeUserName;
                                                     this.changeUserName='';
                                                 } else {
                                                     this.changeUserName='';

@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import {
     createBottomTabNavigator,
     createStackNavigator,
-    createAppContainer
+    createAppContainer, NavigationActions
 } from "react-navigation";
 import {Avatar, Image} from 'react-native-elements';
 
@@ -65,6 +65,13 @@ const TabBar = createBottomTabNavigator({
     User: { screen: UserStack },
 },{
     defaultNavigationOptions: ({ navigation }) => ({
+        tabBarOnPress: (args) => {
+            if (args.navigation.state.routeName === 'Release') {
+                navigation.reset([NavigationActions.navigate({routeName: 'Release'})], 0);
+            } else {
+                args.defaultHandler();
+            }
+        },
         tabBarLabel: ({ focusd, tintColor }) => {
             const { routeName } = navigation.state;
             switch (routeName) {

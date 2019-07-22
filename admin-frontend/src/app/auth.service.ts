@@ -18,7 +18,8 @@ export class AuthService {
     //JWTTokenModely
     this.tokenService.set(res);
     const jwt :JWTTokenModel =  this.tokenService.get<JWTTokenModel>(JWTTokenModel);
-    if(jwt.payload.role !== 1) {
+    console.log(jwt);
+    if(jwt.payload.role !== 10) {
       this.logout();
     console.log( 'not admin');
   }

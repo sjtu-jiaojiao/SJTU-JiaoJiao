@@ -5,19 +5,20 @@
 - nodejs/npm
 - 建议系统环境为Linux系统，windows下可能出现各种问题
 
-## 其他依赖
+## 依赖安装
 
-    go get github.com/micro/micro
-    go get github.com/smartystreets/goconvey
-    go get github.com/oxequa/realize
-    go get github.com/micro/protoc-gen-micro
-    go get github.com/golang/protobuf/protoc-gen-go
-    npm install apidoc -g
+    make deps
     
 ## 本地启动
 一键启动：
 
-    go run run.go run_*.go
+linux:
+
+    go run run.go run_linux.go
+
+windows:
+
+    go run run.go run_windows.go
 
 ## 本地默认地址
 - consul服务：`localhost:8500`
@@ -43,21 +44,6 @@
   - `test_*`：测试配置，请勿修改
 - `config_ttl`：远程配置超时时间（秒）
 - `test`：测试配置，请勿修改
-
-`consul.json` 配置：
-
-- `test`：测试配置，请勿修改
-- `srv_config`：微服务配置
-  - `namespace`：Service的namespace
-
-- `api_config`：API配置
-  - `version`：API版本
-  - `namespace`：APIGateway的namespace
-
-- `sys_config`：系统配置
-  - `auth_url`：OAuth auth url
-  - `token_url`：OAuth token url
-  - `logout_url`：OAuth logout url
 
 ### 环境变量
 **环境变量设置敏感信息，相关内容禁止提交到仓库**

@@ -49,7 +49,7 @@ export class UserService {
 
   /** PUT: update the user on the server */
   updateUser(user): Observable<any> {
-    return this.http.post(this.usersUrl, user, httpOptions).pipe(
+    return this.http.put(this.usersUrl, user, httpOptions).pipe(
       catchError(this.handleError<any>('updateUser'))
     );
   }
