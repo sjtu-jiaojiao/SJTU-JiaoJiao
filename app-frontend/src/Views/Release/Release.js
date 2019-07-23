@@ -48,7 +48,7 @@ export default class ReleaseScreen extends Component {
     render() {
         const buttons = ['出售信息', '求购信息'];
         const { selectedIndex } = this.state;
-        /*
+
         if (Config.userInfo.userId === -1) {
             Alert.alert(
                 '未登录',
@@ -68,8 +68,9 @@ export default class ReleaseScreen extends Component {
                     },
                 ],
                 {cancelable: false},
-            )
-        } else */{
+            );
+            return (<View/>);
+        } else {
             return (
                 <View style={{backgroundColor: '#EFEFF5'}}>
                     <ButtonGroup
@@ -205,6 +206,5 @@ export default class ReleaseScreen extends Component {
                 </View>
             )
         }
-        //return (<View/>);
     }
 }

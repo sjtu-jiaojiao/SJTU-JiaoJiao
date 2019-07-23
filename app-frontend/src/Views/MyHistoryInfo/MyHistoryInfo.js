@@ -51,7 +51,8 @@ export default class MyHistoryInfoScreen extends Component {
                     HistoryInfoId: 1,
                     price: 12.02,
                     releaseTime: "2019.02.28",
-                    validTime: "2019.03.05",
+                    validTime: "20",
+                    dealTime: '2019.03.21',
                     tradingPerson: '王新哲'
                 },
                 {
