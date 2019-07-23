@@ -10,6 +10,7 @@ import (
 
 type mockUserSrv struct{}
 
+// Create is user create mock
 func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, opts ...client.CallOption) (*user.UserCreateResponse, error) {
 	var rsp user.UserCreateResponse
 	if req.StudentId == "" || req.StudentName == "" {
@@ -44,6 +45,7 @@ func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, o
 	return &rsp, nil
 }
 
+// Query is user query mock
 func (a *mockUserSrv) Query(ctx context.Context, req *user.UserQueryRequest, opts ...client.CallOption) (*user.UserInfo, error) {
 	var rsp user.UserInfo
 	if req.UserId != 0 {
@@ -62,6 +64,7 @@ func (a *mockUserSrv) Query(ctx context.Context, req *user.UserQueryRequest, opt
 	return &rsp, nil
 }
 
+// Find is user find mock
 func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts ...client.CallOption) (*user.UserFindResponse, error) {
 	user1 := user.UserInfo{
 		UserId:      1000,
@@ -119,6 +122,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 	return &rsp, nil
 }
 
+// Update is user update mock
 func (a *mockUserSrv) Update(ctx context.Context, req *user.UserInfo, opts ...client.CallOption) (*user.UserUpdateResponse, error) {
 	var rsp user.UserUpdateResponse
 	if req.UserId == 0 {
@@ -135,6 +139,7 @@ func (a *mockUserSrv) Update(ctx context.Context, req *user.UserInfo, opts ...cl
 	return &rsp, nil
 }
 
+// NewUserService is user service mock
 func NewUserService() user.UserService {
 	return new(mockUserSrv)
 }
