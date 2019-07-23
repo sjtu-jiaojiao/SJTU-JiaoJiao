@@ -78,7 +78,7 @@ func getAuth(c *gin.Context) {
 				srv2 := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 					func() interface{} { return mockuser.NewUserService() }).(user.UserService)
 				rsp2, err := srv2.Create(context.TODO(), &user.UserCreateRequest{
-					StudentId:   rsp.StudentId,
+					StudentID:   rsp.StudentID,
 					StudentName: rsp.StudentName,
 				})
 				if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
@@ -92,12 +92,12 @@ func getAuth(c *gin.Context) {
 					if rsp2.User.Role == user.UserInfo_USER {
 						c.JSON(200, gin.H{
 							"status": auth.AuthResponse_SUCCESS,
-							"token":  utils.JWTSign(rsp2.User.UserId, user.UserInfo_USER),
+							"token":  utils.JWTSign(rsp2.User.UserID, user.UserInfo_USER),
 						})
 					} else {
 						c.JSON(200, gin.H{
 							"status": auth.AuthResponse_SUCCESS,
-							"token":  utils.JWTSign(rsp2.User.UserId, user.UserInfo_ADMIN),
+							"token":  utils.JWTSign(rsp2.User.UserID, user.UserInfo_ADMIN),
 						})
 					}
 				} else {

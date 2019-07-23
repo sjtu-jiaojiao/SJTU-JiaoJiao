@@ -21,16 +21,16 @@ type srv struct{}
  * @apiVersion 1.0.0
  * @apiGroup Service
  * @apiName Avatar.Create
- * @apiDescription Create avatar and return avatarId.
+ * @apiDescription Create avatar and return avatarID.
  *
- * @apiParam {int32} userId user id
+ * @apiParam {int32} userID user id
  * @apiParam {bytes} file file bytes, file accept [file type](https://github.com/h2non/filetype#image)
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found <br> 3 for invalid file type
- * @apiSuccess {int32} avatarId new avatar id
+ * @apiSuccess {int32} avatarID new avatar id
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *avatar.AvatarCreateRequest, rsp *avatar.AvatarCreateResponse) error {
-	if bytes.Equal(req.File, []byte{0}) || req.UserId == 0 {
+	if bytes.Equal(req.File, []byte{0}) || req.UserID == 0 {
 		rsp.Status = avatar.AvatarCreateResponse_INVALID_PARAM
 	} else {
 		if !utils.CheckInTest() && !filetype.IsImage(req.File) {
@@ -39,7 +39,7 @@ func (a *srv) Create(ctx context.Context, req *avatar.AvatarCreateRequest, rsp *
 		}
 
 		usr := db.User{
-			ID: req.UserId,
+			ID: req.UserID,
 		}
 		err := db.Ormer.First(&usr).Error
 		if gorm.IsRecordNotFoundError(err) {
@@ -59,13 +59,13 @@ func (a *srv) Create(ctx context.Context, req *avatar.AvatarCreateRequest, rsp *
 			return err
 		}
 
-		usr.AvatarId = microRsp.FileId
+		usr.AvatarID = microRsp.FileID
 		err = db.Ormer.Save(&usr).Error
 		if utils.LogContinue(err, utils.Warning) {
 			return err
 		}
 
-		rsp.AvatarId = microRsp.FileId
+		rsp.AvatarID = microRsp.FileID
 		rsp.Status = avatar.AvatarCreateResponse_SUCCESS
 	}
 	return nil

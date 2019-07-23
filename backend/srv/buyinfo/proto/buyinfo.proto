@@ -7,21 +7,21 @@ service BuyInfo {
 }
 
 message BuyInfoMsg {
-    int32 buyInfoId = 1;
+    int32 buyInfoID = 1;
     int32 status = 2;
     int64 releaseTime = 3;
     int64 validTime = 4;
     string goodName = 5;
     double price = 6;
     string description = 7;
-    string contentId = 8;
-    int32 userId = 9;
+    string contentID = 8;
+    int32 userID = 9;
 
     bool clearEmpty = 99;
 }
 
 message BuyInfoQueryRequest {
-    int32 buyInfoId = 1;
+    int32 buyInfoID = 1;
 }
 
 message BuyInfoCreateRequest {
@@ -29,9 +29,9 @@ message BuyInfoCreateRequest {
     string goodName = 2;
     double price = 3;
     string description = 4;
-    string contentId = 5;
+    string contentID = 5;
     string contentToken = 6;
-    int32 userId = 7;
+    int32 userID = 7;
 }
 
 message BuyInfoCreateResponse {
@@ -42,11 +42,11 @@ message BuyInfoCreateResponse {
         INVALID_TOKEN = 2;
     }
     Status status = 1;
-    int32 buyInfoId = 2;
+    int32 buyInfoID = 2;
 }
 
 message BuyInfoFindRequest {
-    int32 userId = 1;
+    int32 userID = 1;
     int32 status = 2;
     string goodName = 3;
     double lowPrice = 4;

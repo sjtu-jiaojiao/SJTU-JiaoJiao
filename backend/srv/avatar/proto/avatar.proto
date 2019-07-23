@@ -5,7 +5,7 @@ service Avatar {
 }
 
 message AvatarCreateRequest {
-    int32 userId = 1;
+    int32 userID = 1;
     bytes file = 2;
 }
 
@@ -18,5 +18,5 @@ message AvatarCreateResponse {
         INVALID_TYPE = 3;
     }
     Status status = 1;
-    string avatarId = 2;
+    string avatarID = 2;
 }

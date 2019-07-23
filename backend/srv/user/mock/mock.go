@@ -13,33 +13,33 @@ type mockUserSrv struct{}
 // Create is user create mock
 func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, opts ...client.CallOption) (*user.UserCreateResponse, error) {
 	var rsp user.UserCreateResponse
-	if req.StudentId == "" || req.StudentName == "" {
+	if req.StudentID == "" || req.StudentName == "" {
 		rsp.Status = user.UserCreateResponse_INVALID_PARAM
 	} else {
-		if req.StudentId == "1000" {
+		if req.StudentID == "1000" {
 			rsp.Status = user.UserCreateResponse_SUCCESS
 			rsp.User = new(user.UserInfo)
-			rsp.User.UserId = 1
+			rsp.User.UserID = 1
 			rsp.User.Status = user.UserInfo_NORMAL
 			rsp.User.Role = user.UserInfo_USER
-		} else if req.StudentId == "1001" {
+		} else if req.StudentID == "1001" {
 			rsp.Status = user.UserCreateResponse_SUCCESS
 			rsp.User = new(user.UserInfo)
-			rsp.User.UserId = 2
+			rsp.User.UserID = 2
 			rsp.User.Status = user.UserInfo_NORMAL
 			rsp.User.Role = user.UserInfo_ADMIN
-		} else if req.StudentId == "2000" {
+		} else if req.StudentID == "2000" {
 			return nil, errors.New("")
-		} else if req.StudentId == "3000" {
+		} else if req.StudentID == "3000" {
 			rsp.Status = user.UserCreateResponse_SUCCESS
 			rsp.User = new(user.UserInfo)
-			rsp.User.UserId = 3
+			rsp.User.UserID = 3
 			rsp.User.Status = user.UserInfo_FROZEN
 			rsp.User.Role = user.UserInfo_USER
 		} else {
 			rsp.Status = user.UserCreateResponse_USER_EXIST
 			rsp.User = new(user.UserInfo)
-			rsp.User.UserId = 1
+			rsp.User.UserID = 1
 		}
 	}
 	return &rsp, nil
@@ -48,16 +48,16 @@ func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, o
 // Query is user query mock
 func (a *mockUserSrv) Query(ctx context.Context, req *user.UserQueryRequest, opts ...client.CallOption) (*user.UserInfo, error) {
 	var rsp user.UserInfo
-	if req.UserId != 0 {
-		if req.UserId == 1000 {
-			rsp.UserId = 1000
+	if req.UserID != 0 {
+		if req.UserID == 1000 {
+			rsp.UserID = 1000
 			rsp.UserName = "test"
-			rsp.AvatarId = "5d23ea2c32311335f935cd14"
+			rsp.AvatarID = "5d23ea2c32311335f935cd14"
 			rsp.Telephone = "12345678901"
-			rsp.StudentId = "1000"
+			rsp.StudentID = "1000"
 			rsp.StudentName = "jiang"
 			rsp.Status = 1
-		} else if req.UserId == 2000 {
+		} else if req.UserID == 2000 {
 			return nil, errors.New("")
 		}
 	}
@@ -67,29 +67,29 @@ func (a *mockUserSrv) Query(ctx context.Context, req *user.UserQueryRequest, opt
 // Find is user find mock
 func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts ...client.CallOption) (*user.UserFindResponse, error) {
 	user1 := user.UserInfo{
-		UserId:      1000,
+		UserID:      1000,
 		UserName:    "test1",
-		AvatarId:    "5d23ea2c32311335f935cd14",
+		AvatarID:    "5d23ea2c32311335f935cd14",
 		Telephone:   "12345224232",
-		StudentId:   "1",
+		StudentID:   "1",
 		StudentName: "Xiao Ming",
 		Status:      1,
 	}
 	user2 := user.UserInfo{
-		UserId:      1001,
+		UserID:      1001,
 		UserName:    "test2",
-		AvatarId:    "jksfa0980923jkjoifu92323",
+		AvatarID:    "jksfa0980923jkjoifu92323",
 		Telephone:   "67307269876",
-		StudentId:   "2",
+		StudentID:   "2",
 		StudentName: "Xiao Huang",
 		Status:      1,
 	}
 	user3 := user.UserInfo{
-		UserId:      1002,
+		UserID:      1002,
 		UserName:    "test2",
-		AvatarId:    "yuwry981hkjbgmxnlaud9u34352",
+		AvatarID:    "yuwry981hkjbgmxnlaud9u34352",
 		Telephone:   "16539896792",
-		StudentId:   "3",
+		StudentID:   "3",
 		StudentName: "Xiao Bai",
 		Status:      1,
 	}
@@ -125,12 +125,12 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 // Update is user update mock
 func (a *mockUserSrv) Update(ctx context.Context, req *user.UserInfo, opts ...client.CallOption) (*user.UserUpdateResponse, error) {
 	var rsp user.UserUpdateResponse
-	if req.UserId == 0 {
+	if req.UserID == 0 {
 		rsp.Status = user.UserUpdateResponse_INVALID_PARAM
 	} else {
-		if req.UserId == 1000 {
+		if req.UserID == 1000 {
 			rsp.Status = user.UserUpdateResponse_SUCCESS
-		} else if req.UserId == 2000 {
+		} else if req.UserID == 2000 {
 			return &rsp, errors.New("")
 		} else {
 			rsp.Status = user.UserUpdateResponse_NOT_FOUND

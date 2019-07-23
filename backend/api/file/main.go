@@ -14,7 +14,7 @@ import (
 
 func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
-	rg.GET("/file/:fileId", getFile)
+	rg.GET("/file/:fileID", getFile)
 	return router
 }
 
@@ -24,7 +24,7 @@ func setupRouter() *gin.Engine {
  */
 
 /**
- * @api {get} /file/:fileId GetFile
+ * @api {get} /file/:fileID GetFile
  * @apiVersion 1.0.0
  * @apiGroup File
  * @apiPermission none
@@ -39,7 +39,7 @@ func setupRouter() *gin.Engine {
  */
 func getFile(c *gin.Context) {
 	type param struct {
-		FileId string `uri:"fileId" binding:"required"`
+		FileID string `uri:"fileID" binding:"required"`
 	}
 	var p param
 
@@ -48,7 +48,7 @@ func getFile(c *gin.Context) {
 			func() interface{} { return mock.NewFileService() }).(file.FileService)
 
 		rsp, err := srv.Query(context.TODO(), &file.FileRequest{
-			FileId: p.FileId,
+			FileID: p.FileID,
 		})
 		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) {
 			c.JSON(500, err)

@@ -13,15 +13,15 @@ type mockSrv struct{}
 // Create is sellinfo create mock
 func (a *mockSrv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, opts ...client.CallOption) (*sellinfo.SellInfoCreateResponse, error) {
 	var rsp sellinfo.SellInfoCreateResponse
-	if req.ValidTime == 0 || req.GoodName == "" || req.UserId == 0 {
+	if req.ValidTime == 0 || req.GoodName == "" || req.UserID == 0 {
 		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 		return &rsp, nil
 	}
-	if req.ContentId == "" && req.ContentToken == "" {
+	if req.ContentID == "" && req.ContentToken == "" {
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
-		rsp.SellInfoId = 1000
-	} else if req.ContentId != "" && req.ContentToken != "" {
-		if req.ContentId == "error" {
+		rsp.SellInfoID = 1000
+	} else if req.ContentID != "" && req.ContentToken != "" {
+		if req.ContentID == "error" {
 			return nil, errors.New("")
 		}
 		if req.ContentToken == "invalid_token" {
@@ -29,7 +29,7 @@ func (a *mockSrv) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 			return &rsp, nil
 		}
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
-		rsp.SellInfoId = 1000
+		rsp.SellInfoID = 1000
 	} else {
 		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 	}
@@ -39,15 +39,15 @@ func (a *mockSrv) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 // Query is sellinfo query mock
 func (a *mockSrv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, opts ...client.CallOption) (*sellinfo.SellInfoMsg, error) {
 	var rsp sellinfo.SellInfoMsg
-	if req.SellInfoId != 0 {
-		if req.SellInfoId == 1000 {
-			rsp.SellInfoId = 1000
+	if req.SellInfoID != 0 {
+		if req.SellInfoID == 1000 {
+			rsp.SellInfoID = 1000
 			rsp.GoodName = "good"
 			rsp.ValidTime = 1234567890
 			rsp.Description = "very good!"
-			rsp.ContentId = "123456789abc123456789abc"
-			rsp.UserId = 1000
-		} else if req.SellInfoId == 2000 {
+			rsp.ContentID = "123456789abc123456789abc"
+			rsp.UserID = 1000
+		} else if req.SellInfoID == 2000 {
 			return nil, errors.New("")
 		}
 	}
