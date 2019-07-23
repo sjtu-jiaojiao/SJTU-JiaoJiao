@@ -147,13 +147,7 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 			ContentId:    req.ContentId,
 			ContentToken: req.ContentToken,
 		})
-		if err != nil {
-			return err
-		}
-		if microRsp.Status == content.ContentCheckResponse_INVALID_PARAM {
-			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
-			return nil
-		} else if microRsp.Status == content.ContentCheckResponse_INVALID {
+		if err != nil || microRsp.Status != content.ContentCheckResponse_VALID {
 			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_TOKEN
 			return nil
 		}
