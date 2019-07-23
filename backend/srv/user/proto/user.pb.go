@@ -139,7 +139,7 @@ func (UserUpdateResponse_Status) EnumDescriptor() ([]byte, []int) {
 }
 
 type UserCreateRequest struct {
-	StudentId            string   `protobuf:"bytes,1,opt,name=studentId,proto3" json:"studentId,omitempty"`
+	StudentID            string   `protobuf:"bytes,1,opt,name=studentID,proto3" json:"studentID,omitempty"`
 	StudentName          string   `protobuf:"bytes,2,opt,name=studentName,proto3" json:"studentName,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -171,9 +171,9 @@ func (m *UserCreateRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_UserCreateRequest proto.InternalMessageInfo
 
-func (m *UserCreateRequest) GetStudentId() string {
+func (m *UserCreateRequest) GetStudentID() string {
 	if m != nil {
-		return m.StudentId
+		return m.StudentID
 	}
 	return ""
 }
@@ -233,7 +233,7 @@ func (m *UserCreateResponse) GetUser() *UserInfo {
 }
 
 type UserQueryRequest struct {
-	UserId               int32    `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	UserID               int32    `protobuf:"varint,1,opt,name=userID,proto3" json:"userID,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -264,19 +264,19 @@ func (m *UserQueryRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_UserQueryRequest proto.InternalMessageInfo
 
-func (m *UserQueryRequest) GetUserId() int32 {
+func (m *UserQueryRequest) GetUserID() int32 {
 	if m != nil {
-		return m.UserId
+		return m.UserID
 	}
 	return 0
 }
 
 type UserInfo struct {
-	UserId               int32           `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	UserID               int32           `protobuf:"varint,1,opt,name=userID,proto3" json:"userID,omitempty"`
 	UserName             string          `protobuf:"bytes,2,opt,name=userName,proto3" json:"userName,omitempty"`
-	AvatarId             string          `protobuf:"bytes,3,opt,name=avatarId,proto3" json:"avatarId,omitempty"`
+	AvatarID             string          `protobuf:"bytes,3,opt,name=avatarID,proto3" json:"avatarID,omitempty"`
 	Telephone            string          `protobuf:"bytes,4,opt,name=telephone,proto3" json:"telephone,omitempty"`
-	StudentId            string          `protobuf:"bytes,5,opt,name=studentId,proto3" json:"studentId,omitempty"`
+	StudentID            string          `protobuf:"bytes,5,opt,name=studentID,proto3" json:"studentID,omitempty"`
 	StudentName          string          `protobuf:"bytes,6,opt,name=studentName,proto3" json:"studentName,omitempty"`
 	Status               UserInfo_Status `protobuf:"varint,7,opt,name=status,proto3,enum=UserInfo_Status" json:"status,omitempty"`
 	Role                 UserInfo_Role   `protobuf:"varint,8,opt,name=role,proto3,enum=UserInfo_Role" json:"role,omitempty"`
@@ -311,9 +311,9 @@ func (m *UserInfo) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_UserInfo proto.InternalMessageInfo
 
-func (m *UserInfo) GetUserId() int32 {
+func (m *UserInfo) GetUserID() int32 {
 	if m != nil {
-		return m.UserId
+		return m.UserID
 	}
 	return 0
 }
@@ -325,9 +325,9 @@ func (m *UserInfo) GetUserName() string {
 	return ""
 }
 
-func (m *UserInfo) GetAvatarId() string {
+func (m *UserInfo) GetAvatarID() string {
 	if m != nil {
-		return m.AvatarId
+		return m.AvatarID
 	}
 	return ""
 }
@@ -339,9 +339,9 @@ func (m *UserInfo) GetTelephone() string {
 	return ""
 }
 
-func (m *UserInfo) GetStudentId() string {
+func (m *UserInfo) GetStudentID() string {
 	if m != nil {
-		return m.StudentId
+		return m.StudentID
 	}
 	return ""
 }
@@ -531,7 +531,7 @@ var fileDescriptor_116e343673f7ffaf = []byte{
 	0x2c, 0x91, 0x04, 0x28, 0xb6, 0x8b, 0xc9, 0x3d, 0x89, 0x8f, 0x72, 0x4f, 0x67, 0x34, 0xbb, 0x6d,
 	0xa1, 0xfc, 0x30, 0xf7, 0x87, 0xfc, 0xb5, 0x33, 0xf3, 0xed, 0xcc, 0xf2, 0x7d, 0xdf, 0x14, 0x60,
 	0x93, 0x88, 0xd8, 0x59, 0xc7, 0x91, 0x8c, 0xa8, 0x0f, 0x8d, 0x20, 0x11, 0x71, 0x2f, 0x16, 0xa1,
-	0x14, 0x5c, 0xfc, 0xd8, 0x88, 0x44, 0xe2, 0x13, 0xa8, 0x26, 0x72, 0x33, 0x15, 0x2b, 0xe9, 0x4d,
+	0x14, 0x5c, 0xfc, 0xd8, 0x88, 0x44, 0xe2, 0x13, 0xa8, 0x26, 0x72, 0x33, 0x15, 0x2b, 0xe9, 0xf5,
 	0x9b, 0x46, 0xcb, 0x68, 0x57, 0xf9, 0x2e, 0x81, 0x2d, 0xb8, 0xcc, 0x02, 0x16, 0x2e, 0x45, 0xb3,
 	0xa4, 0xeb, 0xc5, 0x14, 0xbd, 0x33, 0x00, 0x8b, 0x5d, 0x93, 0x75, 0xb4, 0x4a, 0x04, 0x76, 0xc0,
 	0x4a, 0x64, 0x28, 0x37, 0x89, 0xee, 0x59, 0xef, 0xd8, 0xce, 0x31, 0xc8, 0xf1, 0x35, 0x82, 0x67,
@@ -558,6 +558,6 @@ var fileDescriptor_116e343673f7ffaf = []byte{
 	0xaf, 0xc0, 0x4a, 0xd7, 0x0d, 0xd1, 0x39, 0x5a, 0x7b, 0xfb, 0xe1, 0x89, 0x7d, 0xc4, 0xe7, 0x50,
 	0xd6, 0xdb, 0x80, 0x0d, 0xe7, 0x70, 0x33, 0xec, 0x1d, 0x05, 0xf8, 0x0a, 0x4c, 0xc5, 0x15, 0xa6,
 	0x4e, 0x2a, 0x68, 0x62, 0x37, 0x9c, 0x23, 0x22, 0xdb, 0x60, 0xa5, 0xff, 0x1f, 0x77, 0x1d, 0xb2,
-	0xe9, 0xfb, 0xbc, 0x7c, 0xb3, 0xf4, 0x57, 0xea, 0xcd, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x44,
-	0x11, 0x8a, 0x4d, 0xb3, 0x04, 0x00, 0x00,
+	0xe9, 0xfb, 0xbc, 0x7c, 0xb3, 0xf4, 0x57, 0xea, 0xcd, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0xe0,
+	0x50, 0x00, 0xc9, 0xb3, 0x04, 0x00, 0x00,
 }

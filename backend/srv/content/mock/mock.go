@@ -37,14 +37,14 @@ func (a *mockSrv) Create(ctx context.Context, req *content.ContentCreateRequest,
 	var rsp content.ContentCreateResponse
 	if bytes.Equal(req.Content, []byte{0}) || req.Type == 0 {
 		rsp.Status = content.ContentCreateResponse_INVALID_PARAM
-	} else if req.ContentId == "" && req.ContentToken == "" {
+	} else if req.ContentID == "" && req.ContentToken == "" {
 		rsp.Status = content.ContentCreateResponse_SUCCESS
-	} else if req.ContentId != "" && req.ContentToken != "" {
-		if req.ContentId == "invalid" {
+	} else if req.ContentID != "" && req.ContentToken != "" {
+		if req.ContentID == "invalid" {
 			rsp.Status = content.ContentCreateResponse_INVALID_TYPE
 			return &rsp, nil
 		}
-		if req.ContentId == "error" {
+		if req.ContentID == "error" {
 			return nil, errors.New("")
 		}
 		if req.ContentToken == "invalid_token" {
@@ -61,16 +61,16 @@ func (a *mockSrv) Create(ctx context.Context, req *content.ContentCreateRequest,
 // Delete is content delete mock
 func (a *mockSrv) Delete(ctx context.Context, req *content.ContentDeleteRequest, opts ...client.CallOption) (*content.ContentDeleteResponse, error) {
 	var rsp content.ContentDeleteResponse
-	if req.ContentId == "" || req.ContentToken == "" {
+	if req.ContentID == "" || req.ContentToken == "" {
 		rsp.Status = content.ContentDeleteResponse_INVALID_PARAM
 	} else {
-		if req.ContentId == "1000" {
+		if req.ContentID == "1000" {
 			if req.ContentToken == "valid_token" {
 				rsp.Status = content.ContentDeleteResponse_SUCCESS
 			} else {
 				rsp.Status = content.ContentDeleteResponse_INVALID_TOKEN
 			}
-		} else if req.ContentId == "2000" {
+		} else if req.ContentID == "2000" {
 			return nil, errors.New("")
 		} else {
 			rsp.Status = content.ContentDeleteResponse_INVALID_TOKEN

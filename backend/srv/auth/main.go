@@ -72,7 +72,7 @@ func (a *srv) Auth(ctx context.Context, req *auth.AuthRequest, rsp *auth.AuthRes
 			} else {
 				rsp.Status = auth.AuthResponse_SUCCESS
 				rsp.Token = id.IDToken
-				rsp.StudentId = utils.JWTParse(t, "code").(string)
+				rsp.StudentID = utils.JWTParse(t, "code").(string)
 				rsp.StudentName = utils.JWTParse(t, "name").(string)
 			}
 		}

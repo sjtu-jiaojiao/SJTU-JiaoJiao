@@ -18,21 +18,21 @@ func TestSrvInfoQuery(t *testing.T) {
 		ID:          1100,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
-		UserId:      1000,
-		GoodId:      1101,
+		UserID:      1000,
+		GoodID:      1101,
 	}
 	good := db.Good{
 		ID:          1101,
 		GoodName:    "good",
 		Description: "Very good!",
-		ContentId:   "123456789",
+		ContentID:   "123456789",
 	}
-	tf := func(sellId int, contentId string, userId int) {
+	tf := func(sellID int, contentID string, userID int) {
 		var rsp sellinfo.SellInfoMsg
 		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.SellInfoId, ShouldEqual, sellId)
-		So(rsp.ContentId, ShouldEqual, contentId)
-		So(rsp.UserId, ShouldEqual, userId)
+		So(rsp.SellInfoID, ShouldEqual, sellID)
+		So(rsp.ContentID, ShouldEqual, contentID)
+		So(rsp.UserID, ShouldEqual, userID)
 	}
 	Convey("Test SellInfo Query", t, func() {
 		tf(0, "", 0)
@@ -40,10 +40,10 @@ func TestSrvInfoQuery(t *testing.T) {
 		So(db.Ormer.Create(&good).Error, ShouldBeNil)
 		So(db.Ormer.Create(&info).Error, ShouldBeNil)
 
-		req.SellInfoId = 1100
+		req.SellInfoID = 1100
 		tf(1100, "123456789", 1000)
 
-		req.SellInfoId = 1101
+		req.SellInfoID = 1101
 		tf(0, "", 0)
 
 		So(db.Ormer.Delete(&db.SellInfo{ID: 1100}).Error, ShouldBeNil)
@@ -65,10 +65,10 @@ func TestSrvInfoCreate(t *testing.T) {
 	//	})
 	//	So(err, ShouldBeNil)
 	//	So(rsp.Status, ShouldEqual, content.ContentCreateResponse_SUCCESS)
-	//	So(rsp.ContentId, ShouldNotBeBlank)
+	//	So(rsp.ContentID, ShouldNotBeBlank)
 	//	So(rsp.ContentToken, ShouldNotBeBlank)
 	//
-	//	return rsp.ContentId, rsp.ContentToken
+	//	return rsp.ContentID, rsp.ContentToken
 	//}
 	//
 	//tf := func(status sellinfo.SellInfoCreateResponse_Status, success bool) int32 {
@@ -76,11 +76,11 @@ func TestSrvInfoCreate(t *testing.T) {
 	//	So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 	//	So(rsp.Status, ShouldEqual, status)
 	//	if success {
-	//		So(rsp.SellInfoId, ShouldNotEqual, 0)
+	//		So(rsp.SellInfoID, ShouldNotEqual, 0)
 	//	} else {
-	//		So(rsp.SellInfoId, ShouldEqual, 0)
+	//		So(rsp.SellInfoID, ShouldEqual, 0)
 	//	}
-	//	return rsp.SellInfoId
+	//	return rsp.SellInfoID
 	//}
 	//
 	//Convey("Test SellInfo Create", t, func() {
@@ -92,37 +92,37 @@ func TestSrvInfoCreate(t *testing.T) {
 	//	req.ValidTime = 1893427200
 	//	tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
 	//
-	//	req.UserId = 1000
+	//	req.UserID = 1000
 	//	id := tf(sellinfo.SellInfoCreateResponse_SUCCESS, true)
 	//
 	//	tmp := db.SellInfo{
 	//		ID: id,
 	//	}
 	//	So(db.Ormer.First(&tmp).Error, ShouldBeNil)
-	//	So(db.Ormer.Delete(&db.Good{ID: tmp.GoodId}).Error, ShouldBeNil)
+	//	So(db.Ormer.Delete(&db.Good{ID: tmp.GoodID}).Error, ShouldBeNil)
 	//	So(db.Ormer.Delete(&tmp).Error, ShouldBeNil)
 	//
-	//	req.ContentId = "123456789abc123456789abc"
+	//	req.ContentID = "123456789abc123456789abc"
 	//	tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
 	//
 	//	req.ContentToken = "jlkfjaoiu2709429-98247ksf"
 	//	tf(sellinfo.SellInfoCreateResponse_INVALID_TOKEN, false)
 	//
-	//	req.ContentId = "1234"
+	//	req.ContentID = "1234"
 	//	tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
 	//
-	//	req.ContentId, req.ContentToken = getToken()
+	//	req.ContentID, req.ContentToken = getToken()
 	//	id = tf(sellinfo.SellInfoCreateResponse_SUCCESS, true)
 	//
 	//	tmp = db.SellInfo{
 	//		ID: id,
 	//	}
 	//	So(db.Ormer.First(&tmp).Error, ShouldBeNil)
-	//	So(db.Ormer.Delete(&db.Good{ID: tmp.GoodId}).Error, ShouldBeNil)
+	//	So(db.Ormer.Delete(&db.Good{ID: tmp.GoodID}).Error, ShouldBeNil)
 	//	So(db.Ormer.Delete(&tmp).Error, ShouldBeNil)
 	//
 	//	_, err := srv.Delete(context.TODO(), &content.ContentDeleteRequest{
-	//		ContentId:    req.ContentId,
+	//		ContentID:    req.ContentID,
 	//		ContentToken: req.ContentToken,
 	//	})
 	//	So(err, ShouldBeNil)
@@ -138,42 +138,42 @@ func TestSrvInfoFind(t *testing.T) {
 		Status:      1,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
-		UserId:      1000,
-		GoodId:      1010,
+		UserID:      1000,
+		GoodID:      1010,
 	}
 	info2 := db.SellInfo{
 		ID:          1001,
 		Status:      2,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
-		UserId:      1000,
-		GoodId:      1011,
+		UserID:      1000,
+		GoodID:      1011,
 	}
 	info3 := db.SellInfo{
 		ID:          1002,
 		Status:      3,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
-		UserId:      1001,
-		GoodId:      1012,
+		UserID:      1001,
+		GoodID:      1012,
 	}
 	good1 := db.Good{
 		ID:          1010,
 		GoodName:    "good",
 		Description: "Very good!",
-		ContentId:   "123456789",
+		ContentID:   "123456789",
 	}
 	good2 := db.Good{
 		ID:          1011,
 		GoodName:    "good",
 		Description: "Very good!",
-		ContentId:   "123456789",
+		ContentID:   "123456789",
 	}
 	good3 := db.Good{
 		ID:          1012,
 		GoodName:    "good",
 		Description: "Very good!",
-		ContentId:   "123456789",
+		ContentID:   "123456789",
 	}
 
 	prepare := func() {
@@ -207,10 +207,10 @@ func TestSrvInfoFind(t *testing.T) {
 
 		testLen(3)
 
-		req.UserId = 1001
+		req.UserID = 1001
 		testLen(1)
 
-		req.UserId = 1000
+		req.UserID = 1000
 		testLen(2)
 
 		req.Limit = 1

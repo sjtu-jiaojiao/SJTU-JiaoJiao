@@ -23,24 +23,24 @@ type srv struct{}
  * @apiName SellInfo.Query
  * @apiDescription Query sell info
  *
- * @apiParam {int32} sellInfoId sellInfo id.
- * @apiSuccess {int32} sellInfoId sellInfoId
+ * @apiParam {int32} sellInfoID sellInfo id.
+ * @apiSuccess {int32} sellInfoID sellInfoID
  * @apiSuccess {int32} status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
  * @apiSuccess {int64} releaseTime sellInfo release time
  * @apiSuccess {int64} validTime sellInfo validate time
  * @apiSuccess {string} goodName good name
  * @apiSuccess {double} price good price
  * @apiSuccess {string} description good description
- * @apiSuccess {string} contentId multimedia data
- * @apiSuccess {int32} userId userId
+ * @apiSuccess {string} contentID multimedia data
+ * @apiSuccess {int32} userID userID
  * @apiUse DBServerDown
  */
 func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoMsg) error {
-	if req.SellInfoId == 0 {
+	if req.SellInfoID == 0 {
 		return nil
 	}
 	info := db.SellInfo{
-		ID: req.SellInfoId,
+		ID: req.SellInfoID,
 	}
 	err := db.Ormer.First(&info).Error
 	if gorm.IsRecordNotFoundError(err) {
@@ -49,7 +49,7 @@ func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp
 		return err
 	}
 	good := db.Good{
-		ID: info.GoodId,
+		ID: info.GoodID,
 	}
 	err = db.Ormer.First(&good).Error
 	if gorm.IsRecordNotFoundError(err) {
@@ -58,15 +58,15 @@ func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp
 		return err
 	}
 
-	rsp.SellInfoId = info.ID
+	rsp.SellInfoID = info.ID
 	rsp.Status = info.Status
 	rsp.ReleaseTime = info.ReleaseTime.Unix()
 	rsp.ValidTime = info.ValidTime.Unix()
 	rsp.GoodName = good.GoodName
 	rsp.Price = good.Price
 	rsp.Description = good.Description
-	rsp.ContentId = good.ContentId
-	rsp.UserId = info.UserId
+	rsp.ContentID = good.ContentID
+	rsp.UserID = info.UserID
 	return nil
 }
 
@@ -77,19 +77,19 @@ func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp
  * @apiName SellInfo.Create
  * @apiDescription create sell info
  *
- * @apiParam {int32} userId sellinfo userid
+ * @apiParam {int32} userID sellinfo userid
  * @apiParam {int64} validTime valid timestamp
  * @apiParam {string} goodName good name
  * @apiParam {string} [description] description for good
  * @apiParam {double} [price] good price
- * @apiParam {string} [contentId] content id of good
+ * @apiParam {string} [contentID] content id of good
  * @apiParam {string} [contentToken] content token
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
- * @apiSuccess {int32} sellInfoId created sellInfoId
+ * @apiSuccess {int32} sellInfoID created sellInfoID
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
-	if req.ValidTime == 0 || req.GoodName == "" || req.UserId == 0 {
+	if req.ValidTime == 0 || req.GoodName == "" || req.UserID == 0 {
 		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 		return nil
 	}
@@ -102,7 +102,7 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 	info := db.SellInfo{
 		ReleaseTime: time.Now(),
 		ValidTime:   time.Unix(req.ValidTime, 0),
-		UserId:      req.UserId,
+		UserID:      req.UserID,
 	}
 
 	insert := func() (int32, error) {
@@ -115,7 +115,7 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 			tx.Rollback()
 			return 0, err
 		}
-		info.GoodId = good.ID
+		info.GoodID = good.ID
 		err = tx.Create(&info).Error
 		if utils.LogContinue(err, utils.Warning) {
 			tx.Rollback()
@@ -130,21 +130,21 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 		return info.ID, nil
 	}
 
-	if req.ContentId == "" && req.ContentToken == "" {
+	if req.ContentID == "" && req.ContentToken == "" {
 		id, err := insert()
 		if err != nil || id == 0 {
 			return nil
 		}
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
-		rsp.SellInfoId = id
-	} else if req.ContentId != "" && req.ContentToken != "" {
+		rsp.SellInfoID = id
+	} else if req.ContentID != "" && req.ContentToken != "" {
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} {
 			return content.NewContentService(name, c)
 		}, func() interface{} {
 			return mock.NewContentService()
 		}).(content.ContentService)
 		microRsp, err := srv.Check(context.TODO(), &content.ContentCheckRequest{
-			ContentId:    req.ContentId,
+			ContentID:    req.ContentID,
 			ContentToken: req.ContentToken,
 		})
 		if err != nil || microRsp.Status != content.ContentCheckResponse_VALID {
@@ -152,13 +152,13 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 			return nil
 		}
 
-		good.ContentId = req.ContentId
+		good.ContentID = req.ContentID
 		id, err := insert()
 		if err != nil || id == 0 {
 			return nil
 		}
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
-		rsp.SellInfoId = id
+		rsp.SellInfoID = id
 	} else {
 		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 	}
@@ -172,7 +172,7 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
  * @apiName SellInfo.Find
  * @apiDescription Find SellInfo.
  *
- * @apiParam {int32} [userId] userId
+ * @apiParam {int32} [userID] userID
  * @apiParam {int32} [status] status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
  * @apiParam {string} [goodName] good name(fuzzy)
  * @apiParam {double} lowPrice=0 low bound of price
@@ -184,15 +184,15 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
  */
 func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *sellinfo.SellInfoFindResponse) error {
 	type result struct {
-		SellInfoId  int32
+		SellInfoID  int32
 		Status      int32
 		ReleaseTime time.Time
 		ValidTime   time.Time
 		GoodName    string
 		Price       float64
 		Description string
-		ContentId   string
-		UserId      int32
+		ContentID   string
+		UserID      int32
 	}
 
 	if req.Limit == 0 {
@@ -208,8 +208,8 @@ func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *
 	var res []*result
 	tb := db.Ormer.Table("sell_infos, goods").Select("sell_infos.id as sell_info_id, status, release_time, " +
 		"valid_time, good_name, price, description, content_id, user_id").Where("sell_infos.good_id = goods.id")
-	if req.UserId != 0 {
-		tb = tb.Where("user_id = ?", req.UserId)
+	if req.UserID != 0 {
+		tb = tb.Where("user_id = ?", req.UserID)
 	}
 	if req.Status != 0 {
 		tb = tb.Where("status = ?", req.Status)
@@ -230,15 +230,15 @@ func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *
 	}
 	for _, v := range res {
 		rsp.SellInfo = append(rsp.SellInfo, &sellinfo.SellInfoMsg{
-			SellInfoId:  v.SellInfoId,
+			SellInfoID:  v.SellInfoID,
 			Status:      v.Status,
 			ReleaseTime: v.ReleaseTime.Unix(),
 			ValidTime:   v.ValidTime.Unix(),
 			GoodName:    v.GoodName,
 			Price:       v.Price,
 			Description: v.Description,
-			ContentId:   v.ContentId,
-			UserId:      v.UserId,
+			ContentID:   v.ContentID,
+			UserID:      v.UserID,
 		})
 	}
 	return nil

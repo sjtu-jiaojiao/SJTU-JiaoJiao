@@ -19,8 +19,8 @@ func Test_getSellInfo(t *testing.T) {
 		So(r.Code, ShouldEqual, code)
 		if r.Code == 200 {
 			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
-			So(data["sellInfoId"], ShouldEqual, id)
-			So(data["contentId"], ShouldEqual, cid)
+			So(data["sellInfoID"], ShouldEqual, id)
+			So(data["contentID"], ShouldEqual, cid)
 		}
 	}
 	Convey("GetSellInfo router test", t, func() {
@@ -47,7 +47,7 @@ func Test_addSellInfo(t *testing.T) {
 	}
 	Convey("AddSellInfo router test", t, func() {
 		tf(400, 0, "")
-		v.Set("userId", "1")
+		v.Set("userID", "1")
 		tf(400, 0, "")
 		v.Set("validTime", "12345")
 		tf(400, 0, "")
@@ -56,16 +56,16 @@ func Test_addSellInfo(t *testing.T) {
 		tf(403, 0, "user")
 		tf(200, sellinfo.SellInfoCreateResponse_SUCCESS, "self")
 		tf(200, sellinfo.SellInfoCreateResponse_SUCCESS, "admin")
-		v.Set("contentId", "1234")
+		v.Set("contentID", "1234")
 		tf(400, 0, "admin")
-		v.Del("contentId")
+		v.Del("contentID")
 		v.Set("contentToken", "valid")
 		tf(400, 0, "admin")
-		v.Set("contentId", "1234")
+		v.Set("contentID", "1234")
 		tf(200, sellinfo.SellInfoCreateResponse_SUCCESS, "admin")
 		v.Set("contentToken", "invalid_token")
 		tf(200, sellinfo.SellInfoCreateResponse_INVALID_TOKEN, "admin")
-		v.Set("contentId", "error")
+		v.Set("contentID", "error")
 		tf(500, 0, "admin")
 	})
 }
