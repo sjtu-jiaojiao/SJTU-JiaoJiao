@@ -39,6 +39,7 @@ func RunWebService(name string, router *gin.Engine) {
 	}
 }
 
+// InitMicroService init a micro service
 func InitMicroService(name string) micro.Service {
 	if !CheckInTest() {
 		service := micro.NewService(

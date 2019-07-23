@@ -10,6 +10,7 @@ import (
 
 type mockSrv struct{}
 
+// Auth is auth auth mock
 func (a *mockSrv) Auth(ctx context.Context, req *auth.AuthRequest, opts ...client.CallOption) (*auth.AuthResponse, error) {
 	var ret auth.AuthResponse
 	if req.Code == "" {
@@ -49,6 +50,7 @@ func (a *mockSrv) Auth(ctx context.Context, req *auth.AuthRequest, opts ...clien
 	return &ret, nil
 }
 
+// NewAuthService is auth service mock
 func NewAuthService() auth.AuthService {
 	return new(mockSrv)
 }

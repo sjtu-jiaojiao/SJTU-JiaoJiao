@@ -11,24 +11,28 @@ import (
 
 type mockSrv struct{}
 
+// Update is content update mock
 func (a *mockSrv) Update(ctx context.Context, in *content.ContentUpdateRequest, opts ...client.CallOption) (*content.ContentUpdateResponse, error) {
 	var rsp content.ContentUpdateResponse
 	// TODO
 	return &rsp, nil
 }
 
+// Query is content query mock
 func (a *mockSrv) Query(ctx context.Context, in *content.ContentQueryRequest, opts ...client.CallOption) (*content.ContentQueryResponse, error) {
 	var rsp content.ContentQueryResponse
 	// TODO
 	return &rsp, nil
 }
 
+// Check is content check mock
 func (a *mockSrv) Check(ctx context.Context, in *content.ContentCheckRequest, opts ...client.CallOption) (*content.ContentCheckResponse, error) {
 	var rsp content.ContentCheckResponse
 	// TODO
 	return &rsp, nil
 }
 
+// Create is content create mock
 func (a *mockSrv) Create(ctx context.Context, req *content.ContentCreateRequest, opts ...client.CallOption) (*content.ContentCreateResponse, error) {
 	var rsp content.ContentCreateResponse
 	if bytes.Equal(req.Content, []byte{0}) || req.Type == 0 {
@@ -54,6 +58,7 @@ func (a *mockSrv) Create(ctx context.Context, req *content.ContentCreateRequest,
 	return &rsp, nil
 }
 
+// Delete is content delete mock
 func (a *mockSrv) Delete(ctx context.Context, req *content.ContentDeleteRequest, opts ...client.CallOption) (*content.ContentDeleteResponse, error) {
 	var rsp content.ContentDeleteResponse
 	if req.ContentId == "" || req.ContentToken == "" {
@@ -74,6 +79,7 @@ func (a *mockSrv) Delete(ctx context.Context, req *content.ContentDeleteRequest,
 	return &rsp, nil
 }
 
+// NewContentService is content service mock
 func NewContentService() content.ContentService {
 	return new(mockSrv)
 }

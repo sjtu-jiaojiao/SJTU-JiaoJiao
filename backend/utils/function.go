@@ -4,12 +4,14 @@ package utils
 
 import "github.com/gin-gonic/gin"
 
+// AssignNotEmpty assign a string when another is not empty
 func AssignNotEmpty(src *string, dst *string) {
 	if *src != "" {
 		*dst = *src
 	}
 }
 
+// AssignNotZero assign a digit when another is not zero
 func AssignNotZero(src interface{}, dst interface{}) {
 	switch v := dst.(type) {
 	case *int32:
@@ -29,6 +31,11 @@ func AssignNotZero(src interface{}, dst interface{}) {
 	}
 }
 
+/*
+GetQueryFile get query file info
+return file byte, response code and error
+response code could be 200 or 413 or 500
+*/
 func GetQueryFile(c *gin.Context, name string, maxsize int64) ([]byte, int, error) {
 	if CheckInTest() {
 		return []byte("test_file"), 200, nil
