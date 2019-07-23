@@ -1,0 +1,3 @@
+exclude_paths:
+  - '**/proto/**'
+  - 'app-frontend/Test-Report/**'

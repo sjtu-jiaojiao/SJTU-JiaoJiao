@@ -14,7 +14,7 @@ message ContentCreateRequest {
         PICTURE = 1;
         VIDEO = 2;
     }
-    string contentId = 1;
+    string contentID = 1;
     string contentToken = 2;
     bytes content = 3;
     Type type = 4;
@@ -29,9 +29,9 @@ message ContentCreateResponse {
         INVALID_TYPE = 3;
     }
     Status status = 1;
-    string contentId = 2;
+    string contentID = 2;
     string contentToken = 3;
-    string fileId = 4;
+    string fileID = 4;
 }
 
 message ContentUpdateRequest {
@@ -40,9 +40,9 @@ message ContentUpdateRequest {
         PICTURE = 1;
         VIDEO = 2;
     }
-    string contentId = 1;
+    string contentID = 1;
     string contentToken = 2;
-    string fileId = 3;
+    string fileID = 3;
     bytes content = 4;
     Type type = 5;
 }
@@ -58,11 +58,11 @@ message ContentUpdateResponse {
         INVALID_TYPE = 5;
     }
     Status status = 1;
-    string fileId = 2;
+    string fileID = 2;
 }
 
 message ContentDeleteRequest {
-    string contentId = 1;
+    string contentID = 1;
     string contentToken = 2;
 }
 
@@ -82,12 +82,12 @@ message ContentMsg {
         PICTURE = 1;
         VIDEO = 2;
     }
-    string fileId = 1;
+    string fileID = 1;
     Type type = 2;
 }
 
 message ContentQueryRequest {
-    string contentId = 1;
+    string contentID = 1;
 }
 
 message ContentQueryResponse {
@@ -102,7 +102,7 @@ message ContentQueryResponse {
 }
 
 message ContentCheckRequest {
-    string contentId = 1;
+    string contentID = 1;
     string contentToken = 2;
 }
 

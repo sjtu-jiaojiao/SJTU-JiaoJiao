@@ -13,7 +13,7 @@ import (
 
 func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
-	rg.GET("/buyInfo/:buyInfoId", getBuyInfo)
+	rg.GET("/buyInfo/:buyInfoID", getBuyInfo)
 	rg.GET("/buyInfo", findBuyInfo)
 	rg.POST("/buyInfo", addBuyInfo)
 	return router
@@ -25,7 +25,7 @@ func setupRouter() *gin.Engine {
  */
 
 /**
- * @api {get} /buyInfo/:buyInfoId GetBuyInfo
+ * @api {get} /buyInfo/:buyInfoID GetBuyInfo
  * @apiVersion 1.0.0
  * @apiGroup BuyInfo
  * @apiPermission none
@@ -39,14 +39,14 @@ func setupRouter() *gin.Engine {
  */
 func getBuyInfo(c *gin.Context) {
 	type param struct {
-		BuyInfoId int32 `uri:"buyInfoId" binding:"required,min=1"`
+		BuyInfoID int32 `uri:"buyInfoID" binding:"required,min=1"`
 	}
 	var p param
 	if !utils.LogContinue(c.ShouldBindUri(&p), utils.Warning) {
 		srv := utils.CallMicroService("buyInfo", func(name string, c client.Client) interface{} { return buyinfo.NewBuyInfoService(name, c) },
 			func() interface{} { return mock.NewBuyInfoService() }).(buyinfo.BuyInfoService)
 		rsp, err := srv.Query(context.TODO(), &buyinfo.BuyInfoQueryRequest{
-			BuyInfoId: p.BuyInfoId,
+			BuyInfoID: p.BuyInfoID,
 		})
 		if utils.LogContinue(err, utils.Warning, "BuyInfo service error: %v", err) {
 			c.JSON(500, err)
@@ -77,18 +77,18 @@ func addBuyInfo(c *gin.Context) {
 		GoodName     string  `form:"goodName" binding:"required"`
 		Price        float64 `form:"price"`
 		Description  string  `form:"description"`
-		ContentId    string  `form:"contentId"`
+		ContentID    string  `form:"contentID"`
 		ContentToken string  `form:"contentToken"`
-		UserId       int32   `form:"userId" binding:"required"`
+		UserID       int32   `form:"userID" binding:"required"`
 	}
 	var p param
 	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
-		if (p.ContentId == "" && p.ContentToken != "") || (p.ContentId != "" && p.ContentToken == "") {
+		if (p.ContentID == "" && p.ContentToken != "") || (p.ContentID != "" && p.ContentToken == "") {
 			c.AbortWithStatus(400)
 			return
 		}
 
-		role := utils.GetRoleID(c, p.UserId)
+		role := utils.GetRoleID(c, p.UserID)
 
 		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
@@ -101,9 +101,9 @@ func addBuyInfo(c *gin.Context) {
 			GoodName:     p.GoodName,
 			Price:        p.Price,
 			Description:  p.Description,
-			ContentId:    p.ContentId,
+			ContentID:    p.ContentID,
 			ContentToken: p.ContentToken,
-			UserId:       p.UserId,
+			UserID:       p.UserID,
 		})
 		if utils.LogContinue(err, utils.Warning, "BuyInfo service error: %v", err) {
 			c.JSON(500, err)
@@ -130,7 +130,7 @@ func addBuyInfo(c *gin.Context) {
  */
 func findBuyInfo(c *gin.Context) {
 	type param struct {
-		UserId    int32   `form:"userId"`
+		UserID    int32   `form:"userID"`
 		Status    int32   `form:"status"`
 		GoodName  string  `form:"goodName"`
 		LowPrice  float64 `form:"lowPrice"`
@@ -144,7 +144,7 @@ func findBuyInfo(c *gin.Context) {
 		srv := utils.CallMicroService("buyInfo", func(name string, c client.Client) interface{} { return buyinfo.NewBuyInfoService(name, c) },
 			func() interface{} { return mock.NewBuyInfoService() }).(buyinfo.BuyInfoService)
 		rsp, err := srv.Find(context.TODO(), &buyinfo.BuyInfoFindRequest{
-			UserId:    p.UserId,
+			UserID:    p.UserID,
 			Status:    p.Status,
 			GoodName:  p.GoodName,
 			LowPrice:  p.LowPrice,

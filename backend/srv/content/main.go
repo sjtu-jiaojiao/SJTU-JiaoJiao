@@ -25,12 +25,12 @@ type srv struct{}
  * @apiName Content.Create
  * @apiDescription create sell info content
  *
- * @apiParam {string} [contentId] 24 bytes content id, left empty for first upload
+ * @apiParam {string} [contentID] 24 bytes content id, left empty for first upload
  * @apiParam {string} [contentToken] content token, left empty for first upload
  * @apiParam {bytes} content binary bytes, file accept [image](https://github.com/h2non/filetype#image) and [video](https://github.com/h2non/filetype#video)
  * @apiParam {int32} type 1 for picture <br> 2 for video
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 2 for invalid type
- * @apiSuccess {string} contentId 24 bytes contentId
+ * @apiSuccess {string} contentID 24 bytes contentID
  * @apiSuccess {string} contentToken random uuid content token
  * @apiUse DBServerDown
  */
@@ -45,7 +45,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 			return primitive.ObjectID{}, err
 		}
 
-		fid, err := primitive.ObjectIDFromHex(rsp.FileId)
+		fid, err := primitive.ObjectIDFromHex(rsp.FileID)
 		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) {
 			return primitive.ObjectID{}, err
 		}
@@ -60,8 +60,8 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 			rsp.Status = content.ContentCreateResponse_INVALID_TYPE
 			return nil
 		}
-		if req.ContentId == "" && req.ContentToken == "" {
-			objId, err := upload()
+		if req.ContentID == "" && req.ContentToken == "" {
+			objID, err := upload()
 			if utils.LogContinue(err, utils.Warning) {
 				return err
 			}
@@ -72,30 +72,30 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 				"token": token,
 				"files": bson.A{
 					bson.M{
-						"fileId": objId,
-						"type":   req.Type.String(),
+						"fileID": objID,
+						"type":   req.Type,
 					}},
 			})
 			if utils.LogContinue(err, utils.Warning) {
 				return err
 			}
 
-			rsp.ContentId = res.InsertedID.(primitive.ObjectID).Hex()
+			rsp.ContentID = res.InsertedID.(primitive.ObjectID).Hex()
 			rsp.ContentToken = token
 			rsp.Status = content.ContentCreateResponse_SUCCESS
-		} else if req.ContentId != "" && req.ContentToken != "" {
-			if !validCheck(req.ContentId, req.ContentToken) {
+		} else if req.ContentID != "" && req.ContentToken != "" {
+			if !validCheck(req.ContentID, req.ContentToken) {
 				rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
 				return nil
 			}
 
-			objId, err := upload()
+			objID, err := upload()
 			if utils.LogContinue(err, utils.Warning) {
 				return err
 			}
 
 			collection := db.MongoDatabase.Collection("sellinfo")
-			rid, err := primitive.ObjectIDFromHex(req.ContentId)
+			rid, err := primitive.ObjectIDFromHex(req.ContentID)
 			if utils.LogContinue(err, utils.Warning) {
 				rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
 				return nil
@@ -107,14 +107,14 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 				bson.D{
 					{"$push", bson.D{
 						{"files", bson.D{
-							{"fileId", objId},
-							{"type", req.Type.String()},
+							{"fileID", objID},
+							{"type", req.Type},
 						}},
 					}}})
 			if utils.LogContinue(err, utils.Warning) {
 				return err
 			}
-			rsp.ContentId = req.ContentId
+			rsp.ContentID = req.ContentID
 			rsp.ContentToken = req.ContentToken
 			rsp.Status = content.ContentCreateResponse_SUCCESS
 		} else {
@@ -131,29 +131,29 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
  * @apiName Content.Update
  * @apiDescription update sell info content
  *
- * @apiParam {string} contentId 24 bytes content id
+ * @apiParam {string} contentID 24 bytes content id
  * @apiParam {string} contentToken content token
- * @apiParam {string} fileId 24 bytes file id
+ * @apiParam {string} fileID 24 bytes file id
  * @apiParam {bytes} [content] binary bytes, file accept [image](https://github.com/h2non/filetype#image)
  *                             and [video](https://github.com/h2non/filetype#video) (note: only delete the file if empty)
  * @apiParam {int32} [type] 1 for picture <br> 2 for video (note: only delete the file if empty)
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for not found <br> 4 for failed <br> 5 for invalid type
- * @apiSuccess {string} [fileId] 24 bytes updated file id (note: new file id differs from old one, meaningful only if content and type are not empty)
+ * @apiSuccess {string} [fileID] 24 bytes updated file id (note: new file id differs from old one, meaningful only if content and type are not empty)
  * @apiUse DBServerDown
  */
 func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp *content.ContentUpdateResponse) error {
-	if req.ContentId == "" || req.ContentToken == "" || req.FileId == "" {
+	if req.ContentID == "" || req.ContentToken == "" || req.FileID == "" {
 		rsp.Status = content.ContentUpdateResponse_INVALID_PARAM
 	} else {
 		// check token
-		if !validCheck(req.ContentId, req.ContentToken) {
+		if !validCheck(req.ContentID, req.ContentToken) {
 			rsp.Status = content.ContentUpdateResponse_INVALID_TOKEN
 			return nil
 		}
 
 		//delete old file
 		collection := db.MongoDatabase.Collection("sellinfo")
-		rid, err := primitive.ObjectIDFromHex(req.ContentId)
+		rid, err := primitive.ObjectIDFromHex(req.ContentID)
 		if utils.LogContinue(err, utils.Warning) {
 			rsp.Status = content.ContentUpdateResponse_INVALID_TOKEN
 			return nil
@@ -164,7 +164,7 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 		}, bson.D{
 			{"$pull", bson.D{
 				{"files", bson.D{
-					{"fileId", req.FileId},
+					{"fileID", req.FileID},
 				}},
 			}},
 		})
@@ -176,7 +176,7 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 		srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
 			func() interface{} { return mock.NewFileService() }).(file.FileService)
 		microDeleteRsp, err := srv.Delete(context.TODO(), &file.FileRequest{
-			FileId: req.FileId,
+			FileID: req.FileID,
 		})
 		if utils.LogContinue(err, utils.Warning) || microDeleteRsp.Status != file.FileDeleteResponse_SUCCESS {
 			rsp.Status = content.ContentUpdateResponse_NOT_FOUND
@@ -198,8 +198,8 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 			}, bson.D{
 				{"$push", bson.D{
 					{"files", bson.D{
-						{"fileId", microCreateRsp.FileId},
-						{"type", req.Type.String()},
+						{"fileID", microCreateRsp.FileID},
+						{"type", req.Type},
 					}},
 				}},
 			})
@@ -207,7 +207,7 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 				rsp.Status = content.ContentUpdateResponse_FAILED
 				return nil
 			}
-			rsp.FileId = microCreateRsp.FileId
+			rsp.FileID = microCreateRsp.FileID
 		}
 		rsp.Status = content.ContentUpdateResponse_SUCCESS
 	}
@@ -221,27 +221,27 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
  * @apiName Content.Delete
  * @apiDescription delete sell info content
  *
- * @apiParam {string} contentId 24 bytes content id
+ * @apiParam {string} contentID 24 bytes content id
  * @apiParam {string} contentToken content token
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
  * @apiUse DBServerDown
  */
 func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp *content.ContentDeleteResponse) error {
-	if req.ContentId == "" || req.ContentToken == "" {
+	if req.ContentID == "" || req.ContentToken == "" {
 		rsp.Status = content.ContentDeleteResponse_INVALID_PARAM
 		return nil
 	}
 	type files struct {
-		FileId primitive.ObjectID                `bson:"fileId"`
+		FileID primitive.ObjectID                `bson:"fileID"`
 		Type   content.ContentCreateRequest_Type `bson:"type"`
 	}
 	type result struct {
-		Id    primitive.ObjectID `bson:"_id"`
+		ID    primitive.ObjectID `bson:"_id"`
 		Files []files            `bson:"files"`
 	}
 
 	collection := db.MongoDatabase.Collection("sellinfo")
-	rid, err := primitive.ObjectIDFromHex(req.ContentId)
+	rid, err := primitive.ObjectIDFromHex(req.ContentID)
 	if utils.LogContinue(err, utils.Warning) {
 		rsp.Status = content.ContentDeleteResponse_INVALID_TOKEN
 		return nil
@@ -260,7 +260,7 @@ func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp
 		func() interface{} { return mock.NewFileService() }).(file.FileService)
 	for _, v := range res.Files {
 		microRsp, err := srv.Delete(context.TODO(), &file.FileRequest{
-			FileId: v.FileId.Hex(),
+			FileID: v.FileID.Hex(),
 		})
 		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) || microRsp.Status != file.FileDeleteResponse_SUCCESS {
 			return err
@@ -277,27 +277,27 @@ func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp
  * @apiName Content.Query
  * @apiDescription query sell info content
  *
- * @apiParam {string} contentId 24 bytes content id
+ * @apiParam {string} contentID 24 bytes content id
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
- * @apiSuccess {list} files {string} fileId : file id <br> {int32} type : file type 1 for picture, 2 for video
+ * @apiSuccess {list} files {string} fileID : file id <br> {int32} type : file type 1 for picture, 2 for video
  * @apiUse DBServerDown
  */
 func (a *srv) Query(ctx context.Context, req *content.ContentQueryRequest, rsp *content.ContentQueryResponse) error {
-	if req.ContentId == "" {
+	if req.ContentID == "" {
 		rsp.Status = content.ContentQueryResponse_INVALID_PARAM
 		return nil
 	}
 	type files struct {
-		FileId primitive.ObjectID      `bson:"fileId"`
+		FileID primitive.ObjectID      `bson:"fileID"`
 		Type   content.ContentMsg_Type `bson:"type"`
 	}
 	type result struct {
-		Id    primitive.ObjectID `bson:"_id"`
+		ID    primitive.ObjectID `bson:"_id"`
 		Files []files            `bson:"files"`
 	}
 
 	collection := db.MongoDatabase.Collection("sellinfo")
-	rid, err := primitive.ObjectIDFromHex(req.ContentId)
+	rid, err := primitive.ObjectIDFromHex(req.ContentID)
 	if utils.LogContinue(err, utils.Warning) {
 		rsp.Status = content.ContentQueryResponse_INVALID_PARAM
 		return nil
@@ -313,7 +313,7 @@ func (a *srv) Query(ctx context.Context, req *content.ContentQueryRequest, rsp *
 
 	for _, v := range res.Files {
 		rsp.Files = append(rsp.Files, &content.ContentMsg{
-			FileId: v.FileId.Hex(),
+			FileID: v.FileID.Hex(),
 			Type:   v.Type,
 		})
 	}
@@ -328,17 +328,17 @@ func (a *srv) Query(ctx context.Context, req *content.ContentQueryRequest, rsp *
  * @apiName Content.Check
  * @apiDescription check sell info content
  *
- * @apiParam {string} contentId 24 bytes content id
+ * @apiParam {string} contentID 24 bytes content id
  * @apiParam {string} contentToken content token
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for valid <br> 2 for invalid
  * @apiUse DBServerDown
  */
 func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *content.ContentCheckResponse) error {
-	if req.ContentId == "" || req.ContentToken == "" {
+	if req.ContentID == "" || req.ContentToken == "" {
 		rsp.Status = content.ContentCheckResponse_INVALID_PARAM
 		return nil
 	}
-	if !validCheck(req.ContentId, req.ContentToken) {
+	if !validCheck(req.ContentID, req.ContentToken) {
 		rsp.Status = content.ContentCheckResponse_INVALID
 		return nil
 	}
@@ -347,21 +347,21 @@ func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *
 	return nil
 }
 
-func validCheck(contentId string, contentToken string) bool {
-	if contentId == "" || contentToken == "" {
+func validCheck(contentID string, contentToken string) bool {
+	if contentID == "" || contentToken == "" {
 		return false
 	}
 	type files struct {
-		FileId primitive.ObjectID      `bson:"fileId"`
+		FileID primitive.ObjectID      `bson:"fileID"`
 		Type   content.ContentMsg_Type `bson:"type"`
 	}
 	type result struct {
-		Id    primitive.ObjectID `bson:"_id"`
+		ID    primitive.ObjectID `bson:"_id"`
 		Files []files            `bson:"files"`
 	}
 
 	collection := db.MongoDatabase.Collection("sellinfo")
-	rid, err := primitive.ObjectIDFromHex(contentId)
+	rid, err := primitive.ObjectIDFromHex(contentID)
 	if utils.LogContinue(err, utils.Warning) {
 		return false
 	}
@@ -373,7 +373,6 @@ func validCheck(contentId string, contentToken string) bool {
 	if utils.LogContinue(err, utils.Warning) {
 		return false
 	}
-
 	return true
 }
 

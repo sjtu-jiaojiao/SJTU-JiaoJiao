@@ -18,6 +18,6 @@ message AuthResponse {
     }
     Status status = 1;
     string token = 2;
-    string studentId = 3;
+    string studentID = 3;
     string studentName = 4;
 }

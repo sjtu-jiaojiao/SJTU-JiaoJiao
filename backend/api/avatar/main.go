@@ -31,7 +31,7 @@ func setupRouter() *gin.Engine {
  */
 func addAvatar(c *gin.Context) {
 	type param struct {
-		UserId int32 `form:"userId" binding:"required,min=1"`
+		UserID int32 `form:"userID" binding:"required,min=1"`
 	}
 	var p param
 
@@ -42,7 +42,7 @@ func addAvatar(c *gin.Context) {
 			return
 		}
 
-		role := utils.GetRoleID(c, p.UserId)
+		role := utils.GetRoleID(c, p.UserID)
 
 		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
@@ -65,7 +65,7 @@ func addAvatar(c *gin.Context) {
 		srv := utils.CallMicroService("avatar", func(name string, c client.Client) interface{} { return avatar.NewAvatarService(name, c) },
 			func() interface{} { return mock.NewAvatarService() }).(avatar.AvatarService)
 		rsp, err := srv.Create(context.TODO(), &avatar.AvatarCreateRequest{
-			UserId: p.UserId,
+			UserID: p.UserID,
 			File:   data,
 		})
 		if utils.LogContinue(err, utils.Warning, "Avatar service error: %v", err) {

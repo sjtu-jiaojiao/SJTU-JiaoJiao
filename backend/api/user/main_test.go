@@ -13,10 +13,10 @@ import (
 )
 
 func Test_addUser(t *testing.T) {
-	tf := func(code int, status user.UserCreateResponse_Status, studentId string, studentName string, id int, user string) {
+	tf := func(code int, status user.UserCreateResponse_Status, studentID string, studentName string, id int, user string) {
 		var data map[string]interface{}
 		r := utils.StartTestServer(setupRouter, "POST", "/user", strings.NewReader(url.Values{
-			"studentId":   {studentId},
+			"studentID":   {studentID},
 			"studentName": {studentName},
 		}.Encode()),
 			func(r *http.Request) {
@@ -27,7 +27,7 @@ func Test_addUser(t *testing.T) {
 		if r.Code == 200 {
 			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
 			So(data["status"], ShouldEqual, status)
-			So(data["user"].(map[string]interface{})["userId"], ShouldEqual, id)
+			So(data["user"].(map[string]interface{})["userID"], ShouldEqual, id)
 		}
 	}
 	Convey("Add user router test", t, func() {
@@ -45,7 +45,7 @@ func Test_addUser(t *testing.T) {
 }
 
 func Test_getUserInfo(t *testing.T) {
-	tf := func(code int, path string, admin bool, id int, studentId interface{}) {
+	tf := func(code int, path string, admin bool, id int, studentID interface{}) {
 		var data map[string]interface{}
 		r := utils.StartTestServer(setupRouter, "GET", "/user/"+path, nil,
 			func(r *http.Request) {
@@ -56,8 +56,8 @@ func Test_getUserInfo(t *testing.T) {
 		So(r.Code, ShouldEqual, code)
 		if r.Code == 200 && r.Body.String() != "{}" {
 			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
-			So(data["userId"], ShouldEqual, id)
-			So(data["studentId"], ShouldEqual, studentId)
+			So(data["userID"], ShouldEqual, id)
+			So(data["studentID"], ShouldEqual, studentID)
 		}
 	}
 	Convey("GetUserInfo router test", t, func() {
@@ -88,20 +88,20 @@ func Test_updateUser(t *testing.T) {
 	Convey("Update user router test", t, func() {
 		tf(400, 0, "")
 		tf(400, 0, "admin")
-		v.Set("userId", "1000")
+		v.Set("userID", "1000")
 		tf(403, 0, "")
 		tf(403, 0, "user")
 		tf(200, user.UserUpdateResponse_SUCCESS, "self")
 		tf(200, user.UserUpdateResponse_SUCCESS, "admin")
-		v.Set("userId", "1001")
+		v.Set("userID", "1001")
 		tf(200, user.UserUpdateResponse_NOT_FOUND, "self")
-		v.Set("userId", "2000")
+		v.Set("userID", "2000")
 		tf(500, 0, "self")
 	})
 }
 
 func Test_findUser(t *testing.T) {
-	tf := func(code int, path string, admin bool, cnt int, studentId interface{}) {
+	tf := func(code int, path string, admin bool, cnt int, studentID interface{}) {
 		var data map[string]interface{}
 		r := utils.StartTestServer(setupRouter, "GET", "/user?"+path, nil,
 			func(r *http.Request) {
@@ -113,7 +113,7 @@ func Test_findUser(t *testing.T) {
 		if r.Code == 200 && r.Body.String() != "{}" {
 			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
 			So(len(data["user"].([]interface{})), ShouldEqual, cnt)
-			So(data["user"].([]interface{})[0].(map[string]interface{})["studentId"], ShouldEqual, studentId)
+			So(data["user"].([]interface{})[0].(map[string]interface{})["studentID"], ShouldEqual, studentID)
 		}
 	}
 	Convey("FindUser router test", t, func() {

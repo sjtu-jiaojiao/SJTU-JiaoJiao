@@ -15,7 +15,7 @@ import (
 func Test_deleteContent(t *testing.T) {
 	tf := func(code int, cid string, ctoken string, status content.ContentDeleteResponse_Status) {
 		var data map[string]interface{}
-		r := utils.StartTestServer(setupRouter, "DELETE", "/content?contentId="+cid+"&contentToken="+ctoken, nil,
+		r := utils.StartTestServer(setupRouter, "DELETE", "/content?contentID="+cid+"&contentToken="+ctoken, nil,
 			func(r *http.Request) {
 				r.Header.Set("Authorization", "admin")
 			})
@@ -26,7 +26,7 @@ func Test_deleteContent(t *testing.T) {
 		}
 	}
 	Convey("GetSellInfo router test", t, func() {
-		r := utils.StartTestServer(setupRouter, "DELETE", "/content?contentId=1000&contentToken=valid_token", nil, nil)
+		r := utils.StartTestServer(setupRouter, "DELETE", "/content?contentID=1000&contentToken=valid_token", nil, nil)
 		So(r.Code, ShouldEqual, 403)
 
 		tf(400, "", "", 0)
@@ -66,18 +66,18 @@ func Test_addContent(t *testing.T) {
 				r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 			})
 		So(r.Code, ShouldEqual, 403)
-		v.Set("contentId", "123")
+		v.Set("contentID", "123")
 		tf(400, 0)
 		v.Set("contentToken", "valid_token")
-		v.Del("contentId")
+		v.Del("contentID")
 		tf(400, 0)
-		v.Set("contentId", "123")
+		v.Set("contentID", "123")
 		tf(200, content.ContentCreateResponse_SUCCESS)
 		v.Set("contentToken", "invalid_token")
 		tf(200, content.ContentCreateResponse_INVALID_TOKEN)
-		v.Set("contentId", "error")
+		v.Set("contentID", "error")
 		tf(500, 0)
-		v.Set("contentId", "invalid")
+		v.Set("contentID", "invalid")
 		tf(200, content.ContentCreateResponse_INVALID_TYPE)
 	})
 }
