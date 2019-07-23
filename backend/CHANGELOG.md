@@ -1,4 +1,8 @@
 # 后端API更新日志
+## v0.1.4 2019-07-23
+### API修改
+1. 所有字段包含`Id`的修改为`ID`
+
 ## v0.1.3 2019-07-23
 ### 恢复
  1. `AddContent`、`DeleteContent`、`AddAvatar`接口恢复使用
