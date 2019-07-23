@@ -96,6 +96,10 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 
 			collection := db.MongoDatabase.Collection("sellinfo")
 			rid, err := primitive.ObjectIDFromHex(req.ContentId)
+			if utils.LogContinue(err, utils.Warning) {
+				rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
+				return nil
+			}
 			_, err = collection.UpdateOne(db.MongoContext, bson.D{
 				{"_id", rid},
 				{"token", req.ContentToken},
@@ -140,7 +144,6 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp *content.ContentUpdateResponse) error {
 	if req.ContentId == "" || req.ContentToken == "" || req.FileId == "" {
 		rsp.Status = content.ContentUpdateResponse_INVALID_PARAM
-		return nil
 	} else {
 		// check token
 		if !validCheck(req.ContentId, req.ContentToken) {
