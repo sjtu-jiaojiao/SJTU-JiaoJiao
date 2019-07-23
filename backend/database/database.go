@@ -38,6 +38,14 @@ type BuyInfo struct {
 	GoodId      int32     `gorm:"not null;index"`
 }
 
+type Transaction struct {
+	ID         int32     `gorm:"auto_increment;primary_key"`
+	CreateTime time.Time `gorm:"not null"`
+	InfoId     int32     `gorm:"not null"`
+	UserId     int32     `gorm:"not null"`
+	Status     int32     `gorm:"not null;default:1"`
+}
+
 type Good struct {
 	ID          int32   `gorm:"auto_increment;primary_key"`
 	GoodName    string  `gorm:"size:128;not null"`

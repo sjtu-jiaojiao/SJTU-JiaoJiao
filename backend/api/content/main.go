@@ -15,6 +15,7 @@ func setupRouter() *gin.Engine {
 	rg.POST("/content", addContent)
 	rg.DELETE("/content", deleteContent)
 	rg.PUT("/content", updateContent)
+	rg.GET("/content/:contentId", getContent)
 	return router
 }
 
@@ -166,6 +167,47 @@ func updateContent(c *gin.Context) {
 			FileId:       p.FileId,
 			Content:      data,
 			Type:         content.ContentUpdateRequest_Type(p.Type),
+		})
+		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
+			c.JSON(500, err)
+			return
+		}
+		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+/**
+ * @api {get} /content/:contentId GetContent
+ * @apiVersion 1.0.0
+ * @apiGroup Content
+ * @apiPermission user/admin
+ * @apiName GetContent
+ * @apiDescription get sell info content
+ *
+ * @apiParam {--} Param see [Content Service](#api-Service-Content_Query)
+ * @apiSuccess (Success 200) {Response} response see [Content Service](#api-Service-Content_Query)
+ * @apiUse InvalidParam
+ * @apiUse ContentServiceDown
+ */
+func getContent(c *gin.Context) {
+	type param struct {
+		ContentId string `uri:"contentId" binding:"required,min=1"`
+	}
+	var p param
+	role := utils.GetRole(c)
+
+	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
+		if !role.User && !role.Admin {
+			c.AbortWithStatus(403)
+			return
+		}
+
+		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
+			func() interface{} { return mock.NewContentService() }).(content.ContentService)
+		rsp, err := srv.Query(context.TODO(), &content.ContentQueryRequest{
+			ContentId: p.ContentId,
 		})
 		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
 			c.JSON(500, err)
