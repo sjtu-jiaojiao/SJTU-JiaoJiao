@@ -2,7 +2,7 @@
 doc文件不方便版本控制，先放这里稳定后再合并
 
 参考：
-- [Effective Go](https://golang.org/doc/effective_go.html)
+  - [Effective Go](https://golang.org/doc/effective_go.html)
 
 ## 自动格式化
 请使用`goimports`，默认配置即可。
