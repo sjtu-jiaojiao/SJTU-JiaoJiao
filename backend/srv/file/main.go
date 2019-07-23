@@ -3,12 +3,9 @@ package main
 import (
 	"bytes"
 	"context"
-	"errors"
-	"io/ioutil"
 	db "jiaojiao/database"
 	file "jiaojiao/srv/file/proto"
 	"jiaojiao/utils"
-	"os"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
@@ -102,13 +99,7 @@ func (a *srvFile) Create(ctx context.Context, req *file.FileCreateRequest, rsp *
  */
 func (a *srvFile) Delete(ctx context.Context, req *file.FileRequest, rsp *file.FileDeleteResponse) error {
 	// TODO
-	var s file.FileCreateResponse
-	f, _ := os.Open("/home/imwxz/Documents/code/SJTU-JiaoJiao/backend/srv/file/1.png")
-	z, _ := ioutil.ReadAll(f)
-	_ = a.Create(context.TODO(), &file.FileCreateRequest{
-		File: z,
-	}, &s)
-	return errors.New(s.FileId)
+	return nil
 }
 
 func main() {

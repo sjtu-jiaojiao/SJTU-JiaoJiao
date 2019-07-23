@@ -11,7 +11,7 @@ import { Format } from 'src/app/Formatter/format';
   styleUrls: ['./sell-info.component.css']
 })
 export class SellInfoComponent implements OnInit {
-
+  tags = ['测试','数据'];
   searchTag: string[]=[];
   sellinfos: sellInfo[];
   current : number = 1;
@@ -43,7 +43,7 @@ export class SellInfoComponent implements OnInit {
     // if not search term, return all info array.
     return;
   }
-    this.infoService.searchSellInfos(this.searchUser,this.size, this.current*this.size-this.size)
+    this.infoService.searchPageSellInfos(this.searchUser,this.size, this.current*this.size-this.size)
     .subscribe(infos => {
       if(!infos) return;
       this.sellinfos = infos.sellInfo;
@@ -66,7 +66,6 @@ export class SellInfoComponent implements OnInit {
   getinfos(): void {
     this.infoService.getPageSellInfos(this.size, this.current*this.size-this.size)
     .subscribe(infos => {
-      console.log(infos);
       if(!infos) return;
       this.sellinfos = infos.sellInfo;
       this.checkcount();

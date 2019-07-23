@@ -19,9 +19,6 @@ func InitORM(dbName string, m ...interface{}) {
 	Ormer, err = gorm.Open("mysql", conn)
 	utils.LogPanic(err)
 
-	if utils.LocalConf.Deploy == "develop" {
-		Ormer.DropTableIfExists(m...)
-	}
 	Ormer.AutoMigrate(m...)
 }
 

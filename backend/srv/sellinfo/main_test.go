@@ -15,14 +15,14 @@ func TestSrvInfoQuery(t *testing.T) {
 	var req sellinfo.SellInfoQueryRequest
 
 	info := db.SellInfo{
-		ID:          1000,
+		ID:          1100,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1000,
-		GoodId:      1000,
+		GoodId:      1101,
 	}
 	good := db.Good{
-		ID:          1001,
+		ID:          1101,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
@@ -40,16 +40,15 @@ func TestSrvInfoQuery(t *testing.T) {
 		So(db.Ormer.Create(&good).Error, ShouldBeNil)
 		So(db.Ormer.Create(&info).Error, ShouldBeNil)
 
-		req.SellInfoId = 1000
-		tf(1000, "123456789", 1000)
+		req.SellInfoId = 1100
+		tf(1100, "123456789", 1000)
 
-		req.SellInfoId = 1001
+		req.SellInfoId = 1101
 		tf(0, "", 0)
 
-		So(db.Ormer.Delete(&db.SellInfo{ID: 1000}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 1001}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.SellInfo{ID: 1100}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 1101}).Error, ShouldBeNil)
 	})
-
 }
 
 func TestSrvInfoCreate(t *testing.T) {
@@ -140,7 +139,7 @@ func TestSrvInfoFind(t *testing.T) {
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1000,
-		GoodId:      1000,
+		GoodId:      1010,
 	}
 	info2 := db.SellInfo{
 		ID:          1001,
@@ -148,7 +147,7 @@ func TestSrvInfoFind(t *testing.T) {
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1000,
-		GoodId:      1001,
+		GoodId:      1011,
 	}
 	info3 := db.SellInfo{
 		ID:          1002,
@@ -156,7 +155,7 @@ func TestSrvInfoFind(t *testing.T) {
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1001,
-		GoodId:      1002,
+		GoodId:      1012,
 	}
 	good1 := db.Good{
 		ID:          1010,

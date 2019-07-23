@@ -1,7 +1,7 @@
 
 <nz-list [nzDataSource]="sellinfos" [nzRenderItem]="info" [nzGrid]="{gutter: 16, span: 6}">
     <ng-template #info let-info>
-      <nz-list-item [nzContent]="nzContent">
+      <nz-list-item *ngIf="info" [nzContent]="nzContent">
         <ng-template #nzContent>
           <nz-card [nzTitle]="info.goodName">
       <div>
@@ -26,10 +26,8 @@
       <div class='infoitem'>
           <span class="badge">状态</span>{{getstate(info.status)}}
       </div>
-      <nz-tag
-        *ngFor="let tag of info.tags"
-      >
-        {{ tag }}
+      <nz-tag *ngFor="let tag of tags">
+        {{tag}}
       </nz-tag>
       </div>
               <a routerLink="/info/sellInfo/{{info.sellInfoId}}">

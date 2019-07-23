@@ -17,7 +17,7 @@
                 <i nz-icon nzType="clock-circle-o" style="font-size: 16px;"></i>
         </ng-template>
         </nz-card>
-        <nz-card nzType="inner" nzTitle="交易简介">
+        <nz-card nzType="inner" nzTitle="交易详情">
           <div class='infoitem'>
               <span class="badge">交易名</span>
               <input [(ngModel)]="info.goodName" placeholder="name"/>
@@ -27,13 +27,14 @@
           </div>
           <div class='infoitem'>
                 <span class="badge">交易类型</span>{{'出售'}}
-          </div>
+          </div>    
           <div class='infoitem'>
                 <span class="badge">交易内容(待微服务)</span>{{info.contentId}}
           </div>
-
         <div class='infoitem'>
-          <span class="badge">发起用户</span>{{info.userId}}
+          <span class="badge">发起用户</span>
+          <a routerLink="/user/{{info.userId}}">{{info.userId}}
+           </a>
       </div>
       <div class='infoitem'>
           <span class="badge">发布日期</span>{{stringToDate(info.releaseTime)}}

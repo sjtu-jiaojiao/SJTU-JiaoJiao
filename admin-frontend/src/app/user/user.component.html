@@ -34,8 +34,12 @@
           <span class="badge">电话号码</span>{{user.telephone}}
       </div>
       <div class= 'useritem'>
-        <span class="badge">权限</span>{{user.role==2?'管理':'用户'}}
+        <span class="badge">权限</span>{{user.role==10?'管理':'用户'}}
       </div>
+          <div class='useritem'>
+                <span class="badge">信用评价</span>
+                <nz-rate [ngModel]="2" nzDisabled></nz-rate>
+          </div>
       </div>
               <a routerLink="/user/{{user.userId}}">
               用户详情

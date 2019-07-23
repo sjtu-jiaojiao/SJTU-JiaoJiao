@@ -91,7 +91,7 @@
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Avatar_Create\">Avatar Service</a> <br> file accept <a href=\"https://github.com/h2non/filetype#image\">file type</a> <br> Max size is 5M</p>"
+            "description": "<p>see <a href=\"#api-Service-Avatar_Create\">Avatar Service</a> <br> Max size is 5M</p>"
           }
         ]
       }
@@ -339,7 +339,7 @@
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Content_Create\">Content Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-Content_Create\">Content Service</a> <br> Max size is 50M</p>"
           }
         ]
       }
@@ -443,7 +443,7 @@
     }
   },
   {
-    "type": "update",
+    "type": "put",
     "url": "/content",
     "title": "UpdateContent",
     "version": "1.0.0",
@@ -463,7 +463,7 @@
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Content_Update\">Content Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-Content_Update\">Content Service</a> <br> Max size is 50M</p>"
           }
         ]
       }
@@ -839,7 +839,7 @@
             "type": "bytes",
             "optional": false,
             "field": "file",
-            "description": "<p>file bytes</p>"
+            "description": "<p>file bytes, file accept <a href=\"https://github.com/h2non/filetype#image\">file type</a></p>"
           }
         ]
       }
@@ -1263,7 +1263,7 @@
             "type": "bytes",
             "optional": false,
             "field": "content",
-            "description": "<p>binary content</p>"
+            "description": "<p>binary bytes, file accept <a href=\"https://github.com/h2non/filetype#image\">image</a> and <a href=\"https://github.com/h2non/filetype#video\">video</a></p>"
           },
           {
             "group": "Parameter",
@@ -1283,7 +1283,7 @@
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 2 for invalid type</p>"
           },
           {
             "group": "Success 200",
@@ -1464,16 +1464,16 @@
           {
             "group": "Parameter",
             "type": "bytes",
-            "optional": false,
+            "optional": true,
             "field": "content",
-            "description": "<p>binary content</p>"
+            "description": "<p>binary bytes, file accept <a href=\"https://github.com/h2non/filetype#image\">image</a> and <a href=\"https://github.com/h2non/filetype#video\">video</a> (note: only delete the file if empty)</p>"
           },
           {
             "group": "Parameter",
             "type": "int32",
-            "optional": false,
+            "optional": true,
             "field": "type",
-            "description": "<p>1 for picture <br> 2 for video</p>"
+            "description": "<p>1 for picture <br> 2 for video (note: only delete the file if empty)</p>"
           }
         ]
       }
@@ -1486,7 +1486,14 @@
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for not found <br> 4 for failed</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for not found <br> 4 for failed <br> 5 for invalid type</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": true,
+            "field": "fileId",
+            "description": "<p>24 bytes updated file id (note: new file id differs from old one, meaningful only if content and type are not empty)</p>"
           }
         ]
       }

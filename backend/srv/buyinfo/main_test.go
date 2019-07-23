@@ -15,14 +15,14 @@ func TestSrvInfoQuery(t *testing.T) {
 	var req buyinfo.BuyInfoQueryRequest
 
 	info := db.BuyInfo{
-		ID:          1000,
+		ID:          2100,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1000,
-		GoodId:      1000,
+		GoodId:      2101,
 	}
 	good := db.Good{
-		ID:          1001,
+		ID:          2101,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
@@ -40,14 +40,14 @@ func TestSrvInfoQuery(t *testing.T) {
 		So(db.Ormer.Create(&good).Error, ShouldBeNil)
 		So(db.Ormer.Create(&info).Error, ShouldBeNil)
 
-		req.BuyInfoId = 1000
-		tf(1000, "123456789", 1000)
+		req.BuyInfoId = 2100
+		tf(2100, "123456789", 1000)
 
-		req.BuyInfoId = 1001
+		req.BuyInfoId = 2101
 		tf(0, "", 0)
 
-		So(db.Ormer.Delete(&db.BuyInfo{ID: 1000}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 1001}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.BuyInfo{ID: 2100}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 2101}).Error, ShouldBeNil)
 	})
 
 }
@@ -61,43 +61,43 @@ func TestSrvInfoFind(t *testing.T) {
 	var req buyinfo.BuyInfoFindRequest
 
 	info1 := db.BuyInfo{
-		ID:          1000,
+		ID:          2000,
 		Status:      1,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1000,
-		GoodId:      1000,
+		GoodId:      2010,
 	}
 	info2 := db.BuyInfo{
-		ID:          1001,
+		ID:          2001,
 		Status:      2,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1000,
-		GoodId:      1001,
+		GoodId:      2011,
 	}
 	info3 := db.BuyInfo{
-		ID:          1002,
+		ID:          2002,
 		Status:      3,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
 		UserId:      1001,
-		GoodId:      1002,
+		GoodId:      2012,
 	}
 	good1 := db.Good{
-		ID:          1010,
+		ID:          2010,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
 	}
 	good2 := db.Good{
-		ID:          1011,
+		ID:          2011,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
 	}
 	good3 := db.Good{
-		ID:          1012,
+		ID:          2012,
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentId:   "123456789",
@@ -112,13 +112,13 @@ func TestSrvInfoFind(t *testing.T) {
 		So(db.Ormer.Create(&info3).Error, ShouldBeNil)
 	}
 	end := func() {
-		So(db.Ormer.Delete(&db.BuyInfo{ID: 1000}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.BuyInfo{ID: 1001}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.BuyInfo{ID: 1002}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.BuyInfo{ID: 2000}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.BuyInfo{ID: 2001}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.BuyInfo{ID: 2002}).Error, ShouldBeNil)
 
-		So(db.Ormer.Delete(&db.Good{ID: 1010}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 1011}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 1012}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 2010}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 2011}).Error, ShouldBeNil)
+		So(db.Ormer.Delete(&db.Good{ID: 2012}).Error, ShouldBeNil)
 	}
 	testLen := func(length int) {
 		var rsp buyinfo.BuyInfoFindResponse

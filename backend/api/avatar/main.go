@@ -24,8 +24,7 @@ func setupRouter() *gin.Engine {
  * @apiName AddAvatar
  * @apiDescription Add avatar
  *
- * @apiParam {--} Param see [Avatar Service](#api-Service-Avatar_Create) <br>
- *						file accept [file type](https://github.com/h2non/filetype#image) <br> Max size is 5M
+ * @apiParam {--} Param see [Avatar Service](#api-Service-Avatar_Create) <br> Max size is 5M
  * @apiSuccess {Response} response see [Avatar Service](#api-Service-Avatar_Create)
  * @apiUse InvalidParam
  * @apiUse UserServiceDown
@@ -37,7 +36,7 @@ func addAvatar(c *gin.Context) {
 	var p param
 
 	file, err := c.FormFile("file")
-	if err == nil && !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
+	if err == nil && !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
 		if file.Size > 1024*1024*5 { // 5M
 			c.AbortWithStatus(413)
 			return
@@ -63,7 +62,7 @@ func addAvatar(c *gin.Context) {
 			return
 		}
 
-		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return avatar.NewAvatarService(name, c) },
+		srv := utils.CallMicroService("avatar", func(name string, c client.Client) interface{} { return avatar.NewAvatarService(name, c) },
 			func() interface{} { return mock.NewAvatarService() }).(avatar.AvatarService)
 		rsp, err := srv.Create(context.TODO(), &avatar.AvatarCreateRequest{
 			UserId: p.UserId,

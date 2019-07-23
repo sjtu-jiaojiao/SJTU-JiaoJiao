@@ -36,6 +36,10 @@ func (a *mockSrv) Create(ctx context.Context, req *content.ContentCreateRequest,
 	} else if req.ContentId == "" && req.ContentToken == "" {
 		rsp.Status = content.ContentCreateResponse_SUCCESS
 	} else if req.ContentId != "" && req.ContentToken != "" {
+		if req.ContentId == "invalid" {
+			rsp.Status = content.ContentCreateResponse_INVALID_TYPE
+			return &rsp, nil
+		}
 		if req.ContentId == "error" {
 			return nil, errors.New("")
 		}

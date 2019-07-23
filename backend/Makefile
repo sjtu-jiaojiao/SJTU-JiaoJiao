@@ -39,8 +39,8 @@ docker: build
 deploy:
 	@echo "$$DOCKER_PASSWORD" | docker login -u "$$DOCKER_USERNAME" --password-stdin
 	@while read -r line;do		\
-		sudo docker push sjtujj/api-$$line	\
-		sudo docker push sjtujj/srv-$$line	\
+		sudo docker push sjtujj/api-$$line;	\
+		sudo docker push sjtujj/srv-$$line;	\
 	done < "$(SRVLIST)"
 	@openssl aes-256-cbc -K $$encrypted_3b095c6852fb_key -iv $$encrypted_3b095c6852fb_iv -in private.key.enc -out private.key -d
 	@chmod 400 private.key
@@ -54,13 +54,16 @@ add:
 
 	@cp -R ./template/api ./api/$$srvnamel
 	@cp -R ./template/srv ./srv/$$srvnamel
-	@rm ./api/$$srvnamel/api.goconvey
-	@rm ./srv/$$srvnamel/srv.goconvey
-	@rm ./srv/$$srvnamel/mock/mock.goconvey
+
+	@mv ./api/$$srvnamel/main_test.tpl ./api/$$srvnamel/main_test.go
+	@mv ./api/$$srvnamel/main.tpl ./api/$$srvnamel/main.go
+	@mv ./srv/$$srvnamel/main_test.tpl ./srv/$$srvnamel/main_test.go
+	@mv ./srv/$$srvnamel/main.tpl ./srv/$$srvnamel/main.go
+	@mv ./srv/$$srvnamel/mock/mock.tpl ./srv/$$srvnamel/mock/mock.go
+	@mv ./srv/$$srvnamel/proto/NAME.proto ./srv/$$srvnamel/proto/$$srvnamel.proto
 
 	@sed -i "s/{{SERVICE_LNAME}}/$$srvnamel/g" ./api/$$srvnamel/Dockerfile
 	@sed -i "s/{{SERVICE_NAME}}/$$srvname/g" ./api/$$srvnamel/main.go
-	@mv ./srv/$$srvnamel/proto/NAME.proto ./srv/$$srvnamel/proto/$$srvnamel.proto
 	@sed -i "s/{{SERVICE_LNAME}}/$$srvnamel/g" ./srv/$$srvnamel/Dockerfile
 	@sed -i "s/{{SERVICE_NAME}}/$$srvname/g" ./srv/$$srvnamel/main.go
 
