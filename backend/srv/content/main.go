@@ -80,31 +80,32 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 				return err
 			}
 
-		rsp.ContentId = res.InsertedID.(primitive.ObjectID).Hex()
-		rsp.ContentToken = token
-		rsp.Status = content.ContentCreateResponse_SUCCESS
-	} else if req.ContentId != "" && req.ContentToken != "" {
-		if !validCheck(req.ContentId, req.ContentToken) {
-			rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
-			return nil
-		}
+			rsp.ContentId = res.InsertedID.(primitive.ObjectID).Hex()
+			rsp.ContentToken = token
+			rsp.Status = content.ContentCreateResponse_SUCCESS
+		} else if req.ContentId != "" && req.ContentToken != "" {
+			if !validCheck(req.ContentId, req.ContentToken) {
+				rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
+				return nil
+			}
 
 			objId, err := upload()
 			if utils.LogContinue(err, utils.Warning) {
 				return err
 			}
 
-		collection := db.MongoDatabase.Collection("sellinfo")
-		rid, err := primitive.ObjectIDFromHex(req.ContentId)
-		_, err = collection.UpdateOne(db.MongoContext, bson.D{
-			{"_id", rid},
-			{"token", req.ContentToken},
-		},
-			bson.D{
-				{"$push", bson.D{
-					{"files", bson.D{
-						{"fileId", objId},
-						{"type", req.Type.String()},
+			collection := db.MongoDatabase.Collection("sellinfo")
+			rid, err := primitive.ObjectIDFromHex(req.ContentId)
+			_, err = collection.UpdateOne(db.MongoContext, bson.D{
+				{"_id", rid},
+				{"token", req.ContentToken},
+			},
+				bson.D{
+					{"$push", bson.D{
+						{"files", bson.D{
+							{"fileId", objId},
+							{"type", req.Type.String()},
+						}},
 					}},
 				})
 			if utils.LogContinue(err, utils.Warning) {
@@ -149,6 +150,8 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 		}
 
 		//delete old file
+		collection := db.MongoDatabase.Collection("sellinfo")
+		rid, err := primitive.ObjectIDFromHex(req.ContentId)
 		_, err = collection.UpdateOne(db.MongoContext, bson.D{
 			{"_id", rid},
 			{"token", req.ContentToken},
@@ -183,6 +186,9 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 				rsp.Status = content.ContentUpdateResponse_FAILED
 				return nil
 			}
+
+			collection := db.MongoDatabase.Collection("sellinfo")
+			rid, err := primitive.ObjectIDFromHex(req.ContentId)
 			_, err = collection.UpdateOne(db.MongoContext, bson.D{
 				{"_id", rid},
 				{"token", req.ContentToken},
