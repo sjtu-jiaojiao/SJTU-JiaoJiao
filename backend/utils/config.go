@@ -17,7 +17,10 @@ type Config struct {
 	Test      string            `json:"test"`
 }
 
+// LocalConf is local config
 var LocalConf Config
+
+// ConsulConf is consul config
 var ConsulConf config.Config
 
 // LoadLocalConfig load config from local

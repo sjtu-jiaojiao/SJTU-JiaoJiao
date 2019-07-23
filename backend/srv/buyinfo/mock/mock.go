@@ -10,6 +10,7 @@ import (
 
 type mockSrv struct{}
 
+// Find is buyinfo create mock
 func (a *mockSrv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, opts ...client.CallOption) (*buyinfo.BuyInfoCreateResponse, error) {
 	var rsp buyinfo.BuyInfoCreateResponse
 	if req.ValidTime == 0 || req.GoodName == "" || req.UserId == 0 {
@@ -35,6 +36,7 @@ func (a *mockSrv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest,
 	return &rsp, nil
 }
 
+// Find is buyinfo query mock
 func (a *mockSrv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, opts ...client.CallOption) (*buyinfo.BuyInfoMsg, error) {
 	var rsp buyinfo.BuyInfoMsg
 	if req.BuyInfoId != 0 {
@@ -52,12 +54,14 @@ func (a *mockSrv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, o
 	return &rsp, nil
 }
 
+// Find is buyinfo find mock
 func (a *mockSrv) Find(ctx context.Context, req *buyinfo.BuyInfoFindRequest, opts ...client.CallOption) (*buyinfo.BuyInfoFindResponse, error) {
 	var rsp buyinfo.BuyInfoFindResponse
 	// TODO
 	return &rsp, nil
 }
 
+// NewBuyInfoService is buyinfo service mock
 func NewBuyInfoService() buyinfo.BuyInfoService {
 	return new(mockSrv)
 }

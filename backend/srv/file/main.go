@@ -46,11 +46,10 @@ func (a *srvFile) Query(ctx context.Context, req *file.FileRequest, rsp *file.Fi
 		if err != nil {
 			rsp.Status = file.FileQueryResponse_NOT_FOUND
 			return nil
-		} else {
-			rsp.File = buf.Bytes()
-			rsp.Size = size
-			rsp.Status = file.FileQueryResponse_SUCCESS
 		}
+		rsp.File = buf.Bytes()
+		rsp.Size = size
+		rsp.Status = file.FileQueryResponse_SUCCESS
 	}
 	return nil
 }
