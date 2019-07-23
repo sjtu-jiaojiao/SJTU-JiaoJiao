@@ -80,41 +80,31 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 				return err
 			}
 
-			rsp.ContentId = res.InsertedID.(primitive.ObjectID).Hex()
-			rsp.ContentToken = token
-			rsp.Status = content.ContentCreateResponse_SUCCESS
-		} else if req.ContentId != "" && req.ContentToken != "" {
-			//check token
-			collection := db.MongoDatabase.Collection("sellinfo")
-			rid, err := primitive.ObjectIDFromHex(req.ContentId)
-			if err != nil {
-				rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
-				return nil
-			}
-			_, err = collection.FindOne(db.MongoContext, bson.D{
-				{"_id", rid},
-				{"token", req.ContentToken},
-			}).DecodeBytes()
-			if err != nil {
-				rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
-				return nil
-			}
+		rsp.ContentId = res.InsertedID.(primitive.ObjectID).Hex()
+		rsp.ContentToken = token
+		rsp.Status = content.ContentCreateResponse_SUCCESS
+	} else if req.ContentId != "" && req.ContentToken != "" {
+		if !validCheck(req.ContentId, req.ContentToken) {
+			rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
+			return nil
+		}
 
 			objId, err := upload()
 			if utils.LogContinue(err, utils.Warning) {
 				return err
 			}
 
-			_, err = collection.UpdateOne(db.MongoContext, bson.D{
-				{"_id", rid},
-				{"token", req.ContentToken},
-			},
-				bson.D{
-					{"$push", bson.D{
-						{"files", bson.D{
-							{"fileId", objId},
-							{"type", req.Type.String()},
-						}},
+		collection := db.MongoDatabase.Collection("sellinfo")
+		rid, err := primitive.ObjectIDFromHex(req.ContentId)
+		_, err = collection.UpdateOne(db.MongoContext, bson.D{
+			{"_id", rid},
+			{"token", req.ContentToken},
+		},
+			bson.D{
+				{"$push", bson.D{
+					{"files", bson.D{
+						{"fileId", objId},
+						{"type", req.Type.String()},
 					}},
 				})
 			if utils.LogContinue(err, utils.Warning) {
@@ -152,24 +142,8 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 		rsp.Status = content.ContentUpdateResponse_INVALID_PARAM
 		return nil
 	} else {
-		if !utils.CheckInTest() && !bytes.Equal(req.Content, []byte{0}) && !(req.Type == 0) &&
-			!filetype.IsImage(req.Content) && !filetype.IsVideo(req.Content) {
-			rsp.Status = content.ContentUpdateResponse_INVALID_TYPE
-			return nil
-		}
-
-		//check token
-		collection := db.MongoDatabase.Collection("sellinfo")
-		rid, err := primitive.ObjectIDFromHex(req.ContentId)
-		if err != nil {
-			rsp.Status = content.ContentUpdateResponse_INVALID_PARAM
-			return nil
-		}
-		_, err = collection.FindOne(db.MongoContext, bson.D{
-			{"_id", rid},
-			{"token", req.ContentToken},
-		}).DecodeBytes()
-		if err != nil {
+		// check token
+		if !validCheck(req.ContentId, req.ContentToken) {
 			rsp.Status = content.ContentUpdateResponse_INVALID_TOKEN
 			return nil
 		}
@@ -351,6 +325,19 @@ func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *
 		rsp.Status = content.ContentCheckResponse_INVALID_PARAM
 		return nil
 	}
+	if !validCheck(req.ContentId, req.ContentToken) {
+		rsp.Status = content.ContentCheckResponse_INVALID
+		return nil
+	}
+
+	rsp.Status = content.ContentCheckResponse_VALID
+	return nil
+}
+
+func validCheck(contentId string, contentToken string) bool {
+	if contentId == "" || contentToken == "" {
+		return false
+	}
 	type files struct {
 		FileId primitive.ObjectID      `bson:"fileId"`
 		Type   content.ContentMsg_Type `bson:"type"`
@@ -361,23 +348,20 @@ func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *
 	}
 
 	collection := db.MongoDatabase.Collection("sellinfo")
-	rid, err := primitive.ObjectIDFromHex(req.ContentId)
+	rid, err := primitive.ObjectIDFromHex(contentId)
 	if err != nil {
-		rsp.Status = content.ContentCheckResponse_INVALID_PARAM
-		return nil
+		return false
 	}
 	var res result
 	err = collection.FindOne(db.MongoContext, bson.D{
 		{"_id", rid},
-		{"token", req.ContentToken},
+		{"token", contentToken},
 	}).Decode(&res)
 	if err != nil {
-		rsp.Status = content.ContentCheckResponse_INVALID
-		return nil
+		return false
 	}
 
-	rsp.Status = content.ContentCheckResponse_VALID
-	return nil
+	return true
 }
 
 func main() {
