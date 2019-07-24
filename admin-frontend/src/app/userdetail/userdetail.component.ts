@@ -5,8 +5,8 @@ import { User } from '../entity/user';
 import { Location } from '@angular/common';
 import { InfoService } from '../info.service';
 import { Format } from '../Formatter/format';
-
-
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { sellInfo, buyInfo } from '../entity/info';
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 export function fFormatter(params) {
      return params.value + ' activities in ' + params.name;
@@ -37,7 +37,10 @@ stringToDate(params) {
   this.getuser();
 }
   typeof(obj): string {
-    return typeof(obj);
+    if( obj['sellInfoId'])
+    return 'sellInfo';
+    if( obj['buyInfoId'])
+    return 'buyInfo';
   }
     goBack(): void {
     this.location.back();
@@ -49,9 +52,20 @@ stringToDate(params) {
         this.forbid = this.user.status === 2;
         this.userName = this.user.userName;
         this.infoService.searchSellInfos(id).subscribe(e => {
-          this.infos = e.sellInfo.sort((a,b )=>parseInt(a.releaseTime)-
-        parseInt(b.releaseTime));
-        this.graph();
+          if(e.sellInfo)
+          {
+        this.infos = e.sellInfo;
+          }
+          this.infoService.searchBuyInfos(id).subscribe(e => {
+            if(e.buyInfo)
+          this.infos = this.infos.concat(e.buyInfo);
+          this.infos= this.infos.sort((a,b )=>parseInt(a.releaseTime)-
+      parseInt(b.releaseTime));
+          this.graph();
+            }
+          );
+
+
         });
       });
    
