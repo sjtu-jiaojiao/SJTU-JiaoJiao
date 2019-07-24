@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import Config from "../../Config";
 import {ListItem} from "react-native-elements";
+import {TimeStamptoDate, DatetoTimeStamp, TimeStampNow} from "../../Utils/TimeStamp";
 
 let dev = "http://202.120.40.8:30711/v1";
 
@@ -56,7 +57,7 @@ export default class SellInfoScreen extends Component {
 
     fetchData() {
         //console.warn(Config.userInfo);
-        //let obj = { userId: Config.userInfo.userId };
+        //let obj = { userID: Config.userInfo.userID };
         let obj = {  };
         //console.warn(obj);
         Http.get('/sellInfo', obj)
@@ -90,6 +91,11 @@ export default class SellInfoScreen extends Component {
         }
     };
 
+    parseTimeStamp = (TimeStamp) => {
+        let date = TimeStamptoDate(TimeStamp);
+        return ('发布时间：' + date);
+    };
+
     renderItem = ({ item }) => (
         <ListItem
             bottomDivider
@@ -102,7 +108,7 @@ export default class SellInfoScreen extends Component {
                     <Text numberOfLines={1} style={styles.ratingText}>商品描述：{item.description}</Text>
                     <Text numberOfLines={1} style={styles.ratingText}>{this.parseStatus(item.status)}</Text>
                     <Text numberOfLines={1} style={styles.ratingText}>出售价格：￥{item.price}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>发布时间：{item.releaseTime}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>{this.parseTimeStamp(item.releaseTime)}</Text>
                     <Text numberOfLines={1} style={styles.ratingText}>商品标签：暂无</Text>
                 </View>
             }
@@ -118,7 +124,10 @@ export default class SellInfoScreen extends Component {
             )
         }
         else {
-            //console.warn(this.state.SellInfoList);
+            //console.warn(this.state.SellInfoList[0].releaseTime);
+            //console.warn(TimeStamptoDate(this.state.SellInfoList[0].releaseTime));
+            //console.warn(TimeStampNow());
+            //console.warn(TimeStamptoDate(TimeStampNow()));
             return (
                 <View>
                     <FlatList

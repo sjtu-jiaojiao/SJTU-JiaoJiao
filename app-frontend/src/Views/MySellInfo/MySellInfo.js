@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {FlatList, Text, View, StyleSheet} from 'react-native';
 import {Avatar, Button, ListItem, SearchBar, Icon} from "react-native-elements";
 import Config from '../../Config';
+import {TimeStamptoDate} from "../../Utils/TimeStamp";
 
 let dev = "http://202.120.40.8:30711/v1";
 
@@ -56,8 +57,8 @@ export default class MySellInfoScreen extends Component {
 
     fetchData() {
         //console.warn(Config.userInfo);
-        //let obj = { userId: Config.userInfo.userId };
-        let obj = { userId: Config.userInfo.userId };
+        //let obj = { userID: Config.userInfo.userID };
+        let obj = { userID: Config.userInfo.userID };
         //console.warn(obj);
         Http.get('/sellInfo', obj)
             .then((response) => {
@@ -90,6 +91,11 @@ export default class MySellInfoScreen extends Component {
         }
     };
 
+    parseTimeStamp = (TimeStamp) => {
+        let date = TimeStamptoDate(TimeStamp);
+        return ('发布时间：' + date);
+    };
+
     renderItem = ({ item }) => (
         <ListItem
             bottomDivider
@@ -102,7 +108,7 @@ export default class MySellInfoScreen extends Component {
                     <Text numberOfLines={1} style={styles.ratingText}>{this.parseStatus(item.status)}</Text>
                     <Text numberOfLines={1} style={styles.ratingText}>商品描述：{item.description}</Text>
                     <Text numberOfLines={1} style={styles.ratingText}>出售价格：￥{item.price}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>发布时间：{item.releaseTime}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>{this.parseTimeStamp(item.releaseTime)}</Text>
                     <Text numberOfLines={1} style={styles.ratingText}>有效时间：{item.validTime}</Text>
                     <Text numberOfLines={1} style={styles.ratingText}>商品标签：暂无</Text>
                 </View>
