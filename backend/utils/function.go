@@ -31,6 +31,25 @@ func AssignNotZero(src interface{}, dst interface{}) {
 	}
 }
 
+func IsEmpty(v interface{}) bool {
+	switch v := v.(type) {
+	case int:
+
+	case int32:
+		return v == 0
+	case *float32:
+		if *src.(*float32) != 0 {
+			*v = *src.(*float32)
+		}
+	case *float64:
+		if *src.(*float64) != 0 {
+			*v = *src.(*float64)
+		}
+	default:
+		panic("wrong type")
+	}
+}
+
 /*
 GetQueryFile get query file info
 return file byte, response code and error

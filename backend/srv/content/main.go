@@ -8,6 +8,7 @@ import (
 	"jiaojiao/srv/file/mock"
 	file "jiaojiao/srv/file/proto"
 	"jiaojiao/utils"
+	"time"
 
 	"github.com/h2non/filetype"
 	"github.com/micro/go-micro/client"
@@ -67,8 +68,10 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 			}
 
 			token := uuid.NewV4().String()
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
 			collection := db.MongoDatabase.Collection("sellinfo")
-			res, err := collection.InsertOne(db.MongoContext, bson.M{
+			res, err := collection.InsertOne(ctx, bson.M{
 				"token": token,
 				"files": bson.A{
 					bson.M{
@@ -94,13 +97,15 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 				return err
 			}
 
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
 			collection := db.MongoDatabase.Collection("sellinfo")
 			rid, err := primitive.ObjectIDFromHex(req.ContentID)
 			if utils.LogContinue(err, utils.Warning) {
 				rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
 				return nil
 			}
-			_, err = collection.UpdateOne(db.MongoContext, bson.D{
+			_, err = collection.UpdateOne(ctx, bson.D{
 				{"_id", rid},
 				{"token", req.ContentToken},
 			},
@@ -152,13 +157,15 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 		}
 
 		//delete old file
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
 		collection := db.MongoDatabase.Collection("sellinfo")
 		rid, err := primitive.ObjectIDFromHex(req.ContentID)
 		if utils.LogContinue(err, utils.Warning) {
 			rsp.Status = content.ContentUpdateResponse_INVALID_TOKEN
 			return nil
 		}
-		_, err = collection.UpdateOne(db.MongoContext, bson.D{
+		_, err = collection.UpdateOne(ctx, bson.D{
 			{"_id", rid},
 			{"token", req.ContentToken},
 		}, bson.D{
@@ -192,7 +199,7 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 				rsp.Status = content.ContentUpdateResponse_FAILED
 				return nil
 			}
-			_, err = collection.UpdateOne(db.MongoContext, bson.D{
+			_, err = collection.UpdateOne(ctx, bson.D{
 				{"_id", rid},
 				{"token", req.ContentToken},
 			}, bson.D{
@@ -240,6 +247,8 @@ func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp
 		Files []files            `bson:"files"`
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 	collection := db.MongoDatabase.Collection("sellinfo")
 	rid, err := primitive.ObjectIDFromHex(req.ContentID)
 	if utils.LogContinue(err, utils.Warning) {
@@ -247,7 +256,7 @@ func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp
 		return nil
 	}
 	var res result
-	err = collection.FindOneAndDelete(db.MongoContext, bson.D{
+	err = collection.FindOneAndDelete(ctx, bson.D{
 		{"_id", rid},
 		{"token", req.ContentToken},
 	}).Decode(&res)
@@ -296,6 +305,8 @@ func (a *srv) Query(ctx context.Context, req *content.ContentQueryRequest, rsp *
 		Files []files            `bson:"files"`
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 	collection := db.MongoDatabase.Collection("sellinfo")
 	rid, err := primitive.ObjectIDFromHex(req.ContentID)
 	if utils.LogContinue(err, utils.Warning) {
@@ -303,7 +314,7 @@ func (a *srv) Query(ctx context.Context, req *content.ContentQueryRequest, rsp *
 		return nil
 	}
 	var res result
-	err = collection.FindOne(db.MongoContext, bson.D{
+	err = collection.FindOne(ctx, bson.D{
 		{"_id", rid},
 	}).Decode(&res)
 	if utils.LogContinue(err, utils.Warning) {
@@ -360,13 +371,15 @@ func validCheck(contentID string, contentToken string) bool {
 		Files []files            `bson:"files"`
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 	collection := db.MongoDatabase.Collection("sellinfo")
 	rid, err := primitive.ObjectIDFromHex(contentID)
 	if utils.LogContinue(err, utils.Warning) {
 		return false
 	}
 	var res result
-	err = collection.FindOne(db.MongoContext, bson.D{
+	err = collection.FindOne(ctx, bson.D{
 		{"_id", rid},
 		{"token", contentToken},
 	}).Decode(&res)
