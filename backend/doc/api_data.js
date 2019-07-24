@@ -258,7 +258,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/buyInfo/:buyInfoId",
+    "url": "/buyInfo/:buyInfoID",
     "title": "GetBuyInfo",
     "version": "1.0.0",
     "group": "BuyInfo",
@@ -506,7 +506,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/file/:fileId",
+    "url": "/file/:fileID",
     "title": "GetFile",
     "version": "1.0.0",
     "group": "File",
@@ -700,7 +700,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/sellInfo/:sellInfoId",
+    "url": "/sellInfo/:sellInfoID",
     "title": "GetSellInfo",
     "version": "1.0.0",
     "group": "SellInfo",
@@ -823,7 +823,7 @@ define({ "api": [
     "version": "1.0.0",
     "group": "Service",
     "name": "Avatar_Create",
-    "description": "<p>Create avatar and return avatarId.</p>",
+    "description": "<p>Create avatar and return avatarID.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -831,7 +831,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "int32",
             "optional": false,
-            "field": "userId",
+            "field": "userID",
             "description": "<p>user id</p>"
           },
           {
@@ -858,7 +858,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "int32",
             "optional": false,
-            "field": "avatarId",
+            "field": "avatarID",
             "description": "<p>new avatar id</p>"
           }
         ]
@@ -894,7 +894,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "int32",
             "optional": false,
-            "field": "userId",
+            "field": "userID",
             "description": "<p>user id</p>"
           },
           {
@@ -929,7 +929,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": true,
-            "field": "contentId",
+            "field": "contentID",
             "description": "<p>content id of good</p>"
           },
           {
@@ -956,8 +956,8 @@ define({ "api": [
             "group": "Success 200",
             "type": "int32",
             "optional": false,
-            "field": "buyInfoId",
-            "description": "<p>created buyInfoId</p>"
+            "field": "buyInfoID",
+            "description": "<p>created buyInfoID</p>"
           }
         ]
       }
@@ -992,8 +992,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "int32",
             "optional": true,
-            "field": "userId",
-            "description": "<p>userId</p>"
+            "field": "userID",
+            "description": "<p>userID</p>"
           },
           {
             "group": "Parameter",
@@ -1087,7 +1087,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "int32",
             "optional": false,
-            "field": "buyInfoId",
+            "field": "buyInfoID",
             "description": "<p>buyInfo id.</p>"
           }
         ]
@@ -1100,8 +1100,8 @@ define({ "api": [
             "group": "Success 200",
             "type": "int32",
             "optional": false,
-            "field": "buyInfoId",
-            "description": "<p>buyInfoId</p>"
+            "field": "buyInfoID",
+            "description": "<p>buyInfoID</p>"
           },
           {
             "group": "Success 200",
@@ -1149,15 +1149,15 @@ define({ "api": [
             "group": "Success 200",
             "type": "string",
             "optional": false,
-            "field": "contentId",
+            "field": "contentID",
             "description": "<p>multimedia data</p>"
           },
           {
             "group": "Success 200",
             "type": "int32",
             "optional": false,
-            "field": "userId",
-            "description": "<p>userId</p>"
+            "field": "userID",
+            "description": "<p>userID</p>"
           }
         ]
       }
@@ -1192,7 +1192,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "contentId",
+            "field": "contentID",
             "description": "<p>24 bytes content id</p>"
           },
           {
@@ -1248,7 +1248,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": true,
-            "field": "contentId",
+            "field": "contentID",
             "description": "<p>24 bytes content id, left empty for first upload</p>"
           },
           {
@@ -1289,8 +1289,8 @@ define({ "api": [
             "group": "Success 200",
             "type": "string",
             "optional": false,
-            "field": "contentId",
-            "description": "<p>24 bytes contentId</p>"
+            "field": "contentID",
+            "description": "<p>24 bytes contentID</p>"
           },
           {
             "group": "Success 200",
@@ -1332,7 +1332,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "contentId",
+            "field": "contentID",
             "description": "<p>24 bytes content id</p>"
           },
           {
@@ -1388,7 +1388,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "contentId",
+            "field": "contentID",
             "description": "<p>24 bytes content id</p>"
           }
         ]
@@ -1409,7 +1409,7 @@ define({ "api": [
             "type": "list",
             "optional": false,
             "field": "files",
-            "description": "<p>{string} fileId : file id <br> {int32} type : file type 1 for picture, 2 for video</p>"
+            "description": "<p>{string} fileID : file id <br> {int32} type : file type 1 for picture, 2 for video</p>"
           }
         ]
       }
@@ -1444,7 +1444,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "contentId",
+            "field": "contentID",
             "description": "<p>24 bytes content id</p>"
           },
           {
@@ -1458,7 +1458,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "fileId",
+            "field": "fileID",
             "description": "<p>24 bytes file id</p>"
           },
           {
@@ -1492,7 +1492,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "string",
             "optional": true,
-            "field": "fileId",
+            "field": "fileID",
             "description": "<p>24 bytes updated file id (note: new file id differs from old one, meaningful only if content and type are not empty)</p>"
           }
         ]
@@ -1548,7 +1548,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "string",
             "optional": false,
-            "field": "fileId",
+            "field": "fileID",
             "description": "<p>file id</p>"
           }
         ]
@@ -1584,7 +1584,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "fileId",
+            "field": "fileID",
             "description": "<p>file id.</p>"
           }
         ]
@@ -1633,7 +1633,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "fileId",
+            "field": "fileID",
             "description": "<p>file id.</p>"
           }
         ]
@@ -1696,7 +1696,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "int32",
             "optional": false,
-            "field": "userId",
+            "field": "userID",
             "description": "<p>sellinfo userid</p>"
           },
           {
@@ -1731,7 +1731,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": true,
-            "field": "contentId",
+            "field": "contentID",
             "description": "<p>content id of good</p>"
           },
           {
@@ -1758,8 +1758,8 @@ define({ "api": [
             "group": "Success 200",
             "type": "int32",
             "optional": false,
-            "field": "sellInfoId",
-            "description": "<p>created sellInfoId</p>"
+            "field": "sellInfoID",
+            "description": "<p>created sellInfoID</p>"
           }
         ]
       }
@@ -1794,8 +1794,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "int32",
             "optional": true,
-            "field": "userId",
-            "description": "<p>userId</p>"
+            "field": "userID",
+            "description": "<p>userID</p>"
           },
           {
             "group": "Parameter",
@@ -1889,7 +1889,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "int32",
             "optional": false,
-            "field": "sellInfoId",
+            "field": "sellInfoID",
             "description": "<p>sellInfo id.</p>"
           }
         ]
@@ -1902,8 +1902,8 @@ define({ "api": [
             "group": "Success 200",
             "type": "int32",
             "optional": false,
-            "field": "sellInfoId",
-            "description": "<p>sellInfoId</p>"
+            "field": "sellInfoID",
+            "description": "<p>sellInfoID</p>"
           },
           {
             "group": "Success 200",
@@ -1951,15 +1951,15 @@ define({ "api": [
             "group": "Success 200",
             "type": "string",
             "optional": false,
-            "field": "contentId",
+            "field": "contentID",
             "description": "<p>multimedia data</p>"
           },
           {
             "group": "Success 200",
             "type": "int32",
             "optional": false,
-            "field": "userId",
-            "description": "<p>userId</p>"
+            "field": "userID",
+            "description": "<p>userID</p>"
           }
         ]
       }
@@ -1994,7 +1994,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": false,
-            "field": "studentId",
+            "field": "studentID",
             "description": "<p>student id.</p>"
           },
           {
@@ -2122,7 +2122,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "int32",
             "optional": false,
-            "field": "userId",
+            "field": "userID",
             "description": "<p>user id</p>"
           }
         ]
@@ -2135,7 +2135,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "int32",
             "optional": false,
-            "field": "userId",
+            "field": "userID",
             "description": "<p>user id</p>"
           },
           {
@@ -2149,7 +2149,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "string",
             "optional": false,
-            "field": "avatarId",
+            "field": "avatarID",
             "description": "<p>user avatar id</p>"
           },
           {
@@ -2163,7 +2163,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "string",
             "optional": false,
-            "field": "studentId",
+            "field": "studentID",
             "description": "<p>student id</p>"
           },
           {
@@ -2220,7 +2220,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "int32",
             "optional": false,
-            "field": "userId",
+            "field": "userID",
             "description": "<p>user id</p>"
           },
           {
@@ -2234,7 +2234,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": true,
-            "field": "avatarId",
+            "field": "avatarID",
             "description": "<p>user avatar id</p>"
           },
           {
@@ -2248,7 +2248,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "string",
             "optional": true,
-            "field": "studentId",
+            "field": "studentID",
             "description": "<p>student id</p>"
           },
           {
@@ -2407,7 +2407,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-User_Find\">User Service</a> <br> None - studentId: hidden <br> None - studentName: hidden</p>"
+            "description": "<p>see <a href=\"#api-Service-User_Find\">User Service</a> <br> None - studentID: hidden <br> None - studentName: hidden</p>"
           }
         ]
       }
@@ -2437,7 +2437,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/user/:userId",
+    "url": "/user/:userID",
     "title": "GetUserInfo",
     "version": "1.0.0",
     "group": "User",
@@ -2469,7 +2469,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-User_Query\">User Service</a> <br> studentId: hidden <br> studentName: hidden</p>"
+            "description": "<p>see <a href=\"#api-Service-User_Query\">User Service</a> <br> studentID: hidden <br> studentName: hidden</p>"
           }
         ],
         "Self/Admin - Success 200": [
@@ -2527,7 +2527,7 @@ define({ "api": [
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-User_Update\">User Service</a> <br> self not allow edit StudentId,StudentName,Status,Role</p>"
+            "description": "<p>see <a href=\"#api-Service-User_Update\">User Service</a> <br> self not allow edit StudentID,StudentName,Status,Role</p>"
           }
         ]
       }
