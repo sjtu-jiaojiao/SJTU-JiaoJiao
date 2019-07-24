@@ -4,6 +4,7 @@ import { sellInfo,buyInfo } from '../../entity/info';
 import { InfoService } from '../../info.service';
 import { filter } from 'rxjs/operators';
 import { Format } from 'src/app/Formatter/format';
+import { InfoComService } from '../infocom.service';
 
 @Component({
   selector: 'app-sell-info',
@@ -12,17 +13,20 @@ import { Format } from 'src/app/Formatter/format';
 })
 export class SellInfoComponent implements OnInit {
   tags = ['测试','数据'];
-  searchTag: string[]=[];
   sellinfos: sellInfo[];
+  gridspan: number;
   current : number = 1;
   size : number = 4;
   count : number;
-  selectedType: number=0;
-  searchUser: string;
-  constructor(private infoService: InfoService) { }
+  searchTag: string[]=[];
+  searchUserID: string;
+  searchStatus: number;
+  searchGoodName: string;
+  constructor(private gs: InfoComService, private infoService: InfoService) { }
 
   ngOnInit() {
     this.getinfos();
+    this.gridspan = this.gs.get();
   }
 
   getstate(statecode: number): string {
@@ -37,13 +41,12 @@ export class SellInfoComponent implements OnInit {
           return '失效';
       }
   }
-  searchByUser(): void {    
-    if (!this.searchUser || !this.searchUser.trim()) {
-    this.getinfos();
-    // if not search term, return all info array.
-    return;
-  }
-    this.infoService.searchPageSellInfos(this.searchUser,this.size, this.current*this.size-this.size)
+  getinfos(): void {    
+    const st = this.gs.unstorage();
+    this.searchUserID=st.u;
+    this.searchGoodName =st.g;
+    this.searchStatus =st.s;
+    this.infoService.getSellInfos(this.searchUserID,this.searchStatus, this.searchGoodName, this.size, this.current*this.size-this.size)
     .subscribe(infos => {
       if(!infos) return;
       this.sellinfos = infos.sellInfo;
@@ -61,18 +64,5 @@ export class SellInfoComponent implements OnInit {
     this.count = (this.current + 1) * this.size;
     else 
     this.count = this.current * this.size;
-  }
-
-  getinfos(): void {
-    this.infoService.getPageSellInfos(this.size, this.current*this.size-this.size)
-    .subscribe(infos => {
-      if(!infos) return;
-      this.sellinfos = infos.sellInfo;
-      this.checkcount();
-    });
-  }
-
-  onChange(){
-    this.searchByUser();
   }
 }

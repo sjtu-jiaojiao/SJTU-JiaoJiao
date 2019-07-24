@@ -4,40 +4,62 @@ import { InfoService } from '../info.service';
 import { filter } from 'rxjs/operators';
 import { SellInfoComponent } from './sell-info/sell-info.component';
 import { BuyInfoComponent } from './buy-info/buy-info.component';
+import { InfoComService } from './infocom.service';
 
 @Component({
   selector: 'app-info',
   templateUrl: './info.component.html',
   styleUrls: ['./info.component.css'],
 })
-export class InfoComponent implements OnInit {
+export class InfoComponent implements OnInit, AfterViewInit {
   searchTag: string[]=[];
-  selectedType: number=-1;
-  searchUser: string;
+  searchType: number=-1;
+  searchUserID: string;
+  searchStatus: number;
+  searchGoodName: string;
+  marks = {
+    0: '0',
+    20: '10',
+    40: '50',
+    60: '100',
+    80: '500',
+    100: 'inf'};
+  priceRange= [0,100];
   @ViewChild(SellInfoComponent, {static: false})
   schild: SellInfoComponent;
   @ViewChild(BuyInfoComponent, {static: false})
   bchild: BuyInfoComponent;
-  constructor() { }
+  constructor(private gs: InfoComService) { }
 
   ngOnInit() {
   }
-  searchByUser(){
-    if(this.selectedType!==0){
-    this.bchild.searchUser=this.searchUser;
-    this.bchild.searchByUser();
+
+  ngAfterViewInit() {
+    setTimeout(this.selectType, 0);
+  }
+  search(){
+    this.gs.storage(this.searchUserID,this.searchStatus,this.searchGoodName);
+    if(this.searchType!==0){
+    this.bchild.getinfos();
     }
-    
-    if(this.selectedType!==1){
-    this.schild.searchUser= this.searchUser;
-    this.schild.searchByUser(); 
+    if(this.searchType!==1){
+    this.schild.getinfos(); 
     }
   }
-  
+  selectType(type: number){
+    if(type===-1)
+    {
+      this.gs.set(12);   
+  }
+    else{
+      this.gs.set(6);
+    }
+    this.search();
+  }
   selectTag(tag: string[]){
-    if(this.selectedType!==0)
+    if(this.searchType!==0)
     this.bchild.searchTag =tag;
-    if(this.selectedType!==1)
+    if(this.searchType!==1)
     this.schild.searchTag =tag;
   }
 }

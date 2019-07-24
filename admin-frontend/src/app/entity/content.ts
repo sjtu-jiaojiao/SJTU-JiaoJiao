@@ -1,10 +1,10 @@
-export class File{
-    fileId: string;
+export class Media{
+    fileID: string;
     type: number;
 }
 
 export class ContentResponse
 {
     status: string;
-    file: File[];
+    files: Media[];
 }

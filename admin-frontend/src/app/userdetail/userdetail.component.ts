@@ -37,9 +37,9 @@ stringToDate(params) {
   this.getuser();
 }
   typeof(obj): string {
-    if( obj['sellInfoId'])
+    if( obj['sellInfoID'])
     return 'sellInfo';
-    if( obj['buyInfoId'])
+    if( obj['buyInfoID'])
     return 'buyInfo';
   }
     goBack(): void {
@@ -51,12 +51,12 @@ stringToDate(params) {
       .subscribe(user => {this.user = user; 
         this.forbid = this.user.status === 2;
         this.userName = this.user.userName;
-        this.infoService.searchSellInfos(id).subscribe(e => {
+        this.infoService.getSellInfos(id).subscribe(e => {
           if(e.sellInfo)
           {
         this.infos = e.sellInfo;
           }
-          this.infoService.searchBuyInfos(id).subscribe(e => {
+          this.infoService.getBuyInfos(id).subscribe(e => {
             if(e.buyInfo)
           this.infos = this.infos.concat(e.buyInfo);
           this.infos= this.infos.sort((a,b )=>parseInt(a.releaseTime)-
@@ -73,7 +73,7 @@ stringToDate(params) {
     save(): void {
     if(!this.user) return;
     const status = this.forbid? 2: 1;
-    this.userService.updateUser({userId: this.user.userId, status: status, userName: this.userName, role: this.user.role})
+    this.userService.updateUser({userID: this.user.userID, status: status, userName: this.userName, role: this.user.role})
       .subscribe(() => this.goBack());
   }
 
