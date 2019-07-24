@@ -9,9 +9,9 @@ export default class UserInfoScreen extends Component {
         super(props);
         //console.warn(Config)
         this.state = {
-            userId: Config.userInfo.userId,
+            userID: Config.userInfo.userID,
             userName: Config.userInfo.userName,
-            studentId: Config.userInfo.studentId,
+            studentID: Config.userInfo.studentID,
             studentName: Config.userInfo.studentName,
             telephone: Config.userInfo.telephone,
             isChangeTelephoneVisible: false,
@@ -107,7 +107,7 @@ export default class UserInfoScreen extends Component {
                                                 'Content-Type': 'application/x-www-form-urlencoded',
                                                 Authorization: ('Bearer ' + Config.JaccountToken.token),
                                             },
-                                            body: ('userId=3&telephone=' + this.changeTelephone),
+                                            body: ('userID=3&telephone=' + this.changeTelephone),
                                         })
                                             .then((response) => {
                                                 if(response.ok) {
@@ -230,7 +230,7 @@ export default class UserInfoScreen extends Component {
                                                 'Content-Type': 'application/x-www-form-urlencoded',
                                                 Authorization: ('Bearer ' + Config.JaccountToken.token),
                                             },
-                                            body: ('userId=3&userName=' + this.changeUserName),
+                                            body: ('userID=3&userName=' + this.changeUserName),
                                         })
                                             .then((response) => {
                                                 if(response.ok) {
@@ -299,7 +299,7 @@ export default class UserInfoScreen extends Component {
                     bottomDivider
                     title={'学号'}
                     titleStyle={{ color: 'black', fontSize: 17 }}
-                    rightElement={<Text style={{ color: 'grey', fontSize: 17 }}>{this.state.studentId}</Text>}
+                    rightElement={<Text style={{ color: 'grey', fontSize: 17 }}>{this.state.studentID}</Text>}
                 />
                 <ListItem
                     bottomDivider
@@ -327,11 +327,11 @@ export default class UserInfoScreen extends Component {
                                 text: '确定', onPress: () => {
                                     Config.JaccountToken={};
                                     Config.userInfo = {
-                                        userId: -1,
+                                        userID: -1,
                                         userName: '',
-                                        avatarId: '',
+                                        avatarID: '',
                                         telephone: '',
-                                        studentId: '',
+                                        studentID: '',
                                         studentName: '',
                                     };
                                     this.props.navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0);

@@ -30,28 +30,29 @@ type srv struct{}
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user.UserCreateResponse) error {
-	if req.StudentID == "" || req.StudentName == "" {
+	if !utils.RequreParam(req.StudentID, req.StudentName) {
 		rsp.Status = user.UserCreateResponse_INVALID_PARAM
-	} else {
-		var usr db.User
-		err := db.Ormer.Where("student_id = ?", req.StudentID).First(&usr).Error
-		if gorm.IsRecordNotFoundError(err) {
-			usr = db.User{
-				UserName:    req.StudentName,
-				AvatarID:    utils.GetStringConfig("srv_config", "default_avatar"),
-				StudentID:   req.StudentID,
-				StudentName: req.StudentName,
-			}
-			utils.LogContinue(db.Ormer.Create(&usr).Error, utils.Warning)
-			rsp.Status = user.UserCreateResponse_SUCCESS
-		} else if utils.LogContinue(err, utils.Warning) {
-			return err
-		} else {
-			rsp.Status = user.UserCreateResponse_USER_EXIST
-		}
-		rsp.User = new(user.UserInfo)
-		parseUser(&usr, rsp.User)
+		return nil
 	}
+
+	var usr db.User
+	err := db.Ormer.Where("student_id = ?", req.StudentID).First(&usr).Error
+	if gorm.IsRecordNotFoundError(err) {
+		usr = db.User{
+			UserName:    req.StudentName,
+			AvatarID:    utils.GetStringConfig("srv_config", "default_avatar"),
+			StudentID:   req.StudentID,
+			StudentName: req.StudentName,
+		}
+		utils.LogContinue(db.Ormer.Create(&usr).Error, utils.Warning)
+		rsp.Status = user.UserCreateResponse_SUCCESS
+	} else if utils.LogContinue(err, utils.Warning) {
+		return err
+	} else {
+		rsp.Status = user.UserCreateResponse_USER_EXIST
+	}
+	rsp.User = new(user.UserInfo)
+	parseUser(&usr, rsp.User)
 	return nil
 }
 
@@ -74,9 +75,10 @@ func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user
  * @apiUse DBServerDown
  */
 func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.UserInfo) error {
-	if req.UserID == 0 {
+	if !utils.RequreParam(req.UserID) {
 		return nil
 	}
+
 	usr := db.User{
 		ID: req.UserID,
 	}
@@ -110,7 +112,7 @@ func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.U
  * @apiUse DBServerDown
  */
 func (a *srv) Update(ctx context.Context, req *user.UserInfo, rsp *user.UserUpdateResponse) error {
-	if req.UserID == 0 {
+	if !utils.RequreParam(req.UserID) {
 		rsp.Status = user.UserUpdateResponse_INVALID_PARAM
 		return nil
 	}

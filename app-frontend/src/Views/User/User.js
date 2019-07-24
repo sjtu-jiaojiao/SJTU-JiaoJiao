@@ -9,9 +9,9 @@ export default class UserScreen extends Component {
         super(props);
         //console.warn(Config)
         this.state = {
-            userId: Config.userInfo.userId,
+            userID: Config.userInfo.userID,
             userName: Config.userInfo.userName,
-            studentId: Config.userInfo.studentId,
+            studentID: Config.userInfo.studentID,
             studentName: Config.userInfo.studentName,
             telephone: Config.userInfo.telephone,
         };

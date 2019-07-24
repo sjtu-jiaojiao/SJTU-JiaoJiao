@@ -48,16 +48,17 @@ export default class MyHistoryInfoScreen extends Component {
                 {
                     description: "求购线性代数",
                     infoType: 'Sell',
-                    HistoryInfoId: 1,
+                    HistoryInfoID: 1,
                     price: 12.02,
                     releaseTime: "2019.02.28",
-                    validTime: "2019.03.05",
+                    validTime: "20",
+                    dealTime: '2019.03.21',
                     tradingPerson: '王新哲'
                 },
                 {
                     description: "求购线购线购线购线购线购线性代数",
                     infoType: 'Buy',
-                    HistoryInfoId: 1,
+                    HistoryInfoID: 1,
                     price: 12.02,
                     releaseTime: "2019.02.28",
                     validTime: "2019.03.05",
@@ -66,7 +67,7 @@ export default class MyHistoryInfoScreen extends Component {
                 {
                     description: "求购数购数购数购数购数",
                     infoType: 'Sell',
-                    HistoryInfoId: 1,
+                    HistoryInfoID: 1,
                     price: 12.02,
                     releaseTime: "2019.02.28",
                     validTime: "2019.03.05",
@@ -75,7 +76,7 @@ export default class MyHistoryInfoScreen extends Component {
                 {
                     description: "线性代数有没有",
                     infoType: 'Sell',
-                    HistoryInfoId: 1,
+                    HistoryInfoID: 1,
                     price: 12.02,
                     releaseTime: "2019.02.28",
                     validTime: "2019.03.05",
@@ -84,7 +85,7 @@ export default class MyHistoryInfoScreen extends Component {
                 {
                     description: "概率统计",
                     infoType: 'Sell',
-                    HistoryInfoId: 1,
+                    HistoryInfoID: 1,
                     price: 12.02,
                     releaseTime: "2019.02.28",
                     validTime: "2019.03.05",
@@ -93,7 +94,7 @@ export default class MyHistoryInfoScreen extends Component {
                 {
                     description: "数学分析",
                     infoType: 'Buy',
-                    HistoryInfoId: 1,
+                    HistoryInfoID: 1,
                     price: 12.02,
                     releaseTime: "2019.02.28",
                     validTime: "2019.03.05",
@@ -111,8 +112,8 @@ export default class MyHistoryInfoScreen extends Component {
 
     fetchData() {
         //console.warn(Config.userInfo);
-        //let obj = { userId: Config.userInfo.userId };
-        let obj = { userId: 2 };
+        //let obj = { userID: Config.userInfo.userID };
+        let obj = { userID: 3 };
         //console.warn(obj);
         Http.get('/HistoryInfo', obj)
             .then((response) => {

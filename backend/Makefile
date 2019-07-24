@@ -1,3 +1,4 @@
+SHELL = /bin/bash
 OUTPUTDIR = ./build
 SRVLIST = ./srvlist.list
 

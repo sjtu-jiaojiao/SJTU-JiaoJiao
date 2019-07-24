@@ -36,9 +36,10 @@ type srv struct{}
  * @apiUse DBServerDown
  */
 func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoMsg) error {
-	if req.SellInfoID == 0 {
+	if !utils.RequreParam(req.SellInfoID) {
 		return nil
 	}
+
 	info := db.SellInfo{
 		ID: req.SellInfoID,
 	}
@@ -89,7 +90,7 @@ func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
-	if req.ValidTime == 0 || req.GoodName == "" || req.UserID == 0 {
+	if !utils.RequreParam(req.ValidTime, req.GoodName, req.UserID) {
 		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 		return nil
 	}
@@ -130,14 +131,14 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 		return info.ID, nil
 	}
 
-	if req.ContentID == "" && req.ContentToken == "" {
+	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) {
 		id, err := insert()
 		if err != nil || id == 0 {
 			return nil
 		}
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
 		rsp.SellInfoID = id
-	} else if req.ContentID != "" && req.ContentToken != "" {
+	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) {
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} {
 			return content.NewContentService(name, c)
 		}, func() interface{} {
