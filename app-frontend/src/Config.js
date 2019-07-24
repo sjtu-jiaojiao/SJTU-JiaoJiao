@@ -2,11 +2,11 @@ let Config = {
     fetchPrefix: 'http://202.120.40.8:30711/v1/',
     JaccountToken: {},
     userInfo: {
-        userId: -1,
+        userID: -1,
         userName: '',
-        avatarId: '',
+        avatarID: '',
         telephone: '',
-        studentId: '',
+        studentID: '',
         studentName: '',
     },
 };

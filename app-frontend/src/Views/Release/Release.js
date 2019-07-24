@@ -4,6 +4,7 @@ import {Avatar, Button, ButtonGroup, SearchBar} from 'react-native-elements';
 import Config from '../../Config';
 import {NavigationActions} from "react-navigation";
 import Textarea from 'react-native-textarea';
+import {TimeStamptoDate, TimeStampNow, DatetoTimeStamp} from "../../Utils/TimeStamp";
 
 export default class ReleaseScreen extends Component {
     constructor(props) {
@@ -49,7 +50,7 @@ export default class ReleaseScreen extends Component {
         const buttons = ['出售信息', '求购信息'];
         const { selectedIndex } = this.state;
 
-        if (Config.userInfo.userId === -1) {
+        if (Config.userInfo.userID === -1) {
             Alert.alert(
                 '未登录',
                 '无法在未登录状态下发布信息，是否切换至登录界面？',
@@ -196,11 +197,66 @@ export default class ReleaseScreen extends Component {
                         buttonStyle={{backgroundColor: 'red'}}
                         containerStyle={{width: 160, marginLeft: 120}}
                         raised={true}
-                        onPress={() => {
-                            // 检查必填项有没有写
-                            // 检查price是不是最多两位的小数double，大于零
-                            Alert.alert('你要发布的是**信息，确认发布嘛？');
-                        }}
+                        onPress={() => Alert.alert(
+                            '发布信息',
+                            ('您确定要发布该条' + buttons[this.state.selectedIndex] + '吗？'),
+                            [
+                                {
+                                    text: '取消',
+                                    onPress: () => console.log('Cancel Pressed'),
+                                    style: 'cancel',
+                                },
+                                {
+                                    text: '确定', onPress: () => {
+                                        let addType;
+                                        if (this.state.selectedIndex === 0)
+                                            addType = 'sellInfo';
+                                        else
+                                            addType = 'buyInfo';
+                                        console.warn((Config.fetchPrefix + addType));
+                                        fetch((Config.fetchPrefix + addType), {
+                                            method: 'POST',
+                                            headers: {
+                                                Accept: 'application/json',
+                                                'Content-Type': 'application/x-www-form-urlencoded',
+                                                Authorization: ('Bearer ' + Config.JaccountToken.token),
+                                            },
+                                            body: ('userID=' + Config.userInfo.userID + '&validTime=20&goodName=' + this.state.goodName),
+                                        })
+                                            .then((response) => {
+                                                if(response.ok) {
+                                                    Alert.alert(
+                                                        '发布成功',
+                                                        '成功发布该交易信息：' + this.state.goodName,
+                                                        [
+                                                            {text: '好', onPress: () => {}}
+                                                        ],
+                                                        {cancelable: false},
+                                                    )
+                                                    this.setState({
+                                                        goodName: '',
+                                                        Discription: '',
+                                                        Price: '',
+                                                    });
+                                                } else {
+                                                    Alert.alert(
+                                                        '出错啦',
+                                                        '网络可能出了问题，请再试一次吧',
+                                                        [
+                                                            {text: '好', onPress: () => {}}
+                                                        ],
+                                                        {cancelable: false},
+                                                    )
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                console.error(error);
+                                            });
+                                    }
+                                },
+                            ],
+                            {cancelable: false},
+                        )}
                     />
                     <View style={{height: 10}} />
                 </View>

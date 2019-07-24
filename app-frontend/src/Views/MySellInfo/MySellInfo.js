@@ -57,8 +57,8 @@ export default class MySellInfoScreen extends Component {
 
     fetchData() {
         //console.warn(Config.userInfo);
-        //let obj = { userId: Config.userInfo.userId };
-        let obj = { userId: Config.userInfo.userId };
+        //let obj = { userID: Config.userInfo.userID };
+        let obj = { userID: Config.userInfo.userID };
         //console.warn(obj);
         Http.get('/sellInfo', obj)
             .then((response) => {

@@ -57,8 +57,8 @@ export default class MyBuyInfoScreen extends Component {
 
     fetchData() {
         //console.warn(Config.userInfo);
-        //let obj = { userId: Config.userInfo.userId };
-        let obj = { userId: Config.userInfo.userId };
+        //let obj = { userID: Config.userInfo.userID };
+        let obj = { userID: Config.userInfo.userID };
         Http.get('/buyInfo', obj)
             .then((response) => {
                 //console.warn(response);
