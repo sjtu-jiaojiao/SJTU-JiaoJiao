@@ -15,7 +15,7 @@ export class SellInfoComponent implements OnInit {
   searchTag: string[]=[];
   sellinfos: sellInfo[];
   current : number = 1;
-  size :number = 4;
+  size : number = 4;
   count : number;
   selectedType: number=0;
   searchUser: string;

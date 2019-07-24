@@ -43,7 +43,7 @@ export class BuyInfoComponent implements OnInit {
     // if not search term, return all info array.
     return;
   }
-    this.infoService.searchBuyInfos(this.searchUser,this.size, this.current*this.size-this.size)
+    this.infoService.searchPageBuyInfos(this.searchUser,this.size, this.current*this.size-this.size)
     .subscribe(infos => {
       if(!infos) return;
       this.buyinfos = infos.buyInfo;
