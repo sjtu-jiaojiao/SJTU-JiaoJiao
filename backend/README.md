@@ -3,7 +3,7 @@
 - golang
 - consul
 - nodejs/npm
-- 建议系统环境为Linux系统，windows下可能出现各种问题
+- **建议系统环境为Linux系统，windows下make命令可能无法正常工作**
 
 依赖安装：
 
