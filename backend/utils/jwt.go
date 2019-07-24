@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	user "jiaojiao/srv/user/proto"
 	"os"
 	"time"
 
@@ -22,6 +23,7 @@ func JWTVerify(token string, secret string) (*jwt.Token, error) {
 	return nil, err
 }
 
+// JWTParse parse jwt token content
 func JWTParse(token *jwt.Token, param string) interface{} {
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && claims[param] != nil {
 		return claims[param]
@@ -29,7 +31,8 @@ func JWTParse(token *jwt.Token, param string) interface{} {
 	return ""
 }
 
-func JWTSign(id int32, role int32) string {
+// JWTSign sign a jwt token
+func JWTSign(id int32, role user.UserInfo_Role) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":   id,
 		"role": role,

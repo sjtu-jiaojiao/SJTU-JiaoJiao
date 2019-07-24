@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Info } from '../entity/info';
+import { Component, OnInit, ɵConsole, ViewChild, AfterViewInit } from '@angular/core';
+import { sellInfo,buyInfo } from '../entity/info';
 import { InfoService } from '../info.service';
 import { filter } from 'rxjs/operators';
+import { SellInfoComponent } from './sell-info/sell-info.component';
+import { BuyInfoComponent } from './buy-info/buy-info.component';
 
 @Component({
   selector: 'app-info',
@@ -10,96 +12,32 @@ import { filter } from 'rxjs/operators';
 })
 export class InfoComponent implements OnInit {
   searchTag: string[]=[];
-  infos: Info[];
-  current : number = 1;
-  curinfos: Info[];
-  size :number = 4;
-  count : number;
-  Tthreshold: number;
-  Ythreshold: number;
   selectedType: number=-1;
-  threshold: number;
-  constructor(private infoService: InfoService) { }
+  searchUser: string;
+  @ViewChild(SellInfoComponent, {static: false})
+  schild: SellInfoComponent;
+  @ViewChild(BuyInfoComponent, {static: false})
+  bchild: BuyInfoComponent;
+  constructor() { }
 
   ngOnInit() {
-    this.getinfos();
   }
-
-
-  selectType(type: number) :void {
-    this.infoService.getInfos()
-    .subscribe(infos => {
-      this.infos = infos;        
-        this.infos = this.infos.filter( ele => ele.type !== (1-type) );
-        this.searchTag.forEach( e => {
-          this.infos = this.infos.filter( arr => arr.tags.indexOf(e) >= 0 );
-        });
-        this.count = this.infos.length;
-        this.current=1;
-        this.switchPage(this.current, this.size);
+  searchByUser(){
+    if(this.selectedType!==0){
+    this.bchild.searchUser=this.searchUser;
+    this.bchild.searchByUser();
     }
-        );
+    
+    if(this.selectedType!==1){
+    this.schild.searchUser= this.searchUser;
+    this.schild.searchByUser(); 
+    }
   }
-
-  selectTag(tags: string[]) :void {
-    this.infoService.getInfos()
-    .subscribe(infos => {
-      this.infos = infos;
-      this.infos = this.infos.filter( ele => ele.type !== (1-this.selectedType) );
-      tags.forEach( e => {
-        this.infos = this.infos.filter( arr => arr.tags.indexOf(e) >= 0 );
-      });
-      this.count = this.infos.length; 
-      this.current=1;
-      this.switchPage(this.current, this.size);
-    });
+  
+  selectTag(tag: string[]){
+    if(this.selectedType!==0)
+    this.bchild.searchTag =tag;
+    if(this.selectedType!==1)
+    this.schild.searchTag =tag;
   }
-  getstate(statecode: number): string {
-      switch (statecode){
-        case 0:
-          return '可预约';
-        case 1: 
-          return '预约中';
-        case 2:
-          return '已完成';
-        case 3:
-          return '待评价';
-        case 4: 
-          return '强制结束';
-      }
-  }
-  end():void {
-    this.infos.filter(h => new Date().getTime() - new Date(h.time).getTime() /1000/60/60/24 > this.Tthreshold && h.count < this.Ythreshold)
-    .map(h => { h.state=4 ; return h;}).forEach(element => 
-      this.infoService.updateInfo(element).subscribe());
-  }	
-  getinfos(): void {
-    this.infoService.getInfos()
-    .subscribe(infos => {
-      this.infos = infos; 
-      this.count = this.infos.length; 
-      this.switchPage(this.current, this.size);
-    });
-  }
-  switchPage(page, size) {
-    if(page* size< this.count)
-    this.curinfos = this.infos.slice( (page-1)*size, page* size)
-    else 
-    this.curinfos = this.infos.slice( (page-1)*size );
-  }
-  pageChange(page){
-    this.switchPage(page,this.size);
-  }
-  sizeChange(size){
-    this.switchPage(this.current,size);
-  }
-  delete(info: Info): void {
-    this.infos = this.infos.filter(h => h !== info);
-    this.infoService.deleteInfo(info.id).subscribe(_ =>{
-      this.count = this.infos.length; 
-      this.switchPage(this.current, this.size);
-    });
-  }
-
-
 }

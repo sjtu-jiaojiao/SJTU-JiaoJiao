@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'user', component: UserComponent,canActivate: [JWTGuard]},
   { path: 'login', component: LoginComponent},
   { path: 'info', component:  InfoComponent,canActivate: [JWTGuard]},
-  { path: 'info/:id', component:  InfoDetailComponent,canActivate: [JWTGuard]},
+  { path: 'info/:type/:id', component:  InfoDetailComponent,canActivate: [JWTGuard]},
   { path: 'activity/:id', component:  ActivitydetailComponent,canActivate: [JWTGuard]},
   { path: 'statistic', component:  InfoStatisticComponent,canActivate: [JWTGuard]},
   { path: 'website', component:  WebsiteComponent,canActivate: [JWTGuard]},

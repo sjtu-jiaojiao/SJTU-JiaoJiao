@@ -25,33 +25,32 @@ import { UserDetailComponent } from './userdetail/userdetail.component';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { CallbackComponent } from './callback/callback.component';
+import { SellInfoComponent } from './info/sell-info/sell-info.component';
+import { BuyInfoComponent } from './info/buy-info/buy-info.component';
 describe('AppComponent', () => {  
-  const rSpy = jasmine.createSpyObj('Router', ['navigateByUrl']);
-  const aSpy = jasmine.createSpyObj('AuthService', ['logout']);
-  const nSpy = jasmine.createSpyObj('NzNotificationService', ['create']);
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         AppComponent,
         UserDetailComponent,
         UserComponent,
+        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
         LoginComponent,
         DashboardComponent,
         WebsiteComponent,
         ActivityComponent,
-        CallbackComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
-      imports: [   
-    //    DelonAuthModule,
+      imports: [
+        //    DelonAuthModule,
         ReactiveFormsModule,
-        RouterTestingModule,
         BrowserModule,
-        AppRoutingModule,    
+        AppRoutingModule,
         NgZorroAntdModule,
         FormsModule,
         NgxEchartsModule,
@@ -60,17 +59,11 @@ describe('AppComponent', () => {
           InMemoryDataService, { dataEncapsulation: false }),
         BrowserAnimationsModule
       ],
-      providers: [
-        {provide: Router, useValue: rSpy}, 
-        {provide: AuthService,useValue: aSpy},
-        {provide: NzNotificationService,useValue: nSpy}
-      ]
     }).compileComponents();
   }));
 
   it('should deal with log out ', () => {
     const eg = new AppComponent(TestBed.get(Router), TestBed.get(AuthService),TestBed.get(NzNotificationService));
-    const auth: AuthService = TestBed.get(AuthService);
     eg.logout();
   })
 });

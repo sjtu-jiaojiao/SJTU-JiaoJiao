@@ -19,8 +19,13 @@ import { InfoComponent } from '../info/info.component';
 import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { UserDetailComponent, fAnimationDelay, fSymbolSize, fFormatter } from './userdetail.component';
+import { UserDetailComponent, fFormatter } from './userdetail.component';
 import { CallbackComponent } from '../callback/callback.component';
+import { AuthService } from '../auth.service';
+import { User } from '../entity/user';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
+import { DelonAuthModule } from '@delon/auth';
 
 describe('UserdetailComponent', () => {
   let component: UserDetailComponent;
@@ -40,10 +45,13 @@ describe('UserdetailComponent', () => {
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
       imports: [   
-    //    DelonAuthModule,
+    //import { BuyInfoComponent } from './../info/buy-info/buy-info.component';
+    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
         AppRoutingModule,    
@@ -67,10 +75,25 @@ describe('UserdetailComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    const service: AuthService = TestBed.get(AuthService);
+    service.login({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMzMzk3MDYsImlkIjozLCJyb2xlIjoyfQ.woB67gYA8hTMljeg6lqwG_3fSJm4Q7SD6Ln8w2Ol4xk' });
+
+    component.user= new User();
+    component.forbid = true;
     component.save();
+    
+    component.forbid = false;
+    component.save();
+    
     component.goBack();
-    expect(fAnimationDelay(5)).toEqual(25);
-    expect(fSymbolSize([0,0,5])).toEqual(10);
-    expect(fFormatter({value: [0,0,5]})).toEqual('5 commits in 12a of Saturday');
+    expect(component.getstate(1)).toEqual('待预约');
+    expect(component.getstate(2)).toEqual('预约');
+    expect(component.getstate(3)).toEqual('完成');
+    expect(component.getstate(4)).toEqual('失效');
+    expect(fFormatter({value: 5, name: 'Jan'})).toEqual('5 activities in Jan');
+    expect(component.stringToDate(new Date(1563134054))).toEqual('1970-01-19 10:12:14');
+    expect(component.typeof(1)).toEqual('number');
+    component.infos = [];
+    component.graph();
   });
 });

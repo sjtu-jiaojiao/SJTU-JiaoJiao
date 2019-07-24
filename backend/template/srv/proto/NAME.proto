@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service  {
+    rpc  () returns ();
+}
+
+message  {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+    }
+    Status status = 1;
+}

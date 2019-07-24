@@ -23,6 +23,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CallbackComponent } from './callback.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SocialService } from '@delon/auth';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
 
 describe('Callback', () => {
   let component: CallbackComponent;
@@ -47,10 +49,11 @@ describe('Callback', () => {
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent 
       ],
       imports: [   
-    //    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
         AppRoutingModule,    
@@ -74,6 +77,6 @@ describe('Callback', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    component.mockModel('123456');
+    component.mockModel('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMzMzk3MDYsImlkIjozLCJyb2xlIjoyfQ.woB67gYA8hTMljeg6lqwG_3fSJm4Q7SD6Ln8w2Ol4xk');;
   });
 });

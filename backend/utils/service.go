@@ -8,11 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/client"
+	"github.com/micro/go-micro/selector"
 	"github.com/micro/go-micro/web"
 )
 
 // CreateAPIGroup create an API router group
 func CreateAPIGroup() (*gin.Engine, *gin.RouterGroup) {
+	if LocalConf.Deploy == "product" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	router := gin.Default()
 	rg := router.Group("/" + GetStringConfig("api_config", "version"))
 	return router, rg
@@ -35,6 +39,7 @@ func RunWebService(name string, router *gin.Engine) {
 	}
 }
 
+// InitMicroService init a micro service
 func InitMicroService(name string) micro.Service {
 	if !CheckInTest() {
 		service := micro.NewService(
@@ -68,5 +73,9 @@ func CallMicroService(name string, f func(name string, c client.Client) interfac
 		return m()
 	}
 	Info("Calling micro service \"%s\"", name)
-	return f(GetServiceName(name), client.DefaultClient)
+	c := client.NewClient(
+		client.RequestTimeout(time.Second*10),
+		client.Selector(selector.DefaultSelector),
+	)
+	return f(GetServiceName(name), c)
 }
