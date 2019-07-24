@@ -9,6 +9,11 @@ import (
 // LoadLog load log config
 func LoadLog() {
 	_ = logs.SetLogger(logs.AdapterConsole, `{"level":7,"color":true}`)
+	if LocalConf.Deploy == "product" {
+		logs.Async()
+	}
+	logs.EnableFuncCallDepth(true)
+	logs.SetLogFuncCallDepth(6)
 }
 
 // Error logs a message at error level.

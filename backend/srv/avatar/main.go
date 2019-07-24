@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	db "jiaojiao/database"
 	avatar "jiaojiao/srv/avatar/proto"
@@ -30,44 +29,44 @@ type srv struct{}
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *avatar.AvatarCreateRequest, rsp *avatar.AvatarCreateResponse) error {
-	if bytes.Equal(req.File, []byte{0}) || req.UserID == 0 {
+	if !utils.RequreParam(req.File, req.UserID) {
 		rsp.Status = avatar.AvatarCreateResponse_INVALID_PARAM
-	} else {
-		if !utils.CheckInTest() && !filetype.IsImage(req.File) {
-			rsp.Status = avatar.AvatarCreateResponse_INVALID_TYPE
-			return nil
-		}
-
-		usr := db.User{
-			ID: req.UserID,
-		}
-		err := db.Ormer.First(&usr).Error
-		if gorm.IsRecordNotFoundError(err) {
-			rsp.Status = avatar.AvatarCreateResponse_NOT_FOUND
-			return nil
-		} else if utils.LogContinue(err, utils.Warning) {
-			return err
-
-		}
-
-		srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
-			func() interface{} { return mock.NewFileService() }).(file.FileService)
-		microRsp, err := srv.Create(context.TODO(), &file.FileCreateRequest{
-			File: req.File,
-		})
-		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) || microRsp.Status != file.FileCreateResponse_SUCCESS {
-			return err
-		}
-
-		usr.AvatarID = microRsp.FileID
-		err = db.Ormer.Save(&usr).Error
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-
-		rsp.AvatarID = microRsp.FileID
-		rsp.Status = avatar.AvatarCreateResponse_SUCCESS
+		return nil
 	}
+
+	if !utils.CheckInTest() && !filetype.IsImage(req.File) {
+		rsp.Status = avatar.AvatarCreateResponse_INVALID_TYPE
+		return nil
+	}
+
+	usr := db.User{
+		ID: req.UserID,
+	}
+	err := db.Ormer.First(&usr).Error
+	if gorm.IsRecordNotFoundError(err) {
+		rsp.Status = avatar.AvatarCreateResponse_NOT_FOUND
+		return nil
+	} else if utils.LogContinue(err, utils.Warning) {
+		return err
+	}
+
+	srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
+		func() interface{} { return mock.NewFileService() }).(file.FileService)
+	microRsp, err := srv.Create(context.TODO(), &file.FileCreateRequest{
+		File: req.File,
+	})
+	if utils.LogContinue(err, utils.Warning, "File service error: %v", err) || microRsp.Status != file.FileCreateResponse_SUCCESS {
+		return err
+	}
+
+	usr.AvatarID = microRsp.FileID
+	err = db.Ormer.Save(&usr).Error
+	if utils.LogContinue(err, utils.Warning) {
+		return err
+	}
+
+	rsp.AvatarID = microRsp.FileID
+	rsp.Status = avatar.AvatarCreateResponse_SUCCESS
 	return nil
 }
 
