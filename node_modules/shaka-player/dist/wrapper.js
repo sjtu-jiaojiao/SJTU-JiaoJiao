@@ -1,0 +1,1 @@
+(function(){var innerGlobal=typeof window!="undefined"?window:global;var exportTo={};(function(window,global){%output%}).call(exportTo,innerGlobal,innerGlobal);if(typeof exports!="undefined")for(var k in exportTo.shaka)exports[k]=exportTo.shaka[k];else if(typeof define!="undefined"&&define.amd)define(function(){return exportTo.shaka});else innerGlobal.shaka=exportTo.shaka})();
