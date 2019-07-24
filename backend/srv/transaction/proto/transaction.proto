@@ -80,8 +80,11 @@ message TransactionFindRequest{
     int32 infoID = 1;
     Category category = 2;
     int32 userID = 3;
-    int64 createTime = 4;
-    Status status = 5;
+    int64 lowCreateTime = 4;
+    int64 highCreateTime = 5;
+    Status status = 6;
+    uint32 limit = 7;
+    uint32 offset = 8;
 }
 
 message TransactionFindResponse{
