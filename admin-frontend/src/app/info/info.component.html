@@ -51,9 +51,19 @@
     </div>
   </div>
 
-  <div *ngIf="selectedType!==1">
+  <div *ngIf="selectedType==0">
     <app-sell-info></app-sell-info>
   </div>
-  <div *ngIf="selectedType!==0">
+  <div *ngIf="selectedType==1">
     <app-buy-info ></app-buy-info>
+  </div>
+  <div *ngIf="selectedType==-1">
+    <div nz-row [nzGutter]="8">
+      <div nz-col [nzSpan]="12">
+        <app-sell-info></app-sell-info>
+      </div>
+      <div nz-col [nzSpan]="12">
+        <app-buy-info ></app-buy-info>
+      </div>
+    </div>
   </div>

@@ -1,5 +1,5 @@
 
-<nz-list [nzDataSource]="sellinfos" [nzRenderItem]="info" [nzGrid]="{gutter: 16, span: 6}">
+<nz-list [nzDataSource]="sellinfos" [nzRenderItem]="info" [nzGrid]="{gutter: 16, column: 8}">
     <ng-template #info let-info>
       <nz-list-item *ngIf="info" [nzContent]="nzContent">
         <ng-template #nzContent>
