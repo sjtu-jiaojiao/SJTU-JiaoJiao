@@ -59,6 +59,7 @@ func IsEmpty(val interface{}) bool {
 	}
 }
 
+// RequreParam check param and return true for all param provided
 func RequreParam(v ...interface{}) bool {
 	for _, arg := range v {
 		if IsEmpty(arg) {
