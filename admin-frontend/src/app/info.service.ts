@@ -94,7 +94,7 @@ export class InfoService {
   }
 
   /** GET infos from the server */
-  searchBuyInfos(term: string,limit:number, offset: number): Observable<InfoResponse> {    
+  searchPageBuyInfos(term: string,limit:number, offset: number): Observable<InfoResponse> {    
     const url = `${this.buyinfoUrl}?userId=${term}&limit=${limit}&offset=${offset}`;
     return this.http.get<InfoResponse>(url)
       .pipe(
@@ -102,6 +102,14 @@ export class InfoService {
       );
   }
 
+  /** GET infos from the server */
+  searchBuyInfos(term: string): Observable<InfoResponse> {    
+    const url = `${this.buyinfoUrl}?userId=${term}`;
+    return this.http.get<InfoResponse>(url)
+      .pipe(
+        catchError(this.handleError<InfoResponse>('getBuyInfos'))
+      );
+  }
   /** PUT: update the info on the server */
   updateBuyInfo(info: any): Observable<any> {
     return this.http.put(this.buyinfoUrl, info, httpOptions).pipe(

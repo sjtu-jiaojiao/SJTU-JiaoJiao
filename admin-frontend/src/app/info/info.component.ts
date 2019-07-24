@@ -12,7 +12,7 @@ import { BuyInfoComponent } from './buy-info/buy-info.component';
 })
 export class InfoComponent implements OnInit {
   searchTag: string[]=[];
-  selectedType: number=0;
+  selectedType: number=-1;
   searchUser: string;
   @ViewChild(SellInfoComponent, {static: false})
   schild: SellInfoComponent;
