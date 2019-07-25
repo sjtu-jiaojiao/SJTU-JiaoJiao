@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InfoDetailComponent, formatDate } from './infodetail.component';
+import { InfoDetailComponent} from './infodetail.component';
 
 import { ActivitydetailComponent } from '../activitydetail/activitydetail.component';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
@@ -79,13 +79,8 @@ describe('InfodetailComponent', () => {
     expect(component).toBeTruthy();
     //create
     setInterval(()=> {},1000);
-    const now =new Date(1997, 9, 3);
-    expect(typeof(formatDate([{name: now.toString(),value: 
-      [[now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'), 1.5]
-    }]))).toEqual('string');
     component.save();
     component.goBack();
-    expect(typeof(component.randomData().name)).toEqual('string');
     expect(component.stringToDate(new Date(1563134054))).toEqual('1970-01-19 10:12:14');
     component.type = 'sellInfo';
     component.getinfo();

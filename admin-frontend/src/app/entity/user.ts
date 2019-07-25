@@ -1,10 +1,10 @@
 export class User
 {
-   userId: number;
+   userID: number;
    userName: string;
-   avatarId: string;
+   avatarID: string;
    telephone: string;
-   studentId: string;
+   studentID: string;
    studentName: string;
    status: number;
    role: number;
