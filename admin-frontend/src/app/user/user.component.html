@@ -19,10 +19,15 @@
     <ng-template #user let-user>
       <nz-list-item [nzContent]="nzContent">
         <ng-template #nzContent>
-          <nz-card [nzTitle]="user.userName">
+          <nz-card>
+          <nz-card-meta [nzTitle]="user.userName"
+          [nzAvatar]="avatarTemplate"></nz-card-meta>
       <div>
+        <ng-template #avatarTemplate>
+          <nz-avatar [nzSize]="'small'" nzSrc="/api/file/{{user.avatarID}}"></nz-avatar>
+        </ng-template>
         <div class='useritem'>
-              <span class="badge">用户ID</span>{{user.userId}}
+              <span class="badge">用户ID</span>{{user.userID}}
         </div>
         <div class='useritem'>
           <span class="badge">用户名</span>{{user.userName}}
@@ -41,7 +46,7 @@
                 <nz-rate [ngModel]="2" nzDisabled></nz-rate>
           </div>
       </div>
-              <a routerLink="/user/{{user.userId}}">
+              <a routerLink="/user/{{user.userID}}">
               用户详情
               <i nz-icon type="search"></i>
                </a>
@@ -52,6 +57,7 @@
   </nz-list>
 
   
+
   <nz-pagination
   [(nzPageIndex)]="current"
   [(nzPageSize)]="size"

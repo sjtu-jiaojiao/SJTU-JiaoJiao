@@ -6,9 +6,13 @@ input{
    color: white;
  }
 
+#searchid {
+  float:right;
+  width: 40%;
+}
 #searchname {
   float:right;
-  width: 60%;
+  width: 40%;
 }
 #type {
   float:left;
