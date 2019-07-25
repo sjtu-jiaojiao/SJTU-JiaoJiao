@@ -35,7 +35,7 @@ export class InfoComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(this.selectType, 0);
+    setTimeout(()=> this.selectType(-1), 0);
   }
   search(){
     this.gs.storage(this.searchUserID,this.searchStatus,this.searchGoodName);
