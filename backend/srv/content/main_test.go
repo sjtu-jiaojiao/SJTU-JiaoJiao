@@ -51,19 +51,20 @@ func TestSrvContentCreate(t *testing.T) {
 
 		req.ContentID = id
 		req.ContentToken = token
+		defer func() {
+			var sc srv
+			var rspc content.ContentDeleteResponse
+			err := sc.Delete(context.TODO(), &content.ContentDeleteRequest{
+				ContentID:    id,
+				ContentToken: token,
+			}, &rspc)
+			So(err, ShouldBeNil)
+		}()
 		tf(content.ContentCreateResponse_SUCCESS, true)
 		tf(content.ContentCreateResponse_SUCCESS, true)
 
 		req.ContentToken = "12463-25897fsfs-5232"
 		tf(content.ContentCreateResponse_INVALID_TOKEN, false)
-
-		var sc srv
-		var rspc content.ContentDeleteResponse
-		err := sc.Delete(context.TODO(), &content.ContentDeleteRequest{
-			ContentID:    id,
-			ContentToken: token,
-		}, &rspc)
-		So(err, ShouldBeNil)
 	})
 }
 

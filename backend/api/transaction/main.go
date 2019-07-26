@@ -13,7 +13,9 @@ import (
 
 func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
-	rg.GET("/transaction")
+	rg.GET("/transaction", findTransaction)
+	rg.POST("/transaction", addTransaction)
+	rg.PUT("/transaction", updateTransaction)
 	return router
 }
 
@@ -30,7 +32,7 @@ func setupRouter() *gin.Engine {
  * @apiName FindTransaction
  * @apiDescription Find transaction
  *
- * @apiParam {--} Param see [Transaction Service](#api-Service-Transaction_Find)
+ * @apiParam {--} Param see [Transaction Service](#api-Service-Transaction_Find) <br> Self permission MUST have userID field
  * @apiSuccess {Response} response see [Transaction Service](#api-Service-Transaction_Find)
  * @apiUse InvalidParam
  * @apiUse TransactionServiceDown
@@ -50,10 +52,15 @@ func findTransaction(c *gin.Context) {
 
 	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
 		role := utils.GetRoleID(c, p.UserID)
+		if !role.Admin && p.UserID == 0 {
+			c.AbortWithStatus(400)
+			return
+		}
 		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}
+
 		srv := utils.CallMicroService("transaction", func(name string, c client.Client) interface{} { return transaction.NewTransactionService(name, c) },
 			func() interface{} { return mock.NewTransactionService() }).(transaction.TransactionService)
 		rsp, err := srv.Find(context.TODO(), &transaction.TransactionFindRequest{
@@ -80,7 +87,7 @@ func findTransaction(c *gin.Context) {
  * @api {post} /transaction AddTransaction
  * @apiVersion 1.0.0
  * @apiGroup Transaction
- * @apiPermission none/admin
+ * @apiPermission user/admin
  * @apiName AddTransaction
  * @apiDescription Add transaction
  *
@@ -98,7 +105,7 @@ func addTransaction(c *gin.Context) {
 	var p param
 	role := utils.GetRole(c)
 
-	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
+	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
 		if !role.User && !role.Admin {
 			c.AbortWithStatus(403)
 			return
@@ -106,9 +113,9 @@ func addTransaction(c *gin.Context) {
 		srv := utils.CallMicroService("transaction", func(name string, c client.Client) interface{} { return transaction.NewTransactionService(name, c) },
 			func() interface{} { return mock.NewTransactionService() }).(transaction.TransactionService)
 		rsp, err := srv.Create(context.TODO(), &transaction.TransactionCreateRequest{
-			InfoID:   p.InfoID,
-			Category: p.Category,
-			UserID:   p.UserID,
+			InfoID:     p.InfoID,
+			Category:   p.Category,
+			FromUserID: p.UserID,
 		})
 		if utils.LogContinue(err, utils.Warning, "Transaction service error: %v", err) {
 			c.JSON(500, err)
@@ -124,7 +131,7 @@ func addTransaction(c *gin.Context) {
  * @api {put} /transaction UpdateTransaction
  * @apiVersion 1.0.0
  * @apiGroup Transaction
- * @apiPermission none/admin
+ * @apiPermission admin
  * @apiName UpdateTransaction
  * @apiDescription Update transaction
  *
@@ -135,14 +142,14 @@ func addTransaction(c *gin.Context) {
  */
 func updateTransaction(c *gin.Context) {
 	type param struct {
-		TransactionID int32                                       `form:"transactionID"`
-		Status        transaction.TransactionUpdateRequest_Status `form:"status"`
+		TransactionID int32                   `form:"transactionID"`
+		Status        transaction.TransStatus `form:"status"`
 	}
 	var p param
 	role := utils.GetRole(c)
 
-	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
-		if !role.User && !role.Admin {
+	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+		if !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}

@@ -47,7 +47,8 @@ type Transaction struct {
 	ID         int32     `gorm:"auto_increment;primary_key"`
 	InfoID     int32     `gorm:"not null"`
 	Category   int32     `gorm:"not null"`
-	UserID     int32     `gorm:"not null"`
+	FromUserID int32     `gorm:"not null"`
+	ToUserID   int32     `gorm:"not null"`
 	CreateTime time.Time `gorm:"not null"`
 	Status     int32     `gorm:"not null;default:1"`
 }

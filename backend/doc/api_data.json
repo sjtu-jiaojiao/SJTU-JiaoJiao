@@ -450,14 +450,21 @@
     "group": "Content",
     "permission": [
       {
-        "name": "user/admin"
+        "name": "none/self/admin"
       }
     ],
     "name": "GetContent",
-    "description": "<p>get sell info content</p>",
+    "description": "<p>Get sell info content</p>",
     "parameter": {
       "fields": {
         "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": true,
+            "field": "userID",
+            "description": "<p>user id, left empty for guest</p>"
+          },
           {
             "group": "Parameter",
             "type": "--",
@@ -470,9 +477,18 @@
     },
     "success": {
       "fields": {
-        "Success 200": [
+        "None - Success 200": [
           {
-            "group": "Success 200",
+            "group": "None - Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-Content_Query\">Content Service</a> <br> contentToken: hidden</p>"
+          }
+        ],
+        "Self/Admin - Success 200": [
+          {
+            "group": "Self/Admin - Success 200",
             "type": "Response",
             "optional": false,
             "field": "response",
@@ -1062,7 +1078,7 @@
             "type": "int32",
             "optional": true,
             "field": "status",
-            "description": "<p>status 1 for waiting <br> 2 for reserved <br> 3 for done <br> 4 for expired</p>"
+            "description": "<p>status 1 for waiting <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed</p>"
           },
           {
             "group": "Parameter",
@@ -1170,7 +1186,7 @@
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>1 for buying <br> 2 for reserved <br> 3 for done <br> 4 for expired</p>"
+            "description": "<p>1 for buying <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed</p>"
           },
           {
             "group": "Success 200",
@@ -1465,6 +1481,13 @@
             "optional": false,
             "field": "status",
             "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "contentToken",
+            "description": "<p>content token</p>"
           },
           {
             "group": "Success 200",
@@ -1864,7 +1887,7 @@
             "type": "int32",
             "optional": true,
             "field": "status",
-            "description": "<p>status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired</p>"
+            "description": "<p>status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed</p>"
           },
           {
             "group": "Parameter",
@@ -1972,7 +1995,7 @@
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired</p>"
+            "description": "<p>1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed</p>"
           },
           {
             "group": "Success 200",
@@ -2070,7 +2093,7 @@
             "group": "Parameter",
             "type": "int32",
             "optional": false,
-            "field": "userID",
+            "field": "fromUserID",
             "description": "<p>userID whose create the transaction</p>"
           }
         ]
@@ -2084,7 +2107,7 @@
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for info id not found</p>"
           },
           {
             "group": "Success 200",
@@ -2141,7 +2164,7 @@
             "type": "int32",
             "optional": true,
             "field": "userID",
-            "description": "<p>userID whose create the transaction</p>"
+            "description": "<p>userID who create the transaction</p>"
           },
           {
             "group": "Parameter",
@@ -2162,7 +2185,7 @@
             "type": "int32",
             "optional": true,
             "field": "status",
-            "description": "<p>1 for order <br> 2 for done</p>"
+            "description": "<p>1 for asking <br> 2 for accepted <br> 3 for rejected <br> 4 for closed <br> 5 for pending <br> 6 for done</p>"
           },
           {
             "group": "Parameter",
@@ -2285,7 +2308,7 @@
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>1 for order <br> 2 for done</p>"
+            "description": "<p>1 for asking <br> 2 for accepted <br> 3 for rejected <br> 4 for closed <br> 5 for pending <br> 6 for done</p>"
           }
         ]
       }
@@ -2658,7 +2681,7 @@
     "group": "Transaction",
     "permission": [
       {
-        "name": "none/admin"
+        "name": "user/admin"
       }
     ],
     "name": "AddTransaction",
@@ -2720,7 +2743,7 @@
     "group": "Transaction",
     "permission": [
       {
-        "name": "none/admin"
+        "name": "self/admin"
       }
     ],
     "name": "FindTransaction",
@@ -2733,7 +2756,7 @@
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Transaction_Find\">Transaction Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-Transaction_Find\">Transaction Service</a> <br> Self permission MUST have userID field</p>"
           }
         ]
       }
@@ -2782,7 +2805,7 @@
     "group": "Transaction",
     "permission": [
       {
-        "name": "none/admin"
+        "name": "admin"
       }
     ],
     "name": "UpdateTransaction",

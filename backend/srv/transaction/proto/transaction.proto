@@ -24,7 +24,7 @@ message TransactionCreateRequest {
     }
     int32 infoID = 1;
     Category category = 2;
-    int32 userID = 3;
+    int32 fromUserID = 3;
 }
 
 message TransactionCreateResponse {
@@ -32,6 +32,7 @@ message TransactionCreateResponse {
         UNKNOWN = 0;
         INVALID_PARAM = -1;
         SUCCESS = 1;
+        NOT_FOUND = 2;
     }
     Status status = 1;
     int32 transactionID = 2;
@@ -61,9 +62,10 @@ message TransactionMsg {
     int32 transactionID = 1;
     int32 infoID = 2;
     Category category = 3;
-    int32 userID = 4;
-    int64 createTime = 5;
-    TransStatus status = 6;
+    int32 fromUserID = 4;
+    int32 toUserID = 5;
+    int64 createTime = 6;
+    TransStatus status = 7;
 }
 
 message TransactionFindRequest {

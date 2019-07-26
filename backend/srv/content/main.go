@@ -378,10 +378,10 @@ func validCheck(contentID string, contentToken string) bool {
 		return false
 	}
 
-	err = collection.FindOne(ctx, bson.D{
+	_, err = collection.FindOne(ctx, bson.D{
 		{"_id", rid},
 		{"token", contentToken},
-	}).Err()
+	}).DecodeBytes()
 	if utils.LogContinue(err, utils.Warning) {
 		return false
 	}

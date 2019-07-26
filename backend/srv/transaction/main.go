@@ -3,11 +3,16 @@ package main
 import (
 	"context"
 	db "jiaojiao/database"
+	mockbuy "jiaojiao/srv/buyinfo/mock"
+	buyinfo "jiaojiao/srv/buyinfo/proto"
+	mocksell "jiaojiao/srv/sellinfo/mock"
+	sellinfo "jiaojiao/srv/sellinfo/proto"
 	transaction "jiaojiao/srv/transaction/proto"
 	"jiaojiao/utils"
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"github.com/micro/go-micro/client"
 )
 
 type srv struct{}
@@ -21,22 +26,55 @@ type srv struct{}
  *
  * @apiParam {int32} infoID sellInfoID or buyInfoID.
  * @apiParam {int32} category 1 for sell <br> 2 for buy
- * @apiParam {int32} userID userID whose create the transaction
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success
+ * @apiParam {int32} fromUserID userID whose create the transaction
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for info id not found
  * @apiSuccess {int32} transactionID transaction id
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequest, rsp *transaction.TransactionCreateResponse) error {
-	if !utils.RequreParam(req.InfoID, req.UserID, req.Category) {
+	if !utils.RequreParam(req.InfoID, req.FromUserID, req.Category) {
 		rsp.Status = transaction.TransactionCreateResponse_INVALID_PARAM
 		return nil
 	}
+
+	var toUserId int32
+	if req.Category == transaction.TransactionCreateRequest_SELL {
+		microSrv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
+			func() interface{} { return mocksell.NewSellInfoService() }).(sellinfo.SellInfoService)
+		srvRsp, err := microSrv.Query(context.TODO(), &sellinfo.SellInfoQueryRequest{
+			SellInfoID: req.InfoID,
+		})
+		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+			return err
+		}
+		if srvRsp.UserID == 0 {
+			rsp.Status = transaction.TransactionCreateResponse_NOT_FOUND
+			return nil
+		}
+		toUserId = srvRsp.UserID
+	} else {
+		microSrv := utils.CallMicroService("buyinfo", func(name string, c client.Client) interface{} { return buyinfo.NewBuyInfoService(name, c) },
+			func() interface{} { return mockbuy.NewBuyInfoService() }).(buyinfo.BuyInfoService)
+		srvRsp, err := microSrv.Query(context.TODO(), &buyinfo.BuyInfoQueryRequest{
+			BuyInfoID: req.InfoID,
+		})
+		if utils.LogContinue(err, utils.Warning, "BuyInfo service error: %v", err) {
+			return err
+		}
+		if srvRsp.UserID == 0 {
+			rsp.Status = transaction.TransactionCreateResponse_NOT_FOUND
+			return nil
+		}
+		toUserId = srvRsp.UserID
+	}
+
 	tran := db.Transaction{
 		InfoID:     req.InfoID,
 		Category:   int32(req.Category),
-		UserID:     req.UserID,
+		FromUserID: req.FromUserID,
+		ToUserID:   toUserId,
 		CreateTime: time.Now(),
-		Status:     int32(transaction.TransStatus_RESERVED),
+		Status:     int32(transaction.TransStatus_ASKING),
 	}
 	err := db.Ormer.Create(&tran).Error
 	if gorm.IsRecordNotFoundError(err) {
@@ -121,22 +159,23 @@ func (a *srv) Find(ctx context.Context, req *transaction.TransactionFindRequest,
 	var res []*db.Transaction
 	tx := db.Ormer.Table("transactions")
 	if req.InfoID != 0 {
-		tx.Where("info_id = ?", req.InfoID)
+		tx = tx.Where("info_id = ?", req.InfoID)
 	}
 	if req.Category != transaction.TransactionFindRequest_CATEGORY_UNKNOWN {
-		tx.Where("category = ?", int32(req.Category))
+		tx = tx.Where("category = ?", int32(req.Category))
 	}
 	if req.UserID != 0 {
-		tx.Where("user_id = ?", req.UserID)
+		tx = tx.Where("from_user_id = ?", req.UserID)
+		tx = tx.Or("to_user_id = ?", req.UserID)
 	}
 	if req.LowCreateTime != 0 {
-		tx.Where("create_time > ?", time.Unix(req.LowCreateTime, 0))
+		tx = tx.Where("create_time > ?", time.Unix(req.LowCreateTime, 0))
 	}
 	if req.HighCreateTime != 0 {
-		tx.Where("create_time < ?", time.Unix(req.HighCreateTime, 0))
+		tx = tx.Where("create_time < ?", time.Unix(req.HighCreateTime, 0))
 	}
 	if req.Status != transaction.TransStatus_UNKNOWN {
-		tx.Where("status = ?", int32(req.Status))
+		tx = tx.Where("status = ?", int32(req.Status))
 	}
 	err := tx.Limit(req.Limit).Offset(req.Offset).Find(&res).Error
 	if utils.LogContinue(err, utils.Warning) {
@@ -148,7 +187,8 @@ func (a *srv) Find(ctx context.Context, req *transaction.TransactionFindRequest,
 			TransactionID: v.ID,
 			InfoID:        v.InfoID,
 			Category:      transaction.TransactionMsg_Category(v.Category),
-			UserID:        v.UserID,
+			FromUserID:    v.FromUserID,
+			ToUserID:      v.ToUserID,
 			CreateTime:    v.CreateTime.Unix(),
 			Status:        transaction.TransStatus(v.Status),
 		})

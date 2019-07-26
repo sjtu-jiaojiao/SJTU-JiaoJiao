@@ -35,11 +35,10 @@ func TestUserCreate(t *testing.T) {
 		req.StudentID = "1234"
 		id := tf(user.UserCreateResponse_SUCCESS)
 		So(id, ShouldBeGreaterThan, 0)
+		defer func() { So(db.Ormer.Delete(&db.User{ID: id}).Error, ShouldBeNil) }()
 
 		id2 := tf(user.UserCreateResponse_USER_EXIST)
 		So(id, ShouldEqual, id2)
-
-		So(db.Ormer.Delete(&db.User{ID: id}).Error, ShouldBeNil)
 	})
 }
 
@@ -67,11 +66,10 @@ func TestUserQuery(t *testing.T) {
 		So(err, ShouldBeNil)
 		req.UserID = 1000
 		tf(1000, "1234")
+		defer func() { So(db.Ormer.Delete(&db.User{ID: 1000}).Error, ShouldBeNil) }()
 
 		req.UserID = 1001
 		tf(0, "")
-
-		So(db.Ormer.Delete(&db.User{ID: 1000}).Error, ShouldBeNil)
 	})
 }
 
@@ -105,6 +103,7 @@ func TestUserUpdate(t *testing.T) {
 			Role:        int32(user.UserInfo_USER),
 		}).Error
 		So(err, ShouldBeNil)
+		defer func() { So(db.Ormer.Delete(&db.User{ID: 2000}).Error, ShouldBeNil) }()
 
 		tf(user.UserUpdateResponse_INVALID_PARAM, 2000, "test1", "12345678901")
 
@@ -123,8 +122,6 @@ func TestUserUpdate(t *testing.T) {
 		req.ClearEmpty = true
 		req.Telephone = ""
 		tf(user.UserUpdateResponse_SUCCESS, 2000, "test2", "")
-
-		So(db.Ormer.Delete(&db.User{ID: 2000}).Error, ShouldBeNil)
 	})
 }
 
@@ -162,6 +159,10 @@ func TestUserFind(t *testing.T) {
 			Status:      1,
 		}).Error
 		So(err, ShouldBeNil)
+		defer func() {
+			So(db.Ormer.Delete(&db.User{ID: 2500}).Error, ShouldBeNil)
+			So(db.Ormer.Delete(&db.User{ID: 2501}).Error, ShouldBeNil)
+		}()
 
 		tf(2, 1, 2501, "12345")
 
@@ -170,9 +171,6 @@ func TestUserFind(t *testing.T) {
 
 		req.Offset = 1
 		tf(1, 0, 2501, "12345")
-
-		So(db.Ormer.Delete(&db.User{ID: 2500}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.User{ID: 2501}).Error, ShouldBeNil)
 	})
 }
 
