@@ -1,5 +1,5 @@
 
-<nz-list [nzDataSource]="sellinfos" [nzRenderItem]="info" [nzGrid]="{gutter: 16, column: 8}">
+<nz-list [nzDataSource]="sellinfos" [nzRenderItem]="info" [nzGrid]="{gutter: 16, span: gridspan}">
     <ng-template #info let-info>
       <nz-list-item *ngIf="info" [nzContent]="nzContent">
         <ng-template #nzContent>
@@ -9,13 +9,13 @@
             <span class="badge">交易名</span>{{info.goodName}}
         </div>
         <div class='infoitem'>
-              <span class="badge">交易ID</span>{{info.sellInfoId}}
+              <span class="badge">交易ID</span>{{info.sellInfoID}}
         </div>
         <div class='infoitem'>
               <span class="badge">交易类型</span>{{'出售'}}
         </div>
       <div class='infoitem'>
-        <span class="badge">发起用户</span>{{info.userId}}
+        <span class="badge">发起用户</span>{{info.userID}}
     </div>
     <div class='infoitem'>
         <span class="badge">发布日期</span>{{stringToDate(info.releaseTime)}}
@@ -30,7 +30,7 @@
         {{tag}}
       </nz-tag>
       </div>
-              <a routerLink="/info/sellInfo/{{info.sellInfoId}}">
+              <a routerLink="/info/sellInfo/{{info.sellInfoID}}">
               交易详情
               <i nz-icon type="search"></i>
                </a>
@@ -45,7 +45,7 @@
   [(nzPageSize)]="size"
   [nzPageSizeOptions]="[4,8,12,16,20,24,28,32]"	
   [nzTotal]="count"
-  (nzPageIndexChange)	="onChange()"
-  (nzPageSizeChange)= "onChange()"
+  (nzPageIndexChange)	="getinfos()"
+  (nzPageSizeChange)= "getinfos()"
   nzShowSizeChanger
 ></nz-pagination>

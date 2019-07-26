@@ -29,7 +29,7 @@ import { Format } from 'src/app/Formatter/format';
 import { buyInfo } from 'src/app/entity/info';
 
 describe('BuyInfoComponent', () => {
-  let component: BuyInfoComponent;
+  let c: BuyInfoComponent;
   let fixture: ComponentFixture<BuyInfoComponent>;
 
   beforeEach(async(() => {
@@ -69,16 +69,15 @@ describe('BuyInfoComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BuyInfoComponent);
-    component = fixture.componentInstance;
+    c = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(c).toBeTruthy();
     const service: AuthService = TestBed.get(AuthService);
     service.login({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMzMzk3MDYsImlkIjozLCJyb2xlIjoyfQ.woB67gYA8hTMljeg6lqwG_3fSJm4Q7SD6Ln8w2Ol4xk' });
 
-    const c = new BuyInfoComponent(TestBed.get(InfoService));
     expect(c.size).toEqual(4);
     expect(c.current).toEqual(1);
     expect(c.getstate(1)).toEqual('待预约');
@@ -88,10 +87,6 @@ describe('BuyInfoComponent', () => {
     expect(Format(new Date(1563134054),'yyyy')).toEqual('1970');
     expect(c.stringToDate(new Date(1563134054))).toEqual('1970-01-19 10:12:14')
     c.checkcount();
-    c.searchUser = '';
-    c.searchByUser();
-    c.searchUser = '1';
-    c.onChange();
     c.buyinfos= [new buyInfo];
     c.size = 1;
     c.checkcount();
