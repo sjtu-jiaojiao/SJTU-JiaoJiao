@@ -204,6 +204,7 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 			rsp.Status = content.ContentUpdateResponse_FAILED
 			return nil
 		}
+
 		_, err = collection.UpdateOne(ctx, bson.D{
 			{"_id", rid},
 			{"token", req.ContentToken},
