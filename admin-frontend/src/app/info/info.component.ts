@@ -17,21 +17,14 @@ export class InfoComponent implements OnInit, AfterViewInit {
   searchUserID: string;
   searchStatus: number;
   searchGoodName: string;
-  marks = {
-    0: '0',
-    20: '10',
-    40: '50',
-    60: '100',
-    80: '500',
-    100: 'inf'};
-  priceRange= [0,100];
   @ViewChild(SellInfoComponent, {static: false})
   schild: SellInfoComponent;
   @ViewChild(BuyInfoComponent, {static: false})
   bchild: BuyInfoComponent;
   constructor(private gs: InfoComService) { }
 
-  ngOnInit() {
+  ngOnInit() {      
+    this.gs.set(12);   
   }
 
   ngAfterViewInit() {

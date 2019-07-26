@@ -1,3 +1,4 @@
+SHELL = /bin/bash
 OUTPUTDIR = ./build
 SRVLIST = ./srvlist.list
 
@@ -50,7 +51,7 @@ deploy:
 ## add: Add new service.
 add:
 	@read -p 'Service name: ' srvname
-	@srvnamel=$${srvname,,}
+	@srvnamel=`echo "$$srvname" | tr '[:upper:]' '[:lower:]'`
 
 	@cp -R ./template/api ./api/$$srvnamel
 	@cp -R ./template/srv ./srv/$$srvnamel

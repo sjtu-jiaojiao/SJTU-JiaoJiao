@@ -118,11 +118,30 @@ export default class SearchScreen extends Component {
                 })
                 .catch((error) => console.error(error));
         } else if (this.state.selectedIndex === 1) {
-            console.warn('Search SellInfo');
-        } else {
-            console.warn('Search BuyInfo')
+            let obj = { goodName: this.state.searchText };
+            //console.warn(obj);
+            Http.get('/sellInfo', obj)
+                .then((response) => {
+                    //alert(response.user[0].userName);
+                    this.setState({
+                        DataList: response.sellInfo,
+                        loaded: true,
+                    }, () => {  });
+                })
+                .catch((error) => console.error(error));
+        } else if (this.state.selectedIndex === 2) {
+            let obj = { goodName: this.state.searchText };
+            //console.warn(obj);
+            Http.get('/buyInfo', obj)
+                .then((response) => {
+                    //alert(response.user[0].userName);
+                    this.setState({
+                        DataList: response.buyInfo,
+                        loaded: true,
+                    }, () => {  });
+                })
+                .catch((error) => console.error(error));
         }
-        // 注意，如果返回的list为空，要提示用户没有他想要的！
     };
 
     isUserNameValid() {
@@ -227,7 +246,7 @@ export default class SearchScreen extends Component {
                         disabledTextStyle={{fontSize: 17}}
                         selectedTextStyle={{fontSize: 17, fontWeight: 'bold'}}
                     />
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={{flexDirection: 'row', backgroundColor: 'white'}}>
                         <SearchBar
                             searchIcon={false}
                             lightTheme={true}
@@ -297,7 +316,7 @@ export default class SearchScreen extends Component {
                     </View>
                     <View style={{height: 10}} />
                     <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                        <Text style={{fontSize: 17}}>没有你要的用户，换个关键词试试？</Text>
+                        <Text style={{fontSize: 17}}>{() => {return ('没有匹配的' + buttons[this.state.selectedIndex] + '，换个关键词试试？')}}</Text>
                     </View>
                 </View>
             )

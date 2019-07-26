@@ -2,7 +2,12 @@
 
 package utils
 
-import "github.com/gin-gonic/gin"
+import (
+	"bytes"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+)
 
 // AssignNotEmpty assign a string when another is not empty
 func AssignNotEmpty(src *string, dst *string) {
@@ -29,6 +34,39 @@ func AssignNotZero(src interface{}, dst interface{}) {
 	default:
 		panic("wrong type")
 	}
+}
+
+// IsEmpty check param zero value
+func IsEmpty(val interface{}) bool {
+	switch v := val.(type) {
+	case int:
+		return v == 0
+	case int32:
+		return v == 0
+	case int64:
+		return v == 0
+	case float32:
+		return v == 0
+	case float64:
+		return v == 0
+	case string:
+		return v == ""
+	case []byte:
+		return bytes.Equal(v, []byte{0})
+	default:
+		s := fmt.Sprintf("%d", val)
+		return s == "0"
+	}
+}
+
+// RequreParam check param and return true for all param provided
+func RequreParam(v ...interface{}) bool {
+	for _, arg := range v {
+		if IsEmpty(arg) {
+			return false
+		}
+	}
+	return true
 }
 
 /*
