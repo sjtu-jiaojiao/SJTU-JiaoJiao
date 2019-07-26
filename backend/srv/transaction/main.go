@@ -27,7 +27,7 @@ type srv struct{}
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequest, rsp *transaction.TransactionCreateResponse) error {
-	if req.InfoID == 0 || req.UserID == 0 || req.Category == transaction.TransactionCreateRequest_UNKNOWN {
+	if !utils.RequreParam(req.InfoID, req.UserID, req.Category) {
 		rsp.Status = transaction.TransactionCreateResponse_INVALID_PARAM
 		return nil
 	}
@@ -36,7 +36,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 		Category:   int32(req.Category),
 		UserID:     req.UserID,
 		CreateTime: time.Now(),
-		Status:     int32(transaction.TransactionMsg_ORDER),
+		Status:     int32(transaction.TransStatus_RESERVED),
 	}
 	err := db.Ormer.Create(&tran).Error
 	if gorm.IsRecordNotFoundError(err) {
@@ -58,15 +58,16 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
  * @apiDescription Update transaction status
  *
  * @apiParam {int32} transactionID transaction ID
- * @apiParam {int32} status 1 for order <br> 2 for done
+ * @apiParam {int32} status 1 for asking <br> 2 for accepted <br> 3 for rejected <br> 4 for closed <br> 5 for pending <br> 6 for done
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success
  * @apiUse DBServerDown
  */
 func (a *srv) Update(ctx context.Context, req *transaction.TransactionUpdateRequest, rsp *transaction.TransactionUpdateResponse) error {
-	if req.TransactionID == 0 || req.Status == transaction.TransactionUpdateRequest_STATUS_UNKNOWN {
+	if utils.RequreParam(req.TransactionID, req.Status) {
 		rsp.Status = transaction.TransactionUpdateResponse_INVALID_PARAM
 		return nil
 	}
+
 	tran := db.Transaction{
 		ID: req.TransactionID,
 	}
@@ -96,10 +97,10 @@ func (a *srv) Update(ctx context.Context, req *transaction.TransactionUpdateRequ
  *
  * @apiParam {int32} [infoID] sellInfoID or buyInfoID.
  * @apiParam {int32} [category] 1 for sell <br> 2 for buy
- * @apiParam {int32} [userID] userID whose create the transaction
+ * @apiParam {int32} [userID] userID who create the transaction
  * @apiParam {int64} [lowCreateTime] low boundary of CreateTime
  * @apiParam {int64} [highCreateTime] high boundary of CreateTime
- * @apiParam {int32} [status] 1 for order <br> 2 for done
+ * @apiParam {int32} [status] 1 for asking <br> 2 for accepted <br> 3 for rejected <br> 4 for closed <br> 5 for pending <br> 6 for done
  * @apiParam {uint32} limit=100 row limit
  * @apiParam {uint32} offset=0 row offset
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
@@ -134,7 +135,7 @@ func (a *srv) Find(ctx context.Context, req *transaction.TransactionFindRequest,
 	if req.HighCreateTime != 0 {
 		tx.Where("create_time < ?", time.Unix(req.HighCreateTime, 0))
 	}
-	if req.Status != transaction.TransactionFindRequest_STATUS_UNKNOWN {
+	if req.Status != transaction.TransStatus_UNKNOWN {
 		tx.Where("status = ?", int32(req.Status))
 	}
 	err := tx.Limit(req.Limit).Offset(req.Offset).Find(&res).Error
@@ -142,14 +143,15 @@ func (a *srv) Find(ctx context.Context, req *transaction.TransactionFindRequest,
 		rsp.Status = transaction.TransactionFindResponse_NOT_FOUND
 		return nil
 	}
-	for i, v := range res {
-		rsp.Transactions = append(rsp.Transactions, new(transaction.TransactionMsg))
-		rsp.Transactions[i].TransactionID = v.ID
-		rsp.Transactions[i].InfoID = v.InfoID
-		rsp.Transactions[i].Category = transaction.TransactionMsg_Category(v.Category)
-		rsp.Transactions[i].UserID = v.UserID
-		rsp.Transactions[i].CreateTime = v.CreateTime.Unix()
-		rsp.Transactions[i].Status = transaction.TransactionMsg_Status(v.Status)
+	for _, v := range res {
+		rsp.Transactions = append(rsp.Transactions, &transaction.TransactionMsg{
+			TransactionID: v.ID,
+			InfoID:        v.InfoID,
+			Category:      transaction.TransactionMsg_Category(v.Category),
+			UserID:        v.UserID,
+			CreateTime:    v.CreateTime.Unix(),
+			Status:        transaction.TransStatus(v.Status),
+		})
 	}
 	rsp.Status = transaction.TransactionFindResponse_SUCCESS
 	return nil

@@ -182,27 +182,27 @@ func updateContent(c *gin.Context) {
  * @api {get} /content/:contentId GetContent
  * @apiVersion 1.0.0
  * @apiGroup Content
- * @apiPermission user/admin
+ * @apiPermission none/self/admin
  * @apiName GetContent
- * @apiDescription get sell info content
+ * @apiDescription Get sell info content
  *
+ * @apiParam {int32} [userID] user id, left empty for guest
  * @apiParam {--} Param see [Content Service](#api-Service-Content_Query)
- * @apiSuccess (Success 200) {Response} response see [Content Service](#api-Service-Content_Query)
+ * @apiSuccess (None - Success 200) {Response} response see [Content Service](#api-Service-Content_Query) <br>
+ *														contentToken: hidden
+ * @apiSuccess (Self/Admin - Success 200) {Response} response see [Content Service](#api-Service-Content_Query)
  * @apiUse InvalidParam
  * @apiUse ContentServiceDown
  */
 func getContent(c *gin.Context) {
 	type param struct {
 		ContentId string `uri:"contentId" binding:"required,min=1"`
+		UserID    int32  `uri:"userID"`
 	}
 	var p param
-	role := utils.GetRole(c)
 
 	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
-		if !role.User && !role.Admin {
-			c.AbortWithStatus(403)
-			return
-		}
+		role := utils.GetRoleID(c, p.UserID)
 
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
@@ -212,6 +212,9 @@ func getContent(c *gin.Context) {
 		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
 			c.JSON(500, err)
 			return
+		}
+		if !role.User && !role.Admin {
+			rsp.ContentToken = ""
 		}
 		c.JSON(200, rsp)
 	} else {

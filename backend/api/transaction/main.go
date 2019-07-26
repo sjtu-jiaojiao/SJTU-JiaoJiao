@@ -26,7 +26,7 @@ func setupRouter() *gin.Engine {
  * @api {get} /transaction FindTransaction
  * @apiVersion 1.0.0
  * @apiGroup Transaction
- * @apiPermission none/admin
+ * @apiPermission self/admin
  * @apiName FindTransaction
  * @apiDescription Find transaction
  *
@@ -42,15 +42,15 @@ func findTransaction(c *gin.Context) {
 		UserID         int32                                       `form:"userID"`
 		LowCreateTime  int64                                       `form:"lowCreateTime"`
 		HighCreateTime int64                                       `form:"highCreateTime"`
-		Status         transaction.TransactionFindRequest_Status   `form:"status"`
+		Status         transaction.TransStatus                     `form:"status"`
 		Limit          uint32                                      `form:"limit"`
 		Offset         uint32                                      `form:"offset"`
 	}
 	var p param
-	role := utils.GetRole(c)
 
 	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
-		if !role.User && !role.Admin {
+		role := utils.GetRoleID(c, p.UserID)
+		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}

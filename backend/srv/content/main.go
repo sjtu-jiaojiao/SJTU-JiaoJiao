@@ -292,6 +292,7 @@ func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp
  *
  * @apiParam {string} contentID 24 bytes content id
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
+ * @apiSuccess {string} contentToken content token
  * @apiSuccess {list} files {string} fileID : file id <br> {int32} type : file type 1 for picture, 2 for video
  * @apiUse DBServerDown
  */
@@ -306,6 +307,7 @@ func (a *srv) Query(ctx context.Context, req *content.ContentQueryRequest, rsp *
 	}
 	type result struct {
 		ID    primitive.ObjectID `bson:"_id"`
+		Token string             `bson:"token"`
 		Files []files            `bson:"files"`
 	}
 
@@ -326,6 +328,7 @@ func (a *srv) Query(ctx context.Context, req *content.ContentQueryRequest, rsp *
 		return nil
 	}
 
+	rsp.ContentToken = res.Token
 	for _, v := range res.Files {
 		rsp.Files = append(rsp.Files, &content.ContentMsg{
 			FileID: v.FileID.Hex(),
@@ -366,14 +369,6 @@ func validCheck(contentID string, contentToken string) bool {
 	if !utils.RequreParam(contentID, contentToken) {
 		return false
 	}
-	type files struct {
-		FileID primitive.ObjectID      `bson:"fileID"`
-		Type   content.ContentMsg_Type `bson:"type"`
-	}
-	type result struct {
-		ID    primitive.ObjectID `bson:"_id"`
-		Files []files            `bson:"files"`
-	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -382,11 +377,11 @@ func validCheck(contentID string, contentToken string) bool {
 	if utils.LogContinue(err, utils.Warning) {
 		return false
 	}
-	var res result
+
 	err = collection.FindOne(ctx, bson.D{
 		{"_id", rid},
 		{"token", contentToken},
-	}).Decode(&res)
+	}).Err()
 	if utils.LogContinue(err, utils.Warning) {
 		return false
 	}

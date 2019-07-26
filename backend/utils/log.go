@@ -12,8 +12,6 @@ func LoadLog() {
 	if LocalConf.Deploy == "product" {
 		logs.Async()
 	}
-	logs.EnableFuncCallDepth(true)
-	logs.SetLogFuncCallDepth(6)
 }
 
 // Error logs a message at error level.

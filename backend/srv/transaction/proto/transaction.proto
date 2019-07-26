@@ -6,7 +6,17 @@ service Transaction {
     rpc Find (TransactionFindRequest) returns (TransactionFindResponse);
 }
 
-message TransactionCreateRequest{
+enum TransStatus {
+    UNKNOWN = 0;
+    ASKING = 1;
+    ACCEPTED = 2;
+    REJECTED = 3;
+    CLOSED = 4;
+    PENDING = 5;
+    DONE = 6;
+}
+
+message TransactionCreateRequest {
     enum Category {
         UNKNOWN = 0;
         SELL = 1;
@@ -27,17 +37,12 @@ message TransactionCreateResponse {
     int32 transactionID = 2;
 }
 
-message TransactionUpdateRequest{
-    enum Status{
-        STATUS_UNKNOWN = 0;
-        ORDER = 1;
-        DONE = 2;
-    }
+message TransactionUpdateRequest {
     int32 transactionID = 1;
-    Status status = 2;
+    TransStatus status = 2;
 }
 
-message TransactionUpdateResponse{
+message TransactionUpdateResponse {
     enum Status {
         UNKNOWN = 0;
         INVALID_PARAM = -1;
@@ -47,47 +52,37 @@ message TransactionUpdateResponse{
     Status status = 1;
 }
 
-message TransactionMsg{
+message TransactionMsg {
     enum Category {
         CATEGORY_UNKNOWN = 0;
         SELL = 1;
         BUY = 2;
-    }
-    enum Status{
-        STATUS_UNKNOWN = 0;
-        ORDER = 1;
-        DONE = 2;
     }
     int32 transactionID = 1;
     int32 infoID = 2;
     Category category = 3;
     int32 userID = 4;
     int64 createTime = 5;
-    Status status = 6;
+    TransStatus status = 6;
 }
 
-message TransactionFindRequest{
+message TransactionFindRequest {
     enum Category {
         CATEGORY_UNKNOWN = 0;
         SELL = 1;
         BUY = 2;
-    }
-    enum Status{
-        STATUS_UNKNOWN  = 0;
-        ORDER = 1;
-        DONE = 2;
     }
     int32 infoID = 1;
     Category category = 2;
     int32 userID = 3;
     int64 lowCreateTime = 4;
     int64 highCreateTime = 5;
-    Status status = 6;
+    TransStatus status = 6;
     uint32 limit = 7;
     uint32 offset = 8;
 }
 
-message TransactionFindResponse{
+message TransactionFindResponse {
     enum Status {
         UNKNOWN = 0;
         INVALID_PARAM = -1;

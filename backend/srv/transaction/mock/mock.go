@@ -10,14 +10,17 @@ import (
 type mockSrv struct{}
 
 func (mockSrv) Create(ctx context.Context, in *transaction.TransactionCreateRequest, opts ...client.CallOption) (*transaction.TransactionCreateResponse, error) {
+	// TODO
 	return nil, nil
 }
 
 func (mockSrv) Update(ctx context.Context, in *transaction.TransactionUpdateRequest, opts ...client.CallOption) (*transaction.TransactionUpdateResponse, error) {
+	// TODO
 	return nil, nil
 }
 
 func (mockSrv) Find(ctx context.Context, in *transaction.TransactionFindRequest, opts ...client.CallOption) (*transaction.TransactionFindResponse, error) {
+	// TODO
 	return nil, nil
 }
 
