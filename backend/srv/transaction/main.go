@@ -37,7 +37,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 		return nil
 	}
 
-	var toUserId int32
+	var toUserID int32
 	if req.Category == transaction.TransactionCreateRequest_SELL {
 		microSrv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
 			func() interface{} { return mocksell.NewSellInfoService() }).(sellinfo.SellInfoService)
@@ -51,7 +51,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 			rsp.Status = transaction.TransactionCreateResponse_NOT_FOUND
 			return nil
 		}
-		toUserId = srvRsp.UserID
+		toUserID = srvRsp.UserID
 	} else {
 		microSrv := utils.CallMicroService("buyinfo", func(name string, c client.Client) interface{} { return buyinfo.NewBuyInfoService(name, c) },
 			func() interface{} { return mockbuy.NewBuyInfoService() }).(buyinfo.BuyInfoService)
@@ -65,14 +65,14 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 			rsp.Status = transaction.TransactionCreateResponse_NOT_FOUND
 			return nil
 		}
-		toUserId = srvRsp.UserID
+		toUserID = srvRsp.UserID
 	}
 
 	tran := db.Transaction{
 		InfoID:     req.InfoID,
 		Category:   int32(req.Category),
 		FromUserID: req.FromUserID,
-		ToUserID:   toUserId,
+		ToUserID:   toUserID,
 		CreateTime: time.Now(),
 		Status:     int32(transaction.TransStatus_ASKING),
 	}

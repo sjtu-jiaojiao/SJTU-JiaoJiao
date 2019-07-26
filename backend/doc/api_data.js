@@ -444,7 +444,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/content/:contentId",
+    "url": "/content/:contentID",
     "title": "GetContent",
     "version": "1.0.0",
     "group": "Content",
