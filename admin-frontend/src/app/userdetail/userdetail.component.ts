@@ -5,8 +5,8 @@ import { User } from '../entity/user';
 import { Location } from '@angular/common';
 import { InfoService } from '../info.service';
 import { Format } from '../Formatter/format';
-
-
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { sellInfo, buyInfo } from '../entity/info';
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 export function fFormatter(params) {
      return params.value + ' activities in ' + params.name;
@@ -37,7 +37,10 @@ stringToDate(params) {
   this.getuser();
 }
   typeof(obj): string {
-    return typeof(obj);
+    if( obj['sellInfoID'])
+    return 'sellInfo';
+    if( obj['buyInfoID'])
+    return 'buyInfo';
   }
     goBack(): void {
     this.location.back();
@@ -48,10 +51,21 @@ stringToDate(params) {
       .subscribe(user => {this.user = user; 
         this.forbid = this.user.status === 2;
         this.userName = this.user.userName;
-        this.infoService.searchSellInfos(id).subscribe(e => {
-          this.infos = e.sellInfo.sort((a,b )=>parseInt(a.releaseTime)-
-        parseInt(b.releaseTime));
-        this.graph();
+        this.infoService.getSellInfos(id).subscribe(e => {
+          if(e.sellInfo)
+          {
+        this.infos = e.sellInfo;
+          }
+          this.infoService.getBuyInfos(id).subscribe(e => {
+            if(e.buyInfo)
+          this.infos = this.infos.concat(e.buyInfo);
+          this.infos= this.infos.sort((a,b )=>parseInt(a.releaseTime)-
+      parseInt(b.releaseTime));
+          this.graph();
+            }
+          );
+
+
         });
       });
    
@@ -59,7 +73,7 @@ stringToDate(params) {
     save(): void {
     if(!this.user) return;
     const status = this.forbid? 2: 1;
-    this.userService.updateUser({userId: this.user.userId, status: status, userName: this.userName, role: this.user.role})
+    this.userService.updateUser({userID: this.user.userID, status: status, userName: this.userName, role: this.user.role})
       .subscribe(() => this.goBack());
   }
 

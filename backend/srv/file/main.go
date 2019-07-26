@@ -20,38 +20,38 @@ type srvFile struct{}
  * @apiName File.Query
  * @apiDescription Query file stream
  *
- * @apiParam {string} fileId file id.
+ * @apiParam {string} fileID file id.
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
  * @apiSuccess {bytes} file file stream
  * @apiSuccess {int64} size file size
  * @apiUse DBServerDown
  */
 func (a *srvFile) Query(ctx context.Context, req *file.FileRequest, rsp *file.FileQueryResponse) error {
-	if req.FileId == "" {
+	if !utils.RequreParam(req.FileID) {
 		rsp.Status = file.FileQueryResponse_INVALID_PARAM
-	} else {
-		bucket, err := gridfs.NewBucket(db.MongoDatabase)
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-
-		fid, err := primitive.ObjectIDFromHex(req.FileId)
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-
-		var buf bytes.Buffer
-		size, err := bucket.DownloadToStream(fid, &buf)
-
-		if err != nil {
-			rsp.Status = file.FileQueryResponse_NOT_FOUND
-			return nil
-		} else {
-			rsp.File = buf.Bytes()
-			rsp.Size = size
-			rsp.Status = file.FileQueryResponse_SUCCESS
-		}
+		return nil
 	}
+
+	bucket, err := gridfs.NewBucket(db.MongoDatabase)
+	if utils.LogContinue(err, utils.Warning) {
+		return err
+	}
+
+	fid, err := primitive.ObjectIDFromHex(req.FileID)
+	if utils.LogContinue(err, utils.Warning) {
+		return err
+	}
+
+	var buf bytes.Buffer
+	size, err := bucket.DownloadToStream(fid, &buf)
+
+	if err != nil {
+		rsp.Status = file.FileQueryResponse_NOT_FOUND
+		return nil
+	}
+	rsp.File = buf.Bytes()
+	rsp.Size = size
+	rsp.Status = file.FileQueryResponse_SUCCESS
 	return nil
 }
 
@@ -64,25 +64,26 @@ func (a *srvFile) Query(ctx context.Context, req *file.FileRequest, rsp *file.Fi
  *
  * @apiParam {bytes} file file stream bytes
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success
- * @apiSuccess {string} fileId file id
+ * @apiSuccess {string} fileID file id
  * @apiUse DBServerDown
  */
 func (a *srvFile) Create(ctx context.Context, req *file.FileCreateRequest, rsp *file.FileCreateResponse) error {
-	if bytes.Equal(req.File, []byte{0}) {
+	if !utils.RequreParam(req.File) {
 		rsp.Status = file.FileCreateResponse_INVALID_PARAM
-	} else {
-		bucket, err := gridfs.NewBucket(db.MongoDatabase)
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-
-		objId, err := bucket.UploadFromStream("", bytes.NewReader(req.File))
-		if utils.LogContinue(err, utils.Warning) {
-			return err
-		}
-		rsp.FileId = objId.Hex()
-		rsp.Status = file.FileCreateResponse_SUCCESS
+		return nil
 	}
+
+	bucket, err := gridfs.NewBucket(db.MongoDatabase)
+	if utils.LogContinue(err, utils.Warning) {
+		return err
+	}
+
+	objID, err := bucket.UploadFromStream("", bytes.NewReader(req.File))
+	if utils.LogContinue(err, utils.Warning) {
+		return err
+	}
+	rsp.FileID = objID.Hex()
+	rsp.Status = file.FileCreateResponse_SUCCESS
 	return nil
 }
 
@@ -93,7 +94,7 @@ func (a *srvFile) Create(ctx context.Context, req *file.FileCreateRequest, rsp *
  * @apiName File.Delete
  * @apiDescription Delete file
  *
- * @apiParam {string} fileId file id.
+ * @apiParam {string} fileID file id.
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
  * @apiUse DBServerDown
  */

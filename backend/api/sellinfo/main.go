@@ -13,7 +13,7 @@ import (
 
 func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
-	rg.GET("/sellInfo/:sellInfoId", getSellInfo)
+	rg.GET("/sellInfo/:sellInfoID", getSellInfo)
 	rg.GET("/sellInfo", findSellInfo)
 	rg.POST("/sellInfo", addSellInfo)
 	return router
@@ -25,7 +25,7 @@ func setupRouter() *gin.Engine {
  */
 
 /**
- * @api {get} /sellInfo/:sellInfoId GetSellInfo
+ * @api {get} /sellInfo/:sellInfoID GetSellInfo
  * @apiVersion 1.0.0
  * @apiGroup SellInfo
  * @apiPermission none
@@ -39,14 +39,14 @@ func setupRouter() *gin.Engine {
  */
 func getSellInfo(c *gin.Context) {
 	type param struct {
-		SellInfoId int32 `uri:"sellInfoId" binding:"required,min=1"`
+		SellInfoID int32 `uri:"sellInfoID" binding:"required,min=1"`
 	}
 	var p param
 	if !utils.LogContinue(c.ShouldBindUri(&p), utils.Warning) {
 		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
 			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
 		rsp, err := srv.Query(context.TODO(), &sellinfo.SellInfoQueryRequest{
-			SellInfoId: p.SellInfoId,
+			SellInfoID: p.SellInfoID,
 		})
 		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
 			c.JSON(500, err)
@@ -77,18 +77,18 @@ func addSellInfo(c *gin.Context) {
 		GoodName     string  `form:"goodName" binding:"required"`
 		Price        float64 `form:"price"`
 		Description  string  `form:"description"`
-		ContentId    string  `form:"contentId"`
+		ContentID    string  `form:"contentID"`
 		ContentToken string  `form:"contentToken"`
-		UserId       int32   `form:"userId" binding:"required"`
+		UserID       int32   `form:"userID" binding:"required"`
 	}
 	var p param
 	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
-		if (p.ContentId == "" && p.ContentToken != "") || (p.ContentId != "" && p.ContentToken == "") {
+		if (p.ContentID == "" && p.ContentToken != "") || (p.ContentID != "" && p.ContentToken == "") {
 			c.AbortWithStatus(400)
 			return
 		}
 
-		role := utils.GetRoleID(c, p.UserId)
+		role := utils.GetRoleID(c, p.UserID)
 
 		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
@@ -101,9 +101,9 @@ func addSellInfo(c *gin.Context) {
 			GoodName:     p.GoodName,
 			Price:        p.Price,
 			Description:  p.Description,
-			ContentId:    p.ContentId,
+			ContentID:    p.ContentID,
 			ContentToken: p.ContentToken,
-			UserId:       p.UserId,
+			UserID:       p.UserID,
 		})
 		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
 			c.JSON(500, err)
@@ -130,7 +130,7 @@ func addSellInfo(c *gin.Context) {
  */
 func findSellInfo(c *gin.Context) {
 	type param struct {
-		UserId    int32   `form:"userId"`
+		UserID    int32   `form:"userID"`
 		Status    int32   `form:"status"`
 		GoodName  string  `form:"goodName"`
 		LowPrice  float64 `form:"lowPrice"`
@@ -144,8 +144,8 @@ func findSellInfo(c *gin.Context) {
 		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
 			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
 		rsp, err := srv.Find(context.TODO(), &sellinfo.SellInfoFindRequest{
-			UserId:    p.UserId,
-			Status:    p.Status,
+			UserID:    p.UserID,
+			Status:    sellinfo.SellStatus(p.Status),
 			GoodName:  p.GoodName,
 			LowPrice:  p.LowPrice,
 			HighPrice: p.HighPrice,

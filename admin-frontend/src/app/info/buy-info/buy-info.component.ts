@@ -4,6 +4,7 @@ import { buyInfo } from '../../entity/info';
 import { InfoService } from '../../info.service';
 import { filter } from 'rxjs/operators';
 import { Format } from 'src/app/Formatter/format';
+import { InfoComService } from '../infocom.service';
 @Component({
   selector: 'app-buy-info',
   templateUrl: './buy-info.component.html',
@@ -11,17 +12,20 @@ import { Format } from 'src/app/Formatter/format';
 })
 export class BuyInfoComponent implements OnInit {
   tags = ['测试','数据'];
-  searchTag: string[]=[];
   buyinfos: buyInfo[];
   current : number = 1;
+  gridspan: number =12;
   size :number = 4;
   count : number;
-  selectedType: number=0;
-  searchUser: string;
-  constructor(private infoService: InfoService) { }
+  searchTag: string[]=[];
+  searchUserID: string;
+  searchStatus: number;
+  searchGoodName: string;
+  constructor(private gs: InfoComService, private infoService: InfoService) { }
 
   ngOnInit() {
     this.getinfos();
+    this.gridspan=this.gs.get();
   }
 
   getstate(statecode: number): string {
@@ -37,20 +41,6 @@ export class BuyInfoComponent implements OnInit {
       }
   }
 
-  searchByUser(): void {    
-    if (!this.searchUser || !this.searchUser.trim()) {
-    this.getinfos();
-    // if not search term, return all info array.
-    return;
-  }
-    this.infoService.searchBuyInfos(this.searchUser,this.size, this.current*this.size-this.size)
-    .subscribe(infos => {
-      if(!infos) return;
-      this.buyinfos = infos.buyInfo;
-      this.checkcount();
-    });
-  }
-
   stringToDate(params) {
       const date = new Date(params);
       return Format(date,'yyyy-MM-dd HH:mm:ss');
@@ -64,17 +54,16 @@ export class BuyInfoComponent implements OnInit {
   }
 
   getinfos(): void {
-    this.infoService.getPageBuyInfos(this.size, this.current*this.size-this.size)
+    const st = this.gs.unstorage();
+    this.searchUserID=st.u;
+    this.searchGoodName =st.g;
+    this.searchStatus =st.s;
+    this.infoService.getBuyInfos(this.searchUserID,this.searchStatus, this.searchGoodName, this.size, this.current*this.size-this.size)
     .subscribe(infos => {
       if(!infos) return;
       this.buyinfos = infos.buyInfo;
       this.checkcount();
     });
   }
-
-  onChange(){
-    this.searchByUser();
-  }
-
 
 }

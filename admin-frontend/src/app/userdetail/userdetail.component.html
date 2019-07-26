@@ -4,7 +4,7 @@
     
         <nz-card>
           <nz-card-meta
-            [nzTitle]="user.userId"
+            [nzTitle]="user.userID"
             [nzDescription]="user.telephone"
             [nzAvatar]="avatarTemplate"
           ></nz-card-meta>
@@ -33,7 +33,7 @@
         </nz-card>
 
         <ng-template #avatarTemplate>
-          <nz-avatar nzSrc="/api/file/{{user.avatarId}}"></nz-avatar>
+          <nz-avatar nzShape='square' [nzSize]="64" nzSrc="/api/file/{{user.avatarID}}"></nz-avatar>
         </ng-template>
 
 
@@ -55,12 +55,14 @@
             <tbody>
               <tr *ngFor="let data of headerTable.data">
                 <td>
-                  <a routerLink="/info/typeof(data)}}/{{data.sellInfoId}}">{{ data.goodName }}
-                   </a>
+                   <a routerLink="/info/{{typeof(data)}}/{{data['sellInfoID']?data.sellInfoID:
+                   data['buyInfoID']?data.buyInfoID:''}}">
+                    {{ data.goodName }}
+                    </a>
                   </td>
                 <td>{{ stringToDate(data.releaseTime) }}</td>
                 <td>{{ getstate(data.status) }}</td>
-                <td>{{ typeof(data.sellInfo)=='sellInfo'?'出售':'求购'}}</td>
+                <td>{{ typeof(data)=='sellInfo'?'出售':'求购'}}</td>
               </tr>
             </tbody>
           </nz-table>        

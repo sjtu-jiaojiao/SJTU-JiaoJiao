@@ -24,6 +24,7 @@ func parseHeader(c *gin.Context) *jwt.Token {
 	return t
 }
 
+// Role is user role struct
 type Role struct {
 	Guest bool
 	User  bool
@@ -31,6 +32,7 @@ type Role struct {
 	Admin bool
 }
 
+// GetRoleID get role and check id to judge self permission
 func GetRoleID(c *gin.Context, id int32) Role {
 	ret := Role{Guest: true}
 	if CheckInTest() {
@@ -61,6 +63,7 @@ func GetRoleID(c *gin.Context, id int32) Role {
 	return ret
 }
 
+// GetRole get role without self permission
 func GetRole(c *gin.Context) Role {
 	return GetRoleID(c, 0)
 }

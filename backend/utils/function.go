@@ -2,14 +2,21 @@
 
 package utils
 
-import "github.com/gin-gonic/gin"
+import (
+	"bytes"
+	"fmt"
 
+	"github.com/gin-gonic/gin"
+)
+
+// AssignNotEmpty assign a string when another is not empty
 func AssignNotEmpty(src *string, dst *string) {
 	if *src != "" {
 		*dst = *src
 	}
 }
 
+// AssignNotZero assign a digit when another is not zero
 func AssignNotZero(src interface{}, dst interface{}) {
 	switch v := dst.(type) {
 	case *int32:
@@ -29,6 +36,44 @@ func AssignNotZero(src interface{}, dst interface{}) {
 	}
 }
 
+// IsEmpty check param zero value
+func IsEmpty(val interface{}) bool {
+	switch v := val.(type) {
+	case int:
+		return v == 0
+	case int32:
+		return v == 0
+	case int64:
+		return v == 0
+	case float32:
+		return v == 0
+	case float64:
+		return v == 0
+	case string:
+		return v == ""
+	case []byte:
+		return bytes.Equal(v, []byte{0})
+	default:
+		s := fmt.Sprintf("%d", val)
+		return s == "0"
+	}
+}
+
+// RequreParam check param and return true for all param provided
+func RequreParam(v ...interface{}) bool {
+	for _, arg := range v {
+		if IsEmpty(arg) {
+			return false
+		}
+	}
+	return true
+}
+
+/*
+GetQueryFile get query file info
+return file byte, response code and error
+response code could be 200 or 413 or 500
+*/
 func GetQueryFile(c *gin.Context, name string, maxsize int64) ([]byte, int, error) {
 	if CheckInTest() {
 		return []byte("test_file"), 200, nil

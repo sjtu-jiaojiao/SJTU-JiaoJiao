@@ -7,7 +7,7 @@ service File {
 }
 
 message FileRequest {
-    string fileId = 1;
+    string fileID = 1;
 }
 
 message FileDeleteResponse {
@@ -43,5 +43,5 @@ message FileCreateResponse {
         SUCCESS = 1;
     }
     Status status = 1;
-    string fileId = 2;
+    string fileID = 2;
 }

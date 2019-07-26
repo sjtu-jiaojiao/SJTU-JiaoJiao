@@ -12,7 +12,7 @@ import (
 
 func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
-	rg.GET("/user/:userId", getUserInfo)
+	rg.GET("/user/:userID", getUserInfo)
 	rg.GET("/user", findUser)
 	rg.POST("/user", addUser)
 	rg.PUT("/user", updateUser)
@@ -25,7 +25,7 @@ func setupRouter() *gin.Engine {
  */
 
 /**
- * @api {get} /user/:userId GetUserInfo
+ * @api {get} /user/:userID GetUserInfo
  * @apiVersion 1.0.0
  * @apiGroup User
  * @apiPermission none/self/admin
@@ -34,31 +34,31 @@ func setupRouter() *gin.Engine {
  *
  * @apiParam {--} Param see [User Service](#api-Service-User_Query)
  * @apiSuccess (None - Success 200) {Response} response see [User Service](#api-Service-User_Query) <br>
- * 											   studentId: hidden <br> studentName: hidden
+ * 											   studentID: hidden <br> studentName: hidden
  * @apiSuccess (Self/Admin - Success 200) {Response} response see [User Service](#api-Service-User_Query)
  * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */
 func getUserInfo(c *gin.Context) {
 	type param struct {
-		UserId int32 `uri:"userId" binding:"required,min=1"`
+		UserID int32 `uri:"userID" binding:"required,min=1"`
 	}
 	var p param
 
 	if !utils.LogContinue(c.ShouldBindUri(&p), utils.Warning) {
-		role := utils.GetRoleID(c, p.UserId)
+		role := utils.GetRoleID(c, p.UserID)
 
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 			func() interface{} { return mock.NewUserService() }).(user.UserService)
 		rsp, err := srv.Query(context.TODO(), &user.UserQueryRequest{
-			UserId: p.UserId,
+			UserID: p.UserID,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
 			c.JSON(500, err)
 			return
 		}
 		if !role.Self && !role.Admin {
-			rsp.StudentId = ""
+			rsp.StudentID = ""
 			rsp.StudentName = ""
 		}
 		c.JSON(200, rsp)
@@ -77,7 +77,7 @@ func getUserInfo(c *gin.Context) {
  *
  * @apiParam {--} Param see [User Service](#api-Service-User_Find) <br> No param need admin permission!
  * @apiSuccess {Response} response see [User Service](#api-Service-User_Find) <br>
- * 											   None - studentId: hidden <br> None - studentName: hidden
+ * 											   None - studentID: hidden <br> None - studentName: hidden
  * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */
@@ -108,7 +108,7 @@ func findUser(c *gin.Context) {
 		}
 		if !role.Admin {
 			for _, v := range rsp.User {
-				v.StudentId = ""
+				v.StudentID = ""
 				v.StudentName = ""
 			}
 		}
@@ -133,7 +133,7 @@ func findUser(c *gin.Context) {
  */
 func addUser(c *gin.Context) {
 	type param struct {
-		StudentId   string `form:"studentId" binding:"required"`
+		StudentID   string `form:"studentID" binding:"required"`
 		StudentName string `form:"studentName" binding:"required"`
 	}
 	var p param
@@ -147,7 +147,7 @@ func addUser(c *gin.Context) {
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 			func() interface{} { return mock.NewUserService() }).(user.UserService)
 		rsp, err := srv.Create(context.TODO(), &user.UserCreateRequest{
-			StudentId:   p.StudentId,
+			StudentID:   p.StudentID,
 			StudentName: p.StudentName,
 		})
 		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
@@ -168,18 +168,18 @@ func addUser(c *gin.Context) {
  * @apiName UpdateUser
  * @apiDescription Update user
  *
- * @apiParam {--} Param see [User Service](#api-Service-User_Update) <br> self not allow edit StudentId,StudentName,Status,Role
+ * @apiParam {--} Param see [User Service](#api-Service-User_Update) <br> self not allow edit StudentID,StudentName,Status,Role
  * @apiSuccess {Response} response see [User Service](#api-Service-User_Update)
  * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */
 func updateUser(c *gin.Context) {
 	type param struct {
-		UserId      int32  `form:"userId" binding:"required,min=1"`
+		UserID      int32  `form:"userID" binding:"required,min=1"`
 		UserName    string `form:"userName"`
-		AvatarId    string `form:"avatarId"`
+		AvatarID    string `form:"avatarID"`
 		Telephone   string `form:"telephone"`
-		StudentId   string `form:"studentId"`
+		StudentID   string `form:"studentID"`
 		StudentName string `form:"studentName"`
 		Status      int32  `form:"status"`
 		Role        int32  `form:"role"`
@@ -188,14 +188,14 @@ func updateUser(c *gin.Context) {
 	var p param
 
 	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
-		role := utils.GetRoleID(c, p.UserId)
+		role := utils.GetRoleID(c, p.UserID)
 
 		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}
 		if !role.Admin { // only admin allow change these fields
-			p.StudentId = ""
+			p.StudentID = ""
 			p.StudentName = ""
 			p.Status = 0
 			p.Role = 0
@@ -203,11 +203,11 @@ func updateUser(c *gin.Context) {
 		srv := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 			func() interface{} { return mock.NewUserService() }).(user.UserService)
 		rsp, err := srv.Update(context.TODO(), &user.UserInfo{
-			UserId:      p.UserId,
+			UserID:      p.UserID,
 			UserName:    p.UserName,
-			AvatarId:    p.AvatarId,
+			AvatarID:    p.AvatarID,
 			Telephone:   p.Telephone,
-			StudentId:   p.StudentId,
+			StudentID:   p.StudentID,
 			StudentName: p.StudentName,
 			Status:      user.UserInfo_Status(p.Status),
 			Role:        user.UserInfo_Role(p.Role),

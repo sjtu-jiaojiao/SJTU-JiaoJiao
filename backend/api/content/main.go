@@ -39,7 +39,7 @@ func setupRouter() *gin.Engine {
  */
 func addContent(c *gin.Context) {
 	type param struct {
-		ContentId    string `form:"contentId"`
+		ContentID    string `form:"contentID"`
 		ContentToken string `form:"contentToken"`
 		Type         int32  `form:"type" binding:"required"`
 	}
@@ -54,7 +54,7 @@ func addContent(c *gin.Context) {
 			return
 		}
 
-		if (p.ContentId == "" && p.ContentToken != "") || (p.ContentId != "" && p.ContentToken == "") {
+		if (p.ContentID == "" && p.ContentToken != "") || (p.ContentID != "" && p.ContentToken == "") {
 			c.AbortWithStatus(400)
 			return
 		}
@@ -67,7 +67,7 @@ func addContent(c *gin.Context) {
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
 		rsp, err := srv.Create(context.TODO(), &content.ContentCreateRequest{
-			ContentId:    p.ContentId,
+			ContentID:    p.ContentID,
 			ContentToken: p.ContentToken,
 			Content:      data,
 			Type:         content.ContentCreateRequest_Type(p.Type),
@@ -97,7 +97,7 @@ func addContent(c *gin.Context) {
  */
 func deleteContent(c *gin.Context) {
 	type param struct {
-		ContentId    string `form:"contentId" binding:"required"`
+		ContentID    string `form:"contentID" binding:"required"`
 		ContentToken string `form:"contentToken" binding:"required"`
 	}
 	var p param
@@ -111,7 +111,7 @@ func deleteContent(c *gin.Context) {
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
 		rsp, err := srv.Delete(context.TODO(), &content.ContentDeleteRequest{
-			ContentId:    p.ContentId,
+			ContentID:    p.ContentID,
 			ContentToken: p.ContentToken,
 		})
 		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
@@ -139,9 +139,9 @@ func deleteContent(c *gin.Context) {
  */
 func updateContent(c *gin.Context) {
 	type param struct {
-		ContentId    string `form:"contentId" binding:"required"`
+		ContentID    string `form:"contentID" binding:"required"`
 		ContentToken string `form:"contentToken" binding:"required"`
-		FileId       string `form:"fileId" binding:"required"`
+		FileID       string `form:"fileID" binding:"required"`
 		Type         int32  `form:"type"`
 	}
 	var p param
@@ -162,9 +162,9 @@ func updateContent(c *gin.Context) {
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
 		rsp, err := srv.Update(context.TODO(), &content.ContentUpdateRequest{
-			ContentId:    p.ContentId,
+			ContentID:    p.ContentID,
 			ContentToken: p.ContentToken,
-			FileId:       p.FileId,
+			FileID:       p.FileID,
 			Content:      data,
 			Type:         content.ContentUpdateRequest_Type(p.Type),
 		})
@@ -182,36 +182,39 @@ func updateContent(c *gin.Context) {
  * @api {get} /content/:contentId GetContent
  * @apiVersion 1.0.0
  * @apiGroup Content
- * @apiPermission user/admin
+ * @apiPermission none/self/admin
  * @apiName GetContent
- * @apiDescription get sell info content
+ * @apiDescription Get sell info content
  *
+ * @apiParam {int32} [userID] user id, left empty for guest
  * @apiParam {--} Param see [Content Service](#api-Service-Content_Query)
- * @apiSuccess (Success 200) {Response} response see [Content Service](#api-Service-Content_Query)
+ * @apiSuccess (None - Success 200) {Response} response see [Content Service](#api-Service-Content_Query) <br>
+ *														contentToken: hidden
+ * @apiSuccess (Self/Admin - Success 200) {Response} response see [Content Service](#api-Service-Content_Query)
  * @apiUse InvalidParam
  * @apiUse ContentServiceDown
  */
 func getContent(c *gin.Context) {
 	type param struct {
 		ContentId string `uri:"contentId" binding:"required,min=1"`
+		UserID    int32  `uri:"userID"`
 	}
 	var p param
-	role := utils.GetRole(c)
 
 	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
-		if !role.User && !role.Admin {
-			c.AbortWithStatus(403)
-			return
-		}
+		role := utils.GetRoleID(c, p.UserID)
 
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
 		rsp, err := srv.Query(context.TODO(), &content.ContentQueryRequest{
-			ContentId: p.ContentId,
+			ContentID: p.ContentId,
 		})
 		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
 			c.JSON(500, err)
 			return
+		}
+		if !role.User && !role.Admin {
+			rsp.ContentToken = ""
 		}
 		c.JSON(200, rsp)
 	} else {

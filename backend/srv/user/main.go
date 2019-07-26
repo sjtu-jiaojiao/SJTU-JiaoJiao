@@ -23,35 +23,36 @@ type srv struct{}
  * @apiName User.Create
  * @apiDescription Create new user.
  *
- * @apiParam {string} studentId student id.
+ * @apiParam {string} studentID student id.
  * @apiParam {string} studentName student name.
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for exist user
  * @apiSuccess {Response} user see [User Service](#api-Service-user_User_Query)
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user.UserCreateResponse) error {
-	if req.StudentId == "" || req.StudentName == "" {
+	if !utils.RequreParam(req.StudentID, req.StudentName) {
 		rsp.Status = user.UserCreateResponse_INVALID_PARAM
-	} else {
-		var usr db.User
-		err := db.Ormer.Where("student_id = ?", req.StudentId).First(&usr).Error
-		if gorm.IsRecordNotFoundError(err) {
-			usr = db.User{
-				UserName:    req.StudentName,
-				AvatarId:    utils.GetStringConfig("srv_config", "default_avatar"),
-				StudentId:   req.StudentId,
-				StudentName: req.StudentName,
-			}
-			utils.LogContinue(db.Ormer.Create(&usr).Error, utils.Warning)
-			rsp.Status = user.UserCreateResponse_SUCCESS
-		} else if utils.LogContinue(err, utils.Warning) {
-			return err
-		} else {
-			rsp.Status = user.UserCreateResponse_USER_EXIST
-		}
-		rsp.User = new(user.UserInfo)
-		parseUser(&usr, rsp.User)
+		return nil
 	}
+
+	var usr db.User
+	err := db.Ormer.Where("student_id = ?", req.StudentID).First(&usr).Error
+	if gorm.IsRecordNotFoundError(err) {
+		usr = db.User{
+			UserName:    req.StudentName,
+			AvatarID:    utils.GetStringConfig("srv_config", "default_avatar"),
+			StudentID:   req.StudentID,
+			StudentName: req.StudentName,
+		}
+		utils.LogContinue(db.Ormer.Create(&usr).Error, utils.Warning)
+		rsp.Status = user.UserCreateResponse_SUCCESS
+	} else if utils.LogContinue(err, utils.Warning) {
+		return err
+	} else {
+		rsp.Status = user.UserCreateResponse_USER_EXIST
+	}
+	rsp.User = new(user.UserInfo)
+	parseUser(&usr, rsp.User)
 	return nil
 }
 
@@ -62,23 +63,24 @@ func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user
  * @apiName User.Query
  * @apiDescription Query user info.
  *
- * @apiParam {int32} userId user id
- * @apiSuccess {int32} userId user id
+ * @apiParam {int32} userID user id
+ * @apiSuccess {int32} userID user id
  * @apiSuccess {string} userName user name
- * @apiSuccess {string} avatarId user avatar id
+ * @apiSuccess {string} avatarID user avatar id
  * @apiSuccess {string} telephone user telephone
- * @apiSuccess {string} studentId student id
+ * @apiSuccess {string} studentID student id
  * @apiSuccess {string} studentName student name
  * @apiSuccess {int32} status user status, 1 for normal <br> 2 for frozen
  * @apiSuccess {int32} role user role, 1 for user <br> 2 for admin
  * @apiUse DBServerDown
  */
 func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.UserInfo) error {
-	if req.UserId == 0 {
+	if !utils.RequreParam(req.UserID) {
 		return nil
 	}
+
 	usr := db.User{
-		ID: req.UserId,
+		ID: req.UserID,
 	}
 	err := db.Ormer.First(&usr).Error
 	if gorm.IsRecordNotFoundError(err) {
@@ -97,11 +99,11 @@ func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.U
  * @apiName User.Update
  * @apiDescription Update user info, only update provided field. If clearEmpty=1 and param support allow clear, clear the field when not provided.
  *
- * @apiParam {int32} userId user id
+ * @apiParam {int32} userID user id
  * @apiParam {string} [userName] user name
- * @apiParam {string} [avatarId] user avatar id
+ * @apiParam {string} [avatarID] user avatar id
  * @apiParam {string} [telephone] user telephone, allow clear
- * @apiParam {string} [studentId] student id
+ * @apiParam {string} [studentID] student id
  * @apiParam {string} [studentName] student name
  * @apiParam {int32} [status] user status, 1 for normal <br> 2 for frozen
  * @apiParam {int32} [role] user role, 1 for user <br> 2 for admin
@@ -110,24 +112,24 @@ func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.U
  * @apiUse DBServerDown
  */
 func (a *srv) Update(ctx context.Context, req *user.UserInfo, rsp *user.UserUpdateResponse) error {
-	if req.UserId == 0 {
+	if !utils.RequreParam(req.UserID) {
 		rsp.Status = user.UserUpdateResponse_INVALID_PARAM
 		return nil
 	}
 
 	usr := db.User{
-		ID: req.UserId,
+		ID: req.UserID,
 	}
 	err := db.Ormer.First(&usr).Error
 	if err == nil {
 		utils.AssignNotEmpty(&req.UserName, &usr.UserName)
-		utils.AssignNotEmpty(&req.AvatarId, &usr.AvatarId)
+		utils.AssignNotEmpty(&req.AvatarID, &usr.AvatarID)
 		if req.ClearEmpty {
 			usr.Telephone = req.Telephone
 		} else {
 			utils.AssignNotEmpty(&req.Telephone, &usr.Telephone)
 		}
-		utils.AssignNotEmpty(&req.StudentId, &usr.StudentId)
+		utils.AssignNotEmpty(&req.StudentID, &usr.StudentID)
 		utils.AssignNotEmpty(&req.StudentName, &usr.StudentName)
 		utils.AssignNotZero((*int32)(&req.Status), &usr.Status)
 		utils.AssignNotZero((*int32)(&req.Role), &usr.Role)
@@ -177,11 +179,11 @@ func (a *srv) Find(ctx context.Context, req *user.UserFindRequest, rsp *user.Use
 }
 
 func parseUser(s *db.User, d *user.UserInfo) {
-	d.UserId = int32(s.ID)
+	d.UserID = int32(s.ID)
 	d.UserName = s.UserName
-	d.AvatarId = s.AvatarId
+	d.AvatarID = s.AvatarID
 	d.Telephone = s.Telephone
-	d.StudentId = s.StudentId
+	d.StudentID = s.StudentID
 	d.StudentName = s.StudentName
 	d.Status = user.UserInfo_Status(s.Status)
 	d.Role = user.UserInfo_Role(s.Role)

@@ -18,36 +18,37 @@ func TestSrvInfoQuery(t *testing.T) {
 		ID:          2100,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
-		UserId:      1000,
-		GoodId:      2101,
+		UserID:      1000,
+		GoodID:      2101,
 	}
 	good := db.Good{
 		ID:          2101,
 		GoodName:    "good",
 		Description: "Very good!",
-		ContentId:   "123456789",
+		ContentID:   "123456789",
 	}
-	tf := func(buyId int, contentId string, userId int) {
+	tf := func(buyID int, contentID string, userID int) {
 		var rsp buyinfo.BuyInfoMsg
 		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.BuyInfoId, ShouldEqual, buyId)
-		So(rsp.ContentId, ShouldEqual, contentId)
-		So(rsp.UserId, ShouldEqual, userId)
+		So(rsp.BuyInfoID, ShouldEqual, buyID)
+		So(rsp.ContentID, ShouldEqual, contentID)
+		So(rsp.UserID, ShouldEqual, userID)
 	}
 	Convey("Test BuyInfo Query", t, func() {
 		tf(0, "", 0)
 
 		So(db.Ormer.Create(&good).Error, ShouldBeNil)
 		So(db.Ormer.Create(&info).Error, ShouldBeNil)
+		defer func() {
+			So(db.Ormer.Delete(&db.Good{ID: 2101}).Error, ShouldBeNil)
+			So(db.Ormer.Delete(&db.BuyInfo{ID: 2100}).Error, ShouldBeNil)
+		}()
 
-		req.BuyInfoId = 2100
+		req.BuyInfoID = 2100
 		tf(2100, "123456789", 1000)
 
-		req.BuyInfoId = 2101
+		req.BuyInfoID = 2101
 		tf(0, "", 0)
-
-		So(db.Ormer.Delete(&db.BuyInfo{ID: 2100}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 2101}).Error, ShouldBeNil)
 	})
 
 }
@@ -65,42 +66,42 @@ func TestSrvInfoFind(t *testing.T) {
 		Status:      1,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
-		UserId:      1000,
-		GoodId:      2010,
+		UserID:      1000,
+		GoodID:      2010,
 	}
 	info2 := db.BuyInfo{
 		ID:          2001,
 		Status:      2,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
-		UserId:      1000,
-		GoodId:      2011,
+		UserID:      1000,
+		GoodID:      2011,
 	}
 	info3 := db.BuyInfo{
 		ID:          2002,
 		Status:      3,
 		ReleaseTime: time.Date(2019, 9, 9, 9, 9, 9, 0, time.Local),
 		ValidTime:   time.Date(2020, 9, 9, 9, 9, 9, 0, time.Local),
-		UserId:      1001,
-		GoodId:      2012,
+		UserID:      1001,
+		GoodID:      2012,
 	}
 	good1 := db.Good{
 		ID:          2010,
 		GoodName:    "good",
 		Description: "Very good!",
-		ContentId:   "123456789",
+		ContentID:   "123456789",
 	}
 	good2 := db.Good{
 		ID:          2011,
 		GoodName:    "good",
 		Description: "Very good!",
-		ContentId:   "123456789",
+		ContentID:   "123456789",
 	}
 	good3 := db.Good{
 		ID:          2012,
 		GoodName:    "good",
 		Description: "Very good!",
-		ContentId:   "123456789",
+		ContentID:   "123456789",
 	}
 
 	prepare := func() {
@@ -131,13 +132,14 @@ func TestSrvInfoFind(t *testing.T) {
 		testLen(0)
 
 		prepare()
+		defer end()
 
 		testLen(3)
 
-		req.UserId = 1001
+		req.UserID = 1001
 		testLen(1)
 
-		req.UserId = 1000
+		req.UserID = 1000
 		testLen(2)
 
 		req.Limit = 1
@@ -148,8 +150,6 @@ func TestSrvInfoFind(t *testing.T) {
 
 		req.Offset = 2
 		testLen(0)
-
-		end()
 	})
 }
 

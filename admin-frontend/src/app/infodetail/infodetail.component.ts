@@ -4,12 +4,9 @@ import { sellInfo } from '../entity/info';
 import { Location } from '@angular/common';
 import { InfoService } from '../info.service';
 import { Format } from '../Formatter/format';
+import { FileService } from './../file.service';
+import { Media } from '../entity/content';
 
-export function formatDate(params) {
-    params = params[0];
-    const date = new Date(params.name);
-    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
-}
 @Component({
   selector: 'app-infodetail',
   templateUrl: './infodetail.component.html',
@@ -21,6 +18,7 @@ export class InfoDetailComponent implements OnInit {
   fnoption: any;
   type :string;
   state: number =0;
+  contents: Media[];
   now = new Date(1997, 9, 3);
   oneDay = 24 * 3600 * 1000;
   option: any;
@@ -30,19 +28,9 @@ export class InfoDetailComponent implements OnInit {
   constructor(
   private route: ActivatedRoute,
   private infoService: InfoService,
-  private location: Location
+  private location: Location,
+  private fileService:FileService
 ) {}
-  randomData() {
-    this.now = new Date(+this.now + this.oneDay);
-    this.value = this.value + Math.random() * 21 - 10;
-    return {
-        name: this.now.toString(),
-        value: [
-            [this.now.getFullYear(), this.now.getMonth() + 1, this.now.getDate()].join('/'),
-            Math.round(this.value)
-        ]
-    };
-}
 stringToDate(params) {
     const date = new Date(params);
     return Format(date,'yyyy-MM-dd HH:mm:ss');
@@ -53,6 +41,14 @@ stringToDate(params) {
       this.type = this.route.snapshot.paramMap.get('type');
       this.getinfo();
   }
+    getContent(): void {
+    this.fileService.getContent(this.info.contentID).subscribe(
+        e => {
+            this.contents = e.files;
+            console.log(this.contents);
+        }
+    )
+    }
     goBack(): void {
     this.location.back();
   }
@@ -84,45 +80,8 @@ stringToDate(params) {
     }
 
   graph() {
-      
-    for (let i = 0; i < 1000; i++) {
-        this.d.push(this.randomData());
-}
-    this.option = {
-    title: {
-        text: '价格波动曲线'
-    },
-    tooltip: {
-        trigger: 'axis',
-        formatter: formatDate,
-        axisPointer: {
-            animation: false
-        }
-    },
-    xAxis: {
-        type: 'time',
-        splitLine: {
-            show: false
-        }
-    },
-    yAxis: {
-        type: 'value',
-        boundaryGap: [0, '100%'],
-        splitLine: {
-            show: false
-        }
-    },
-    series: [{
-        name: '模拟数据',
-        type: 'line',
-        showSymbol: false,
-        hoverAnimation: false,
-        data: this.d
-    }]
-};
     this.fnoption = {
     title: {
-        text: '流量跟踪漏斗图',
     },
     tooltip: {
         trigger: 'item',
@@ -177,45 +136,5 @@ stringToDate(params) {
     ]
 };
 
-    setInterval(() => {
-
-    for (let i = 0; i < 5; i++) {
-        this.d.shift();
-        this.d.push(this.randomData());
-    }
-    this.option = {
-      title: {
-          text: '价格波动曲线'
-      },
-      tooltip: {
-          trigger: 'axis',
-          formatter: formatDate,
-          axisPointer: {
-              animation: false
-          }
-      },
-      xAxis: {
-          type: 'time',
-          splitLine: {
-              show: false
-          }
-      },
-      yAxis: {
-          type: 'value',
-          boundaryGap: [0, '100%'],
-          splitLine: {
-              show: false
-          }
-      },
-      series: [{
-          name: '模拟数据',
-          type: 'line',
-          showSymbol: false,
-          hoverAnimation: false,
-          data: this.d
-      }]
-  };
-}, 1000);
-  }
 }
-
+}

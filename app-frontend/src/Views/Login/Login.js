@@ -30,9 +30,9 @@ export default class LoginScreen extends Component {
                             return response.json();
                         })
                         .then((responseJson) => {
-                            Config.userInfo.userId=responseJson.userId;
+                            Config.userInfo.userID=responseJson.userID;
                             Config.userInfo.userName=responseJson.userName;
-                            Config.userInfo.studentId=responseJson.studentId;
+                            Config.userInfo.studentID=responseJson.studentID;
                             Config.userInfo.studentName=responseJson.studentName;
                             Config.userInfo.telephone=responseJson.telephone;
                             //console.warn(Config.userInfo);
