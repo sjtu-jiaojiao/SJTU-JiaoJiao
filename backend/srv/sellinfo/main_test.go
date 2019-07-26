@@ -39,15 +39,16 @@ func TestSrvInfoQuery(t *testing.T) {
 
 		So(db.Ormer.Create(&good).Error, ShouldBeNil)
 		So(db.Ormer.Create(&info).Error, ShouldBeNil)
+		defer func() {
+			So(db.Ormer.Delete(&db.Good{ID: 1101}).Error, ShouldBeNil)
+			So(db.Ormer.Delete(&db.SellInfo{ID: 1100}).Error, ShouldBeNil)
+		}()
 
 		req.SellInfoID = 1100
 		tf(1100, "123456789", 1000)
 
 		req.SellInfoID = 1101
 		tf(0, "", 0)
-
-		So(db.Ormer.Delete(&db.SellInfo{ID: 1100}).Error, ShouldBeNil)
-		So(db.Ormer.Delete(&db.Good{ID: 1101}).Error, ShouldBeNil)
 	})
 }
 
@@ -204,6 +205,7 @@ func TestSrvInfoFind(t *testing.T) {
 		testLen(0)
 
 		prepare()
+		defer end()
 
 		testLen(3)
 
@@ -221,8 +223,6 @@ func TestSrvInfoFind(t *testing.T) {
 
 		req.Offset = 2
 		testLen(0)
-
-		end()
 	})
 }
 

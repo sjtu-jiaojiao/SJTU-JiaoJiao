@@ -15,6 +15,7 @@ func setupRouter() *gin.Engine {
 	rg.POST("/content", addContent)
 	rg.DELETE("/content", deleteContent)
 	rg.PUT("/content", updateContent)
+	rg.GET("/content/:contentId", getContent)
 	return router
 }
 
@@ -170,6 +171,50 @@ func updateContent(c *gin.Context) {
 		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
 			c.JSON(500, err)
 			return
+		}
+		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+/**
+ * @api {get} /content/:contentId GetContent
+ * @apiVersion 1.0.0
+ * @apiGroup Content
+ * @apiPermission none/self/admin
+ * @apiName GetContent
+ * @apiDescription Get sell info content
+ *
+ * @apiParam {int32} [userID] user id, left empty for guest
+ * @apiParam {--} Param see [Content Service](#api-Service-Content_Query)
+ * @apiSuccess (None - Success 200) {Response} response see [Content Service](#api-Service-Content_Query) <br>
+ *														contentToken: hidden
+ * @apiSuccess (Self/Admin - Success 200) {Response} response see [Content Service](#api-Service-Content_Query)
+ * @apiUse InvalidParam
+ * @apiUse ContentServiceDown
+ */
+func getContent(c *gin.Context) {
+	type param struct {
+		ContentId string `uri:"contentId" binding:"required,min=1"`
+		UserID    int32  `uri:"userID"`
+	}
+	var p param
+
+	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
+		role := utils.GetRoleID(c, p.UserID)
+
+		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
+			func() interface{} { return mock.NewContentService() }).(content.ContentService)
+		rsp, err := srv.Query(context.TODO(), &content.ContentQueryRequest{
+			ContentID: p.ContentId,
+		})
+		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
+			c.JSON(500, err)
+			return
+		}
+		if !role.User && !role.Admin {
+			rsp.ContentToken = ""
 		}
 		c.JSON(200, rsp)
 	} else {

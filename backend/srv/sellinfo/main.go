@@ -25,7 +25,7 @@ type srv struct{}
  *
  * @apiParam {int32} sellInfoID sellInfo id.
  * @apiSuccess {int32} sellInfoID sellInfoID
- * @apiSuccess {int32} status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
+ * @apiSuccess {int32} status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed
  * @apiSuccess {int64} releaseTime sellInfo release time
  * @apiSuccess {int64} validTime sellInfo validate time
  * @apiSuccess {string} goodName good name
@@ -60,7 +60,7 @@ func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp
 	}
 
 	rsp.SellInfoID = info.ID
-	rsp.Status = info.Status
+	rsp.Status = sellinfo.SellStatus(info.Status)
 	rsp.ReleaseTime = info.ReleaseTime.Unix()
 	rsp.ValidTime = info.ValidTime.Unix()
 	rsp.GoodName = good.GoodName
@@ -174,7 +174,7 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
  * @apiDescription Find SellInfo.
  *
  * @apiParam {int32} [userID] userID
- * @apiParam {int32} [status] status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired
+ * @apiParam {int32} [status] status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed
  * @apiParam {string} [goodName] good name(fuzzy)
  * @apiParam {double} lowPrice=0 low bound of price
  * @apiParam {double} highPrice=inf high bound of price
@@ -232,7 +232,7 @@ func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *
 	for _, v := range res {
 		rsp.SellInfo = append(rsp.SellInfo, &sellinfo.SellInfoMsg{
 			SellInfoID:  v.SellInfoID,
-			Status:      v.Status,
+			Status:      sellinfo.SellStatus(v.Status),
 			ReleaseTime: v.ReleaseTime.Unix(),
 			ValidTime:   v.ValidTime.Unix(),
 			GoodName:    v.GoodName,

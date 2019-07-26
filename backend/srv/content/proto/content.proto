@@ -98,7 +98,8 @@ message ContentQueryResponse {
         NOT_FOUND = 2;
     }
     Status status = 1;
-    repeated ContentMsg files = 2;
+    string contentToken = 2;
+    repeated ContentMsg files = 3;
 }
 
 message ContentCheckRequest {
