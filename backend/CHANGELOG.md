@@ -1,4 +1,11 @@
 # 后端API更新日志
+## v0.2.0 2019-07-29
+### 新增
+1. `GET /content/:contentID` 获取content
+2. `GET /transaction` 获取交易
+3. `POST /transaction` 添加交易
+4. `PUT /transaction` 修改交易
+
 ## v0.1.4 2019-07-23
 ### API修改
 1. 所有字段包含`Id`的修改为`ID`

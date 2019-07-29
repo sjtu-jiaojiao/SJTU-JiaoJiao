@@ -26,6 +26,7 @@ import { User } from '../entity/user';
 import { SellInfoComponent } from '../info/sell-info/sell-info.component';
 import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
 import { DelonAuthModule } from '@delon/auth';
+import { sellInfo,  buyInfo } from '../entity/info';
 
 describe('UserdetailComponent', () => {
   let component: UserDetailComponent;
@@ -50,8 +51,6 @@ describe('UserdetailComponent', () => {
         BuyInfoComponent
       ],
       imports: [   
-    //import { BuyInfoComponent } from './../info/buy-info/buy-info.component';
-    DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
         AppRoutingModule,    
@@ -92,7 +91,12 @@ describe('UserdetailComponent', () => {
     expect(component.getstate(4)).toEqual('失效');
     expect(fFormatter({value: 5, name: 'Jan'})).toEqual('5 activities in Jan');
     expect(component.stringToDate(new Date(1563134054))).toEqual('1970-01-19 10:12:14');
-    expect(component.typeof(1)).toEqual('number');
+    const sI = new sellInfo;
+    const bI = new buyInfo;
+    sI.sellInfoID = 1; 
+    bI.buyInfoID  =2 ;
+    expect(component.typeof(sI)).toEqual('sellInfo');
+    expect(component.typeof(bI)).toEqual('buyInfo');
     component.infos = [];
     component.graph();
   });

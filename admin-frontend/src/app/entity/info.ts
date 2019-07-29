@@ -1,26 +1,26 @@
 export class sellInfo{
-    public sellInfoId : number;
+    public sellInfoID : number;
     public status : number;
     public releaseTime: string;
     public validTime: string;
     public goodName: string;
     public price: number;
     public description: string;
-    public contentId: string;
-    public userId: number;
+    public contentID: string;
+    public userID: number;
     public tag: string [];
 }
 
 export class buyInfo{
-    public buyInfoId : number;
+    public buyInfoID : number;
     public status : number;
     public releaseTime: string;
     public validTime: string;
     public goodName: string;
     public price: number;
     public description: string;
-    public contentId: string;
-    public userId: number;
+    public contentID: string;
+    public userID: number;
     public tag: string [];
 }
 

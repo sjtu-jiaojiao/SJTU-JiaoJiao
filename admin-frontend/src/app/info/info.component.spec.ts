@@ -81,10 +81,10 @@ describe('InfoComponent', () => {
 
     component.schild=stmp;
     component.bchild=btmp;
-    component.selectedType=-1;
+    component.searchType=-1;
     component.searchTag=['黑'];
-    component.searchUser='林';
-    component.searchByUser();
+    component.searchUserID='1';
+    component.search();
     component.selectTag(['黑']);
   });
 });

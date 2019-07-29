@@ -18,22 +18,6 @@ export class InfoService {
   private buyinfoUrl = 'api/buyInfo';
   constructor(private http: HttpClient) { }
 
-  /** GET infos from the server */
-  getSellInfos(): Observable<InfoResponse> {
-    return this.http.get<InfoResponse>(this.sellinfoUrl)
-      .pipe(
-        catchError(this.handleError<InfoResponse>('getSellInfos'))
-      );
-  }
-
-  /** GET infos from the server */
-  getPageSellInfos(limit:number, offset: number): Observable<InfoResponse> {    
-    const url = `${this.sellinfoUrl}?limit=${limit}&offset=${offset}`;
-    return this.http.get<InfoResponse>(url)
-      .pipe(
-        catchError(this.handleError<InfoResponse>('getPageSellInfos'))
-      );
-  }
 
   /** GET info by id. Will 404 if id not found */
   getSellInfo(id: string): Observable<sellInfo> {
@@ -43,21 +27,16 @@ export class InfoService {
     );
   }
   /** GET infos from the server */
-  searchSellInfos(term: string): Observable<InfoResponse> {    
-    const url = `${this.sellinfoUrl}?userId=${term}`;
+  getSellInfos(userID: string = null, status: number = null, goodName: string = null,limit:number=null, offset: number=null): Observable<InfoResponse> {    
+    let url = `${this.sellinfoUrl}?`;
+    if(userID && userID.trim()) url += `userID=${userID}&`;
+    if(status) url+= `status=${status}&`;
+    if(goodName && goodName.trim()) url+=`goodName=${goodName}&`;
+    if(limit) url+= `limit=${limit}&`;
+    if(offset) url+=`offset=${offset}&`;
     return this.http.get<InfoResponse>(url)
       .pipe(
-        catchError(this.handleError<InfoResponse>('getInfos'))
-      );
-  }
-
-
-  /** GET infos from the server */
-  searchPageSellInfos(term: string,limit:number, offset: number): Observable<InfoResponse> {    
-    const url = `${this.sellinfoUrl}?userId=${term}&limit=${limit}&offset=${offset}`;
-    return this.http.get<InfoResponse>(url)
-      .pipe(
-        catchError(this.handleError<InfoResponse>('getInfos'))
+        catchError(this.handleError<InfoResponse>('getSellInfos'))
       );
   }
 
@@ -67,21 +46,17 @@ export class InfoService {
       catchError(this.handleError<any>('updateSellInfo'))
     );
   }
-
   /** GET infos from the server */
-  getBuyInfos(): Observable<InfoResponse> {
-    return this.http.get<InfoResponse>(this.buyinfoUrl)
-      .pipe(
-        catchError(this.handleError<InfoResponse>('getBuyInfos'))
-      );
-  }
-
-  /** GET infos from the server */
-  getPageBuyInfos(limit:number, offset: number): Observable<InfoResponse> {    
-    const url = `${this.buyinfoUrl}?limit=${limit}&offset=${offset}`;
+  getBuyInfos(userID: string = null, status: number = null, goodName: string = null,limit:number=null, offset: number=null): Observable<InfoResponse> {    
+    let url = `${this.buyinfoUrl}?`;
+    if(userID && userID.trim()) url += `userID=${userID}&`;
+    if(status) url+= `status=${status}&`;
+    if(goodName && goodName.trim()) url+=`goodName=${goodName}&`;
+    if(limit) url+= `limit=${limit}&`;
+    if(offset) url+=`offset=${offset}&`;
     return this.http.get<InfoResponse>(url)
       .pipe(
-        catchError(this.handleError<InfoResponse>('getPageBuyInfos'))
+        catchError(this.handleError<InfoResponse>('getBuyInfos'))
       );
   }
 
@@ -93,23 +68,6 @@ export class InfoService {
     );
   }
 
-  /** GET infos from the server */
-  searchPageBuyInfos(term: string,limit:number, offset: number): Observable<InfoResponse> {    
-    const url = `${this.buyinfoUrl}?userId=${term}&limit=${limit}&offset=${offset}`;
-    return this.http.get<InfoResponse>(url)
-      .pipe(
-        catchError(this.handleError<InfoResponse>('getBuyInfos'))
-      );
-  }
-
-  /** GET infos from the server */
-  searchBuyInfos(term: string): Observable<InfoResponse> {    
-    const url = `${this.buyinfoUrl}?userId=${term}`;
-    return this.http.get<InfoResponse>(url)
-      .pipe(
-        catchError(this.handleError<InfoResponse>('getBuyInfos'))
-      );
-  }
   /** PUT: update the info on the server */
   updateBuyInfo(info: any): Observable<any> {
     return this.http.put(this.buyinfoUrl, info, httpOptions).pipe(

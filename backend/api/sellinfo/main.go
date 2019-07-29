@@ -145,7 +145,7 @@ func findSellInfo(c *gin.Context) {
 			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
 		rsp, err := srv.Find(context.TODO(), &sellinfo.SellInfoFindRequest{
 			UserID:    p.UserID,
-			Status:    p.Status,
+			Status:    sellinfo.SellStatus(p.Status),
 			GoodName:  p.GoodName,
 			LowPrice:  p.LowPrice,
 			HighPrice: p.HighPrice,

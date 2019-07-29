@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {FlatList, Text, View, StyleSheet} from 'react-native';
 import {Avatar, Button, ListItem, SearchBar, Icon} from "react-native-elements";
 import Config from '../../Config';
+import {TimeStamptoDate} from "../../Utils/TimeStamp";
 
 let dev = "http://202.120.40.8:30711/v1";
 
@@ -44,86 +45,21 @@ export default class MyBuyInfoScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            BuyInfoList: [
-                {
-                    goodName: "求购线性代数",
-                    description: "求购线性代数",
-                    buyInfoId: 1,
-                    price: 12.02,
-                    status: 1,
-                    releaseTime: "2019.02.28",
-                    validTime: "2019.03.05",
-                },
-                {
-                    goodName: "求购高数上求购高数上求购高数上求购高数上求购高数上求购高数上",
-                    description: "求购高数上求购高数上求购高数上求购高数上求购高数上求购高数上",
-                    buyInfoId: 1,
-                    price: 12.02,
-                    status: 1,
-                    releaseTime: "2019.02.28",
-                    validTime: "2019.03.05",
-                },
-                {
-                    goodName: "求购概率统计",
-                    description: "求购概率统计",
-                    buyInfoId: 1,
-                    price: 12.02,
-                    status: 1,
-                    releaseTime: "2019.02.28",
-                    validTime: "2019.03.05",
-                },
-                {
-                    goodName: "求购数学分析",
-                    description: "求购数学分析",
-                    buyInfoId: 1,
-                    price: 12.02,
-                    status: 1,
-                    releaseTime: "2019.02.28",
-                    validTime: "2019.03.05",
-                },
-                {
-                    goodName: "高等代数有没有",
-                    description: "高等代数有没有",
-                    buyInfoId: 1,
-                    price: 12.02,
-                    status: 1,
-                    releaseTime: "2019.02.28",
-                    validTime: "2019.03.05",
-                },
-                {
-                    goodName: "出二手电动车",
-                    description: "出二手电动车",
-                    buyInfoId: 1,
-                    price: 12.02,
-                    status: 1,
-                    releaseTime: "2019.02.28",
-                    validTime: "2019.03.05",
-                },
-                {
-                    goodName: "我就发一个铁柱子看一看",
-                    description: "我就发一个铁柱子看一看",
-                    buyInfoId: 1,
-                    price: 12.02,
-                    status: 1,
-                    releaseTime: "2019.02.28",
-                    validTime: "2019.03.05",
-                },
-            ],
+            BuyInfoList: null,
             loaded: true,
         };
-        //this.fetchData = this.fetchData.bind(this);
+        this.fetchData = this.fetchData.bind(this);
     };
 
     componentDidMount() {
-        //this.fetchData();
+        this.fetchData();
     }
 
     fetchData() {
         //console.warn(Config.userInfo);
-        //let obj = { userId: Config.userInfo.userId };
-        let obj = { userId: 2 };
-        //console.warn(obj);
-        Http.get('/BuyInfo', obj)
+        //let obj = { userID: Config.userInfo.userID };
+        let obj = { userID: Config.userInfo.userID };
+        Http.get('/buyInfo', obj)
             .then((response) => {
                 //console.warn(response);
                 this.setState({
@@ -140,6 +76,25 @@ export default class MyBuyInfoScreen extends Component {
 
     keyExtractor = (item, index) => index.toString();
 
+    parseStatus = (status) => {
+        let Prefix = '商品状态：';
+        switch (status) {
+            case 1:
+                return (Prefix + '出售中');
+            case 2:
+                return (Prefix + '已预约');
+            case 3:
+                return (Prefix + '已出售');
+            case 4:
+                return (Prefix + '已过期 (不再出售)');
+        }
+    };
+
+    parseTimeStamp = (TimeStamp) => {
+        let date = TimeStamptoDate(TimeStamp);
+        return ('发布时间：' + date);
+    };
+
     renderItem = ({ item }) => (
         <ListItem
             bottomDivider
@@ -149,11 +104,12 @@ export default class MyBuyInfoScreen extends Component {
             }
             subtitle={
                 <View style={styles.subtitleView}>
-                    <Text numberOfLines={1} style={styles.ratingText}>求购描述：{item.description}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>商品状态：{item.status}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>预期价格：￥{item.price}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>发布时间：{item.releaseTime}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>成交时间：{item.validTime}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>{this.parseStatus(item.status)}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>商品描述：{item.description}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>出售价格：￥{item.price}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>{this.parseTimeStamp(item.releaseTime)}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>有效时间：{item.validTime}</Text>
+                    <Text numberOfLines={1} style={styles.ratingText}>商品标签：暂无</Text>
                 </View>
             }
         />
@@ -167,7 +123,7 @@ export default class MyBuyInfoScreen extends Component {
                 </View>
             )
         }
-        else if (this.state.BuyInfoList == undefined) {
+        else if (this.state.BuyInfoList === undefined) {
             return (
                 <View style={styles.container}>
                     <Text>您暂时没有发布任何求购信息</Text>
