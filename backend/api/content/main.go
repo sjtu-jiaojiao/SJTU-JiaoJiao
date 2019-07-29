@@ -5,6 +5,7 @@ import (
 	"jiaojiao/srv/content/mock"
 	content "jiaojiao/srv/content/proto"
 	"jiaojiao/utils"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -148,11 +149,12 @@ func updateContent(c *gin.Context) {
 	var p param
 	role := utils.GetRole(c)
 	data, code, err := utils.GetQueryFile(c, "content", 1024*1024*50) // 50M
-	if err != nil {
-		data = []byte{0}
+	if err == http.ErrMissingFile {                                   // allow no file
+		code = 200
+		err = nil
 	}
 
-	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+	if err == nil && !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
 		if code != 200 {
 			c.AbortWithStatus(code)
 			return
@@ -206,12 +208,12 @@ func getContent(c *gin.Context) {
 
 	if !utils.LogContinue(c.ShouldBindUri(&p), utils.Warning) {
 		tmp := c.DefaultQuery("userID", "0")
-		userId, err := strconv.Atoi(tmp)
+		userID, err := strconv.Atoi(tmp)
 		if utils.LogContinue(err, utils.Warning) {
 			c.AbortWithStatus(400)
 			return
 		}
-		role := utils.GetRoleID(c, int32(userId))
+		role := utils.GetRoleID(c, int32(userID))
 
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)

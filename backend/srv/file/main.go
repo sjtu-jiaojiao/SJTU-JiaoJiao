@@ -100,6 +100,7 @@ func (a *srvFile) Create(ctx context.Context, req *file.FileCreateRequest, rsp *
  */
 func (a *srvFile) Delete(ctx context.Context, req *file.FileRequest, rsp *file.FileDeleteResponse) error {
 	// TODO
+	rsp.Status = file.FileDeleteResponse_SUCCESS
 	return nil
 }
 

@@ -1106,6 +1106,7 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "uint32",
+            "size": "0-100",
             "optional": false,
             "field": "limit",
             "defaultValue": "100",
@@ -1915,6 +1916,7 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "uint32",
+            "size": "0-100",
             "optional": false,
             "field": "limit",
             "defaultValue": "100",
@@ -2190,6 +2192,7 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "uint32",
+            "size": "0-100",
             "optional": false,
             "field": "limit",
             "defaultValue": "100",
@@ -2425,6 +2428,7 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "uint32",
+            "size": "0-100",
             "optional": false,
             "field": "limit",
             "defaultValue": "100",

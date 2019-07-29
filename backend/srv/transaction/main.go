@@ -139,7 +139,7 @@ func (a *srv) Update(ctx context.Context, req *transaction.TransactionUpdateRequ
  * @apiParam {int64} [lowCreateTime] low boundary of CreateTime
  * @apiParam {int64} [highCreateTime] high boundary of CreateTime
  * @apiParam {int32} [status] 1 for asking <br> 2 for accepted <br> 3 for rejected <br> 4 for closed <br> 5 for pending <br> 6 for done
- * @apiParam {uint32} limit=100 row limit
+ * @apiParam {uint32{0-100}} limit=100 row limit
  * @apiParam {uint32} offset=0 row offset
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
  * @apiSuccess {array} transactions see below
@@ -153,6 +153,9 @@ func (a *srv) Update(ctx context.Context, req *transaction.TransactionUpdateRequ
  */
 func (a *srv) Find(ctx context.Context, req *transaction.TransactionFindRequest, rsp *transaction.TransactionFindResponse) error {
 	if req.Limit == 0 {
+		req.Limit = 100
+	}
+	if req.Limit > 100 {
 		req.Limit = 100
 	}
 
