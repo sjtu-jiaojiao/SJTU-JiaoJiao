@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     }
 });
 
-export default class App extends Component {
+export default class TestPage extends Component {
 
     constructor() {
         super();
@@ -68,7 +68,8 @@ export default class App extends Component {
             console.warn((Config.fetchPrefix + 'avatar'));
             let formData = new FormData();
             formData.append('userID', Config.userInfo.userID);
-            formData.append('file',  image.data)
+            formData.append('file',  image.data);
+            console.warn(formData);
             fetch((Config.fetchPrefix + 'avatar'), {
                 method: 'POST',
                 headers: {

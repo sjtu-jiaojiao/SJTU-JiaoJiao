@@ -64,6 +64,19 @@ export default class HomeScreen extends Component {
                     onPress={() => this.props.navigation.navigate('BuyInfo')}
                 />
                 <View style={{height: 20}} />
+                <Button
+                    icon={<Avatar
+                        rounded size='small'
+                        source={require('../../assets/icons/search.png')}
+                        overlayContainerStyle={{backgroundColor: '#EFEFF5'}}
+                    />}
+                    title=' TestPage'
+                    titleStyle={{color: 'black', fontSize: 17}}
+                    buttonStyle={{width: 120, backgroundColor: '#EFEFF5'}}
+                    containerStyle={{width: 120, marginLeft: 20}}
+                    raised={true}
+                    onPress={() => this.props.navigation.navigate('TestPage')}
+                />
                 <ListItem
                     containerStyle={{height: 1000, backgroundColor: '#EFEFF5'}}
                 />
