@@ -26,6 +26,7 @@ import { AuthService } from '../auth.service';
 import { User } from '../entity/user';
 import { SellInfoComponent } from '../info/sell-info/sell-info.component';
 import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
+import { sellInfo } from '../entity/info';
 
 describe('InfodetailComponent', () => {
   let component: InfoDetailComponent;
@@ -81,10 +82,13 @@ describe('InfodetailComponent', () => {
     setInterval(()=> {},1000);
     component.save();
     component.goBack();
-    expect(component.stringToDate(new Date(1563134054))).toEqual('1970-01-19 10:12:14');
+    expect(component.stringToDate(1563134054)).toEqual('2019-07-15 03:54:14');
     component.type = 'sellInfo';
     component.getinfo();
     component.type = 'buyInfo';
     component.getinfo();
+    component.info = new sellInfo();
+    component.info.contentID= '1';
+    component.getContent();
   });
 });

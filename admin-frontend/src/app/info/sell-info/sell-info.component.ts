@@ -55,7 +55,7 @@ export class SellInfoComponent implements OnInit {
   }
 
   stringToDate(params) {
-      const date = new Date(params);
+      const date = new Date(params*1000);
       return Format(date,'yyyy-MM-dd HH:mm:ss');
   }
 
