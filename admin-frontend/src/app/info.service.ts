@@ -46,6 +46,7 @@ export class InfoService {
       catchError(this.handleError<any>('updateSellInfo'))
     );
   }
+
   /** GET infos from the server */
   getBuyInfos(userID: string = null, status: number = null, goodName: string = null,limit:number=null, offset: number=null): Observable<InfoResponse> {    
     let url = `${this.buyinfoUrl}?`;

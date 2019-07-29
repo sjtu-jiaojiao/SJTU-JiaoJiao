@@ -42,7 +42,8 @@ export class BuyInfoComponent implements OnInit {
   }
 
   stringToDate(params) {
-      const date = new Date(params);
+      const date = new Date(params*1000);
+      console.log(params);
       return Format(date,'yyyy-MM-dd HH:mm:ss');
       }
 

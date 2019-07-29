@@ -29,7 +29,7 @@ export class UserDetailComponent implements OnInit {
   private location: Location
 ) {}
 stringToDate(params) {
-    const date = new Date(params);
+    const date = new Date(parseInt(params+'000'));
     return Format(date,'yyyy-MM-dd HH:mm:ss');
     }
 
@@ -97,14 +97,15 @@ stringToDate(params) {
   graph() {
 
 const sellData = [ 0 , 0 , 0 , 0 , 0 ,0 ,0 , 0 ,0 , 0 ,0 ,0];
+const buyData = [ 0 , 0 , 0 , 0 , 0 ,0 ,0 , 0 ,0 , 0 ,0 ,0];
 this.infos.forEach(element => {
-  const y =new Date(element.releaseTime).getFullYear(); 
-  const m =new Date(element.releaseTime).getMonth() + 1;
-  const now = new Date();
-  const ynow = now.getFullYear();
-  const mnow = now.getMonth() + 1 ;
+  const y =new Date(element.releaseTime*1000).getFullYear(); 
+  const m =new Date(element.releaseTime*1000).getMonth() + 1;
   //if((ynow == y + 1 && m > mnow) || (ynow == y && m <= mnow) )
-    sellData[m-1] +=1;
+    if(this.typeof(element)=='sellInfo')
+      sellData[m-1] +=1;
+    else 
+      buyData[m-1] +=1;
 });
   console.log(sellData)
     this.option = {
@@ -138,9 +139,15 @@ radiusAxis: {
       minInterval: 1
 },
 series: [{
-  name: 'Recor',
+  name: 'Sell Record',
   type: 'bar',
   data: sellData,
+  coordinateSystem: 'polar'
+},
+{
+  name: 'Buy Record',
+  type: 'bar',
+  data: buyData,
   coordinateSystem: 'polar'
 }]
 };
