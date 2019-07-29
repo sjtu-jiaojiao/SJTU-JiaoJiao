@@ -24,7 +24,7 @@ func (mockSrv) Find(ctx context.Context, in *transaction.TransactionFindRequest,
 	return nil, nil
 }
 
-// is service mock
+// NewTransactionService is service mock
 func NewTransactionService() transaction.TransactionService {
 	return new(mockSrv)
 }
