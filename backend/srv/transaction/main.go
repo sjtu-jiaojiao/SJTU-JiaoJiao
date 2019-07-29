@@ -32,7 +32,7 @@ type srv struct{}
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequest, rsp *transaction.TransactionCreateResponse) error {
-	if !utils.RequreParam(req.InfoID, req.FromUserID, req.Category) {
+	if !utils.RequireParam(req.InfoID, req.FromUserID, req.Category) {
 		rsp.Status = transaction.TransactionCreateResponse_INVALID_PARAM
 		return nil
 	}
@@ -53,7 +53,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 		}
 		toUserID = srvRsp.UserID
 	} else {
-		microSrv := utils.CallMicroService("buyinfo", func(name string, c client.Client) interface{} { return buyinfo.NewBuyInfoService(name, c) },
+		microSrv := utils.CallMicroService("buyInfo", func(name string, c client.Client) interface{} { return buyinfo.NewBuyInfoService(name, c) },
 			func() interface{} { return mockbuy.NewBuyInfoService() }).(buyinfo.BuyInfoService)
 		srvRsp, err := microSrv.Query(context.TODO(), &buyinfo.BuyInfoQueryRequest{
 			BuyInfoID: req.InfoID,
@@ -101,7 +101,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
  * @apiUse DBServerDown
  */
 func (a *srv) Update(ctx context.Context, req *transaction.TransactionUpdateRequest, rsp *transaction.TransactionUpdateResponse) error {
-	if !utils.RequreParam(req.TransactionID, req.Status) {
+	if !utils.RequireParam(req.TransactionID, req.Status) {
 		rsp.Status = transaction.TransactionUpdateResponse_INVALID_PARAM
 		return nil
 	}
@@ -110,15 +110,15 @@ func (a *srv) Update(ctx context.Context, req *transaction.TransactionUpdateRequ
 		ID: req.TransactionID,
 	}
 	err := db.Ormer.First(&tran).Error
-	if utils.LogContinue(err, utils.Warning) {
+	if gorm.IsRecordNotFoundError(err) {
 		rsp.Status = transaction.TransactionUpdateResponse_NOT_FOUND
 		return nil
+	} else if utils.LogContinue(err, utils.Warning) {
+		return err
 	}
 	tran.Status = int32(req.Status)
 	err = db.Ormer.Save(&tran).Error
-	if gorm.IsRecordNotFoundError(err) {
-		return nil
-	} else if utils.LogContinue(err, utils.Warning) {
+	if utils.LogContinue(err, utils.Warning) {
 		return err
 	}
 

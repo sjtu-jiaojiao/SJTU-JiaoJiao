@@ -2387,7 +2387,7 @@ define({ "api": [
             "type": "Response",
             "optional": false,
             "field": "user",
-            "description": "<p>see <a href=\"#api-Service-user_User_Query\">User Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-User_Query\">User Service</a></p>"
           }
         ]
       }
@@ -2450,10 +2450,10 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "list",
+            "type": "array",
             "optional": false,
             "field": "user",
-            "description": "<p>see <a href=\"#api-Service-user_User_Query\">User Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-User_Query\">User Service</a></p>"
           }
         ]
       }
@@ -2551,7 +2551,7 @@ define({ "api": [
             "type": "int32",
             "optional": false,
             "field": "role",
-            "description": "<p>user role, 1 for user <br> 2 for admin</p>"
+            "description": "<p>user role, 1 for user <br> 10 for admin</p>"
           }
         ]
       }
@@ -2636,7 +2636,7 @@ define({ "api": [
             "type": "int32",
             "optional": true,
             "field": "role",
-            "description": "<p>user role, 1 for user <br> 2 for admin</p>"
+            "description": "<p>user role, 1 for user <br> 10 for admin</p>"
           },
           {
             "group": "Parameter",
@@ -2933,7 +2933,7 @@ define({ "api": [
     "group": "User",
     "permission": [
       {
-        "name": "none/admin"
+        "name": "none/self/admin"
       }
     ],
     "name": "FindUser",
@@ -2953,13 +2953,22 @@ define({ "api": [
     },
     "success": {
       "fields": {
-        "Success 200": [
+        "None - Success 200": [
           {
-            "group": "Success 200",
+            "group": "None - Success 200",
             "type": "Response",
             "optional": false,
             "field": "response",
-            "description": "<p>see <a href=\"#api-Service-User_Find\">User Service</a> <br> None - studentID: hidden <br> None - studentName: hidden</p>"
+            "description": "<p>see <a href=\"#api-Service-User_Find\">User Service</a> <br> studentID: hidden <br> studentName: hidden</p>"
+          }
+        ],
+        "Self/Admin - Success 200": [
+          {
+            "group": "Self/Admin - Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-User_Find\">User Service</a></p>"
           }
         ]
       }

@@ -98,9 +98,9 @@ func findTransaction(c *gin.Context) {
  */
 func addTransaction(c *gin.Context) {
 	type param struct {
-		InfoID   int32                                         `form:"infoID"`
-		Category transaction.TransactionCreateRequest_Category `form:"category"`
-		UserID   int32                                         `form:"userID"`
+		InfoID     int32                                         `form:"infoID"`
+		Category   transaction.TransactionCreateRequest_Category `form:"category"`
+		FromUserID int32                                         `form:"fromUserID"`
 	}
 	var p param
 	role := utils.GetRole(c)
@@ -115,7 +115,7 @@ func addTransaction(c *gin.Context) {
 		rsp, err := srv.Create(context.TODO(), &transaction.TransactionCreateRequest{
 			InfoID:     p.InfoID,
 			Category:   p.Category,
-			FromUserID: p.UserID,
+			FromUserID: p.FromUserID,
 		})
 		if utils.LogContinue(err, utils.Warning, "Transaction service error: %v", err) {
 			c.JSON(500, err)

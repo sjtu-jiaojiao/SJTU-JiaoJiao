@@ -36,7 +36,7 @@ type srv struct{}
  * @apiUse DBServerDown
  */
 func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp *sellinfo.SellInfoMsg) error {
-	if !utils.RequreParam(req.SellInfoID) {
+	if !utils.RequireParam(req.SellInfoID) {
 		return nil
 	}
 
@@ -90,7 +90,7 @@ func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, rsp *sellinfo.SellInfoCreateResponse) error {
-	if !utils.RequreParam(req.ValidTime, req.GoodName, req.UserID) {
+	if !utils.RequireParam(req.ValidTime, req.GoodName, req.UserID) {
 		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 		return nil
 	}
