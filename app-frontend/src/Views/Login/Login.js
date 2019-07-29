@@ -35,6 +35,7 @@ export default class LoginScreen extends Component {
                             Config.userInfo.studentID=responseJson.studentID;
                             Config.userInfo.studentName=responseJson.studentName;
                             Config.userInfo.telephone=responseJson.telephone;
+                            Config.userInfo.avatarID=responseJson.avatarID;
                             //console.warn(Config.userInfo);
                             this.props.navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0);
                             //console.warn(responseJson);

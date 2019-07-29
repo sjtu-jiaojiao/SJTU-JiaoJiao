@@ -4,7 +4,7 @@ let Config = {
     userInfo: {
         userID: -1,
         userName: '',
-        avatarID: '',
+        avatarID: 'to_be_changed',
         telephone: '',
         studentID: '',
         studentName: '',

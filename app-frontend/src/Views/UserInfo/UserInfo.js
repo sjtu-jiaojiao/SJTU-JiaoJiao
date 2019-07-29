@@ -1,8 +1,27 @@
 import React, { Component } from 'react';
-import {Text, View, TextInput, Alert} from 'react-native';
+import {Text, View, TextInput, Alert, TouchableOpacity, NativeModules, Dimensions } from 'react-native';
 import {ListItem, Avatar, Button, Icon, Overlay} from "react-native-elements";
 import Config from "../../Config";
 import {NavigationActions, HeaderBackButton } from "react-navigation";
+import HTTP from '../../Network/Network';
+
+let ImagePicker = NativeModules.ImageCropPicker;
+
+const {width, height, scale} = Dimensions.get('window');
+
+class MyAvatar extends Component {
+    render() {
+        if(this.props.avatarID === 'to_be_changed') {
+            return (
+                <Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')}/>
+            )
+        } else {
+            return (
+                <Avatar rounded size='large' source={{uri: (Config.fetchPrefix + 'file/' + this.props.avatarID)}}/>
+            )
+        }
+    }
+}
 
 export default class UserInfoScreen extends Component {
     constructor(props) {
@@ -14,6 +33,7 @@ export default class UserInfoScreen extends Component {
             studentID: Config.userInfo.studentID,
             studentName: Config.userInfo.studentName,
             telephone: Config.userInfo.telephone,
+            avatarID: Config.userInfo.avatarID,
             isChangeTelephoneVisible: false,
             isChangeUserNameVisible: false,
         };
@@ -36,6 +56,38 @@ export default class UserInfoScreen extends Component {
     isUserNameValid() {
         return /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){0,31}$/.test(this.changeUserName);
     }
+
+    pickSingle(cropit, circular=false, mediaType) {
+        ImagePicker.openPicker({
+            width: 500,
+            height: 500,
+            cropping: cropit,
+            cropperCircleOverlay: circular,
+            compressImageMaxWidth: 1000,
+            compressImageMaxHeight: 1000,
+            compressImageQuality: 1,
+            compressVideoPreset: 'MediumQuality',
+            includeExif: true,
+            includeBase64: true,
+        }).then(image => {
+            //console.warn('received base64 image');
+            let params = {
+                userID: Config.userInfo.userID,
+                path: image.path,
+            };
+            HTTP.uploadImage('/avatar', params)
+                .then((response) => {
+                    //console.warn('成功!');
+                    //console.warn(response);
+                    Config.userInfo.avatarID = response.avatarID;
+                    this.setState({
+                        avatarID: response.avatarID,
+                    });
+                }).catch((err) => {
+                //console.warn('失败!');
+                //console.warn(err);
+            });
+        })};
 
     render() {
         return (
@@ -252,6 +304,7 @@ export default class UserInfoScreen extends Component {
                                                     this.changeUserName='';
                                                 } else {
                                                     this.changeUserName='';
+                                                    console.warn(response);
                                                     Alert.alert(
                                                         '出错啦',
                                                         '网络可能出了问题，请再试一次吧',
@@ -276,8 +329,10 @@ export default class UserInfoScreen extends Component {
                 <View style={{height: 200}}>
                     <View style={{alignItems: 'center', justifyContent: 'center'}}>
                         <View style={{height: 55}}/>
-                        <Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')} />
-                        <Text style={{fontSize: 15}}>点击修改头像</Text>
+                        <MyAvatar avatarID={this.state.avatarID}/>
+                        <TouchableOpacity onPress={() => this.pickSingle(true)} style={{marginTop: 5}}>
+                            <Text style={{color: 'black', fontSize: 17, textAlign: 'center'}}>点击修改头像</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <ListItem
@@ -312,7 +367,7 @@ export default class UserInfoScreen extends Component {
                     title='退出登录'
                     titleStyle={{color: 'white', fontSize: 17}}
                     buttonStyle={{backgroundColor: 'red'}}
-                    containerStyle={{width: 160, marginLeft: 120}}
+                    containerStyle={{width: 160, marginLeft: (width / 2 - 80)}}
                     raised={true}
                     onPress={() => Alert.alert(
                         '退出登录',

@@ -3,7 +3,6 @@ import {
     View, Text, StyleSheet, ScrollView, Alert,
     Image, TouchableOpacity, NativeModules, Dimensions
 } from 'react-native';
-import Video from 'react-native-video';
 import Config from "../../Config";
 
 var ImagePicker = NativeModules.ImageCropPicker;
@@ -65,21 +64,41 @@ export default class App extends Component {
             includeBase64: true,
         }).then(image => {
             console.warn('received base64 image');
-            console.warn((Config.fetchPrefix + 'avatar'));
-            let formData = new FormData();
-            formData.append('userID', Config.userInfo.userID);
-            formData.append('file',  image.data)
-            fetch((Config.fetchPrefix + 'avatar'), {
+            console.warn((Config.fetchPrefix + addType));
+            fetch((Config.fetchPrefix + addType), {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/x-www-form-urlencoded',
                     Authorization: ('Bearer ' + Config.JaccountToken.token),
                 },
-                body: formData,
+                body: ('userID=' + Config.userInfo.userID + '&validTime=20&goodName=' + this.state.goodName),
             })
                 .then((response) => {
-                    console.warn(response);
+                    if(response.ok) {
+                        Alert.alert(
+                            '发布成功',
+                            '成功发布该交易信息：' + this.state.goodName,
+                            [
+                                {text: '好', onPress: () => {}}
+                            ],
+                            {cancelable: false},
+                        )
+                        this.setState({
+                            goodName: '',
+                            Discription: '',
+                            Price: '',
+                        });
+                    } else {
+                        Alert.alert(
+                            '出错啦',
+                            '网络可能出了问题，请再试一次吧',
+                            [
+                                {text: '好', onPress: () => {}}
+                            ],
+                            {cancelable: false},
+                        )
+                    }
                 })
                 .catch((error) => {
                     console.error(error);
@@ -93,7 +112,7 @@ export default class App extends Component {
             Alert.alert(e.message ? e.message : e);
         });
     }
-
+/*
     renderVideo(video) {
         console.log('rendering video');
         return (<View style={{height: 300, width: 300}}>
@@ -113,7 +132,7 @@ export default class App extends Component {
                    onLoad={load => console.log(load)}
                    repeat={true} />
         </View>);
-    }
+    }*/
 
     renderImage(image) {
         return <Image style={{width: 300, height: 300, resizeMode: 'contain'}} source={image} />
