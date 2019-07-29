@@ -26,7 +26,7 @@ type srv struct{}
  * @apiParam {string} studentID student id.
  * @apiParam {string} studentName student name.
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for exist user
- * @apiSuccess {Response} user see [User Service](#api-Service-user_User_Query)
+ * @apiSuccess {Response} user see [User Service](#api-Service-User_Query)
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user.UserCreateResponse) error {
@@ -71,7 +71,7 @@ func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user
  * @apiSuccess {string} studentID student id
  * @apiSuccess {string} studentName student name
  * @apiSuccess {int32} status user status, 1 for normal <br> 2 for frozen
- * @apiSuccess {int32} role user role, 1 for user <br> 2 for admin
+ * @apiSuccess {int32} role user role, 1 for user <br> 10 for admin
  * @apiUse DBServerDown
  */
 func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.UserInfo) error {
@@ -106,7 +106,7 @@ func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.U
  * @apiParam {string} [studentID] student id
  * @apiParam {string} [studentName] student name
  * @apiParam {int32} [status] user status, 1 for normal <br> 2 for frozen
- * @apiParam {int32} [role] user role, 1 for user <br> 2 for admin
+ * @apiParam {int32} [role] user role, 1 for user <br> 10 for admin
  * @apiParam {bool} clearEmpty=0 clear the empty field
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for user not found
  * @apiUse DBServerDown
@@ -158,7 +158,7 @@ func (a *srv) Update(ctx context.Context, req *user.UserInfo, rsp *user.UserUpda
  * @apiParam {string} [userName] username
  * @apiParam {uint32} limit=100 row limit
  * @apiParam {uint32} offset=0 row offset
- * @apiSuccess {list} user see [User Service](#api-Service-user_User_Query)
+ * @apiSuccess {array} user see [User Service](#api-Service-User_Query)
  * @apiUse DBServerDown
  */
 func (a *srv) Find(ctx context.Context, req *user.UserFindRequest, rsp *user.UserFindResponse) error {
