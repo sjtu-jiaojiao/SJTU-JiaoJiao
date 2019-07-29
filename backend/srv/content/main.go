@@ -32,6 +32,7 @@ type srv struct{}
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 2 for invalid type
  * @apiSuccess {string} contentID 24 bytes contentID
  * @apiSuccess {string} contentToken random uuid content token
+ * @apiSuccess {string} fileID 24 bytes fileID
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp *content.ContentCreateResponse) error {
@@ -89,6 +90,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 
 		rsp.ContentID = res.InsertedID.(primitive.ObjectID).Hex()
 		rsp.ContentToken = token
+		rsp.FileID = objID.Hex()
 		rsp.Status = content.ContentCreateResponse_SUCCESS
 	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) { // add exist one
 		if !validCheck(req.ContentID, req.ContentToken) {
@@ -125,6 +127,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 		}
 		rsp.ContentID = req.ContentID
 		rsp.ContentToken = req.ContentToken
+		rsp.FileID = objID.Hex()
 		rsp.Status = content.ContentCreateResponse_SUCCESS
 	} else {
 		rsp.Status = content.ContentCreateResponse_INVALID_PARAM
