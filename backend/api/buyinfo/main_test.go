@@ -1,12 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	buyinfo "jiaojiao/srv/buyinfo/proto"
 	"jiaojiao/utils"
-	"net/http"
 	"net/url"
-	"strings"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -14,16 +11,22 @@ import (
 
 func Test_getBuyInfo(t *testing.T) {
 	tf := func(code int, path string, id int, cid string) {
-		var data map[string]interface{}
-		r := utils.StartTestServer(setupRouter, "GET", "/buyInfo/"+path, nil, nil)
-		So(r.Code, ShouldEqual, code)
-		if r.Code == 200 {
-			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
-			So(data["buyInfoID"], ShouldEqual, id)
-			So(data["contentID"], ShouldEqual, cid)
+		c, d := utils.GetTestData(setupRouter, "GET", "/buyInfo/"+path, nil, "")
+
+		So(c, ShouldEqual, code)
+		if d != nil {
+			So(d["buyInfoID"], ShouldEqual, id)
+			So(d["contentID"], ShouldEqual, cid)
 		}
 	}
 	Convey("GetBuyInfo router test", t, func() {
+		So(utils.RoleTest(setupRouter, utils.Role{
+			Guest: true,
+			User:  true,
+			Self:  true,
+			Admin: true,
+		}, "GET", "/buyInfo/1000", nil), ShouldBeZeroValue)
+
 		tf(400, "0", 0, "")
 		tf(200, "1000", 1000, "123456789abc123456789abc")
 		tf(500, "2000", 0, "")
@@ -33,16 +36,11 @@ func Test_getBuyInfo(t *testing.T) {
 func Test_addBuyInfo(t *testing.T) {
 	v := url.Values{}
 	tf := func(code int, status buyinfo.BuyInfoCreateResponse_Status, user string) {
-		var data map[string]interface{}
-		r := utils.StartTestServer(setupRouter, "POST", "/buyInfo", strings.NewReader(v.Encode()),
-			func(r *http.Request) {
-				r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-				r.Header.Set("Authorization", user)
-			})
-		So(r.Code, ShouldEqual, code)
-		if r.Code == 200 {
-			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
-			So(data["status"], ShouldEqual, status)
+		c, d := utils.GetTestData(setupRouter, "POST", "/buyInfo", v, user)
+
+		So(c, ShouldEqual, code)
+		if d != nil {
+			So(d["status"], ShouldEqual, status)
 		}
 	}
 	Convey("AddBuyInfo router test", t, func() {
@@ -52,19 +50,24 @@ func Test_addBuyInfo(t *testing.T) {
 		v.Set("validTime", "12345")
 		tf(400, 0, "")
 		v.Set("goodName", "good")
-		tf(403, 0, "")
-		tf(403, 0, "user")
 		tf(200, buyinfo.BuyInfoCreateResponse_SUCCESS, "self")
-		tf(200, buyinfo.BuyInfoCreateResponse_SUCCESS, "admin")
+
+		So(utils.RoleTest(setupRouter, utils.Role{
+			Guest: false,
+			User:  false,
+			Self:  true,
+			Admin: true,
+		}, "POST", "/buyInfo", v), ShouldBeZeroValue)
+
 		v.Set("contentID", "1234")
 		tf(400, 0, "admin")
 		v.Del("contentID")
 		v.Set("contentToken", "valid")
 		tf(400, 0, "admin")
 		v.Set("contentID", "1234")
-		tf(200, buyinfo.BuyInfoCreateResponse_SUCCESS, "admin")
+		tf(200, buyinfo.BuyInfoCreateResponse_SUCCESS, "self")
 		v.Set("contentToken", "invalid_token")
-		tf(200, buyinfo.BuyInfoCreateResponse_INVALID_TOKEN, "admin")
+		tf(200, buyinfo.BuyInfoCreateResponse_INVALID_TOKEN, "self")
 		v.Set("contentID", "error")
 		tf(500, 0, "admin")
 	})

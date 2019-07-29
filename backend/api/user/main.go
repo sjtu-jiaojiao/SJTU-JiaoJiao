@@ -71,13 +71,14 @@ func getUserInfo(c *gin.Context) {
  * @api {get} /user FindUser
  * @apiVersion 1.0.0
  * @apiGroup User
- * @apiPermission none/admin
+ * @apiPermission none/self/admin
  * @apiName FindUser
  * @apiDescription Find user
  *
  * @apiParam {--} Param see [User Service](#api-Service-User_Find) <br> No param need admin permission!
- * @apiSuccess {Response} response see [User Service](#api-Service-User_Find) <br>
- * 											   None - studentID: hidden <br> None - studentName: hidden
+ * @apiSuccess (None - Success 200) {Response} response see [User Service](#api-Service-User_Find) <br>
+ * 											   studentID: hidden <br> studentName: hidden
+ * @apiSuccess (Self/Admin - Success 200) {Response} response see [User Service](#api-Service-User_Find)
  * @apiUse InvalidParam
  * @apiUse UserServiceDown
  */

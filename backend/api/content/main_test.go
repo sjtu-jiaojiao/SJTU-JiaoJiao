@@ -1,33 +1,31 @@
 package main
 
 import (
-	"encoding/json"
 	content "jiaojiao/srv/content/proto"
 	"jiaojiao/utils"
-	"net/http"
 	"net/url"
-	"strings"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func Test_deleteContent(t *testing.T) {
-	tf := func(code int, cid string, ctoken string, status content.ContentDeleteResponse_Status) {
-		var data map[string]interface{}
-		r := utils.StartTestServer(setupRouter, "DELETE", "/content?contentID="+cid+"&contentToken="+ctoken, nil,
-			func(r *http.Request) {
-				r.Header.Set("Authorization", "admin")
-			})
-		So(r.Code, ShouldEqual, code)
-		if r.Code == 200 {
-			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
-			So(data["status"], ShouldEqual, status)
+	tf := func(code int, cid string, cToken string, status content.ContentDeleteResponse_Status) {
+		c, d := utils.GetTestData(setupRouter, "DELETE", "/content?contentID="+cid+"&contentToken="+cToken,
+			nil, "admin")
+
+		So(c, ShouldEqual, code)
+		if d != nil {
+			So(d["status"], ShouldEqual, status)
 		}
 	}
 	Convey("GetSellInfo router test", t, func() {
-		r := utils.StartTestServer(setupRouter, "DELETE", "/content?contentID=1000&contentToken=valid_token", nil, nil)
-		So(r.Code, ShouldEqual, 403)
+		So(utils.RoleTest(setupRouter, utils.Role{
+			Guest: false,
+			User:  true,
+			Self:  true,
+			Admin: true,
+		}, "DELETE", "/content?contentID=1000&contentToken=valid_token", nil), ShouldBeZeroValue)
 
 		tf(400, "", "", 0)
 		tf(400, "1000", "", 0)
@@ -43,16 +41,12 @@ func Test_deleteContent(t *testing.T) {
 func Test_addContent(t *testing.T) {
 	v := url.Values{}
 	tf := func(code int, status content.ContentCreateResponse_Status) {
-		var data map[string]interface{}
-		r := utils.StartTestServer(setupRouter, "POST", "/content",
-			strings.NewReader(v.Encode()), func(r *http.Request) {
-				r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-				r.Header.Set("Authorization", "user")
-			})
-		So(r.Code, ShouldEqual, code)
-		if r.Code == 200 {
-			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldEqual, nil)
-			So(data["status"], ShouldEqual, status)
+		c, d := utils.GetTestData(setupRouter, "POST", "/content",
+			v, "user")
+
+		So(c, ShouldEqual, code)
+		if d != nil {
+			So(d["status"], ShouldEqual, status)
 		}
 	}
 	Convey("AddContent router test", t, func() {
@@ -61,11 +55,14 @@ func Test_addContent(t *testing.T) {
 		tf(400, 0)
 		v.Set("type", "1")
 		tf(200, content.ContentCreateResponse_SUCCESS)
-		r := utils.StartTestServer(setupRouter, "POST", "/content", strings.NewReader(v.Encode()),
-			func(r *http.Request) {
-				r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-			})
-		So(r.Code, ShouldEqual, 403)
+
+		So(utils.RoleTest(setupRouter, utils.Role{
+			Guest: false,
+			User:  true,
+			Self:  true,
+			Admin: true,
+		}, "POST", "/content", v), ShouldBeZeroValue)
+
 		v.Set("contentID", "123")
 		tf(400, 0)
 		v.Set("contentToken", "valid_token")

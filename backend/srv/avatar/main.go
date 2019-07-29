@@ -29,7 +29,7 @@ type srv struct{}
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *avatar.AvatarCreateRequest, rsp *avatar.AvatarCreateResponse) error {
-	if !utils.RequreParam(req.File, req.UserID) {
+	if !utils.RequireParam(req.File, req.UserID) {
 		rsp.Status = avatar.AvatarCreateResponse_INVALID_PARAM
 		return nil
 	}

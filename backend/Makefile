@@ -22,10 +22,17 @@ build:
 ## proto: Generate proto file.
 proto:
 	@echo Generating proto file...
-	@for file in `find ./srv/ -name "*.proto"`;do	 \
-    	dir=$$(dirname "$${file}");					\
-    	protoc --proto_path=$$dir --micro_out=$$dir --go_out=$$dir `basename "$${file}"`;	\
+ifdef SRV
+	@for file in `find ./srv/$(SRV) -name "*.proto"`;do	 \
+		dir=$$(dirname "$${file}");					\
+		protoc --proto_path=$$dir --micro_out=$$dir --go_out=$$dir `basename "$${file}"`;	\
 	done
+else
+	@for file in `find ./srv/ -name "*.proto"`;do	 \
+		dir=$$(dirname "$${file}");					\
+		protoc --proto_path=$$dir --micro_out=$$dir --go_out=$$dir `basename "$${file}"`;	\
+	done
+endif
 	@echo Success
 
 ## docker: Build docker images.

@@ -12,6 +12,7 @@
         "Content",
         "Avatar",
         "File",
+        "Transaction",
         "Service"
     ]
 }
