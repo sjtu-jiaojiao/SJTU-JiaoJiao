@@ -93,7 +93,7 @@ func TestSrvInfoCreate(t *testing.T) {
 	//	req.ValidTime = 1893427200
 	//	tf(sellinfo.SellInfoCreateResponse_INVALID_PARAM, false)
 	//
-	//	req.UserID = 1000
+	//	req.FromUserID = 1000
 	//	id := tf(sellinfo.SellInfoCreateResponse_SUCCESS, true)
 	//
 	//	tmp := db.SellInfo{
