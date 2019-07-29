@@ -208,12 +208,12 @@ func getContent(c *gin.Context) {
 
 	if !utils.LogContinue(c.ShouldBindUri(&p), utils.Warning) {
 		tmp := c.DefaultQuery("userID", "0")
-		userId, err := strconv.Atoi(tmp)
+		userID, err := strconv.Atoi(tmp)
 		if utils.LogContinue(err, utils.Warning) {
 			c.AbortWithStatus(400)
 			return
 		}
-		role := utils.GetRoleID(c, int32(userId))
+		role := utils.GetRoleID(c, int32(userID))
 
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)
