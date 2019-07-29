@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	auth "jiaojiao/srv/auth/proto"
 	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
@@ -13,14 +12,13 @@ import (
 
 func Test_getAuth(t *testing.T) {
 	tf := func(code int, param string, status auth.AuthResponse_Status, id int, role user.UserInfo_Role) {
-		var data map[string]interface{}
-		r := utils.StartTestServer(setupRouter, "GET", "/auth?code="+param, nil, nil)
-		So(r.Code, ShouldEqual, code)
-		if r.Code == 200 {
-			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldBeNil)
-			So(data["status"], ShouldEqual, status)
+		c, d := utils.GetTestData(setupRouter, "GET", "/auth?code="+param, nil, "")
+
+		So(c, ShouldEqual, code)
+		if d != nil {
+			So(d["status"], ShouldEqual, status)
 			if status == auth.AuthResponse_SUCCESS {
-				t, err := utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
+				t, err := utils.JWTVerify(d["token"].(string), os.Getenv("JJ_JWTSECRET"))
 				So(err, ShouldBeNil)
 				So(utils.JWTParse(t, "id"), ShouldEqual, id)
 				So(utils.JWTParse(t, "role"), ShouldEqual, role)
