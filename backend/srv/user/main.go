@@ -156,13 +156,16 @@ func (a *srv) Update(ctx context.Context, req *user.UserInfo, rsp *user.UserUpda
  * @apiDescription Find user(fuzzy).
  *
  * @apiParam {string} [userName] username
- * @apiParam {uint32} limit=100 row limit
+ * @apiParam {uint32{0-100}} limit=100 row limit
  * @apiParam {uint32} offset=0 row offset
  * @apiSuccess {list} user see [User Service](#api-Service-user_User_Query)
  * @apiUse DBServerDown
  */
 func (a *srv) Find(ctx context.Context, req *user.UserFindRequest, rsp *user.UserFindResponse) error {
 	if req.Limit == 0 {
+		req.Limit = 100
+	}
+	if req.Limit > 100 {
 		req.Limit = 100
 	}
 
