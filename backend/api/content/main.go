@@ -5,6 +5,7 @@ import (
 	"jiaojiao/srv/content/mock"
 	content "jiaojiao/srv/content/proto"
 	"jiaojiao/utils"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/client"
@@ -103,7 +104,7 @@ func deleteContent(c *gin.Context) {
 	var p param
 	role := utils.GetRole(c)
 
-	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
+	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
 		if !role.User && !role.Admin {
 			c.AbortWithStatus(403)
 			return
@@ -147,8 +148,11 @@ func updateContent(c *gin.Context) {
 	var p param
 	role := utils.GetRole(c)
 	data, code, err := utils.GetQueryFile(c, "content", 1024*1024*50) // 50M
+	if err != nil {
+		data = []byte{0}
+	}
 
-	if err == nil && !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
+	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
 		if code != 200 {
 			c.AbortWithStatus(code)
 			return
@@ -197,12 +201,17 @@ func updateContent(c *gin.Context) {
 func getContent(c *gin.Context) {
 	type param struct {
 		ContentID string `uri:"contentID" binding:"required,min=1"`
-		UserID    int32  `uri:"userID"`
 	}
 	var p param
 
-	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
-		role := utils.GetRoleID(c, p.UserID)
+	if !utils.LogContinue(c.ShouldBindUri(&p), utils.Warning) {
+		tmp := c.DefaultQuery("userID", "0")
+		userId, err := strconv.Atoi(tmp)
+		if utils.LogContinue(err, utils.Warning) {
+			c.AbortWithStatus(400)
+			return
+		}
+		role := utils.GetRoleID(c, int32(userId))
 
 		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
 			func() interface{} { return mock.NewContentService() }).(content.ContentService)

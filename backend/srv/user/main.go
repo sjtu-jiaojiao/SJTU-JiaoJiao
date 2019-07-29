@@ -30,7 +30,7 @@ type srv struct{}
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user.UserCreateResponse) error {
-	if !utils.RequreParam(req.StudentID, req.StudentName) {
+	if !utils.RequireParam(req.StudentID, req.StudentName) {
 		rsp.Status = user.UserCreateResponse_INVALID_PARAM
 		return nil
 	}
@@ -75,7 +75,7 @@ func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user
  * @apiUse DBServerDown
  */
 func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.UserInfo) error {
-	if !utils.RequreParam(req.UserID) {
+	if !utils.RequireParam(req.UserID) {
 		return nil
 	}
 
@@ -112,7 +112,7 @@ func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.U
  * @apiUse DBServerDown
  */
 func (a *srv) Update(ctx context.Context, req *user.UserInfo, rsp *user.UserUpdateResponse) error {
-	if !utils.RequreParam(req.UserID) {
+	if !utils.RequireParam(req.UserID) {
 		rsp.Status = user.UserUpdateResponse_INVALID_PARAM
 		return nil
 	}

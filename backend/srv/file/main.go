@@ -27,7 +27,7 @@ type srvFile struct{}
  * @apiUse DBServerDown
  */
 func (a *srvFile) Query(ctx context.Context, req *file.FileRequest, rsp *file.FileQueryResponse) error {
-	if !utils.RequreParam(req.FileID) {
+	if !utils.RequireParam(req.FileID) {
 		rsp.Status = file.FileQueryResponse_INVALID_PARAM
 		return nil
 	}
@@ -68,7 +68,7 @@ func (a *srvFile) Query(ctx context.Context, req *file.FileRequest, rsp *file.Fi
  * @apiUse DBServerDown
  */
 func (a *srvFile) Create(ctx context.Context, req *file.FileCreateRequest, rsp *file.FileCreateResponse) error {
-	if !utils.RequreParam(req.File) {
+	if !utils.RequireParam(req.File) {
 		rsp.Status = file.FileCreateResponse_INVALID_PARAM
 		return nil
 	}
