@@ -170,13 +170,19 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 		rsp.Status = content.ContentUpdateResponse_INVALID_TOKEN
 		return nil
 	}
+
+	fid, err := primitive.ObjectIDFromHex(req.FileID)
+	if utils.LogContinue(err, utils.Warning) {
+		rsp.Status = content.ContentUpdateResponse_NOT_FOUND
+		return nil
+	}
 	_, err = collection.UpdateOne(ctx, bson.D{
 		{"_id", rid},
 		{"token", req.ContentToken},
 	}, bson.D{
 		{"$pull", bson.D{
 			{"files", bson.D{
-				{"fileID", req.FileID},
+				{"fileID", fid},
 			}},
 		}},
 	})
@@ -204,6 +210,11 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 			rsp.Status = content.ContentUpdateResponse_FAILED
 			return nil
 		}
+		fid, err = primitive.ObjectIDFromHex(microCreateRsp.FileID)
+		if utils.LogContinue(err, utils.Warning) {
+			rsp.Status = content.ContentUpdateResponse_FAILED
+			return nil
+		}
 
 		_, err = collection.UpdateOne(ctx, bson.D{
 			{"_id", rid},
@@ -211,7 +222,7 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 		}, bson.D{
 			{"$push", bson.D{
 				{"files", bson.D{
-					{"fileID", microCreateRsp.FileID},
+					{"fileID", fid},
 					{"type", req.Type},
 				}},
 			}},

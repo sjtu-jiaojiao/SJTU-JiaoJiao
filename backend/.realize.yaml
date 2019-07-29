@@ -51,7 +51,7 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: make proto
+    - command: make proto SRV=auth
       type: before
       path: ../../
       output: true
@@ -92,7 +92,7 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: make proto
+    - command: make proto SRV=user
       type: before
       path: ../../
       output: true
@@ -133,7 +133,7 @@ schema:
       - /
       - ../../utils
     scripts:
-    - command: make proto
+    - command: make proto SRV=sellinfo
       type: before
       path: ../../
       output: true
@@ -174,7 +174,7 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: make proto
+    - command: make proto SRV=file
       type: before
       path: ../../
       output: true
@@ -215,7 +215,7 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: make proto
+    - command: make proto SRV=avatar
       type: before
       path: ../../
       output: true
@@ -256,7 +256,7 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: make proto
+    - command: make proto SRV=content
       type: before
       path: ../../
       output: true
@@ -297,7 +297,7 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: make proto
+    - command: make proto SRV=buyinfo
       type: before
       path: ../../
       output: true
@@ -338,7 +338,7 @@ schema:
     - /
     - ../../utils
     scripts:
-    - command: make proto
+    - command: make proto SRV=transaction
       type: before
       path: ../../
       output: true

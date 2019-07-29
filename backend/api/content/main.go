@@ -5,6 +5,7 @@ import (
 	"jiaojiao/srv/content/mock"
 	content "jiaojiao/srv/content/proto"
 	"jiaojiao/utils"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -148,11 +149,12 @@ func updateContent(c *gin.Context) {
 	var p param
 	role := utils.GetRole(c)
 	data, code, err := utils.GetQueryFile(c, "content", 1024*1024*50) // 50M
-	if err != nil {
-		data = []byte{0}
+	if err == http.ErrMissingFile {                                   // allow no file
+		code = 200
+		err = nil
 	}
 
-	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+	if err == nil && !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
 		if code != 200 {
 			c.AbortWithStatus(code)
 			return
