@@ -32,6 +32,7 @@ type srv struct{}
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 2 for invalid type
  * @apiSuccess {string} contentID 24 bytes contentID
  * @apiSuccess {string} contentToken random uuid content token
+ * @apiSuccess {string} fileID 24 bytes fileID
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp *content.ContentCreateResponse) error {
@@ -55,7 +56,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 	}
 
 	// check param
-	if !utils.RequreParam(req.Content, req.Type) {
+	if !utils.RequireParam(req.Content, req.Type) {
 		rsp.Status = content.ContentCreateResponse_INVALID_PARAM
 		return nil
 	}
@@ -89,6 +90,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 
 		rsp.ContentID = res.InsertedID.(primitive.ObjectID).Hex()
 		rsp.ContentToken = token
+		rsp.FileID = objID.Hex()
 		rsp.Status = content.ContentCreateResponse_SUCCESS
 	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) { // add exist one
 		if !validCheck(req.ContentID, req.ContentToken) {
@@ -125,6 +127,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 		}
 		rsp.ContentID = req.ContentID
 		rsp.ContentToken = req.ContentToken
+		rsp.FileID = objID.Hex()
 		rsp.Status = content.ContentCreateResponse_SUCCESS
 	} else {
 		rsp.Status = content.ContentCreateResponse_INVALID_PARAM
@@ -150,7 +153,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
  * @apiUse DBServerDown
  */
 func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp *content.ContentUpdateResponse) error {
-	if !utils.RequreParam(req.ContentID, req.ContentToken, req.FileID) {
+	if !utils.RequireParam(req.ContentID, req.ContentToken, req.FileID) {
 		rsp.Status = content.ContentUpdateResponse_INVALID_PARAM
 		return nil
 	}
@@ -170,13 +173,19 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 		rsp.Status = content.ContentUpdateResponse_INVALID_TOKEN
 		return nil
 	}
+
+	fid, err := primitive.ObjectIDFromHex(req.FileID)
+	if utils.LogContinue(err, utils.Warning) {
+		rsp.Status = content.ContentUpdateResponse_NOT_FOUND
+		return nil
+	}
 	_, err = collection.UpdateOne(ctx, bson.D{
 		{"_id", rid},
 		{"token", req.ContentToken},
 	}, bson.D{
 		{"$pull", bson.D{
 			{"files", bson.D{
-				{"fileID", req.FileID},
+				{"fileID", fid},
 			}},
 		}},
 	})
@@ -196,11 +205,16 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 	}
 
 	//add new file
-	if utils.RequreParam(req.Content, req.Type) {
+	if utils.RequireParam(req.Content, req.Type) {
 		microCreateRsp, err := srv.Create(context.TODO(), &file.FileCreateRequest{
 			File: req.Content,
 		})
 		if utils.LogContinue(err, utils.Warning) || microDeleteRsp.Status != file.FileDeleteResponse_SUCCESS {
+			rsp.Status = content.ContentUpdateResponse_FAILED
+			return nil
+		}
+		fid, err = primitive.ObjectIDFromHex(microCreateRsp.FileID)
+		if utils.LogContinue(err, utils.Warning) {
 			rsp.Status = content.ContentUpdateResponse_FAILED
 			return nil
 		}
@@ -211,7 +225,7 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 		}, bson.D{
 			{"$push", bson.D{
 				{"files", bson.D{
-					{"fileID", microCreateRsp.FileID},
+					{"fileID", fid},
 					{"type", req.Type},
 				}},
 			}},
@@ -239,7 +253,7 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
  * @apiUse DBServerDown
  */
 func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp *content.ContentDeleteResponse) error {
-	if !utils.RequreParam(req.ContentID, req.ContentToken) {
+	if !utils.RequireParam(req.ContentID, req.ContentToken) {
 		rsp.Status = content.ContentDeleteResponse_INVALID_PARAM
 		return nil
 	}
@@ -298,7 +312,7 @@ func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp
  * @apiUse DBServerDown
  */
 func (a *srv) Query(ctx context.Context, req *content.ContentQueryRequest, rsp *content.ContentQueryResponse) error {
-	if !utils.RequreParam(req.ContentID) {
+	if !utils.RequireParam(req.ContentID) {
 		rsp.Status = content.ContentQueryResponse_INVALID_PARAM
 		return nil
 	}
@@ -353,7 +367,7 @@ func (a *srv) Query(ctx context.Context, req *content.ContentQueryRequest, rsp *
  * @apiUse DBServerDown
  */
 func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *content.ContentCheckResponse) error {
-	if !utils.RequreParam(req.ContentID, req.ContentToken) {
+	if !utils.RequireParam(req.ContentID, req.ContentToken) {
 		rsp.Status = content.ContentCheckResponse_INVALID_PARAM
 		return nil
 	}
@@ -367,7 +381,7 @@ func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *
 }
 
 func validCheck(contentID string, contentToken string) bool {
-	if !utils.RequreParam(contentID, contentToken) {
+	if !utils.RequireParam(contentID, contentToken) {
 		return false
 	}
 

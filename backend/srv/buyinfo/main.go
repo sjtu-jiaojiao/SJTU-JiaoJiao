@@ -36,7 +36,7 @@ type srv struct{}
  * @apiUse DBServerDown
  */
 func (a *srv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, rsp *buyinfo.BuyInfoMsg) error {
-	if !utils.RequreParam(req.BuyInfoID) {
+	if !utils.RequireParam(req.BuyInfoID) {
 		return nil
 	}
 	info := db.BuyInfo{
@@ -89,7 +89,7 @@ func (a *srv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, rsp *
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp *buyinfo.BuyInfoCreateResponse) error {
-	if !utils.RequreParam(req.ValidTime, req.GoodName, req.UserID) {
+	if !utils.RequireParam(req.ValidTime, req.GoodName, req.UserID) {
 		rsp.Status = buyinfo.BuyInfoCreateResponse_INVALID_PARAM
 		return nil
 	}
@@ -177,7 +177,7 @@ func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp
  * @apiParam {string} [goodName] good name(fuzzy)
  * @apiParam {double} lowPrice=0 low bound of price, included
  * @apiParam {double} highPrice=inf high bound of price, included
- * @apiParam {uint32} limit=100 row limit
+ * @apiParam {uint32{0-100}} limit=100 row limit
  * @apiParam {uint32} offset=0 row offset
  * @apiSuccess {list} buyInfo see [BuyInfo Service](#api-Service-BuyInfo_Query)
  * @apiUse DBServerDown
@@ -196,6 +196,9 @@ func (a *srv) Find(ctx context.Context, req *buyinfo.BuyInfoFindRequest, rsp *bu
 	}
 
 	if req.Limit == 0 {
+		req.Limit = 100
+	}
+	if req.Limit > 100 {
 		req.Limit = 100
 	}
 	if req.LowPrice < 0 {
