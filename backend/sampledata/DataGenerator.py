@@ -1,5 +1,4 @@
 import random
-import string
 
 
 def readFile(filename):
@@ -25,11 +24,11 @@ def generateGood():
         for i in range(1, 200001):
             f.write(str(i) + ",")
             length = random.randint(1, 5)
-            for j in range(0, length):
+            for _ in range(0, length):
                 f.write(names[random.randint(0, len(names) - 1)])
             f.write("," + str(float(random.randint(0, 999999)) / 100) + ",")
             length = random.randint(10, 50)
-            for j in range(0, length):
+            for _ in range(0, length):
                 f.write(names[random.randint(0, len(names) - 1)])
             f.write(
                 "," + "".join([random.choice("0123456789abcdef")for i in range(24)]) + "\n")
@@ -48,7 +47,7 @@ def generateUser():
                              for num in range(0, 11)]) + ",")
             f.write("517" + "".join([str(random.randint(0, 9))
                                      for num in range(0, 9)]) + ",")
-            for j in range(0, 3):
+            for _ in range(0, 3):
                 f.write(randCHN())
             f.write("," + str(random.randint(1, 1000) / 999 + 1) +
                     "," + str(random.randint(1, 1000) / 999 + 1) + "\n")
