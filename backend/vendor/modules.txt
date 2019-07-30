@@ -2,6 +2,8 @@
 github.com/BurntSushi/toml
 # github.com/armon/go-metrics v0.0.0-20190430140413-ec5e00d3c878
 github.com/armon/go-metrics
+# github.com/asaskevich/EventBus v0.0.0-20180315140547-d46933a94f05
+github.com/asaskevich/EventBus
 # github.com/astaxie/beego v1.11.1
 github.com/astaxie/beego/logs
 # github.com/bitly/go-simplejson v0.5.0
@@ -97,6 +99,8 @@ github.com/jtolds/gls
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.8
 github.com/mattn/go-isatty
+# github.com/mattn/go-runewidth v0.0.4
+github.com/mattn/go-runewidth
 # github.com/micro/cli v0.2.0
 github.com/micro/cli
 # github.com/micro/go-micro v1.7.0
@@ -173,6 +177,8 @@ github.com/mitchellh/mapstructure
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
+# github.com/myzhan/boomer v0.0.0-20190713082008-307abf52aca9
+github.com/myzhan/boomer
 # github.com/nats-io/nats.go v1.8.1
 github.com/nats-io/nats.go
 github.com/nats-io/nats.go/encoders/builtin
@@ -181,6 +187,8 @@ github.com/nats-io/nats.go/util
 github.com/nats-io/nkeys
 # github.com/nats-io/nuid v1.0.1
 github.com/nats-io/nuid
+# github.com/olekukonko/tablewriter v0.0.1
+github.com/olekukonko/tablewriter
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
 # github.com/satori/go.uuid v1.2.0
@@ -202,6 +210,11 @@ github.com/ugorji/go/codec
 github.com/xdg/scram
 # github.com/xdg/stringprep v1.0.0
 github.com/xdg/stringprep
+# github.com/zeromq/goczmq v4.1.0+incompatible
+github.com/zeromq/goczmq
+# github.com/zeromq/gomq v0.0.0-20181008000130-95dc37dee5c4
+github.com/zeromq/gomq
+github.com/zeromq/gomq/zmtp
 # go.mongodb.org/mongo-driver v1.0.2
 go.mongodb.org/mongo-driver/mongo
 go.mongodb.org/mongo-driver/mongo/options
