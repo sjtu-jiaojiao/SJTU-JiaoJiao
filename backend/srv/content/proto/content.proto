@@ -45,6 +45,7 @@ message ContentUpdateRequest {
     string fileID = 3;
     bytes content = 4;
     Type type = 5;
+    repeated string tags = 6;
 }
 
 message ContentUpdateResponse {
@@ -76,7 +77,7 @@ message ContentDeleteResponse {
     Status status = 1;
 }
 
-message ContentMsg {
+message FileMsg {
     enum Type {
         UNKNOWN = 0;
         PICTURE = 1;
@@ -99,7 +100,8 @@ message ContentQueryResponse {
     }
     Status status = 1;
     string contentToken = 2;
-    repeated ContentMsg files = 3;
+    repeated FileMsg files = 3;
+    repeated string tags = 4;
 }
 
 message ContentCheckRequest {

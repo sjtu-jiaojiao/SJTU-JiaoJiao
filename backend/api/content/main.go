@@ -141,10 +141,11 @@ func deleteContent(c *gin.Context) {
  */
 func updateContent(c *gin.Context) {
 	type param struct {
-		ContentID    string `form:"contentID" binding:"required"`
-		ContentToken string `form:"contentToken" binding:"required"`
-		FileID       string `form:"fileID" binding:"required"`
-		Type         int32  `form:"type"`
+		ContentID    string   `form:"contentID" binding:"required"`
+		ContentToken string   `form:"contentToken" binding:"required"`
+		FileID       string   `form:"fileID" binding:"required"`
+		Type         int32    `form:"type"`
+		Tags         []string `form:"tags" binding:"required"`
 	}
 	var p param
 	role := utils.GetRole(c)
@@ -173,6 +174,7 @@ func updateContent(c *gin.Context) {
 			FileID:       p.FileID,
 			Content:      data,
 			Type:         content.ContentUpdateRequest_Type(p.Type),
+			Tags:         p.Tags,
 		})
 		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
 			c.JSON(500, err)
