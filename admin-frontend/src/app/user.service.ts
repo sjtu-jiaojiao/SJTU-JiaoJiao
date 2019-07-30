@@ -24,7 +24,7 @@ export class UserService {
   }
   /** GET users from the server */
   getUsers(): Observable<UserResponse> {
-    const url = `${this.usersUrl}`;
+    const url = `${this.usersUrl}?limit=100000`;
     return this.http.get<UserResponse>(url,httpOptions)
       .pipe(
         catchError(this.handleError<UserResponse>('getUsers'))

@@ -6,7 +6,7 @@
           <nz-card [nzTitle]="info.goodName">
       <div>
         <div class='infoitem'>
-            <span class="badge">交易名</span>{{info.goodName}}
+            <span class="badge">交易名</span>{{info.goodName.length>10? info.goodName.substr(0,10)+'...':info.goodName}}
         </div>
         <div class='infoitem'>
               <span class="badge">交易ID</span>{{info.buyInfoID}}

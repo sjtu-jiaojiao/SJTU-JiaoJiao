@@ -32,8 +32,31 @@ export class InfoStatisticComponent implements OnInit {
                     this.ts();
                     this.lq();
                     this.good();
+                    this.getMoreBuy(100);
+                    this.getMoreSell(100);
                 }
   );})
+  }
+  getMoreBuy(offset){
+      if(!(this.bi.length%100))
+        this.is.getBuyInfos(null,null,null,null,offset).subscribe(
+            e => {
+                this.bi=this.bi.concat(e.buyInfo);
+                this.lq();
+                this.getMoreBuy(offset+100);
+            }
+        );
+  }
+  getMoreSell(offset){
+      console.log(this.si.length);
+      if(!(this.si.length%100))
+        this.is.getSellInfos(null,null,null,null,offset).subscribe(
+            e => {
+                this.si= this.si.concat(e.sellInfo);
+                this.lq();
+                this.getMoreSell(offset+100);
+            }
+        );
   }
   good() {
     var data = prepareBoxplotData([
@@ -43,7 +66,6 @@ export class InfoStatisticComponent implements OnInit {
     [890, 810, 810, 820, 800, 770, 760, 740, 750, 760, 910, 920, 890, 860, 880, 720, 840, 850, 850, 780],
     [890, 840, 780, 810, 760, 810, 790, 810, 820, 850, 870, 870, 810, 740, 810, 940, 950, 800, 810, 870]
 ]);
-
 this.goodoption = {
     backgroundColor: '#01193d',
     title: [
@@ -305,29 +327,31 @@ this.goodoption = {
     return [t.getFullYear(), t.getMonth() + 1, t.getDate()].join('/');
   }
   lq() {
-    const bd =new Map();
+    let bd =new Map();
     this.bi.forEach( e => {
+        if(!e||e.releaseTime<0)return;
        const str = this.fmt(new Date(e.releaseTime*1000));
        if(str in bd)
         bd[str]+=1;
         else 
         bd[str]=1;
     });
-    const sd =new Map();
+    let sd =new Map();
     this.si.forEach( e => {
+        if(!e||e.releaseTime<0)return;
        const str = this.fmt(new Date(e.releaseTime*1000));
        if(str in sd)
         sd[str]+=1;
         else 
         sd[str]=1;
     });
-    const bdata = [];
+    let bdata = [];
     for(let i in bd){
         bdata.push([i,bd[i]]);
     }
-    const sdata = [];
+
+    let sdata = [];
     for(let i in sd){
-        console.log(i);
         sdata.push([i,sd[i]]);
     }
     this.lqoption = {
@@ -378,18 +402,14 @@ this.goodoption = {
         {
             name: '新增购买信息',
             type: 'value',
-            max: function(value) {
-                return value.max *3/2;
-            }
+            max: (value) => value.max*3/2
         },
         {
             name: '新增出售信息',
             nameLocation: 'start',
             type: 'value',
             inverse: true,
-            max: function(value) {
-                return value.max *3/2;
-            }
+            max: (value) => value.max*3/2
         }
     ],
     series: [

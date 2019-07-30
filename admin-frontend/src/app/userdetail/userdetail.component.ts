@@ -112,8 +112,7 @@ this.infos.forEach(element => {
 title: {
 },
 legend: {
-    data: ['Record'],
-    left: 'right'
+    data: ['出售', '求购']
 },
 polar: {},
 tooltip: {

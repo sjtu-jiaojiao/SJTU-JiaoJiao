@@ -16,18 +16,20 @@ export class DashboardComponent implements OnInit {
 
   site : any;
   hst: any[];
+  /*
   userNum: number;
   infoNum: number;
   acInfoNum: number;
+  */
   ngOnInit() {
     this.getHistory();
     this.wbService.getSite().subscribe(s => this.site= s);
-    this.usService.getUsers().subscribe( e =>this.userNum = e.user.length);
-    this.ifService.getSellInfos().subscribe( e => {
-      this.infoNum = e.sellInfo.length;
-      this.acInfoNum = e.sellInfo.filter( e => e.status < 3).length;
-    }
-      );
+    //this.usService.getUsers().subscribe( e =>this.userNum = e.user.length);
+    //this.ifService.getSellInfos().subscribe( e => {
+    //  this.infoNum = e.sellInfo.length;
+    //this.acInfoNum = e.sellInfo.filter( e => e.status < 3).length;
+    //}
+    //  );
   }
   getHistory(){
     this.wbService.getSiteHistory().subscribe( s =>this.hst =s.sort((a,b)=> a.time-b.time));
