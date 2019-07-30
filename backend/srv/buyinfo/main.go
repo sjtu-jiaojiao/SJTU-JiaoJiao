@@ -84,6 +84,7 @@ func (a *srv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, rsp *
  * @apiParam {double} [price] good price
  * @apiParam {string} [contentID] content id of good
  * @apiParam {string} [contentToken] content token
+ * @apiParam {list} [tags] {string} tag
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
  * @apiSuccess {int32} buyInfoID created buyInfoID
  * @apiUse DBServerDown
@@ -130,6 +131,22 @@ func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp
 		return info.ID, nil
 	}
 
+	srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
+		func() interface{} { return mock.NewContentService() }).(content.ContentService)
+	if utils.RequireParam(req.Tags) {
+		microRsp, err := srv.CreateTag(context.TODO(), &content.ContentCreateTagRequest{
+			ContentID:    req.ContentID,
+			ContentToken: req.ContentToken,
+			Tags:         req.Tags,
+		})
+		if err != nil || microRsp.Status != content.ContentCreateTagResponse_SUCCESS {
+			rsp.Status = buyinfo.BuyInfoCreateResponse_INVALID_TOKEN
+			return nil
+		}
+		req.ContentID = microRsp.ContentID
+		req.ContentToken = microRsp.ContentToken
+	}
+
 	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) {
 		id, err := insert()
 		if err != nil || id == 0 {
@@ -138,11 +155,6 @@ func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp
 		rsp.Status = buyinfo.BuyInfoCreateResponse_SUCCESS
 		rsp.BuyInfoID = id
 	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) {
-		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} {
-			return content.NewContentService(name, c)
-		}, func() interface{} {
-			return mock.NewContentService()
-		}).(content.ContentService)
 		microRsp, err := srv.Check(context.TODO(), &content.ContentCheckRequest{
 			ContentID:    req.ContentID,
 			ContentToken: req.ContentToken,

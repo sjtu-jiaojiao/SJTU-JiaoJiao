@@ -73,13 +73,14 @@ func getBuyInfo(c *gin.Context) {
  */
 func addBuyInfo(c *gin.Context) {
 	type param struct {
-		ValidTime    int64   `form:"validTime" binding:"required"`
-		GoodName     string  `form:"goodName" binding:"required"`
-		Price        float64 `form:"price"`
-		Description  string  `form:"description"`
-		ContentID    string  `form:"contentID"`
-		ContentToken string  `form:"contentToken"`
-		UserID       int32   `form:"userID" binding:"required"`
+		ValidTime    int64    `form:"validTime" binding:"required"`
+		GoodName     string   `form:"goodName" binding:"required"`
+		Price        float64  `form:"price"`
+		Description  string   `form:"description"`
+		ContentID    string   `form:"contentID"`
+		ContentToken string   `form:"contentToken"`
+		UserID       int32    `form:"userID" binding:"required"`
+		Tags         []string `form:"tags"`
 	}
 	var p param
 	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
@@ -104,6 +105,7 @@ func addBuyInfo(c *gin.Context) {
 			ContentID:    p.ContentID,
 			ContentToken: p.ContentToken,
 			UserID:       p.UserID,
+			Tags:         p.Tags,
 		})
 		if utils.LogContinue(err, utils.Warning, "BuyInfo service error: %v", err) {
 			c.JSON(500, err)
