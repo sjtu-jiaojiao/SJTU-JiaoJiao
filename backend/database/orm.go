@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"jiaojiao/utils"
 	"os"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql" // mysql orm
@@ -22,6 +23,10 @@ func InitORM(dbName string, m ...interface{}) {
 	utils.LogPanic(err)
 
 	Ormer.AutoMigrate(m...)
+
+	Ormer.DB().SetMaxIdleConns(10)
+	Ormer.DB().SetMaxOpenConns(768)
+	Ormer.DB().SetConnMaxLifetime(time.Hour)
 }
 
 // CloseORM close orm object
