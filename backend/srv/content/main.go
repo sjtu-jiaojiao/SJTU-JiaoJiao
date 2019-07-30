@@ -137,6 +137,79 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 }
 
 /**
+ * @api {rpc} /rpc Content.CreateTag
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName Content.CreateTag
+ * @apiDescription create tags
+ *
+ * @apiParam {string} [contentID] 24 bytes content id, left empty for first upload
+ * @apiParam {string} [contentToken] content token, left empty for first upload
+ * @apiParam {list} tags {string} tag
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 2 for invalid type
+ * @apiSuccess {string} contentID 24 bytes contentID
+ * @apiSuccess {string} contentToken random uuid content token
+ * @apiUse DBServerDown
+ */
+func (a *srv) CreateTag(ctx context.Context, req *content.ContentCreateTagRequest, rsp *content.ContentCreateTagResponse) error {
+	// check param
+	if !utils.RequireParam(req.Tags) {
+		rsp.Status = content.ContentCreateTagResponse_INVALID_PARAM
+		return nil
+	}
+
+	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) { // create new
+		token := uuid.NewV4().String()
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		collection := db.MongoDatabase.Collection("sellinfo")
+		res, err := collection.InsertOne(ctx, bson.M{
+			"token": token,
+			"tags":  req.Tags,
+		})
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+
+		rsp.ContentID = res.InsertedID.(primitive.ObjectID).Hex()
+		rsp.ContentToken = token
+		rsp.Status = content.ContentCreateTagResponse_SUCCESS
+	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) { // add exist one
+		if !validCheck(req.ContentID, req.ContentToken) {
+			rsp.Status = content.ContentCreateTagResponse_INVALID_TOKEN
+			return nil
+		}
+
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		collection := db.MongoDatabase.Collection("sellinfo")
+		rid, err := primitive.ObjectIDFromHex(req.ContentID)
+		if utils.LogContinue(err, utils.Warning) {
+			rsp.Status = content.ContentCreateTagResponse_INVALID_TOKEN
+			return nil
+		}
+		_, err = collection.UpdateOne(ctx, bson.D{
+			{"_id", rid},
+			{"token", req.ContentToken},
+		},
+			bson.D{
+				{"$setOnInsert", bson.D{
+					{"tags", req.Tags},
+				}},
+			})
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+		rsp.ContentID = req.ContentID
+		rsp.ContentToken = req.ContentToken
+		rsp.Status = content.ContentCreateTagResponse_SUCCESS
+	} else {
+		rsp.Status = content.ContentCreateTagResponse_INVALID_PARAM
+	}
+	return nil
+}
+
+/**
  * @api {rpc} /rpc Content.Update
  * @apiVersion 1.0.0
  * @apiGroup Service
