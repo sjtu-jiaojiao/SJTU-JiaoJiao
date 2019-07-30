@@ -5,14 +5,15 @@ import {
 } from 'react-native';
 import Video from 'react-native-video';
 import Config from "../../Config";
+import {Avatar, withBadge, Badge} from "react-native-elements";
 
-let ImagePicker = NativeModules.ImageCropPicker;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: 150,
     },
     button: {
         backgroundColor: 'blue',
@@ -89,6 +90,9 @@ class HTTP {
     }
 }
 
+const {width, height, scale} = Dimensions.get('window');
+let ImagePicker = NativeModules.ImageCropPicker;
+
 export default class TestPage extends Component {
 
     constructor() {
@@ -97,86 +101,34 @@ export default class TestPage extends Component {
             image: null,
             images: null
         };
+        this.keyID = 0;
     }
 
-    pickSingleBase64(cropit) {
-        ImagePicker.openPicker({
-            width: 300,
-            height: 300,
-            cropping: cropit,
-            includeBase64: true,
-            includeExif: true,
-        }).then(image => {
-            console.log('received base64 images');
-            this.setState({
-                image: {uri: `data:${image.mime};base64,`+ image.data, width: image.width, height: image.height},
-                images: null
+    pickMultiple() {
+            ImagePicker.openPicker({
+                multiple: true,
+                waitAnimationEnd: false,
+                includeExif: true,
+                forceJpg: true,
+            }).then(selectedImages => {
+                this.setState(previousState => {
+                    return {
+                        image: null,
+                        images: previousState.images === null ?
+                            selectedImages.map(i => {
+                                console.log('received image', i);
+                                return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
+                            }) :
+                            previousState.images.concat(selectedImages.map(i => {
+                                console.log('received image', i);
+                                return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
+                            })),
+                    }});
+            }).catch(e => {
+                console.warn('出错啦！');
+                console.warn(e);
             });
-        }).catch(e => alert(e));
     }
-
-    pickSingle(cropit, circular=false, mediaType) {
-        ImagePicker.openPicker({
-            width: 500,
-            height: 500,
-            cropping: cropit,
-            cropperCircleOverlay: circular,
-            compressImageMaxWidth: 1000,
-            compressImageMaxHeight: 1000,
-            compressImageQuality: 1,
-            compressVideoPreset: 'MediumQuality',
-            includeExif: true,
-            includeBase64: true,
-        }).then(image => {
-            console.warn('received base64 image');
-            let params = {
-                userID: Config.userInfo.userID,
-                path: image.path,
-            };
-            HTTP.uploadImage('/avatar', params)
-                .then((response) => {
-                    console.warn('成功!');
-                    console.warn(response);
-                }).catch((err) => {
-                    console.warn('失败!');
-                    console.warn(err);
-                });
-
-            let obj = { };
-            HTTP.get(('/file/5d3e68c0d5ef47cec3eb5363'), obj)
-                .then((response) => {
-                    //alert(response.user[0].userName);
-                    this.setState({
-                        DataList: response.sellInfo,
-                        loaded: true,
-                    }, () => {  });
-                })
-                .catch((error) => console.error(error));
-            /*console.warn((Config.fetchPrefix + 'avatar'));
-            fetch((Config.fetchPrefix + 'avatar'), {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    Authorization: ('Bearer ' + Config.JaccountToken.token),
-                },
-                body: ('userID=' + Config.userInfo.userID + '&file=' + image.data)
-            })
-                .then((response) => {
-                    console.warn(response);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-            this.setState({
-                image: {uri: `data:${image.mime};base64,`+ image.data, width: image.width, height: image.height},
-                images: null
-            });
-        }).catch(e => {
-            console.log(e);
-            Alert.alert(e.message ? e.message : e);
-        });*/
-    })};
 
     renderVideo(video) {
         console.log('rendering video');
@@ -200,28 +152,42 @@ export default class TestPage extends Component {
     }
 
     renderImage(image) {
-        return <Image style={{width: 300, height: 300, resizeMode: 'contain'}} source={image} />
+        return (
+            <View>
+                <Image style={{
+                    width: (1.05 / 5.05 * width),
+                    height: (1.05 / 5.05 * width),
+                    resizeMode: 'contain',
+                    borderColor: 'white',
+                    borderWidth: 1,
+                }} source={image} />
+                <Badge
+                    status="error"
+                    containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+                />
+            </View>
+        )
     }
 
     renderAsset(image) {
         if (image.mime && image.mime.toLowerCase().indexOf('video/') !== -1) {
             return this.renderVideo(image);
         }
-
         return this.renderImage(image);
     }
 
     render() {
-        return (<View style={styles.container}>
-            <ScrollView>
-                {this.state.image ? this.renderAsset(this.state.image) : null}
-                {this.state.images ? this.state.images.map(i => <View key={i.uri}>{this.renderAsset(i)}</View>) : null}
-            </ScrollView>
-
-            <TouchableOpacity onPress={() => this.pickSingle(true)} style={styles.button}>
-                <Text style={styles.text}>Select Single</Text>
-            </TouchableOpacity>
-
-        </View>);
+        return (
+            <View>
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity onPress={this.pickMultiple.bind(this)}>
+                        <Image style={{width: (1.05 / 5.05 * width), height: (1.05 / 5.05 * width), resizeMode: 'contain',}} source={require('../../assets/images/addPhotoVideo.jpg')}/>
+                    </TouchableOpacity>
+                    <ScrollView horizontal={true}>
+                        {this.state.images ? this.state.images.map(i => <View key={this.keyID++}>{this.renderAsset(i)}</View>) : null}
+                    </ScrollView>
+                </View>
+            </View>
+        );
     }
 }

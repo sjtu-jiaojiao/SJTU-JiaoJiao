@@ -1,12 +1,26 @@
 import React, { Component } from 'react';
-import {Alert, Text, TextInput, View, StyleSheet, Dimensions, ScrollView } from 'react-native';
-import {Avatar, Button, ButtonGroup, SearchBar} from 'react-native-elements';
+import {
+    Alert,
+    Text,
+    TextInput,
+    View,
+    StyleSheet,
+    Dimensions,
+    ScrollView,
+    TouchableOpacity,
+    Image,
+    NativeModules
+} from 'react-native';
+import {Avatar, Badge, Button, ButtonGroup, SearchBar} from 'react-native-elements';
 import Config from '../../Config';
 import {NavigationActions} from "react-navigation";
 import Textarea from 'react-native-textarea';
 import {TimeStamptoDate, TimeStampNow, DatetoTimeStamp} from "../../Utils/TimeStamp";
+import Video from "react-native-video";
 
 const {width, height, scale} = Dimensions.get('window');
+
+let ImagePicker = NativeModules.ImageCropPicker;
 
 export default class ReleaseScreen extends Component {
     constructor(props) {
@@ -14,10 +28,12 @@ export default class ReleaseScreen extends Component {
         this.state = {
             selectedIndex: 0,
             goodName: '',
-            Discription: '',
+            goodDiscription: '',
             Price: '',
+            images: null,
         };
         this.updateIndex = this.updateIndex.bind(this);
+        this.keyID = 0;
     };
 
     static navigationOptions = {
@@ -36,9 +52,9 @@ export default class ReleaseScreen extends Component {
         })
     };
 
-    updateDiscription = (Discription) => {
+    updateDiscription = (goodDiscription) => {
         this.setState({
-            Discription: Discription,
+            goodDiscription: goodDiscription,
         })
     };
 
@@ -47,6 +63,79 @@ export default class ReleaseScreen extends Component {
             Price: Price,
         })
     };
+
+    pickMultiple() {
+        ImagePicker.openPicker({
+            multiple: true,
+            waitAnimationEnd: false,
+            includeExif: true,
+            forceJpg: true,
+        }).then(selectedImages => {
+            this.keyID = 0;
+            this.setState(previousState => {
+                return {
+                    images: previousState.images === null ?
+                        selectedImages.map(i => {
+                            console.log('received image', i);
+                            return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
+                        }) :
+                        previousState.images.concat(selectedImages.map(i => {
+                            console.log('received image', i);
+                            return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
+                        })),
+                }});
+        }).catch(e => {
+            console.warn('出错啦！');
+            console.warn(e);
+        });
+    }
+
+    deleteImage = () => {
+        console.warn('删除图片');
+    };
+
+    renderVideo(video) {
+        console.log('rendering video');
+        return (<View style={{height: 300, width: 300}}>
+            <Video source={{uri: video.uri, type: video.mime}}
+                   style={{position: 'absolute',
+                       top: 0,
+                       left: 0,
+                       bottom: 0,
+                       right: 0
+                   }}
+                   rate={1}
+                   paused={false}
+                   volume={1}
+                   muted={false}
+                   resizeMode={'cover'}
+                   onError={e => console.log(e)}
+                   onLoad={load => console.log(load)}
+                   repeat={true} />
+        </View>);
+    }
+
+    renderImage(image) {
+        return (
+            <TouchableOpacity>
+                <Image style={{
+                    width: (1.05 / 5.05 * width),
+                    height: (1.05 / 5.05 * width),
+                    resizeMode: 'contain',
+                    borderColor: 'white',
+                    borderWidth: 1,
+                }} source={image} />
+            </TouchableOpacity>
+        )
+    }
+
+    renderAsset(image) {
+        if (image.mime && image.mime.toLowerCase().indexOf('video/') !== -1) {
+            return this.renderVideo(image);
+        }
+
+        return this.renderImage(image);
+    }
 
     render() {
         const buttons = ['出售信息', '求购信息'];
@@ -126,7 +215,7 @@ export default class ReleaseScreen extends Component {
                                 containerStyle={{flex: 1.05}}
                                 buttonStyle={{backgroundColor: '#EFEFF5', flex: 1, alignItems: 'center'}}
                                 raised={true}
-                                onPress={() => {alert(this.state.Discription)}}
+                                onPress={() => {alert(this.state.goodDiscription)}}
                             />
                             <Textarea
                                 containerStyle={{
@@ -154,10 +243,13 @@ export default class ReleaseScreen extends Component {
                             </Text>
                         </View>
                         <View style={{height: 10}} />
-                        <View>
-                            <Text style={{alignItems: 'center', justifyContent: 'center'}}>
-                                上传照片和视频
-                            </Text>
+                        <View style={{flexDirection: 'row'}}>
+                            <TouchableOpacity onPress={this.pickMultiple.bind(this)}>
+                                <Image style={{width: (1.05 / 5.05 * width), height: (1.05 / 5.05 * width), resizeMode: 'contain',}} source={require('../../assets/images/addPhotoVideo.jpg')}/>
+                            </TouchableOpacity>
+                            <ScrollView horizontal={true}>
+                                {this.state.images ? this.state.images.map(i => <View key={this.keyID++}>{this.renderAsset(i)}</View>) : null}
+                            </ScrollView>
                         </View>
                         <View style={{height: 10}} />
                         <View style={{flexDirection: 'row', backgroundColor: 'white'}}>
@@ -206,7 +298,7 @@ export default class ReleaseScreen extends Component {
                                 [
                                     {
                                         text: '取消',
-                                        onPress: () => console.log('Cancel Pressed'),
+                                        onPress: () => console.warn('Cancel Pressed'),
                                         style: 'cancel',
                                     },
                                     {
@@ -238,7 +330,7 @@ export default class ReleaseScreen extends Component {
                                                         )
                                                         this.setState({
                                                             goodName: '',
-                                                            Discription: '',
+                                                            goodDiscription: '',
                                                             Price: '',
                                                         });
                                                     } else {
