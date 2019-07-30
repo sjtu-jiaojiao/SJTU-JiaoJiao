@@ -28,12 +28,12 @@ type srv struct{}
  *
  * @apiParam {string} [contentID] 24 bytes content id, left empty for first upload
  * @apiParam {string} [contentToken] content token, left empty for first upload
- * @apiParam {bytes} [content] binary bytes, file accept [image](https://github.com/h2non/filetype#image) and [video](https://github.com/h2non/filetype#video)
- * @apiParam {int32} [type] 1 for picture <br> 2 for video
+ * @apiParam {bytes} content binary bytes, file accept [image](https://github.com/h2non/filetype#image) and [video](https://github.com/h2non/filetype#video)
+ * @apiParam {int32} type 1 for picture <br> 2 for video
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 2 for invalid type
  * @apiSuccess {string} contentID 24 bytes contentID
  * @apiSuccess {string} contentToken random uuid content token
- * @apiSuccess {string} [fileID] 24 bytes fileID, return if content and type not empty
+ * @apiSuccess {string} fileID 24 bytes fileID
  * @apiUse DBServerDown
  */
 func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp *content.ContentCreateResponse) error {
@@ -57,55 +57,42 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 	}
 
 	// check param
+	if !utils.RequireParam(req.Content, req.Type) {
+		rsp.Status = content.ContentCreateResponse_INVALID_PARAM
+		return nil
+	}
+
 	if !utils.CheckInTest() && !filetype.IsImage(req.Content) && !filetype.IsVideo(req.Content) {
 		rsp.Status = content.ContentCreateResponse_INVALID_TYPE
 		return nil
 	}
 
 	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) { // create new
+		objID, err := upload()
+		if utils.LogContinue(err, utils.Warning) {
+			return err
+		}
+
 		token := uuid.NewV4().String()
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		collection := db.MongoDatabase.Collection("sellinfo")
-
-		if utils.RequireParam(req.Content, req.Type) { // add file
-			objID, err := upload()
-			if utils.LogContinue(err, utils.Warning) {
-				return err
-			}
-
-			res, err := collection.InsertOne(ctx, bson.M{
-				"token": token,
-				"files": bson.A{
-					bson.M{
-						"fileID": objID,
-						"type":   req.Type,
-					},
-				},
-				"tags": bson.A{},
-			})
-			if utils.LogContinue(err, utils.Warning) {
-				return err
-			}
-
-			rsp.ContentID = res.InsertedID.(primitive.ObjectID).Hex()
-			rsp.ContentToken = token
-			rsp.FileID = objID.Hex()
-			rsp.Status = content.ContentCreateResponse_SUCCESS
-		} else { // empty content
-			res, err := collection.InsertOne(ctx, bson.M{
-				"token": token,
-				"files": bson.A{},
-				"tags":  bson.A{},
-			})
-			if utils.LogContinue(err, utils.Warning) {
-				return err
-			}
-
-			rsp.ContentID = res.InsertedID.(primitive.ObjectID).Hex()
-			rsp.ContentToken = token
-			rsp.Status = content.ContentCreateResponse_SUCCESS
+		res, err := collection.InsertOne(ctx, bson.M{
+			"token": token,
+			"files": bson.A{
+				bson.M{
+					"fileID": objID,
+					"type":   req.Type,
+				}},
+		})
+		if utils.LogContinue(err, utils.Warning) {
+			return err
 		}
+
+		rsp.ContentID = res.InsertedID.(primitive.ObjectID).Hex()
+		rsp.ContentToken = token
+		rsp.FileID = objID.Hex()
+		rsp.Status = content.ContentCreateResponse_SUCCESS
 	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) { // add exist one
 		if !validCheck(req.ContentID, req.ContentToken) {
 			rsp.Status = content.ContentCreateResponse_INVALID_TOKEN
