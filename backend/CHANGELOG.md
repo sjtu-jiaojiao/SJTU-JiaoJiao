@@ -1,4 +1,15 @@
 # 后端API更新日志
+## v0.2.1 2019-07-30
+### 修复
+1. content相关API已可使用
+
+### API修改
+1. `POST /transaction` `userID`参数修改为`fromUserID`
+2. `POST /content` 现在会多返回新创建的fileID
+
+### 参数修改
+1. 查询接口限制单条最大值为100
+
 ## v0.2.0 2019-07-29
 ### 新增
 1. `GET /content/:contentID` 获取content
