@@ -17,6 +17,7 @@ import {NavigationActions} from "react-navigation";
 import Textarea from 'react-native-textarea';
 import {TimeStamptoDate, TimeStampNow, DatetoTimeStamp} from "../../Utils/TimeStamp";
 import Video from "react-native-video";
+import {isValidTimeValid, isPriceValid} from "../../Utils/CheckValidity";
 import HTTP from "../../Network/Network";
 
 const {width, height, scale} = Dimensions.get('window');
@@ -48,6 +49,7 @@ export default class ReleaseScreen extends Component {
             goodName: '',
             description: '',
             Price: '',
+            validTime: '',
             images: [],
         };
         this.updateIndex = this.updateIndex.bind(this);
@@ -83,6 +85,12 @@ export default class ReleaseScreen extends Component {
         this.setState({
             Price: Price,
         })
+    };
+
+    updateValidTime = (validTime) => {
+        this.setState({
+            validTime: validTime,
+        });
     };
 
     pickMultiple() {
@@ -310,6 +318,40 @@ export default class ReleaseScreen extends Component {
                             />
                         </View>
                         <View style={{height: 10}} />
+                        <View style={{flexDirection: 'row', backgroundColor: 'white'}}>
+                            <Button
+                                title='有效时间'
+                                titleStyle={{color: 'steelblue', fontSize: 14, fontWeight: 'bold'}}
+                                containerStyle={{flex: 1.1}}
+                                buttonStyle={{backgroundColor: '#EFEFF5', flex: 1, alignItems: 'center'}}
+                                raised={true}
+                                onPress={() => {alert(this.state.validTime)}}
+                            />
+                            <SearchBar
+                                searchIcon={false}
+                                clearIcon={false}
+                                cancelIcon={false}
+                                lightTheme={true}
+                                containerStyle={{
+                                    flex: 4,
+                                    height: 55,
+                                    backgroundColor: 'white',
+                                    borderWidth: 0, //no effect
+                                    shadowColor: 'white', //no effect
+                                    borderBottomColor: 'transparent',
+                                    borderTopColor: 'transparent',
+                                }}
+                                inputContainerStyle={{
+                                    marginTop: -9,
+                                    height: 55,
+                                    backgroundColor: 'white',
+                                }}
+                                placeholder={'必填。单位为天，信息有效期'}
+                                onChangeText={ this.updateValidTime }
+                                value={ this.state.validTime }
+                            />
+                        </View>
+                        <View style={{height: 10}} />
                         <Button
                             title={'发布信息'}
                             titleStyle={{color: 'white', fontSize: 18}}
@@ -317,10 +359,43 @@ export default class ReleaseScreen extends Component {
                             containerStyle={{width: 160, marginLeft: (width / 2 - 80)}}
                             raised={true}
                             onPress={() => {
-                                if (this.state.goodName === '') {
+                                if (this.state.validTime === '') {
+                                    Alert.alert(
+                                        '有效时间不可为空',
+                                        '有效时间是必填项，它代表这条信息有效的时间跨度，单位为天',
+                                        [
+                                            {
+                                                text: '好', onPress: () => {}
+                                            }
+                                        ],
+                                        {cancelable: false},
+                                    )
+                                } else if (isValidTimeValid(this.state.validTime) === false) {
+                                    Alert.alert(
+                                        '有效时间格式不对',
+                                        '有效时间是以天为单位的时间跨度，只能是正整数',
+                                        [
+                                            {
+                                                text: '好', onPress: () => {}
+                                            }
+                                        ],
+                                        {cancelable: false},
+                                    )
+                                } else if (this.state.Price === '' || isPriceValid(this.state.Price) === false) {
+                                    Alert.alert(
+                                        '价格格式不对',
+                                        '价格只能是至多保留两位小数的正数',
+                                        [
+                                            {
+                                                text: '好', onPress: () => {}
+                                            }
+                                        ],
+                                        {cancelable: false},
+                                    )
+                                } else if (this.state.goodName === '') {
                                     Alert.alert(
                                         '物品名称不可为空',
-                                        '物品名称是必填项，不可以空着哦！',
+                                        '物品名称是必填项，不可以空着哦',
                                         [
                                             {
                                                 text: '好', onPress: () => {}
@@ -347,7 +422,7 @@ export default class ReleaseScreen extends Component {
                                                         addType = '/buyInfo';
                                                     let formData = new FormData();
                                                     formData.append('userID', Config.userInfo.userID);
-                                                    formData.append('releaseTime', TimeStampNow());
+                                                    formData.append('validTime', this.state.validTime);
                                                     formData.append('goodName', this.state.goodName);
                                                     if (this.state.description !== '')
                                                         formData.append('description', this.state.description);
@@ -370,6 +445,7 @@ export default class ReleaseScreen extends Component {
                                                                                     goodName: '',
                                                                                     description: '',
                                                                                     Price: '',
+                                                                                    validTime: '',
                                                                                     images: [],
                                                                                 });
                                                                             }
@@ -465,7 +541,7 @@ export default class ReleaseScreen extends Component {
                                                                         addType = '/buyInfo';
                                                                     let formData = new FormData();
                                                                     formData.append('userID', Config.userInfo.userID);
-                                                                    formData.append('validTime', TimeStampNow());
+                                                                    formData.append('validTime', this.state.validTime);
                                                                     formData.append('goodName', this.state.goodName);
                                                                     formData.append('contentID', this.contentID);
                                                                     formData.append('contentToken', this.contentToken);
@@ -490,6 +566,7 @@ export default class ReleaseScreen extends Component {
                                                                                                     goodName: '',
                                                                                                     description: '',
                                                                                                     Price: '',
+                                                                                                    validTime: '',
                                                                                                     images: [],
                                                                                                 });
                                                                                             }
