@@ -5,6 +5,7 @@ import Config from "../../Config";
 import {NavigationActions, HeaderBackButton } from "react-navigation";
 import HTTP from '../../Network/Network';
 import MyAvatar from '../../Components/MyAvatar';
+import { isUserNameValid, isTelephoneValid } from "../../Utils/CheckValidity";
 
 let ImagePicker = NativeModules.ImageCropPicker;
 
@@ -34,15 +35,6 @@ export default class UserInfoScreen extends Component {
             headerLeft:(<HeaderBackButton onPress={()=> navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0)}/>),
         }
     };
-
-    isTelephoneValid() {
-        let length = this.changeTelephone.length;
-        return length === 11 && /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1})|)+\d{8})$/.test(this.changeTelephone);
-    }
-
-    isUserNameValid() {
-        return /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){0,31}$/.test(this.changeUserName);
-    }
 
     pickSingle(cropit, circular=false, mediaType) {
         ImagePicker.openPicker({
@@ -126,7 +118,7 @@ export default class UserInfoScreen extends Component {
                                             {cancelable: false},
                                         )
                                     }
-                                    else if(this.isTelephoneValid() === false) {
+                                    else if(isTelephoneValid(this.changeTelephone) === false) {
                                         Alert.alert(
                                             '不正确的电话号码格式',
                                             this.changeTelephone + '不是正确的电话号码格式，请重新输入',
@@ -159,7 +151,7 @@ export default class UserInfoScreen extends Component {
                                                                 }}
                                                         ],
                                                         {cancelable: false},
-                                                    )
+                                                    );
                                                     this.setState({
                                                         telephone: this.changeTelephone,
                                                         isChangeTelephoneVisible: false
@@ -202,7 +194,7 @@ export default class UserInfoScreen extends Component {
                 >
                     <View style={{width: 300,}}>
                         <Text style={{fontSize: 17}}>请输入新的用户名</Text>
-                        <Text style={{fontSize: 13}}>不超过32位，且以字母开头、可带数字、“_”、“.”</Text>
+                        <Text style={{fontSize: 13}}>要求用户名不超过32位，且只能包含汉字、字母、数字和特殊符号“_”、“.”</Text>
                         <TextInput
                             autoFocus={true}
                             style={{borderWidth: 1, borderColor: 'black', textAlign: 'center'}}
@@ -249,10 +241,10 @@ export default class UserInfoScreen extends Component {
                                             {cancelable: false},
                                         )
                                     }
-                                    else if(this.isUserNameValid() === false) {
+                                    else if(isUserNameValid(this.changeUserName) === false) {
                                         Alert.alert(
                                             '用户名不合法',
-                                            '要求用户名不超过32位，且以字母开头、可带数字、“_”、“.”',
+                                            '要求用户名不超过32位，且只能包含汉字、字母、数字和特殊符号“_”、“.”',
                                             [
                                                 {text: '好', onPress: () => {
                                                         this.setState({isChangeUserNameVisible: true})
