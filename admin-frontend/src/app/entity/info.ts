@@ -1,8 +1,8 @@
 export class sellInfo{
     public sellInfoID : number;
     public status : number;
-    public releaseTime: string;
-    public validTime: string;
+    public releaseTime: number;
+    public validTime: number;
     public goodName: string;
     public price: number;
     public description: string;
@@ -14,8 +14,8 @@ export class sellInfo{
 export class buyInfo{
     public buyInfoID : number;
     public status : number;
-    public releaseTime: string;
-    public validTime: string;
+    public releaseTime: number;
+    public validTime: number;
     public goodName: string;
     public price: number;
     public description: string;

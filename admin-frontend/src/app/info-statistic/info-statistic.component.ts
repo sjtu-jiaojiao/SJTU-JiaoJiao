@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { EChartOption} from 'echarts';
 import * as echarts from 'echarts/lib/echarts';
+import { InfoService } from '../info.service';
+import { buyInfo, sellInfo } from 'src/app/entity/info';
+import {prepareBoxplotData} from 'echarts/extension/dataTool';
 const name = ['LJH', 'WXZ', 'ZWJ', 'KHQ', 'MZD', 'ZEL', 'JZM', 'HJT', 'TRUMP',
 'LJH2', 'WXZ2', 'ZWJ2', 'KHQ2', 'MZD2', 'ZEL2', 'JZM2', 'HJT2', 'TRUMP2',
 'LJH3', 'WXZ3', 'ZWJ3', 'KHQ3', 'MZD3', 'ZEL3', 'JZM3', 'HJT3', 'TRUMP3'];
@@ -15,108 +18,139 @@ export class InfoStatisticComponent implements OnInit {
   tsoption: any;
   lqoption: any;
   goodoption: any;
-  constructor() { }
+  bi: buyInfo[];
+  si: sellInfo[];
+  constructor(private is: InfoService) { }
   ngOnInit() {
-    this.cld();
-    this.fdg();
-    this.ts();
-    this.lq();
-    this.good();
+    this.is.getBuyInfos().subscribe(
+        e => {this.bi = e.buyInfo;
+            this.is.getSellInfos().subscribe(
+                e => {
+                    this.si = e.sellInfo;
+                    this.cld();
+                    this.fdg();
+                    this.ts();
+                    this.lq();
+                    this.good();
+                    this.getMoreBuy(100);
+                    this.getMoreSell(100);
+                }
+  );})
+  }
+  getMoreBuy(offset){
+      if(!(this.bi.length%100))
+        this.is.getBuyInfos(null,null,null,null,offset).subscribe(
+            e => {
+                this.bi=this.bi.concat(e.buyInfo);
+                this.lq();
+                this.getMoreBuy(offset+100);
+            }
+        );
+  }
+  getMoreSell(offset){
+      console.log(this.si.length);
+      if(!(this.si.length%100))
+        this.is.getSellInfos(null,null,null,null,offset).subscribe(
+            e => {
+                this.si= this.si.concat(e.sellInfo);
+                this.lq();
+                this.getMoreSell(offset+100);
+            }
+        );
   }
   good() {
-    const jsdata1: any[][] = [['2019-01-01', 18.5, 3], ['2019-01-02', 12.5, 3], ['2019-01-01', 42.5, 5], ['2019-01-03', 65, 5],
-    ['2019-01-05', 23.5, 5], ['2019-01-04', 18, 5], ['2019-01-02', 18, 4]];
-    const jsdata2: any[][] = [['2019-01-01', 32.5, 2], ['2019-01-02', 122.5, 4], ['2019-01-01', 41.5, 5], ['2019-01-07', 75, 5],
-    ['2019-01-03', 21.5, 5], ['2019-01-04', 177, 5], ['2019-01-02', 66, 5]];
-    const jsdata3: any[][]  = [['2019-01-01', 11], ['2019-01-06', 12.5, 4], ['2019-01-01', 4.5, 3], ['2019-01-03', 15, 3],
-    ['2019-01-03', 11.5, 5], ['2019-01-04', 17, 3], ['2019-01-02', 16, 5]];
-    const itemstyle = {
-    normal: {
-        opacity: 0.8,
-        shadowBlur: 10,
-        shadowOffsetX: 0,
-        shadowOffsetY: 0,
-        shadowColor: 'rgba(0, 0, 0, 0.3)'
-    }
-};
-    this.goodoption = {
+    var data = prepareBoxplotData([
+    [850, 740, 900, 1070, 930, 850, 950, 980, 980, 880, 1000, 980, 930, 650, 760, 810, 1000, 1000, 960, 960],
+    [960, 940, 960, 940, 880, 800, 850, 880, 900, 840, 830, 790, 810, 880, 880, 830, 800, 790, 760, 800],
+    [880, 880, 880, 860, 720, 720, 620, 860, 970, 950, 880, 910, 850, 870, 840, 840, 850, 840, 840, 840],
+    [890, 810, 810, 820, 800, 770, 760, 740, 750, 760, 910, 920, 890, 860, 880, 720, 840, 850, 850, 780],
+    [890, 840, 780, 810, 760, 810, 790, 810, 820, 850, 870, 870, 810, 740, 810, 940, 950, 800, 810, 870]
+]);
+this.goodoption = {
+    backgroundColor: '#01193d',
+    title: [
+        {
+            text: 'Price Trend',
+            left: 'center',
+        }
+    ],
+    tooltip: {
+        trigger: 'item',
+        axisPointer: {
+            type: 'shadow'
+        }
+    },
     dataZoom: [
         {
             show: true,
             realtime: true,
-            start: 65,
-            end: 85
+            start: 0,
+            end: 40
         },
         {
             type: 'inside',
             realtime: true,
-            start: 65,
-            end: 85
+            start: 0,
+            end: 40
         }
     ],
-      xAxis :
-      {
-          type: 'category',
-      },
-        backgroundColor: '#01193d',
-        title: {
-            text: 'Price Trend',
+    grid: {
+        left: '10%',
+        right: '10%',
+        bottom: '15%'
+    },
+    xAxis: {
+        type: 'category',
+        data: data.axisData,
+        boundaryGap: true,
+        nameGap: 30,
+        axisLine: {onZero: false},
+        splitArea: {
+            show: false
         },
-        color: [
-            '#dd4444', '#fec42c', '#80F1BE'
-        ],
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                label: {
-                    show: true,
-                    backgroundColor: '#004E52'
-                },
-                type: 'cross'
+        axisLabel: {
+            formatter: 'tag {value}'
+        },
+        splitLine: {
+            show: false
+        },
+    },
+    yAxis: {
+        type: 'value',
+        name: 'yuan'
+    },
+    series: [
+        {
+            name: 'boxplot',
+            type: 'boxplot',
+            data: data.boxData,
+            tooltip: {
+                formatter: function (param) {
+                    return [
+                        'tag ' + param.name + ': ',
+                        'upper: ' + param.data[5],
+                        'Q3: ' + param.data[4],
+                        'median: ' + param.data[3],
+                        'Q1: ' + param.data[2],
+                        'lower: ' + param.data[1]
+                    ].join('<br/>');
+                }
             }
-        },
-        legend: {
-            y: 'top',
-            data: ['Book', 'Shoe', 'Mouse'],
-        },
-        yAxis: {
-            type: 'value',
-            min: 0,
-            max: 'datamax',
-            name: 'Price',
-            splitLine: {
-                show: true
-            }
-        },
-        series: [{
-            name: 'Book',
-            type: 'scatter',
-            symbolSize: t => 3 * t[2],
-            itemStyle: itemstyle,
-            data: jsdata1
-        }, {
-            name: 'Shoe',
-            type: 'scatter',
-            symbolSize: t => 3 * t[2],
-            itemStyle: itemstyle,
-            data: jsdata2
         },
         {
-            name: 'Mouse',
+            name: 'outlier',
             type: 'scatter',
-            symbolSize: t => 3 * t[2],
-            itemStyle: itemstyle,
-            data: jsdata3
+            data: data.outliers
         }
-
     ]
-    };
+};
   }
   ts() {
     this.tsoption = {
       backgroundColor: '#01193d',
       title: {
-          text: 'Transaction Calendar'
+          text: 'Transaction Calendar',
+          left: 'center'
       },
       tooltip : {
           trigger: 'item'
@@ -189,7 +223,8 @@ export class InfoStatisticComponent implements OnInit {
     this.cldoption = {
     backgroundColor: '#01193d',
       title: {
-      text: 'Label WordCloud'
+      text: 'Label WordCloud',
+      left: 'center',
   },
   tooltip: {},
   series: [{
@@ -246,14 +281,15 @@ export class InfoStatisticComponent implements OnInit {
   }, 0);
       return { name: node,
       itemStyle: {
-        color: v < 10 ?'#60acfc': '#ff7c7c'
+        color: '#60acfc'
       }, value : v, symbolSize: v,
   draggable: true};
 });
     this.fdgoption = {
     backgroundColor: '#01193d',
       title: {
-          text: 'Transaction Network'
+          text: 'Transaction Network',
+          left: 'center',
       },
       tooltip: {},
       animationDurationUpdate: 1500,
@@ -287,15 +323,37 @@ export class InfoStatisticComponent implements OnInit {
           ]
       };
   }
+  fmt(t: Date) {
+    return [t.getFullYear(), t.getMonth() + 1, t.getDate()].join('/');
+  }
   lq() {
-    const date =  [
-        '2009/6/12 2:00', '2009/6/12 3:00', '2009/6/12 4:00', '2009/6/12 5:00', '2009/6/12 6:00',
-        '2009/6/12 7:00', '2009/6/12 8:00', '2009/6/12 9:00', '2009/6/12 10:00', '2009/6/12 11:00',
-        '2009/6/12 12:00', '2009/6/12 13:00', '2009/6/12 14:00', '2009/6/12 15:00', '2009/6/12 16:00',
-        '2009/6/12 17:00', '2009/6/12 18:00', '2009/6/12 19:00', '2009/6/12 20:00', '2009/6/12 21:00',
-        '2009/6/12 22:00', '2009/6/12 23:00'].map( (str) => {
-        return str.replace(' ', '\n'); }
-        );
+    let bd =new Map();
+    this.bi.forEach( e => {
+        if(!e||e.releaseTime<0)return;
+       const str = this.fmt(new Date(e.releaseTime*1000));
+       if(str in bd)
+        bd[str]+=1;
+        else 
+        bd[str]=1;
+    });
+    let sd =new Map();
+    this.si.forEach( e => {
+        if(!e||e.releaseTime<0)return;
+       const str = this.fmt(new Date(e.releaseTime*1000));
+       if(str in sd)
+        sd[str]+=1;
+        else 
+        sd[str]=1;
+    });
+    let bdata = [];
+    for(let i in bd){
+        bdata.push([i,bd[i]]);
+    }
+
+    let sdata = [];
+    for(let i in sd){
+        sdata.push([i,sd[i]]);
+    }
     this.lqoption = {
     backgroundColor: '#01193d',
     title : {
@@ -324,35 +382,34 @@ export class InfoStatisticComponent implements OnInit {
         {
             show: true,
             realtime: true,
-            start: 65,
-            end: 85
+            start: 0,
+            end: 100
         },
         {
             type: 'inside',
             realtime: true,
-            start: 65,
-            end: 85
+            start: 0,
+            end: 100
         }
     ],
     xAxis : [
         {
-            type : 'category',
+            type : 'time',
             boundaryGap : false,
             axisLine: {onZero: false},
-            data : date
         }],
     yAxis: [
         {
             name: '新增购买信息',
             type: 'value',
-            max: 500
+            max: (value) => value.max*3/2
         },
         {
             name: '新增出售信息',
             nameLocation: 'start',
-            max: 500,
             type: 'value',
-            inverse: true
+            inverse: true,
+            max: (value) => value.max*3/2
         }
     ],
     series: [
@@ -387,7 +444,7 @@ export class InfoStatisticComponent implements OnInit {
             lineStyle: {
                 width: 1
             },
-            data: date.map(_ => Math.floor(Math.random() * 50))
+            data: bdata
         },
         {
             name: '出售',
@@ -421,7 +478,7 @@ export class InfoStatisticComponent implements OnInit {
             lineStyle: {
                 width: 1
             },
-            data: date.map(_ => Math.floor(Math.random() * 50))
+            data: sdata
         }
     ]
 };
