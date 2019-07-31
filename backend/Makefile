@@ -82,7 +82,7 @@ add:
 
 ## test: Run go test.
 test:
-	@go list -f '{{if len .TestGoFiles}}"s=`echo {{.Dir}} | tail -c 6` && [ $$s == "utils" ] && go test -tags=test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || ([ $$s != "e/api" ] && [ $$s != "e/srv" ] && go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || :)"{{end}}' ./... | xargs -L 1 bash -c
+	@go list -f '{{if len .TestGoFiles}}"s=`echo {{.Dir}} | tail -c 6` && [ $$s == "utils" ] && go test -tags=test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || ([ $$s != "stest" ] && go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || :)"{{end}}' ./... | xargs -L 1 bash -c
 
 ## doc: Generate document.
 doc:
