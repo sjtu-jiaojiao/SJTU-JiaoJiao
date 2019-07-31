@@ -1,19 +1,27 @@
 package mock
 
 import (
+	"context"
+	message "jiaojiao/srv/message/proto"
+
 	"github.com/micro/go-micro/client"
 )
 
-type mockSrv struct{}
+type mockMessageSrv struct{}
 
-// is mock
-func (a *mockSrv) (ctx context.Context, req *, opts ...client.CallOption) (*, error) {
-	var ret 
-	
-	return &ret, nil
+func (a *mockMessageSrv) Query(ctx context.Context, in *message.MessageQueryRequest, opts ...client.CallOption) (*message.MessageQueryResponse, error) {
+	var rsp message.MessageQueryResponse
+	// TODO
+	return &rsp, nil
+}
+
+func (a *mockMessageSrv) Create(ctx context.Context, in *message.MessageCreateRequest, opts ...client.CallOption) (*message.MessageCreateResponse, error) {
+	var rsp message.MessageCreateResponse
+	// TODO
+	return &rsp, nil
 }
 
 // is service mock
-func New Service() . Service {
-	return new(mockSrv)
+func NewMessageService() message.MessageService {
+	return new(mockMessageSrv)
 }
