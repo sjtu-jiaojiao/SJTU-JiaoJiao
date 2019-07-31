@@ -33,6 +33,33 @@ export default class HTTP {
         });
     }
 
+    static addContent(url, params) {
+        return new Promise(function (resolve, reject) {
+            let formData = new FormData();
+            for (let key in params) {
+                formData.append(key, params[key]);
+            }
+            let content = {uri: params.path, type: 'application/octet-stream', name: 'image.jpg'};
+            formData.append("content", content);
+            fetch(common_url + url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data;charset=utf-8',
+                    Authorization: ('Bearer ' + Config.JaccountToken.token),
+                },
+                body: formData,
+            }).then((response) => response.json())
+                .then((responseData) => {
+                    //console.warn(responseData);
+                    resolve(responseData);
+                })
+                .catch((err) => {
+                    console.warn(err);
+                    reject(err);
+                });
+        });
+    }
+
     static get(url, params) {
         // 将后台接口的公共部分拼接进去
         url = dev + url;
@@ -64,4 +91,28 @@ export default class HTTP {
                 });
         });
     }
+
+    static addInfo(url, formData) {
+        console.warn((common_url + url));
+        console.warn(formData);
+        return new Promise(function (resolve, reject) {
+            fetch((common_url + url), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data;charset=utf-8',
+                    Authorization: ('Bearer ' + Config.JaccountToken.token),
+                },
+                body: formData,
+            }).then((response) => response.json())
+                .then((responseData) => {
+                    console.warn(responseData);
+                    resolve(responseData);
+                })
+                .catch((err) => {
+                    console.warn(err);
+                    reject(err);
+                });
+        });
+    }
+
 }

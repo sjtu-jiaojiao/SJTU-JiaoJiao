@@ -17,6 +17,7 @@ import {NavigationActions} from "react-navigation";
 import Textarea from 'react-native-textarea';
 import {TimeStamptoDate, TimeStampNow, DatetoTimeStamp} from "../../Utils/TimeStamp";
 import Video from "react-native-video";
+import HTTP from "../../Network/Network";
 
 const {width, height, scale} = Dimensions.get('window');
 
@@ -46,10 +47,13 @@ export default class ReleaseScreen extends Component {
             goodName: '',
             description: '',
             Price: '',
-            images: null,
+            images: [],
         };
         this.updateIndex = this.updateIndex.bind(this);
         this.keyID = 0;
+        this.contentID = '';
+        this.contentToken = '';
+        this.uploadImageSuccess = false;
     };
 
     static navigationOptions = {
@@ -83,22 +87,15 @@ export default class ReleaseScreen extends Component {
     pickMultiple() {
         ImagePicker.openPicker({
             multiple: true,
-            waitAnimationEnd: false,
-            includeExif: true,
             forceJpg: true,
         }).then(selectedImages => {
             this.keyID = 0;
             this.setState(previousState => {
                 return {
-                    images: previousState.images === null ?
-                        selectedImages.map(i => {
-                            console.log('received image', i);
-                            return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
-                        }) :
-                        previousState.images.concat(selectedImages.map(i => {
-                            console.log('received image', i);
-                            return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
-                        })),
+                    images: previousState.images.concat(selectedImages.map(i => {
+                        console.log('received image', i);
+                        return {uri: i.path, width: i.width, height: i.height, mime: i.mime};
+                    })),
                 }});
         }).catch(e => {
             //console.warn('出错啦！');
@@ -274,7 +271,7 @@ export default class ReleaseScreen extends Component {
                                 <Image style={{width: (1.05 / 5.05 * width), height: (1.05 / 5.05 * width), resizeMode: 'contain',}} source={require('../../assets/images/addPhotoVideo.jpg')}/>
                             </TouchableOpacity>
                             <ScrollView horizontal={true}>
-                                {this.state.images ? this.state.images.map((image, index) => <View key={this.keyID++}>{this.renderAsset(image, index)}</View>) : null}
+                                {this.state.images.length > 0 ? this.state.images.map((image, index) => <View key={this.keyID++}>{this.renderAsset(image, index)}</View>) : null}
                             </ScrollView>
                         </View>
                         <View style={{height: 10}} />
@@ -318,67 +315,231 @@ export default class ReleaseScreen extends Component {
                             buttonStyle={{backgroundColor: 'red'}}
                             containerStyle={{width: 160, marginLeft: (width / 2 - 80)}}
                             raised={true}
-                            onPress={() => Alert.alert(
-                                '发布信息',
-                                ('您确定要发布该条' + buttons[this.state.selectedIndex] + '吗？'),
-                                [
-                                    {
-                                        text: '取消',
-                                        //onPress: () => console.warn('Cancel Pressed'),
-                                        style: 'cancel',
-                                    },
-                                    {
-                                        text: '确定', onPress: () => {
-                                            let addType;
-                                            if (this.state.selectedIndex === 0)
-                                                addType = 'sellInfo';
-                                            else
-                                                addType = 'buyInfo';
-                                            //console.warn((Config.fetchPrefix + addType));
-                                            fetch((Config.fetchPrefix + addType), {
-                                                method: 'POST',
-                                                headers: {
-                                                    Accept: 'application/json',
-                                                    'Content-Type': 'application/x-www-form-urlencoded',
-                                                    Authorization: ('Bearer ' + Config.JaccountToken.token),
-                                                },
-                                                body: ('userID=' + Config.userInfo.userID + '&validTime=20&goodName=' + this.state.goodName),
-                                            })
-                                                .then((response) => {
-                                                    if(response.ok) {
-                                                        Alert.alert(
-                                                            '发布成功',
-                                                            '成功发布该交易信息：' + this.state.goodName,
-                                                            [
-                                                                {text: '好', onPress: () => {}}
-                                                            ],
-                                                            {cancelable: false},
-                                                        );
-                                                        this.setState({
-                                                            goodName: '',
-                                                            description: '',
-                                                            Price: '',
+                            onPress={() => {
+                                if (this.state.goodName === '') {
+                                    Alert.alert(
+                                        '物品名称不可为空',
+                                        '物品名称是必填项，不可以空着哦！',
+                                        [
+                                            {
+                                                text: '好', onPress: () => {}
+                                            }
+                                        ],
+                                        {cancelable: false},
+                                    )
+                                } else if (this.state.images.length === 0) {
+                                    Alert.alert(
+                                        '发布信息',
+                                        ('您确定要发布该条' + buttons[this.state.selectedIndex] + '吗？'),
+                                        [
+                                            {
+                                                text: '取消',
+                                                //onPress: () => console.warn('Cancel Pressed'),
+                                                style: 'cancel',
+                                            },
+                                            {
+                                                text: '确定', onPress: () => {
+                                                    let addType;
+                                                    if (this.state.selectedIndex === 0)
+                                                        addType = '/sellInfo';
+                                                    else
+                                                        addType = '/buyInfo';
+                                                    let formData = new FormData();
+                                                    formData.append('userID', Config.userInfo.userID);
+                                                    formData.append('validTime', TimeStampNow());
+                                                    formData.append('goodName', this.state.goodName);
+                                                    if (this.state.description !== '')
+                                                        formData.append('description', this.state.description);
+                                                    if (this.state.Price !== '')
+                                                        formData.append('price', this.state.Price);
+                                                    HTTP.addInfo(addType, formData)
+                                                        .then((response) => {
+                                                            if (response.status === 1) {
+                                                                Alert.alert(
+                                                                    '发布成功',
+                                                                    '成功发布该交易信息：' + this.state.goodName,
+                                                                    [
+                                                                        {
+                                                                            text: '好', onPress: () => {
+                                                                                this.keyID = 0;
+                                                                                this.contentID = '';
+                                                                                this.contentToken = '';
+                                                                                this.uploadImageSuccess = false;
+                                                                                this.setState({
+                                                                                    goodName: '',
+                                                                                    description: '',
+                                                                                    Price: '',
+                                                                                    images: [],
+                                                                                });
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    {cancelable: false},
+                                                                );
+                                                            } else {
+                                                                console.warn(response);
+                                                                Alert.alert(
+                                                                    '出错啦',
+                                                                    '网络可能出了问题，请再试一次吧',
+                                                                    [
+                                                                        {
+                                                                            text: '好', onPress: () => {
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    {cancelable: false},
+                                                                )
+                                                            }
+                                                        })
+                                                        .catch((error) => {
+                                                            console.error(error);
                                                         });
-                                                    } else {
-                                                        console.warn(response);
-                                                        Alert.alert(
-                                                            '出错啦',
-                                                            '网络可能出了问题，请再试一次吧',
-                                                            [
-                                                                {text: '好', onPress: () => {}}
-                                                            ],
-                                                            {cancelable: false},
-                                                        )
-                                                    }
-                                                })
-                                                .catch((error) => {
-                                                    console.error(error);
-                                                });
-                                        }
-                                    },
-                                ],
-                                {cancelable: false},
-                            )}
+                                                }
+                                            }
+                                        ]
+                                    );
+                                } else {
+                                    Alert.alert(
+                                        '发布信息',
+                                        ('您确定要发布该条' + buttons[this.state.selectedIndex] + '吗？'),
+                                        [
+                                            {
+                                                text: '取消',
+                                                //onPress: () => console.warn('Cancel Pressed'),
+                                                style: 'cancel',
+                                            },
+                                            {
+                                                text: '确定', onPress: () => {
+                                                    let params = {
+                                                        path: this.state.images[0].uri,
+                                                        type: 1,
+                                                    };
+                                                    //console.warn(params);
+                                                    HTTP.addContent('/content', params)
+                                                        .then((response) => {
+                                                            if (response.status === 1) {
+                                                                console.warn('上传图片成功!');
+                                                                //console.warn(response);
+                                                                this.uploadImageSuccess = true;
+                                                                this.contentID = response.contentID;
+                                                                this.contentToken = response.contentToken;
+                                                                let len = this.state.images.length;
+                                                                for (let j = 1; this.uploadImageSuccess && j < len; ++j) {
+                                                                    params = {
+                                                                        path: this.state.images[j].uri,
+                                                                        type: 1,
+                                                                        contentID: this.contentID,
+                                                                        contentToken: this.contentToken,
+                                                                    };
+                                                                    HTTP.addContent('/content', params)
+                                                                        .then((response) => {
+                                                                            if (response.status === 1) {
+                                                                                console.warn('上传图片成功!');
+                                                                                //console.warn(response);
+                                                                            } else {
+                                                                                //console.warn(response);
+                                                                                Alert.alert(
+                                                                                    '出错啦',
+                                                                                    '网络可能出了问题，请再试一次吧',
+                                                                                    [
+                                                                                        {
+                                                                                            text: '好', onPress: () => {
+                                                                                                this.uploadImageSuccess = false;
+                                                                                            }
+                                                                                        }
+                                                                                    ],
+                                                                                    {cancelable: false},
+                                                                                )
+                                                                            }
+                                                                        }).catch((err) => {
+                                                                        //console.warn('失败!');
+                                                                        //console.warn(err);
+                                                                    });
+                                                                }
+                                                                if (this.uploadImageSuccess) {
+                                                                    let addType;
+                                                                    if (this.state.selectedIndex === 0)
+                                                                        addType = '/sellInfo';
+                                                                    else
+                                                                        addType = '/buyInfo';
+                                                                    let formData = new FormData();
+                                                                    formData.append('userID', Config.userInfo.userID);
+                                                                    formData.append('validTime', TimeStampNow());
+                                                                    formData.append('goodName', this.state.goodName);
+                                                                    formData.append('contentID', this.contentID);
+                                                                    formData.append('contentToken', this.contentToken);
+                                                                    if (this.state.description !== '')
+                                                                        formData.append('description', this.state.description);
+                                                                    if (this.state.Price !== '')
+                                                                        formData.append('price', this.state.Price);
+                                                                    HTTP.addInfo(addType, formData)
+                                                                        .then((response) => {
+                                                                            if (response.status === 1) {
+                                                                                Alert.alert(
+                                                                                    '发布成功',
+                                                                                    '成功发布该交易信息：' + this.state.goodName,
+                                                                                    [
+                                                                                        {
+                                                                                            text: '好', onPress: () => {
+                                                                                                this.keyID = 0;
+                                                                                                this.contentID = '';
+                                                                                                this.contentToken = '';
+                                                                                                this.uploadImageSuccess = false;
+                                                                                                this.setState({
+                                                                                                    goodName: '',
+                                                                                                    description: '',
+                                                                                                    Price: '',
+                                                                                                    images: [],
+                                                                                                });
+                                                                                            }
+                                                                                        }
+                                                                                    ],
+                                                                                    {cancelable: false},
+                                                                                );
+                                                                            } else {
+                                                                                console.warn(response);
+                                                                                Alert.alert(
+                                                                                    '出错啦',
+                                                                                    '网络可能出了问题，请再试一次吧',
+                                                                                    [
+                                                                                        {
+                                                                                            text: '好', onPress: () => {
+                                                                                            }
+                                                                                        }
+                                                                                    ],
+                                                                                    {cancelable: false},
+                                                                                )
+                                                                            }
+                                                                        })
+                                                                        .catch((error) => {
+                                                                            console.error(error);
+                                                                        });
+                                                                }
+                                                            } else {
+                                                                //console.warn(response);
+                                                                Alert.alert(
+                                                                    '出错啦',
+                                                                    '网络可能出了问题，请再试一次吧',
+                                                                    [
+                                                                        {
+                                                                            text: '好', onPress: () => {
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    {cancelable: false},
+                                                                )
+                                                            }
+                                                        }).catch((err) => {
+                                                        //console.warn('失败!');
+                                                        //console.warn(err);
+                                                    });
+                                                }
+                                            },
+                                        ],
+                                        {cancelable: false},
+                                    );
+                                }
+                            }}
                         />
                         <View style={{height: 10}} />
                     </View>
