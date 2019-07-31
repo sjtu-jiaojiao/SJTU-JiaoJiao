@@ -2,6 +2,7 @@ syntax = "proto3";
 
 service Message {
     rpc Create (MessageCreateRequest) returns (MessageCreateResponse);
+    rpc Query (MessageQueryRequest) returns (MessageQueryResponse);
 }
 
 message MessageInfo{
@@ -39,4 +40,30 @@ message MessageCreateResponse {
         SUCCESS = 1;
     }
     Status status = 1;
+}
+
+message MessageQueryRequest {
+    enum Way {
+        UNKNOWN = 0;
+        ONLY_PULL = 1;
+        READ_MESSAGE = 2;
+        HISTORY = 3;
+    }
+    int32 fromUser = 1;
+    int32 toUser = 2;
+    Way way = 3;
+}
+
+message MessageQueryResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
+    int32 fromUser = 2;
+    int32 toUser = 3;
+    int32 badge = 4;
+    repeated MessageInfo infos = 5;
 }
