@@ -9,12 +9,30 @@ import (
 	"jiaojiao/utils"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
 	"go.mongodb.org/mongo-driver/bson"
 
 	"github.com/micro/go-micro/client"
 )
 
 type srv struct{}
+
+type MsgInfo struct {
+	Time    time.Time                `bson:"time"`
+	Forward bool                     `bson:"forward"`
+	Type    message.MessageInfo_Type `bson:"type"`
+	Text    string                   `bson:"text"`
+	Unread  bool                     `bson:"unread"`
+}
+
+type ChatLog struct {
+	ID       primitive.ObjectID `bson:"_id"`
+	FromUser int32              `bson:"fromUser"`
+	ToUser   int32              `bson:"toUser"`
+	Badge    int32              `bson:"badge"`
+	Infos    []MsgInfo          `bson:"infos"`
+}
 
 /**
  * @api {rpc} /rpc Message.Create
@@ -37,6 +55,10 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 		return nil
 	}
 
+	if req.Type == message.MessageCreateRequest_TEXT && !utils.RequireParam(req.Text) {
+		rsp.Status = message.MessageCreateResponse_INVALID_PARAM
+		return nil
+	}
 	if req.Type == message.MessageCreateRequest_PICTURE || req.Type == message.MessageCreateRequest_VIDEO {
 		srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
 			func() interface{} { return mock.NewFileService() }).(file.FileService)
@@ -53,15 +75,16 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	collection := db.MongoDatabase.Collection("sellinfo")
-	res1, err1 := collection.Find(ctx, bson.M{
+	collection := db.MongoDatabase.Collection("message")
+	var res1, res2 ChatLog
+	err1 := collection.FindOne(ctx, bson.M{
 		"fromUser": req.FromUser,
 		"toUser":   req.ToUser,
-	})
-	res2, err2 := collection.Find(ctx, bson.M{
+	}).Decode(&res1)
+	err2 := collection.FindOne(ctx, bson.M{
 		"fromUser": req.ToUser,
 		"toUser":   req.FromUser,
-	})
+	}).Decode(&res2)
 
 	if err1 == nil && err2 != nil { //fromUser to toUser
 		_, err := collection.UpdateOne(ctx, bson.M{
@@ -85,7 +108,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 			"fromUser": req.FromUser,
 			"toUser":   req.ToUser,
 		}, bson.M{"$set": bson.M{
-			"badge": res1.Current.Lookup("badge").Int32() + 1,
+			"badge": res1.Badge + 1,
 		}})
 		if utils.LogContinue(err, utils.Warning) {
 			rsp.Status = message.MessageCreateResponse_UNKNOWN
@@ -115,7 +138,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 			"fromUser": req.ToUser,
 			"toUser":   req.FromUser,
 		}, bson.M{"$set": bson.M{
-			"badge": res2.Current.Lookup("badge").Int32() + 1,
+			"badge": res2.Badge + 1,
 		}})
 		if utils.LogContinue(err, utils.Warning) {
 			rsp.Status = message.MessageCreateResponse_UNKNOWN
@@ -178,7 +201,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	collection := db.MongoDatabase.Collection("sellinfo")
+	collection := db.MongoDatabase.Collection("message")
 	_, err1 := collection.Find(ctx, bson.M{
 		"fromUser": req.FromUser,
 		"toUser":   req.ToUser,
@@ -253,6 +276,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 }
 
 func main() {
+	db.InitMongoDB("messagemongo")
 	service := utils.InitMicroService("message")
 	utils.LogPanic(message.RegisterMessageHandler(service.Server(), new(srv)))
 	utils.RunMicroService(service)

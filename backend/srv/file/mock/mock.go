@@ -1,6 +1,7 @@
 package mock
 
 import (
+	"bytes"
 	"context"
 	file "jiaojiao/srv/file/proto"
 
@@ -10,9 +11,12 @@ import (
 type mockFileSrv struct{}
 
 // Create is file create mock
-func (a *mockFileSrv) Create(ctx context.Context, in *file.FileCreateRequest, opts ...client.CallOption) (*file.FileCreateResponse, error) {
+func (a *mockFileSrv) Create(ctx context.Context, req *file.FileCreateRequest, opts ...client.CallOption) (*file.FileCreateResponse, error) {
 	var rsp file.FileCreateResponse
-	// TODO
+	if bytes.Equal(req.File, []byte{0, 1, 2, 3, 4, 5}) {
+		rsp.Status = file.FileCreateResponse_SUCCESS
+		rsp.FileID = "1234567890abcdef12345678"
+	}
 	return &rsp, nil
 }
 
