@@ -54,7 +54,7 @@ export default class UserInfoScreen extends Component {
                 userID: Config.userInfo.userID,
                 path: image.path,
             };
-            HTTP.uploadImage('/avatar', params)
+            HTTP.addAvatar('/avatar', params)
                 .then((response) => {
                     //console.warn('成功!');
                     //console.warn(response);

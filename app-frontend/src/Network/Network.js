@@ -6,7 +6,7 @@ let common_url = 'http://202.120.40.8:30711/v1'; //服务器地址
 let dev = "http://202.120.40.8:30711/v1";
 
 export default class HTTP {
-    static uploadImage(url, params) {
+    static addAvatar(url, params) {
         return new Promise(function (resolve, reject) {
             let formData = new FormData();
             for (let key in params) {
