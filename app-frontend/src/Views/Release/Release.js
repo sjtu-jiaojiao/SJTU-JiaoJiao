@@ -22,13 +22,29 @@ const {width, height, scale} = Dimensions.get('window');
 
 let ImagePicker = NativeModules.ImageCropPicker;
 
+class ReleaseImage extends Component {
+    render () {
+        return (
+            <TouchableOpacity onLongPress={() => {this.props.deleteImage(this.props.index)}}>
+                <Image style={{
+                    width: (1.05 / 5.05 * width),
+                    height: (1.05 / 5.05 * width),
+                    resizeMode: 'contain',
+                    borderColor: 'white',
+                    borderWidth: 1,
+                }} source={this.props.image} />
+            </TouchableOpacity>
+        )
+    }
+}
+
 export default class ReleaseScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
             selectedIndex: 0,
             goodName: '',
-            goodDiscription: '',
+            description: '',
             Price: '',
             images: null,
         };
@@ -52,9 +68,9 @@ export default class ReleaseScreen extends Component {
         })
     };
 
-    updateDiscription = (goodDiscription) => {
+    updateDescription = (description) => {
         this.setState({
-            goodDiscription: goodDiscription,
+            description: description,
         })
     };
 
@@ -85,13 +101,32 @@ export default class ReleaseScreen extends Component {
                         })),
                 }});
         }).catch(e => {
-            console.warn('出错啦！');
-            console.warn(e);
+            //console.warn('出错啦！');
+            //console.warn(e);
         });
     }
 
-    deleteImage = () => {
-        console.warn('删除图片');
+    deleteImage = (index) => {
+        //console.warn('删除图片' + index);
+        Alert.alert(
+            '即将删除图片',
+            '确定删除该图片吗？',
+            [
+                {
+                    text: '取消',
+                    style: 'cancel',
+                },
+                {
+                    text: '确定', onPress: () => {
+                        this.keyID = 0;
+                        this.setState({
+                            images: this.state.images.filter((_, i) => i !== index),
+                        });
+                    }
+                },
+            ],
+            {cancelable: false},
+        );
     };
 
     renderVideo(video) {
@@ -115,26 +150,17 @@ export default class ReleaseScreen extends Component {
         </View>);
     }
 
-    renderImage(image) {
+    renderImage = (image, index) => {
         return (
-            <TouchableOpacity>
-                <Image style={{
-                    width: (1.05 / 5.05 * width),
-                    height: (1.05 / 5.05 * width),
-                    resizeMode: 'contain',
-                    borderColor: 'white',
-                    borderWidth: 1,
-                }} source={image} />
-            </TouchableOpacity>
+            <ReleaseImage image={image} index={index} deleteImage={index => this.deleteImage(index)}/>
         )
-    }
+    };
 
-    renderAsset(image) {
+    renderAsset(image, index) {
         if (image.mime && image.mime.toLowerCase().indexOf('video/') !== -1) {
             return this.renderVideo(image);
         }
-
-        return this.renderImage(image);
+        return this.renderImage(image, index);
     }
 
     render() {
@@ -215,7 +241,7 @@ export default class ReleaseScreen extends Component {
                                 containerStyle={{flex: 1.05}}
                                 buttonStyle={{backgroundColor: '#EFEFF5', flex: 1, alignItems: 'center'}}
                                 raised={true}
-                                onPress={() => {alert(this.state.goodDiscription)}}
+                                onPress={() => {alert(this.state.description)}}
                             />
                             <Textarea
                                 containerStyle={{
@@ -228,8 +254,8 @@ export default class ReleaseScreen extends Component {
                                     borderTopColor: 'transparent',
                                 }}
                                 style={{marginLeft: 14, marginRight: 13, fontSize: 18, }}
-                                onChangeText={this.updateDiscription}
-                                defaultValue={this.state.goodDiscription}
+                                onChangeText={this.updateDescription}
+                                defaultValue={this.state.description}
                                 maxLength={360}
                                 placeholder={'选填。可输入对物品的详细描述或者列出物品清单'}
                                 placeholderTextColor={'grey'}
@@ -248,7 +274,7 @@ export default class ReleaseScreen extends Component {
                                 <Image style={{width: (1.05 / 5.05 * width), height: (1.05 / 5.05 * width), resizeMode: 'contain',}} source={require('../../assets/images/addPhotoVideo.jpg')}/>
                             </TouchableOpacity>
                             <ScrollView horizontal={true}>
-                                {this.state.images ? this.state.images.map(i => <View key={this.keyID++}>{this.renderAsset(i)}</View>) : null}
+                                {this.state.images ? this.state.images.map((image, index) => <View key={this.keyID++}>{this.renderAsset(image, index)}</View>) : null}
                             </ScrollView>
                         </View>
                         <View style={{height: 10}} />
@@ -298,7 +324,7 @@ export default class ReleaseScreen extends Component {
                                 [
                                     {
                                         text: '取消',
-                                        onPress: () => console.warn('Cancel Pressed'),
+                                        //onPress: () => console.warn('Cancel Pressed'),
                                         style: 'cancel',
                                     },
                                     {
@@ -308,7 +334,7 @@ export default class ReleaseScreen extends Component {
                                                 addType = 'sellInfo';
                                             else
                                                 addType = 'buyInfo';
-                                            console.warn((Config.fetchPrefix + addType));
+                                            //console.warn((Config.fetchPrefix + addType));
                                             fetch((Config.fetchPrefix + addType), {
                                                 method: 'POST',
                                                 headers: {
@@ -327,10 +353,10 @@ export default class ReleaseScreen extends Component {
                                                                 {text: '好', onPress: () => {}}
                                                             ],
                                                             {cancelable: false},
-                                                        )
+                                                        );
                                                         this.setState({
                                                             goodName: '',
-                                                            goodDiscription: '',
+                                                            description: '',
                                                             Price: '',
                                                         });
                                                     } else {

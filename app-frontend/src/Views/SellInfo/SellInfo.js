@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Config from "../../Config";
 import {ListItem} from "react-native-elements";
-import {TimeStamptoDate, DatetoTimeStamp, TimeStampNow} from "../../Utils/TimeStamp";
+import {parseStatus, parseTimeStamp} from "../../Utils/ParseInfo";
 
 let dev = "http://202.120.40.8:30711/v1";
 
@@ -77,43 +77,30 @@ export default class SellInfoScreen extends Component {
 
     keyExtractor = (item, index) => index.toString();
 
-    parseStatus = (status) => {
-        let Prefix = '商品状态：';
-        switch (status) {
-            case 1:
-                return (Prefix + '出售中');
-            case 2:
-                return (Prefix + '已预约');
-            case 3:
-                return (Prefix + '已出售');
-            case 4:
-                return (Prefix + '已过期 (不再出售)');
-        }
+    renderItem = ({ item }) => {
+        let sellInfoID = item.sellInfoID;
+        let goodName = item.goodName;
+        return (
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('SellGoodInfo', { sellInfoID, goodName })}>
+                <ListItem
+                    bottomDivider
+                    containerStyle={{height: 200}}
+                    title={
+                        <Text numberOfLines={1} style={{color: 'black', fontWeight: 'bold', fontSize: 20}}>出售物品：{item.goodName}</Text>
+                    }
+                    subtitle={
+                        <View style={styles.subtitleView}>
+                            <Text numberOfLines={1} style={styles.ratingText}>商品描述：{item.description}</Text>
+                            <Text numberOfLines={1} style={styles.ratingText}>商品状态：{parseStatus(item.status)}</Text>
+                            <Text numberOfLines={1} style={styles.ratingText}>出售价格：￥{item.price}</Text>
+                            <Text numberOfLines={1} style={styles.ratingText}>发布时间：{parseTimeStamp(item.releaseTime)}</Text>
+                            <Text numberOfLines={1} style={styles.ratingText}>商品标签：暂无</Text>
+                        </View>
+                    }
+                />
+            </TouchableOpacity>
+        );
     };
-
-    parseTimeStamp = (TimeStamp) => {
-        let date = TimeStamptoDate(TimeStamp);
-        return ('发布时间：' + date);
-    };
-
-    renderItem = ({ item }) => (
-        <ListItem
-            bottomDivider
-            containerStyle={{height: 200}}
-            title={
-                <Text numberOfLines={1} style={{color: 'black', fontWeight: 'bold', fontSize: 20}}>出售物品：{item.goodName}</Text>
-            }
-            subtitle={
-                <View style={styles.subtitleView}>
-                    <Text numberOfLines={1} style={styles.ratingText}>商品描述：{item.description}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>{this.parseStatus(item.status)}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>出售价格：￥{item.price}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>{this.parseTimeStamp(item.releaseTime)}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>商品标签：暂无</Text>
-                </View>
-            }
-        />
-    );
 
     render() {
         if (this.state.loaded === false) {

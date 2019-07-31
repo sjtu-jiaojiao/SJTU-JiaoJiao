@@ -3763,6 +3763,11 @@ jsx-ast-utils@^2.0.1:
     array-includes "^3.0.3"
     object.assign "^4.1.0"
 
+jwt-decode@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.npm.taobao.org/jwt-decode/download/jwt-decode-2.2.0.tgz#7d86bd56679f58ce6a84704a657dd392bba81a79"
+  integrity sha1-fYa9VmefWM5qhHBKZX3TkruoGnk=
+
 keymirror@^0.1.1:
   version "0.1.1"
   resolved "https://registry.npm.taobao.org/keymirror/download/keymirror-0.1.1.tgz#918889ea13f8d0a42e7c557250eee713adc95c35"
@@ -3876,6 +3881,11 @@ locate-path@^3.0.0:
   dependencies:
     p-locate "^3.0.0"
     path-exists "^3.0.0"
+
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.npm.taobao.org/lodash.isequal/download/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
 
 lodash.sortby@^4.7.0:
   version "4.7.0"
@@ -5120,6 +5130,14 @@ react-native-lightbox@^0.8.0:
   integrity sha1-0TLp30WJNrrmrpEsMJd13OMB//w=
   dependencies:
     prop-types "^15.5.10"
+
+react-native-looped-carousel@^0.1.13:
+  version "0.1.13"
+  resolved "https://registry.npm.taobao.org/react-native-looped-carousel/download/react-native-looped-carousel-0.1.13.tgz#bc1f94ee818347ecfd573acd9710c84b2f450d1f"
+  integrity sha1-vB+U7oGDR+z9VzrNlxDISy9FDR8=
+  dependencies:
+    lodash.isequal "^4.5.0"
+    prop-types "^15.6.1"
 
 react-native-modal-dropdown@^0.6.2:
   version "0.6.2"

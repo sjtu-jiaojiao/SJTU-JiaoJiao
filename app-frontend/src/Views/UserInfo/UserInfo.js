@@ -4,24 +4,11 @@ import {ListItem, Avatar, Button, Icon, Overlay} from "react-native-elements";
 import Config from "../../Config";
 import {NavigationActions, HeaderBackButton } from "react-navigation";
 import HTTP from '../../Network/Network';
+import MyAvatar from '../../Components/MyAvatar';
 
 let ImagePicker = NativeModules.ImageCropPicker;
 
 const {width, height, scale} = Dimensions.get('window');
-
-class MyAvatar extends Component {
-    render() {
-        if(this.props.avatarID === 'to_be_changed') {
-            return (
-                <Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')}/>
-            )
-        } else {
-            return (
-                <Avatar rounded size='large' source={{uri: (Config.fetchPrefix + 'file/' + this.props.avatarID)}}/>
-            )
-        }
-    }
-}
 
 export default class UserInfoScreen extends Component {
     constructor(props) {
@@ -159,7 +146,7 @@ export default class UserInfoScreen extends Component {
                                                 'Content-Type': 'application/x-www-form-urlencoded',
                                                 Authorization: ('Bearer ' + Config.JaccountToken.token),
                                             },
-                                            body: ('userID=3&telephone=' + this.changeTelephone),
+                                            body: ('userID=' + Config.userInfo.userID + '&telephone=' + this.changeTelephone),
                                         })
                                             .then((response) => {
                                                 if(response.ok) {
@@ -282,7 +269,7 @@ export default class UserInfoScreen extends Component {
                                                 'Content-Type': 'application/x-www-form-urlencoded',
                                                 Authorization: ('Bearer ' + Config.JaccountToken.token),
                                             },
-                                            body: ('userID=3&userName=' + this.changeUserName),
+                                            body: ('userID=' + Config.userInfo.userID + '&userName=' + this.changeUserName),
                                         })
                                             .then((response) => {
                                                 if(response.ok) {

@@ -20,6 +20,7 @@ import SellInfoScreen from "../Views/SellInfo/SellInfo";
 import SearchScreen from "../Views/Search/Search";
 import LoginScreen from "../Views/Login/Login";
 import TestPage from '../Views/TestPage/TestPage';
+import SellGoodInfoScreen from "../Views/GoodInfo/SellGoodInfo";
 
 class Test extends Component {
     render() {
@@ -38,6 +39,7 @@ const HomeStack = createStackNavigator({
     BuyInfo: { screen: BuyInfoScreen },
     SellInfo: { screen: SellInfoScreen },
     Search: { screen: SearchScreen },
+    SellGoodInfo: { screen: SellGoodInfoScreen },
     TestPage: { screen: TestPage },
 });
 
@@ -58,6 +60,7 @@ const UserStack = createStackNavigator({
     MyHistoryInfo: { screen: MyHistoryInfoScreen},
     UserInfo: { screen: UserInfoScreen},
     Login: { screen: LoginScreen },
+    SellGoodInfo: { screen: SellGoodInfoScreen },
 });
 
 const TabBar = createBottomTabNavigator({

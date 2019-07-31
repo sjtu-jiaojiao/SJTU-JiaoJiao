@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import {WebView} from "react-native-webview";
 import {NavigationActions} from "react-navigation";
 import Config from "../../Config";
+import jwt_decode from 'jwt-decode';
 
 export default class LoginScreen extends Component {
 
@@ -19,8 +20,11 @@ export default class LoginScreen extends Component {
                     //console.warn(event.nativeEvent.data);
                     Config.JaccountToken = JSON.parse(event.nativeEvent.data);
                     //console.warn(Config.JaccountToken);
+                    let decodeToken = jwt_decode(Config.JaccountToken.token);
+                    //console.warn(decodeToken);
+                    //console.warn(Config.JaccountToken);
                     //console.warn(Config.JaccountToken.status);
-                    fetch((Config.fetchPrefix + 'user/3'),{
+                    fetch((Config.fetchPrefix + 'user/' + decodeToken.id),{
                         headers: {
                             Authorization: ('Bearer ' + Config.JaccountToken.token),
                         }
