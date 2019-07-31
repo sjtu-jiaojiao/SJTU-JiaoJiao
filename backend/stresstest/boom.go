@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"crypto/tls"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -29,14 +30,14 @@ func goodSearch() {
 		boomer.RecordFailure("http", "goodSearch", time.Since(start).Nanoseconds()/int64(time.Millisecond), err.Error())
 		return
 	}
-	length, _ := io.Copy(ioutil.Discard, res.Body)
-	err = res.Body.Close()
+	length, err := io.Copy(ioutil.Discard, res.Body)
 	elapsed := time.Since(start)
 
 	if err != nil {
 		boomer.RecordFailure("http", "goodSearch", elapsed.Nanoseconds()/int64(time.Millisecond), err.Error())
 		return
 	}
+	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
 		boomer.RecordFailure("http", "goodSearch", elapsed.Nanoseconds()/int64(time.Millisecond), res.Status)
@@ -68,11 +69,15 @@ func main() {
 	}
 
 	t = &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
 		MaxIdleConns:        10240,
 		MaxIdleConnsPerHost: 10240,
+		DisableKeepAlives:   true,
 	}
 	c = &http.Client{
-		Timeout:   10 * time.Second,
+		Timeout:   40 * time.Second,
 		Transport: t,
 	}
 
