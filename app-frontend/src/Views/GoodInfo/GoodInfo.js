@@ -1,48 +1,50 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import HTTP from '../../Network/Network';
 import {parseStatus, parseTimeStamp} from "../../Utils/ParseInfo";
 import MyAvatar from '../../Components/MyAvatar';
 
 class InfoPart extends Component {
     render() {
-        let {item} = this.props;
+        let { infoType, item } = this.props;
+        let NAME = infoType === 'sellInfo' ? '出售' : '求购';
+        let STATUS = infoType === 'sellInfo' ? '出售价格：' : '预期价格：';
         return (
             <View style={{marginTop: 20}}>
-                <View style={{backgroundColor: 'white'}}>
-                    <Text style={{marginLeft: 20, marginRight: 20}} selectable={true}>
-                        <Text style={styles.headerText}>出售</Text>
-                        <Text style={styles.headerText}>出售物品：</Text>
+                <View style={{backgroundColor: '#FCFCFC'}}>
+                    <Text style={{marginLeft: 20, marginRight: 20, marginTop: 20}} selectable={true}>
+                        <Text style={[styles.headerText, styles.goodType]}>{NAME}</Text>
+                        <Text style={styles.headerText}>物品：</Text>
                         <Text style={styles.ratingText}>{item.goodName}</Text>
                     </Text>
                 </View>
-                <View style={{backgroundColor: 'white', marginTop: 10}}>
-                    <Text style={{marginLeft: 20, marginRight: 20}}>
+                <View style={{backgroundColor: '#FCFCFC'}}>
+                    <Text style={{marginLeft: 20, marginRight: 20, marginTop: 10}}>
                         <Text style={styles.headerText}>具体描述：</Text>
                         <Text style={styles.ratingText}>{item.description}</Text>
                     </Text>
                 </View>
-                <View style={{backgroundColor: 'white', marginTop: 10}}>
-                    <Text style={{marginLeft: 20, marginRight: 20}}>
-                        <Text style={styles.headerText}>商品状态：</Text>
+                <View style={{backgroundColor: '#FCFCFC'}}>
+                    <Text style={{marginLeft: 20, marginRight: 20, marginTop: 10}}>
+                        <Text style={styles.headerText}>信息状态：</Text>
                         <Text style={styles.ratingText}>{parseStatus(item.status)}</Text>
                     </Text>
                 </View>
-                <View style={{backgroundColor: 'white', marginTop: 10}}>
-                    <Text style={{marginLeft: 20, marginRight: 20}}>
-                        <Text style={styles.headerText}>出售价格：</Text>
+                <View style={{backgroundColor: '#FCFCFC'}}>
+                    <Text style={{marginLeft: 20, marginRight: 20, marginTop: 10}}>
+                        <Text style={styles.headerText}>{STATUS}</Text>
                         <Text style={styles.ratingText}>￥{item.price}</Text>
                     </Text>
                 </View>
-                <View style={{backgroundColor: 'white', marginTop: 10}}>
-                    <Text style={{marginLeft: 20, marginRight: 20}}>
+                <View style={{backgroundColor: '#FCFCFC'}}>
+                    <Text style={{marginLeft: 20, marginRight: 20, marginTop: 10}}>
                         <Text style={styles.headerText}>发布时间：</Text>
                         <Text style={styles.ratingText}>{parseTimeStamp(item.releaseTime)}</Text>
                     </Text>
                 </View>
-                <View style={{backgroundColor: 'white', marginTop: 10}}>
-                    <Text style={{marginLeft: 20, marginRight: 20}}>
-                        <Text style={styles.headerText}>商品标签：</Text>
+                <View style={{backgroundColor: '#FCFCFC'}}>
+                    <Text style={{marginLeft: 20, marginRight: 20, marginTop: 10, marginBottom: 20}}>
+                        <Text style={styles.headerText}>物品标签：</Text>
                         <Text style={styles.ratingText}>暂无</Text>
                     </Text>
                 </View>
@@ -56,7 +58,7 @@ class ImagePart extends Component {
         let {contentID} = this.props;
         return (
             <View style={{marginTop: 20}}>
-                <View style={{backgroundColor: 'white'}}>
+                <View style={{backgroundColor: '#FCFCFC'}}>
                     <Text style={{marginLeft: 20, marginRight: 20}} selectable={true}>
                         <Text style={styles.headerText}>图片部分{contentID}</Text>
                     </Text>
@@ -103,21 +105,45 @@ class UserPart extends  Component {
     }
 
     render() {
-        let {userID} = this.props;
-        return (
-            <View style={{}}>
-                <View style={{backgroundColor: 'white', flexDirection: 'row'}}>
-                    <Text style={{marginLeft: 20, marginRight: 20}} selectable={true}>
-                        <Text style={styles.headerText}>用户信息部分{userID}</Text>
-                    </Text>
+        if (this.state.loaded === false) {
+            return (
+                <View style={styles.container}>
+                    <Text>用户信息加载中...</Text>
                 </View>
-                <View style={{height: 10, backgroundColor: '#EFEFF5'}} />
-            </View>
-        )
+            )
+        }
+        else {
+            let {userID, navigate} = this.props;
+            let userName = this.state.userName;
+            //console.warn(userName);
+            return (
+                <View style={{backgroundColor: '#FCFCFC', marginBottom: 20}}>
+                    <View style={{
+                        backgroundColor: '#FCFCFC',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginTop: 20,
+                        marginBottom: 20,
+                        marginLeft: 20,
+                        marginRight: 20,
+                    }}>
+                        <View style={{marginLeft: 10}}>
+                            <Text style={styles.headerText}>信息发布人：</Text>
+                            <Text style={{color: 'black', fontSize: 20}}> {this.state.userName}</Text>
+                            <TouchableOpacity onPress={() => {navigate({ userID, userName });}}>
+                                <Text style={styles.headerText}>点击此处查看TA的更多信息</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <MyAvatar avatarID={this.state.avatarID}/>
+                    </View>
+                    <View style={{height: 10, backgroundColor: '#EFEFF5'}}/>
+                </View>
+            )
+        }
     }
 }
 
-export default class SellGoodInfoScreen extends Component {
+export default class GoodInfoScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -133,8 +159,8 @@ export default class SellGoodInfoScreen extends Component {
         };
         this.params = this.props.navigation.state.params;
         //console.warn(this.params)
-        this.sellInfoID = this.params ? this.params.sellInfoID : null;
-        //console.warn(this.sellInfoID);
+        this.infoType = this.params? this.params.infoType : null;
+        this.infoID = this.infoType === 'sellInfo' ? this.params.sellInfoID : this.params.buyInfoID;
         this.fetchData = this.fetchData.bind(this);
     };
 
@@ -148,7 +174,7 @@ export default class SellGoodInfoScreen extends Component {
         let obj = {  };
         //console.warn(obj);
         //console.warn("http://202.120.40.8:30711/v1"+'/sellInfo/' + this.sellInfoID);
-        HTTP.get(('/sellInfo/' + this.sellInfoID), obj)
+        HTTP.get(('/' + this.infoType + '/' + this.infoID), obj)
             .then((response) => {
                 //console.warn(response);
                 this.setState({
@@ -167,8 +193,13 @@ export default class SellGoodInfoScreen extends Component {
     }
 
     static navigationOptions = ({navigation}) => ({
-        headerTitle: (<Text numberOfLines={1} style={{flex:1, color: '#298BFF', fontSize: 23}}>{navigation.state.params.goodName}</Text>)
+        headerTitle: (<Text numberOfLines={1} style={{flex:1, color: '#298BFF', fontSize: 23}}>{navigation.state.params.header}</Text>)
     });
+
+    navigate = (params) => {
+        //console.warn(params);
+        this.props.navigation.push('UserInfoForOthers', params);
+    };
 
     render() {
         if (this.state.loaded === false) {
@@ -186,9 +217,9 @@ export default class SellGoodInfoScreen extends Component {
             return (
                 <ScrollView>
                     <View style={{backgroundColor: '#EFEFF5'}}>
-                        <InfoPart item={this.state}/>
+                        <InfoPart infoType={this.infoType} item={this.state}/>
                         <ImagePart contentID={this.state.contentID}/>
-                        <UserPart userID={this.state.userID}/>
+                        <UserPart userID={this.state.userID} navigate={(params) => this.navigate(params)}/>
                     </View>
                 </ScrollView>
             )
@@ -210,12 +241,15 @@ let styles = StyleSheet.create({
         paddingTop: 5
     },
     ratingText: {
-        color: 'black',
-        fontSize: 20,
+        color: '#042A2B',
+        fontSize: 18,
     },
     headerText: {
-        color: '#E53A40',
-        fontSize: 20,
+        color: '#5EB1BF',
+        fontSize: 18,
+    },
+    goodType: {
+        fontSize: 23,
         fontWeight: 'bold',
     }
 });

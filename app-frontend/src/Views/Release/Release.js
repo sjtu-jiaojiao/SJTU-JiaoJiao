@@ -360,6 +360,7 @@ export default class ReleaseScreen extends Component {
                                                             Price: '',
                                                         });
                                                     } else {
+                                                        console.warn(response);
                                                         Alert.alert(
                                                             '出错啦',
                                                             '网络可能出了问题，请再试一次吧',

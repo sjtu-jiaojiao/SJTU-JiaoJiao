@@ -20,37 +20,33 @@ import SellInfoScreen from "../Views/SellInfo/SellInfo";
 import SearchScreen from "../Views/Search/Search";
 import LoginScreen from "../Views/Login/Login";
 import TestPage from '../Views/TestPage/TestPage';
-import SellGoodInfoScreen from "../Views/GoodInfo/SellGoodInfo";
-
-class Test extends Component {
-    render() {
-        return (
-            <View >
-                <Text>
-                    test page!
-                </Text>
-            </View>
-        )
-    }
-}
+import GoodInfoScreen from '../Views/GoodInfo/GoodInfo';
+import UserInfoForOthersScreen from "../Views/UserInfoForOthers/UserInfoForOthors";
+import SellInfoForOthersScreen from "../Views/SellInfoForOthers/SellInfoForOthers";
+import BuyInfoForOthersScreen from "../Views/BuyInfoForOthers/BuyInfoForOthers";
 
 const HomeStack = createStackNavigator({
     Home: { screen: HomeScreen },
     BuyInfo: { screen: BuyInfoScreen },
     SellInfo: { screen: SellInfoScreen },
     Search: { screen: SearchScreen },
-    SellGoodInfo: { screen: SellGoodInfoScreen },
+    GoodInfo: { screen: GoodInfoScreen },
+    UserInfoForOthers: { screen: UserInfoForOthersScreen},
+    SellInfoForOthers: { screen: SellInfoForOthersScreen },
+    BuyInfoForOthers: { screen: BuyInfoForOthersScreen },
     TestPage: { screen: TestPage },
 });
 
 const ReleaseStack = createStackNavigator({
     Release: { screen: ReleaseScreen },
-    Test: { screen: Test},
 });
 
 const ContactStack = createStackNavigator({
     Contact: { screen: ContactScreen },
-    Test: { screen: Test},
+    GoodInfo: { screen: GoodInfoScreen },
+    UserInfoForOthers: { screen: UserInfoForOthersScreen},
+    SellInfoForOthers: { screen: SellInfoForOthersScreen },
+    BuyInfoForOthers: { screen: BuyInfoForOthersScreen },
 });
 
 const UserStack = createStackNavigator({
@@ -60,7 +56,10 @@ const UserStack = createStackNavigator({
     MyHistoryInfo: { screen: MyHistoryInfoScreen},
     UserInfo: { screen: UserInfoScreen},
     Login: { screen: LoginScreen },
-    SellGoodInfo: { screen: SellGoodInfoScreen },
+    GoodInfo: { screen: GoodInfoScreen },
+    UserInfoForOthers: { screen: UserInfoForOthersScreen},
+    SellInfoForOthers: { screen: SellInfoForOthersScreen },
+    BuyInfoForOthers: { screen: BuyInfoForOthersScreen },
 });
 
 const TabBar = createBottomTabNavigator({
@@ -152,7 +151,6 @@ const TabBar = createBottomTabNavigator({
 /*
 const AppStack = createStackNavigator({
     Tabs: TabBar,
-    TestPage: Test,
 }, {
     defaultNavigationOptions: {
         headerStyle: {
@@ -163,5 +161,3 @@ const AppStack = createStackNavigator({
 });*/
 
 export default createAppContainer(TabBar);
-
-export { Test };

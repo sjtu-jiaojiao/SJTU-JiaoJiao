@@ -79,9 +79,10 @@ export default class SellInfoScreen extends Component {
 
     renderItem = ({ item }) => {
         let sellInfoID = item.sellInfoID;
-        let goodName = item.goodName;
+        let header = ('出售：' + item.goodName);
+        let infoType = 'sellInfo';
         return (
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('SellGoodInfo', { sellInfoID, goodName })}>
+            <TouchableOpacity onPress={() => this.props.navigation.push('GoodInfo', { infoType, sellInfoID, header })}>
                 <ListItem
                     bottomDivider
                     containerStyle={{height: 200}}
@@ -90,11 +91,11 @@ export default class SellInfoScreen extends Component {
                     }
                     subtitle={
                         <View style={styles.subtitleView}>
-                            <Text numberOfLines={1} style={styles.ratingText}>商品描述：{item.description}</Text>
-                            <Text numberOfLines={1} style={styles.ratingText}>商品状态：{parseStatus(item.status)}</Text>
+                            <Text numberOfLines={1} style={styles.ratingText}>具体描述：{item.description}</Text>
+                            <Text numberOfLines={1} style={styles.ratingText}>信息状态：{parseStatus(item.status)}</Text>
                             <Text numberOfLines={1} style={styles.ratingText}>出售价格：￥{item.price}</Text>
                             <Text numberOfLines={1} style={styles.ratingText}>发布时间：{parseTimeStamp(item.releaseTime)}</Text>
-                            <Text numberOfLines={1} style={styles.ratingText}>商品标签：暂无</Text>
+                            <Text numberOfLines={1} style={styles.ratingText}>物品标签：暂无</Text>
                         </View>
                     }
                 />
