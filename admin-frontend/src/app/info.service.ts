@@ -27,7 +27,7 @@ export class InfoService {
       this.getSellInfos().subscribe(e=>
         {
         this.si = e.sellInfo;
-      this.getMoreSell(100,false);
+        this.getMoreSell(100,false);
         })
     }
     return this.si;
@@ -49,17 +49,22 @@ export class InfoService {
     if(!(this.bi.length%100) && !dynamic)
       this.getBuyInfos(null,null,null,null,offset).subscribe(
           e => {
+              if(e){
               this.bi=this.bi.concat(e.buyInfo);
-              this.getMoreBuy(offset+100, false);
-          }
+              if(e.buyInfo.length!=100)
+              dynamic =! dynamic;
+            }
+              this.getMoreBuy(offset+100, dynamic);
+            }
       );
       else{
           setTimeout(() => {
               this.getBuyInfos(null,null,null,null,offset).subscribe(
                   e => {
-                      if(e.buyInfo)
+                      if(e)
                       this.bi=this.bi.concat(e.buyInfo);
                       this.getMoreBuy(this.bi.length-1, true);
+                      console.log(this.bi);
           }
       );}, 5000 );
       }
@@ -69,15 +74,19 @@ getMoreSell(offset, dynamic){
     if(!(this.si.length%100) && !dynamic)
       this.getSellInfos(null,null,null,null,offset).subscribe(
           e => {
-              this.si= this.si.concat(e.sellInfo);
-              this.getMoreSell(offset+100, false);
-          }
+              if(e){
+              this.si= this.si.concat(e.sellInfo);   
+              if(e.sellInfo.length!=100)
+                dynamic=!dynamic;
+              }
+              this.getMoreSell(offset+100,dynamic)
+            }
       );
   else{
       setTimeout(() => {
           this.getSellInfos(null,null,null,null,offset).subscribe(
               e => {
-                  if(e.sellInfo)
+                  if(e)
                   this.si=this.si.concat(e.sellInfo);
                   this.getMoreSell(this.si.length-1,true);
       }
@@ -85,7 +94,7 @@ getMoreSell(offset, dynamic){
   }
 }
   /** GET info by id. Will 404 if id not found */
-  getSellInfo(id: string): Observable<sellInfo> {
+  getSellInfo(id: number): Observable<sellInfo> {
     const url = `${this.sellinfoUrl}/${id}`;
     return this.http.get<sellInfo>(url).pipe(
       catchError(this.handleError<sellInfo>(`getInfo id=${id}`))
@@ -128,7 +137,7 @@ getMoreSell(offset, dynamic){
   }
 
   /** GET info by id. Will 404 if id not found */
-  getBuyInfo(id: string): Observable<buyInfo> {
+  getBuyInfo(id: number): Observable<buyInfo> {
     const url = `${this.buyinfoUrl}/${id}`;
     return this.http.get<buyInfo>(url).pipe(
       catchError(this.handleError<buyInfo>(`getBuy id=${id}`))

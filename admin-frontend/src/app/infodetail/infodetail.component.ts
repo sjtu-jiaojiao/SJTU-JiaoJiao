@@ -54,7 +54,7 @@ stringToDate(params) {
     this.location.back();
   }
     getinfo(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+    const id = parseInt(this.route.snapshot.paramMap.get('id'));
     if(this.type === 'sellInfo')
     this.infoService.getSellInfo(id)
       .subscribe(info => {
