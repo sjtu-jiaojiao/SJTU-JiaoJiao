@@ -2,7 +2,7 @@ syntax = "proto3";
 
 service Message {
     rpc Create (MessageCreateRequest) returns (MessageCreateResponse);
-    rpc Query (MessageQueryRequest) returns (MessageQueryResponse);
+    rpc Find (MessageFindRequest) returns (MessageFindResponse);
 }
 
 message MessageInfo{
@@ -42,7 +42,7 @@ message MessageCreateResponse {
     Status status = 1;
 }
 
-message MessageQueryRequest {
+message MessageFindRequest {
     enum Way {
         UNKNOWN = 0;
         ONLY_PULL = 1;
@@ -54,7 +54,7 @@ message MessageQueryRequest {
     Way way = 3;
 }
 
-message MessageQueryResponse {
+message MessageFindResponse {
     enum Status {
         UNKNOWN = 0;
         INVALID_PARAM = -1;

@@ -17,11 +17,11 @@ func TestCreate(t *testing.T) {
 	})
 }
 
-func TestQuery(t *testing.T) {
+func TestFind(t *testing.T) {
 	var s srv
-	var req message.MessageQueryRequest
-	Convey("Test Query Message", t, func() {
-		err := s.Query(context.TODO(), &req, &message.MessageQueryResponse{})
+	var req message.MessageFindRequest
+	Convey("Test Find Message", t, func() {
+		err := s.Find(context.TODO(), &req, &message.MessageFindResponse{})
 		ShouldBeNil(err)
 	})
 

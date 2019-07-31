@@ -654,6 +654,130 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/message",
+    "title": "AddMessage",
+    "version": "1.0.0",
+    "group": "Message",
+    "permission": [
+      {
+        "name": "self/admin"
+      }
+    ],
+    "name": "AddMessage",
+    "description": "<p>Add chat message</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-Message_Create\">Message Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-Message_Create\">Message Service</a></p>"
+          }
+        ]
+      }
+    },
+    "filename": "api/message/main.go",
+    "groupTitle": "Message",
+    "error": {
+      "fields": {
+        "Error 400": [
+          {
+            "group": "Error 400",
+            "optional": false,
+            "field": "InvalidParam",
+            "description": "<p>Invalid param</p>"
+          }
+        ],
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "MessageServiceDown",
+            "description": "<p>Message service down</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "get",
+    "url": "/message",
+    "title": "FindMessage",
+    "version": "1.0.0",
+    "group": "Message",
+    "permission": [
+      {
+        "name": "self/admin"
+      }
+    ],
+    "name": "FindMessage",
+    "description": "<p>Find chat message</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-Message_Find\">Message Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-Message_Find\">Message Service</a></p>"
+          }
+        ]
+      }
+    },
+    "filename": "api/message/main.go",
+    "groupTitle": "Message",
+    "error": {
+      "fields": {
+        "Error 400": [
+          {
+            "group": "Error 400",
+            "optional": false,
+            "field": "InvalidParam",
+            "description": "<p>Invalid param</p>"
+          }
+        ],
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "MessageServiceDown",
+            "description": "<p>Message service down</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "post",
     "url": "/sellInfo",
     "title": "AddSellInfo",
     "version": "1.0.0",
@@ -1377,6 +1501,13 @@ define({ "api": [
             "optional": false,
             "field": "contentToken",
             "description": "<p>random uuid content token</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "fileID",
+            "description": "<p>24 bytes fileID</p>"
           }
         ]
       }
@@ -1753,6 +1884,211 @@ define({ "api": [
       }
     },
     "filename": "srv/file/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
+    "title": "Message.Create",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "Message_Create",
+    "description": "<p>Create Message</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "fromUser",
+            "description": "<p>user who launch the chat at first time</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "toUser",
+            "description": "<p>user who accept the chat at first time</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "type",
+            "description": "<p>1 for text <br> 2 for picture <br> 3 for video</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "text",
+            "description": "<p>plain message text if type is text</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "bytes",
+            "optional": true,
+            "field": "file",
+            "description": "<p>file stream bytes, valid only if type is picture or video</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success</p>"
+          }
+        ]
+      }
+    },
+    "filename": "srv/message/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
+    "title": "Message.Find",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "Message_Find",
+    "description": "<p>Find Message</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "fromUser",
+            "description": "<p>user who launch the chat at first time</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "toUser",
+            "description": "<p>user who accept the chat at first time</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "way",
+            "description": "<p>1 for only pull message <br> 2 for read message <br> 3 for query history message</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "fromUser",
+            "description": "<p>user who launch the chat at first time</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "toUser",
+            "description": "<p>user who accept the chat at first time</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "badge",
+            "description": "<p>count of message still unread</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "list",
+            "optional": false,
+            "field": "infos",
+            "description": "<p>see below MessageInfo</p>"
+          }
+        ],
+        "MessageInfo": [
+          {
+            "group": "MessageInfo",
+            "type": "int64",
+            "optional": false,
+            "field": "time",
+            "description": "<p>message create time</p>"
+          },
+          {
+            "group": "MessageInfo",
+            "type": "bool",
+            "optional": false,
+            "field": "forward",
+            "description": "<p>false for chat from toUser to fromUser <br> true for chat from fromUser to toUser</p>"
+          },
+          {
+            "group": "MessageInfo",
+            "type": "int32",
+            "optional": false,
+            "field": "type",
+            "description": "<p>1 for text <br> 2 for picture <br> 3 for video</p>"
+          },
+          {
+            "group": "MessageInfo",
+            "type": "string",
+            "optional": false,
+            "field": "text",
+            "description": "<p>plain message text if type is text <br> fileID if type is picture or video</p>"
+          },
+          {
+            "group": "MessageInfo",
+            "type": "bool",
+            "optional": false,
+            "field": "unread",
+            "description": "<p>false for having read <br> true for not having read</p>"
+          }
+        ]
+      }
+    },
+    "filename": "srv/message/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {

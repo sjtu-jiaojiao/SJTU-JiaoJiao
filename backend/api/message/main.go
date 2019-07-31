@@ -93,16 +93,16 @@ func addMessage(c *gin.Context) {
  * @apiName FindMessage
  * @apiDescription Find chat message
  *
- * @apiParam {--} Param see [Message Service](#api-Service-Message_Query)
- * @apiSuccess (Success 200) {Response} response see [Message Service](#api-Service-Message_Query)
+ * @apiParam {--} Param see [Message Service](#api-Service-Message_Find)
+ * @apiSuccess (Success 200) {Response} response see [Message Service](#api-Service-Message_Find)
  * @apiUse InvalidParam
  * @apiUse MessageServiceDown
  */
 func findMessage(c *gin.Context) {
 	type param struct {
-		FromUser int32                           `form:"fromUser" binding:"required"`
-		ToUser   int32                           `form:"toUser" binding:"required"`
-		Way      message.MessageQueryRequest_Way `form:"way" binding:"required"`
+		FromUser int32                          `form:"fromUser" binding:"required"`
+		ToUser   int32                          `form:"toUser" binding:"required"`
+		Way      message.MessageFindRequest_Way `form:"way" binding:"required"`
 	}
 	var p param
 
@@ -116,7 +116,7 @@ func findMessage(c *gin.Context) {
 
 		srv := utils.CallMicroService("message", func(name string, c client.Client) interface{} { return message.NewMessageService(name, c) },
 			func() interface{} { return mock.NewMessageService() }).(message.MessageService)
-		rsp, err := srv.Query(context.TODO(), &message.MessageQueryRequest{
+		rsp, err := srv.Find(context.TODO(), &message.MessageFindRequest{
 			FromUser: p.FromUser,
 			ToUser:   p.ToUser,
 			Way:      p.Way,

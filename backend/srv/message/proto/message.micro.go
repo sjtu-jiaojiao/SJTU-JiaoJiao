@@ -35,7 +35,7 @@ var _ server.Option
 
 type MessageService interface {
 	Create(ctx context.Context, in *MessageCreateRequest, opts ...client.CallOption) (*MessageCreateResponse, error)
-	Query(ctx context.Context, in *MessageQueryRequest, opts ...client.CallOption) (*MessageQueryResponse, error)
+	Find(ctx context.Context, in *MessageFindRequest, opts ...client.CallOption) (*MessageFindResponse, error)
 }
 
 type messageService struct {
@@ -66,9 +66,9 @@ func (c *messageService) Create(ctx context.Context, in *MessageCreateRequest, o
 	return out, nil
 }
 
-func (c *messageService) Query(ctx context.Context, in *MessageQueryRequest, opts ...client.CallOption) (*MessageQueryResponse, error) {
-	req := c.c.NewRequest(c.name, "Message.Query", in)
-	out := new(MessageQueryResponse)
+func (c *messageService) Find(ctx context.Context, in *MessageFindRequest, opts ...client.CallOption) (*MessageFindResponse, error) {
+	req := c.c.NewRequest(c.name, "Message.Find", in)
+	out := new(MessageFindResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -80,13 +80,13 @@ func (c *messageService) Query(ctx context.Context, in *MessageQueryRequest, opt
 
 type MessageHandler interface {
 	Create(context.Context, *MessageCreateRequest, *MessageCreateResponse) error
-	Query(context.Context, *MessageQueryRequest, *MessageQueryResponse) error
+	Find(context.Context, *MessageFindRequest, *MessageFindResponse) error
 }
 
 func RegisterMessageHandler(s server.Server, hdlr MessageHandler, opts ...server.HandlerOption) error {
 	type message interface {
 		Create(ctx context.Context, in *MessageCreateRequest, out *MessageCreateResponse) error
-		Query(ctx context.Context, in *MessageQueryRequest, out *MessageQueryResponse) error
+		Find(ctx context.Context, in *MessageFindRequest, out *MessageFindResponse) error
 	}
 	type Message struct {
 		message
@@ -103,6 +103,6 @@ func (h *messageHandler) Create(ctx context.Context, in *MessageCreateRequest, o
 	return h.MessageHandler.Create(ctx, in, out)
 }
 
-func (h *messageHandler) Query(ctx context.Context, in *MessageQueryRequest, out *MessageQueryResponse) error {
-	return h.MessageHandler.Query(ctx, in, out)
+func (h *messageHandler) Find(ctx context.Context, in *MessageFindRequest, out *MessageFindResponse) error {
+	return h.MessageHandler.Find(ctx, in, out)
 }

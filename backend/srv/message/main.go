@@ -26,8 +26,8 @@ type srv struct{}
  * @apiParam {int32} fromUser user who launch the chat at first time
  * @apiParam {int32} toUser user who accept the chat at first time
  * @apiParam {int32} type 1 for text <br> 2 for picture <br> 3 for video
- * @apiParam {string} text plain message text if type is text
- * @apiParam {bytes} file file stream bytes, valid only if type is picture or video
+ * @apiParam {string} [text] plain message text if type is text
+ * @apiParam {bytes} [file] file stream bytes, valid only if type is picture or video
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success
  * @apiUse DBServerDown
  */
@@ -149,11 +149,11 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 }
 
 /**
- * @api {rpc} /rpc Message.Query
+ * @api {rpc} /rpc Message.Find
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName Message.Create
- * @apiDescription Create Message
+ * @apiName Message.Find
+ * @apiDescription Find Message
  *
  * @apiParam {int32} fromUser user who launch the chat at first time
  * @apiParam {int32} toUser user who accept the chat at first time
@@ -167,12 +167,12 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
  * @apiSuccess (MessageInfo) {bool} forward false for chat from toUser to fromUser <br> true for chat from fromUser to toUser
  * @apiSuccess (MessageInfo) {int32} type 1 for text <br> 2 for picture <br> 3 for video
  * @apiSuccess (MessageInfo) {string} text plain message text if type is text <br> fileID if type is picture or video
- * @apiParam (MessageInfo) {bool} unread false for having read <br> true for not having read
+ * @apiSuccess (MessageInfo) {bool} unread false for having read <br> true for not having read
  * @apiUse DBServerDown
  */
-func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *message.MessageQueryResponse) error {
+func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *message.MessageFindResponse) error {
 	if !utils.RequireParam(req.FromUser, req.ToUser, req.Way) {
-		rsp.Status = message.MessageQueryResponse_INVALID_PARAM
+		rsp.Status = message.MessageFindResponse_INVALID_PARAM
 		return nil
 	}
 
@@ -195,14 +195,14 @@ func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *
 		rsp.FromUser = req.ToUser
 		rsp.ToUser = req.FromUser
 	} else if err1 != nil && err2 != nil {
-		rsp.Status = message.MessageQueryResponse_NOT_FOUND
+		rsp.Status = message.MessageFindResponse_NOT_FOUND
 		return nil
 	} else {
-		rsp.Status = message.MessageQueryResponse_INVALID_PARAM
+		rsp.Status = message.MessageFindResponse_INVALID_PARAM
 		return nil
 	}
 
-	if req.Way == message.MessageQueryRequest_ONLY_PULL {
+	if req.Way == message.MessageFindRequest_ONLY_PULL {
 		err := collection.FindOne(ctx, bson.M{
 			"fromUser": rsp.FromUser,
 			"toUser":   rsp.ToUser,
@@ -212,12 +212,12 @@ func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *
 			},
 		}).Decode(&rsp)
 		if utils.LogContinue(err, utils.Warning) {
-			rsp.Status = message.MessageQueryResponse_UNKNOWN
+			rsp.Status = message.MessageFindResponse_UNKNOWN
 			return nil
 		}
-		rsp.Status = message.MessageQueryResponse_SUCCESS
+		rsp.Status = message.MessageFindResponse_SUCCESS
 		return nil
-	} else if req.Way == message.MessageQueryRequest_READ_MESSAGE {
+	} else if req.Way == message.MessageFindRequest_READ_MESSAGE {
 		err := collection.FindOneAndUpdate(ctx, bson.M{
 			"fromUser": rsp.FromUser,
 			"toUser":   rsp.ToUser,
@@ -232,21 +232,21 @@ func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *
 			},
 		}).Decode(&rsp)
 		if utils.LogContinue(err, utils.Warning) {
-			rsp.Status = message.MessageQueryResponse_UNKNOWN
+			rsp.Status = message.MessageFindResponse_UNKNOWN
 			return nil
 		}
-		rsp.Status = message.MessageQueryResponse_SUCCESS
+		rsp.Status = message.MessageFindResponse_SUCCESS
 		return nil
-	} else if req.Way == message.MessageQueryRequest_HISTORY {
+	} else if req.Way == message.MessageFindRequest_HISTORY {
 		err := collection.FindOne(ctx, bson.M{
 			"fromUser": rsp.FromUser,
 			"toUser":   rsp.ToUser,
 		}).Decode(&rsp)
 		if utils.LogContinue(err, utils.Warning) {
-			rsp.Status = message.MessageQueryResponse_UNKNOWN
+			rsp.Status = message.MessageFindResponse_UNKNOWN
 			return nil
 		}
-		rsp.Status = message.MessageQueryResponse_SUCCESS
+		rsp.Status = message.MessageFindResponse_SUCCESS
 		return nil
 	}
 	return nil
