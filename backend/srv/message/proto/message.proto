@@ -1,10 +1,38 @@
 syntax = "proto3";
 
-service  {
-    rpc  () returns ();
+service Message {
+    rpc Create (MessageCreateRequest) returns (MessageCreateResponse);
 }
 
-message  {
+message MessageInfo{
+    enum Type {
+        UNKNOWN = 0;
+        TEXT = 1;
+        PICTURE = 2;
+        VIDEO = 3;
+    }
+    int64 time = 1;
+    bool forward = 2;
+    Type type = 3;
+    string text = 4;
+    bool unread = 5;
+}
+
+message MessageCreateRequest{
+    enum Type {
+        UNKNOWN = 0;
+        TEXT = 1;
+        PICTURE = 2;
+        VIDEO = 3;
+    }
+    int32 fromUser = 1;
+    int32 toUser = 2;
+    Type type = 3;
+    string text = 4;
+    bytes file = 5;
+}
+
+message MessageCreateResponse {
     enum Status {
         UNKNOWN = 0;
         INVALID_PARAM = -1;
