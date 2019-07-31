@@ -25,6 +25,7 @@ let ImagePicker = NativeModules.ImageCropPicker;
 
 class ReleaseImage extends Component {
     render () {
+        console.warn(this.props.image);
         return (
             <TouchableOpacity onLongPress={() => {this.props.deleteImage(this.props.index)}}>
                 <Image style={{
@@ -346,7 +347,7 @@ export default class ReleaseScreen extends Component {
                                                         addType = '/buyInfo';
                                                     let formData = new FormData();
                                                     formData.append('userID', Config.userInfo.userID);
-                                                    formData.append('validTime', TimeStampNow());
+                                                    formData.append('releaseTime', TimeStampNow());
                                                     formData.append('goodName', this.state.goodName);
                                                     if (this.state.description !== '')
                                                         formData.append('description', this.state.description);

@@ -1,8 +1,40 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions} from 'react-native';
 import HTTP from '../../Network/Network';
 import {parseStatus, parseTimeStamp} from "../../Utils/ParseInfo";
 import MyAvatar from '../../Components/MyAvatar';
+import Video from "react-native-video";
+import Config from "../../Config";
+import {Avatar} from "react-native-elements";
+
+const {width, height, scale} = Dimensions.get('window');
+
+class GoodInfoImage extends Component {
+    render () {
+        let {fileID} = this.props;
+        let imageUri = (Config.fetchPrefix + 'file/' + fileID);
+        let imageWidth=width * 0.85, imageHeight=width * 0.85;
+        /*Image.getSize(imageUri)
+            .then((width, height) => {
+                imageWidth = 0.85 * width;
+                imageHeight = height * imageWidth / width;
+            })
+            .catch((error) => {
+                console.log(error); //取宽，高出错
+            });*/
+        return (
+            <TouchableOpacity activeOpacity={0.7} onLongPress={() => {}}>
+                <Image style={{
+                    width: imageWidth,
+                    height: imageHeight,
+                    resizeMode: 'contain',
+                    borderColor: 'white',
+                    borderWidth: 1,
+                }} source={{uri: imageUri}} />
+            </TouchableOpacity>
+        );
+    }
+}
 
 class InfoPart extends Component {
     render() {
@@ -48,24 +80,98 @@ class InfoPart extends Component {
                         <Text style={styles.ratingText}>暂无</Text>
                     </Text>
                 </View>
+                <View style={{height: 20, backgroundColor: '#EFEFF5'}}/>
             </View>
         );
     }
 }
 
 class ImagePart extends Component {
-    render() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loaded: false,
+            contentToken: '',
+            files: '',
+        };
+        this.keyID = 0;
+    };
+
+    componentDidMount() {
+        this.fetchData();
+    }
+
+    fetchData() {
+        //console.warn(Config.userInfo);
+        //let obj = { userID: Config.userInfo.userID };
+        let obj = {  };
         let {contentID} = this.props;
+        HTTP.get(('/content/' + contentID), obj)
+            .then((response) => {
+                //console.warn(response);
+                this.setState({
+                    contentToken: response.contentToken,
+                    files: response.files,
+                    loaded: true,
+                });
+            })
+            .catch((error) => console.error(error));
+    }
+
+    renderVideo(video) {
+        console.log('rendering video');
+        return (<View style={{height: 300, width: 300}}>
+            <Video source={{uri: video.uri, type: video.mime}}
+                   style={{position: 'absolute',
+                       top: 0,
+                       left: 0,
+                       bottom: 0,
+                       right: 0
+                   }}
+                   rate={1}
+                   paused={false}
+                   volume={1}
+                   muted={false}
+                   resizeMode={'cover'}
+                   onError={e => console.log(e)}
+                   onLoad={load => console.log(load)}
+                   repeat={true} />
+        </View>);
+    }
+
+    renderImage = (fileID) => {
+        //console.warn(fileID);
         return (
-            <View style={{marginTop: 20}}>
-                <View style={{backgroundColor: '#FCFCFC'}}>
-                    <Text style={{marginLeft: 20, marginRight: 20}} selectable={true}>
-                        <Text style={styles.headerText}>图片部分{contentID}</Text>
-                    </Text>
-                </View>
-                <View style={{height: 10, backgroundColor: '#EFEFF5'}} />
-            </View>
+            <GoodInfoImage fileID={fileID}/>
         )
+    };
+
+    renderAsset(file) {
+        //console.warn(file);
+        if (file.type === 2) {
+            return this.renderVideo(file.fileID);
+        }
+        return this.renderImage(file.fileID);
+    }
+
+    render() {
+        if (this.state.loaded === false) {
+            return (
+                <View style={styles.container}>
+                    <Text>图片加载中...</Text>
+                </View>
+            );
+        } else {
+            //console.warn(this.state.files);
+            return (
+                <View style={{alignItems: 'center'}}>
+                    <View style={{backgroundColor: '#FCFCFC'}}>
+                        {this.state.files.length > 0 ? this.state.files.map(file => <View key={this.keyID++}>{this.renderAsset(file)}</View>) : null}
+                    </View>
+                    <View style={{height: 20, backgroundColor: '#EFEFF5'}}/>
+                </View>
+            );
+        }
     }
 }
 
@@ -218,7 +324,7 @@ export default class GoodInfoScreen extends Component {
                 <ScrollView>
                     <View style={{backgroundColor: '#EFEFF5'}}>
                         <InfoPart infoType={this.infoType} item={this.state}/>
-                        <ImagePart contentID={this.state.contentID}/>
+                        {this.state.contentID === undefined? null : <ImagePart contentID={this.state.contentID}/>}
                         <UserPart userID={this.state.userID} navigate={(params) => this.navigate(params)}/>
                     </View>
                 </ScrollView>

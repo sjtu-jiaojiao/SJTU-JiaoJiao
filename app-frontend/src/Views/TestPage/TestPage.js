@@ -4,9 +4,10 @@ import {
     View,
     Text,
     ScrollView,
-    RefreshControl,
+    RefreshControl, Image, TouchableOpacity,
 } from 'react-native';
 import jwt_decode from 'jwt-decode';
+import Config from "../../Config";
 
 export default class RefreshControlDemo extends Component {
     static navigationOptions = {
@@ -18,7 +19,7 @@ export default class RefreshControlDemo extends Component {
         loaded:0,
         isRefreshing: false,
         data: Array.from(new Array(20)).map((val, i) => ({text: '初始化： ' + i, clicks: 0})),
-    }
+    };
 
     _onRefresh = () => {
         this.setState({isRefreshing: true});
@@ -37,11 +38,31 @@ export default class RefreshControlDemo extends Component {
                 data: rowData,
             });
         }, 3000);
-    }
+    };
 
     render() {
-        console.warn(jwt_decode('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjQ1MzU1ODksImlkIjoxMDAwMiwicm9sZSI6MX0.zdPwgUOSThZ3Eru53pmxbg1MijWOh17UhD57mlEZLdQ'));
+        let imageUri = 'http://202.120.40.8:30711/v1/file/5d41bc5bc286640d0c7ec63e';
+        let imageWidth, imageHeight;
+        Image.getSize(imageUri)
+            .then((width, height) => {
+                imageWidth = 0.85 * width;
+                imageHeight = height * imageWidth / width;
+            })
+            .catch((error) => {
+                console.warn(error);
+            });
         return (
+            <TouchableOpacity onLongPress={() => {}}>
+                <Image style={{
+                    width: imageWidth,
+                    height: imageHeight,
+                    resizeMode: 'contain',
+                    borderColor: 'white',
+                    borderWidth: 1,
+                }} source={{uri: imageUri}} />
+            </TouchableOpacity>
+        );
+        /*return (
             <ScrollView
                 style={{flex:1}}
                 refreshControl={
@@ -57,6 +78,9 @@ export default class RefreshControlDemo extends Component {
                         progressBackgroundColor="#ffff00"
                     />
                 }>
+                    <TouchableOpacity onLongPress={() => {}}>
+                        <Image source={{uri: 'http://202.120.40.8:30711/v1/file/5d41bc5bc286640d0c7ec63e'}} />
+                    </TouchableOpacity>
                  <View>
                     {
                         this.state.data.map((row, ii) => {
@@ -65,7 +89,7 @@ export default class RefreshControlDemo extends Component {
                     }
                 </View>
             </ScrollView>
-        );
+        );*/
     }
 }
 0
