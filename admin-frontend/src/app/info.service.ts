@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { sellInfo, buyInfo, InfoResponse } from './entity/info';
+import { query } from '\@angular/animations';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,8 +18,72 @@ export class InfoService {
   private sellinfoUrl = 'api/sellInfo';  // URL to web api
   private buyinfoUrl = 'api/buyInfo';
   constructor(private http: HttpClient) { }
+  bi: buyInfo[];
+  si: sellInfo[];
 
+  getAllSellInfo(): sellInfo[]{
+    if(!this.si)
+    {
+      this.getSellInfos().subscribe(e=>
+        {
+        this.si = e.sellInfo;
+      this.getMoreSell(100,false);
+        })
+    }
+    return this.si;
+  }
+  
+  getAllBuyInfo(): buyInfo[]{
+    if(!this.bi)
+    {
+      this.getBuyInfos().subscribe(e=>
+        {
+        this.bi = e.buyInfo;
+      this.getMoreBuy(100,false);
+        })
+    }
+    return this.bi;
+  }
+  
+  getMoreBuy(offset, dynamic){
+    if(!(this.bi.length%100) && !dynamic)
+      this.getBuyInfos(null,null,null,null,offset).subscribe(
+          e => {
+              this.bi=this.bi.concat(e.buyInfo);
+              this.getMoreBuy(offset+100, false);
+          }
+      );
+      else{
+          setTimeout(() => {
+              this.getBuyInfos(null,null,null,null,offset).subscribe(
+                  e => {
+                      if(e.buyInfo)
+                      this.bi=this.bi.concat(e.buyInfo);
+                      this.getMoreBuy(this.bi.length-1, true);
+          }
+      );}, 5000 );
+      }
+}
 
+getMoreSell(offset, dynamic){
+    if(!(this.si.length%100) && !dynamic)
+      this.getSellInfos(null,null,null,null,offset).subscribe(
+          e => {
+              this.si= this.si.concat(e.sellInfo);
+              this.getMoreSell(offset+100, false);
+          }
+      );
+  else{
+      setTimeout(() => {
+          this.getSellInfos(null,null,null,null,offset).subscribe(
+              e => {
+                  if(e.sellInfo)
+                  this.si=this.si.concat(e.sellInfo);
+                  this.getMoreSell(this.si.length-1,true);
+      }
+  );}, 5000 );
+  }
+}
   /** GET info by id. Will 404 if id not found */
   getSellInfo(id: string): Observable<sellInfo> {
     const url = `${this.sellinfoUrl}/${id}`;

@@ -20,6 +20,7 @@ export class InfoStatisticComponent implements OnInit {
   goodoption: any;
   bi: buyInfo[];
   si: sellInfo[];
+  pl: boolean = false;
   constructor(private is: InfoService) { }
   ngOnInit() {
     this.is.getBuyInfos().subscribe(
@@ -31,32 +32,26 @@ export class InfoStatisticComponent implements OnInit {
                     this.fdg();
                     this.ts();
                     this.lq();
-                    this.good();
-                    this.getMoreBuy(100);
-                    this.getMoreSell(100);
+                    this.good();          
+                    this.bi = this.is.getAllBuyInfo();          
+                    this.si = this.is.getAllSellInfo();
+                    this.getAllInfo();
                 }
   );})
   }
-  getMoreBuy(offset){
-      if(!(this.bi.length%100))
-        this.is.getBuyInfos(null,null,null,null,offset).subscribe(
-            e => {
-                this.bi=this.bi.concat(e.buyInfo);
-                this.lq();
-                this.getMoreBuy(offset+100);
-            }
-        );
+  pauseLine(){
+      this.pl=!this.pl;
   }
-  getMoreSell(offset){
-      console.log(this.si.length);
-      if(!(this.si.length%100))
-        this.is.getSellInfos(null,null,null,null,offset).subscribe(
-            e => {
-                this.si= this.si.concat(e.sellInfo);
-                this.lq();
-                this.getMoreSell(offset+100);
-            }
-        );
+  getAllInfo(){
+
+      setTimeout(() => {
+          this.bi = this.is.getAllBuyInfo();
+          this.bi = this.bi.sort( (a,b) => a.releaseTime - b.releaseTime);
+          this.si = this.is.getAllSellInfo();
+          this.si = this.si.sort( (a,b) => a.releaseTime - b.releaseTime);
+          if(!this.pl)this.lq();
+          this.getAllInfo();
+      }, 10000);
   }
   good() {
     var data = prepareBoxplotData([
@@ -415,34 +410,27 @@ this.goodoption = {
     series: [
         {
             name: '购买',
-            type: 'line',
-            animation: false,
-            smooth: true,
-            showAllSymbol: true,
+            yAxisIndex: 0,
+            type:'line',
+            smooth:true,
             symbol: 'circle',
-            symbolSize: 6,
+            symbolSize: 1,
+            sampling: 'average',
+            itemStyle: {
+                normal: {
+                    color: '#d68262'
+                }
+            },
             areaStyle: {
                 normal: {
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                         offset: 0,
-                        color: 'rgba(137, 189, 27, 0.9)'
+                        color: '#d68262'
                     }, {
-                        offset: 0.8,
-                        color: 'rgba(137, 189, 27, 0)'
-                    }], false),
-                    shadowColor: 'rgba(0, 0, 0, 0.1)',
-                    shadowBlur: 10
+                        offset: 1,
+                        color: '#ffe'
+                    }])
                 }
-            },
-            itemStyle: {
-                normal: {
-                    color: 'rgb(137,189,27)',
-                    borderColor: 'rgba(137,189,2,0.27)',
-                    borderWidth: 12
-                }
-            },
-            lineStyle: {
-                width: 1
             },
             data: bdata
         },
@@ -450,33 +438,25 @@ this.goodoption = {
             name: '出售',
             type: 'line',
             yAxisIndex: 1,
-            animation: false,
+            symbolSize: 1,
             smooth: true,
-            showAllSymbol: true,
             symbol: 'circle',
-            symbolSize: 6,
-            areaStyle: {
-                normal: {
-                    color: new echarts.graphic.LinearGradient(0, 1, 0,0 , [{
-                        offset: 0,
-                        color: 'rgba(219, 50, 51, 0.9)'
-                    }, {
-                        offset: 0.8,
-                        color: 'rgba(219, 50, 51, 0)'
-                    }], false),
-                    shadowColor: 'rgba(0, 0, 0, 0.1)',
-                    shadowBlur: 10
-                }
-            },
+            sampling: 'average',
             itemStyle: {
                 normal: {
-                    color: 'rgb(219,50,51)',
-                    borderColor: 'rgba(219,50,51,0.2)',
-                    borderWidth: 12
+                    color: '#8ec6ad'
                 }
             },
-            lineStyle: {
-                width: 1
+            areaStyle: {
+                normal: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: '#8ec6ad'
+                    }, {
+                        offset: 1,
+                        color: '#ffe'
+                    }])
+                }
             },
             data: sdata
         }
