@@ -16,42 +16,36 @@ class InfoPart extends Component {
                         <Text style={styles.ratingText}>{item.goodName}</Text>
                     </Text>
                 </View>
-                <View style={{height: 10, backgroundColor: '#EFEFF5'}} />
-                <View style={{backgroundColor: 'white'}}>
+                <View style={{backgroundColor: 'white', marginTop: 10}}>
                     <Text style={{marginLeft: 20, marginRight: 20}}>
                         <Text style={styles.headerText}>具体描述：</Text>
                         <Text style={styles.ratingText}>{item.description}</Text>
                     </Text>
                 </View>
-                <View style={{height: 10, backgroundColor: '#EFEFF5'}} />
-                <View style={{backgroundColor: 'white'}}>
+                <View style={{backgroundColor: 'white', marginTop: 10}}>
                     <Text style={{marginLeft: 20, marginRight: 20}}>
                         <Text style={styles.headerText}>商品状态：</Text>
                         <Text style={styles.ratingText}>{parseStatus(item.status)}</Text>
                     </Text>
                 </View>
-                <View style={{height: 10, backgroundColor: '#EFEFF5'}} />
-                <View style={{backgroundColor: 'white'}}>
+                <View style={{backgroundColor: 'white', marginTop: 10}}>
                     <Text style={{marginLeft: 20, marginRight: 20}}>
                         <Text style={styles.headerText}>出售价格：</Text>
                         <Text style={styles.ratingText}>￥{item.price}</Text>
                     </Text>
                 </View>
-                <View style={{height: 10, backgroundColor: '#EFEFF5'}} />
-                <View style={{backgroundColor: 'white'}}>
+                <View style={{backgroundColor: 'white', marginTop: 10}}>
                     <Text style={{marginLeft: 20, marginRight: 20}}>
                         <Text style={styles.headerText}>发布时间：</Text>
                         <Text style={styles.ratingText}>{parseTimeStamp(item.releaseTime)}</Text>
                     </Text>
                 </View>
-                <View style={{height: 10, backgroundColor: '#EFEFF5'}} />
-                <View style={{backgroundColor: 'white'}}>
+                <View style={{backgroundColor: 'white', marginTop: 10}}>
                     <Text style={{marginLeft: 20, marginRight: 20}}>
                         <Text style={styles.headerText}>商品标签：</Text>
                         <Text style={styles.ratingText}>暂无</Text>
                     </Text>
                 </View>
-                <View style={{height: 10, backgroundColor: '#EFEFF5'}} />
             </View>
         );
     }
