@@ -2006,6 +2006,22 @@ define({ "api": [
             "optional": false,
             "field": "way",
             "description": "<p>1 for only pull message <br> 2 for read message <br> 3 for query history message</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "limit",
+            "defaultValue": "20",
+            "description": "<p>limit of return message infos, only for history query</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "offset",
+            "defaultValue": "0",
+            "description": "<p>offset from the latest message info, only for history query</p>"
           }
         ]
       }

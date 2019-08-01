@@ -103,6 +103,8 @@ func findMessage(c *gin.Context) {
 		FromUser int32                          `form:"fromUser" binding:"required"`
 		ToUser   int32                          `form:"toUser" binding:"required"`
 		Way      message.MessageFindRequest_Way `form:"way" binding:"required"`
+		Limit    int32                          `form:"limit"`
+		Offset   int32                          `form:"offset"`
 	}
 	var p param
 

@@ -132,47 +132,45 @@ func TestFind(t *testing.T) {
 		})
 		So(err, ShouldBeNil)
 	}
+
+	testBase := func(infoLen int, badge int, status message.MessageFindResponse_Status) {
+		rsp.Reset()
+		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, status)
+		So(rsp.Badge, ShouldEqual, badge)
+		So(len(rsp.Infos), ShouldEqual, infoLen)
+	}
 	Convey("Test Find Message", t, func() {
 		prepareData()
 
 		req.FromUser = 1001
 		req.ToUser = 2001
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, message.MessageCreateResponse_INVALID_PARAM)
+		So(rsp.Status, ShouldEqual, message.MessageFindResponse_INVALID_PARAM)
 
 		req.Way = message.MessageFindRequest_ONLY_PULL
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, message.MessageCreateResponse_SUCCESS)
-		So(rsp.Badge, ShouldEqual, 3)
-		So(len(rsp.Infos), ShouldEqual, 2)
+		testBase(2, 3, message.MessageFindResponse_SUCCESS)
 		So(rsp.Infos[1].Text, ShouldEqual, "1234567890abcdef12345678")
 
-		rsp.Infos = nil
 		req.Way = message.MessageFindRequest_READ_MESSAGE
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, message.MessageCreateResponse_SUCCESS)
-		So(rsp.Badge, ShouldEqual, 3)
-		So(len(rsp.Infos), ShouldEqual, 2)
+		testBase(2, 3, message.MessageFindResponse_SUCCESS)
 		So(rsp.Infos[1].Text, ShouldEqual, "1234567890abcdef12345678")
 
-		rsp.Infos = nil
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, message.MessageCreateResponse_SUCCESS)
-		So(rsp.Badge, ShouldEqual, 0)
-		So(len(rsp.Infos), ShouldEqual, 0)
+		testBase(0, 0, message.MessageFindResponse_SUCCESS)
 
-		rsp.Infos = nil
+		req.Way = message.MessageFindRequest_HISTORY
+		testBase(5, 0, message.MessageFindResponse_SUCCESS)
+
+		req.Limit = 3
+		testBase(3, 0, message.MessageFindResponse_SUCCESS)
+
 		req.FromUser = 2001
 		req.Way = message.MessageFindRequest_ONLY_PULL
 		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, message.MessageFindResponse_NOT_FOUND)
 
-		rsp.Infos = nil
 		req.ToUser = 1001
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, message.MessageCreateResponse_SUCCESS)
-		So(rsp.Badge, ShouldEqual, 0)
-		So(len(rsp.Infos), ShouldEqual, 1)
+		testBase(1, 0, message.MessageFindResponse_SUCCESS)
 		So(rsp.Infos[0].Text, ShouldEqual, "你好，我是小明4(⊙﹏⊙)，🔺")
 
 		defer func() {

@@ -193,6 +193,8 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
  * @apiParam {int32} fromUser user who launch the chat at first time
  * @apiParam {int32} toUser user who accept the chat at first time
  * @apiParam {int32} way 1 for only pull message <br> 2 for read message <br> 3 for query history message
+ * @apiParam {int32} limit=20 limit of return message infos, only for history query
+ * @apiParam {int32} offset=0 offset from the latest message info, only for history query
  * @apiSuccess {int32} fromUser user who launch the chat at first time
  * @apiSuccess {int32} toUser user who accept the chat at first time
  * @apiSuccess {int32} badge count of message still unread
@@ -209,6 +211,9 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 	if !utils.RequireParam(req.FromUser, req.ToUser, req.Way) {
 		rsp.Status = message.MessageFindResponse_INVALID_PARAM
 		return nil
+	}
+	if req.Limit == 0 {
+		req.Limit = 20
 	}
 
 	decodeRes := func(src *ChatLog, dest *message.MessageFindResponse) {
@@ -322,14 +327,23 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 		rsp.Status = message.MessageFindResponse_SUCCESS
 		return nil
 	} else if req.Way == message.MessageFindRequest_HISTORY {
+		var res ChatLog
 		err := collection.FindOne(ctx, bson.M{
 			"fromUser": rsp.FromUser,
 			"toUser":   rsp.ToUser,
-		}).Decode(&rsp)
+		}, &options.FindOneOptions{
+			Projection: bson.M{
+				"infos": bson.M{
+					"$slice": bson.A{req.Offset, req.Limit},
+				},
+			},
+		}).Decode(&res)
 		if utils.LogContinue(err, utils.Warning) {
 			rsp.Status = message.MessageFindResponse_UNKNOWN
 			return nil
 		}
+
+		decodeRes(&res, rsp)
 		rsp.Status = message.MessageFindResponse_SUCCESS
 		return nil
 	}
