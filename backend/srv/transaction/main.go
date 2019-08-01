@@ -44,7 +44,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 		srvRsp, err := microSrv.Query(context.TODO(), &sellinfo.SellInfoQueryRequest{
 			SellInfoID: req.InfoID,
 		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
 		if srvRsp.UserID == 0 {
@@ -58,7 +58,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 		srvRsp, err := microSrv.Query(context.TODO(), &buyinfo.BuyInfoQueryRequest{
 			BuyInfoID: req.InfoID,
 		})
-		if utils.LogContinue(err, utils.Warning, "BuyInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
 		if srvRsp.UserID == 0 {
@@ -79,7 +79,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 	err := db.Ormer.Create(&tran).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil
-	} else if utils.LogContinue(err, utils.Warning) {
+	} else if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 
@@ -113,12 +113,12 @@ func (a *srv) Update(ctx context.Context, req *transaction.TransactionUpdateRequ
 	if gorm.IsRecordNotFoundError(err) {
 		rsp.Status = transaction.TransactionUpdateResponse_NOT_FOUND
 		return nil
-	} else if utils.LogContinue(err, utils.Warning) {
+	} else if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 	tran.Status = int32(req.Status)
 	err = db.Ormer.Save(&tran).Error
-	if utils.LogContinue(err, utils.Warning) {
+	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 

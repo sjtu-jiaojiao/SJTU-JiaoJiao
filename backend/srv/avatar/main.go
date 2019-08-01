@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	db "jiaojiao/database"
 	avatar "jiaojiao/srv/avatar/proto"
 	"jiaojiao/srv/file/mock"
@@ -46,7 +47,7 @@ func (a *srv) Create(ctx context.Context, req *avatar.AvatarCreateRequest, rsp *
 	if gorm.IsRecordNotFoundError(err) {
 		rsp.Status = avatar.AvatarCreateResponse_NOT_FOUND
 		return nil
-	} else if utils.LogContinue(err, utils.Warning) {
+	} else if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 
@@ -55,13 +56,17 @@ func (a *srv) Create(ctx context.Context, req *avatar.AvatarCreateRequest, rsp *
 	microRsp, err := srv.Create(context.TODO(), &file.FileCreateRequest{
 		File: req.File,
 	})
-	if utils.LogContinue(err, utils.Warning, "File service error: %v", err) || microRsp.Status != file.FileCreateResponse_SUCCESS {
+	if utils.LogContinue(err, utils.Error) {
 		return err
+	}
+	if microRsp.Status != file.FileCreateResponse_SUCCESS {
+		_, s := utils.LogContinueS("File create return "+microRsp.Status.String(), utils.Error)
+		return errors.New(s)
 	}
 
 	usr.AvatarID = microRsp.FileID
 	err = db.Ormer.Save(&usr).Error
-	if utils.LogContinue(err, utils.Warning) {
+	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 

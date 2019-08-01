@@ -73,7 +73,7 @@ func findTransaction(c *gin.Context) {
 			Limit:          p.Limit,
 			Offset:         p.Offset,
 		})
-		if utils.LogContinue(err, utils.Warning, "Transaction service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -117,7 +117,7 @@ func addTransaction(c *gin.Context) {
 			Category:   p.Category,
 			FromUserID: p.FromUserID,
 		})
-		if utils.LogContinue(err, utils.Warning, "Transaction service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -159,7 +159,7 @@ func updateTransaction(c *gin.Context) {
 			TransactionID: p.TransactionID,
 			Status:        p.Status,
 		})
-		if utils.LogContinue(err, utils.Warning, "Transaction service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}

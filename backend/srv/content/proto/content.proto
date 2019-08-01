@@ -9,12 +9,13 @@ service Content {
     rpc Check (ContentCheckRequest) returns (ContentCheckResponse);
 }
 
+enum Type {
+    UNKNOWN = 0;
+    PICTURE = 1;
+    VIDEO = 2;
+}
+
 message ContentCreateRequest {
-    enum Type {
-        UNKNOWN = 0;
-        PICTURE = 1;
-        VIDEO = 2;
-    }
     string contentID = 1;
     string contentToken = 2;
     bytes content = 3;
@@ -55,11 +56,6 @@ message ContentCreateTagResponse{
 }
 
 message ContentUpdateRequest {
-    enum Type {
-        UNKNOWN = 0;
-        PICTURE = 1;
-        VIDEO = 2;
-    }
     string contentID = 1;
     string contentToken = 2;
     string fileID = 3;
@@ -75,8 +71,7 @@ message ContentUpdateResponse {
         SUCCESS = 1;
         INVALID_TOKEN = 2;
         NOT_FOUND = 3;
-        FAILED = 4;
-        INVALID_TYPE = 5;
+        INVALID_TYPE = 4;
     }
     Status status = 1;
     string fileID = 2;
@@ -93,16 +88,12 @@ message ContentDeleteResponse {
         INVALID_PARAM = -1;
         SUCCESS = 1;
         INVALID_TOKEN = 2;
+        NOT_FOUND = 3;
     }
     Status status = 1;
 }
 
 message FileMsg {
-    enum Type {
-        UNKNOWN = 0;
-        PICTURE = 1;
-        VIDEO = 2;
-    }
     string fileID = 1;
     Type type = 2;
 }

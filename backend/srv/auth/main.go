@@ -47,19 +47,19 @@ func (a *srv) Auth(ctx context.Context, req *auth.AuthRequest, rsp *auth.AuthRes
 		}
 		client := &http.Client{Transport: tr}
 		resp, err := client.PostForm(utils.GetStringConfig("sys_config", "token_url"), params)
-		if utils.LogContinue(err, utils.Warning) {
+		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
 		defer resp.Body.Close()
 
 		body, err := ioutil.ReadAll(resp.Body)
-		if utils.LogContinue(err, utils.Warning) {
+		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
 
 		id := idToken{}
 		err = json.Unmarshal(body, &id)
-		if utils.LogContinue(err, utils.Warning) {
+		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
 

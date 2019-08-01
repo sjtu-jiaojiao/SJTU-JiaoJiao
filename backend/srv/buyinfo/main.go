@@ -45,7 +45,7 @@ func (a *srv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, rsp *
 	err := db.Ormer.First(&info).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil
-	} else if utils.LogContinue(err, utils.Warning) {
+	} else if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 	good := db.Good{
@@ -54,7 +54,7 @@ func (a *srv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, rsp *
 	err = db.Ormer.First(&good).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil
-	} else if utils.LogContinue(err, utils.Warning) {
+	} else if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 
@@ -108,23 +108,23 @@ func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp
 
 	insert := func() (int32, error) {
 		tx := db.Ormer.Begin()
-		if utils.LogContinue(tx.Error, utils.Warning) {
+		if tx.Error != nil {
 			return 0, tx.Error
 		}
 		err := tx.Create(&good).Error
-		if utils.LogContinue(err, utils.Warning) {
+		if err != nil {
 			tx.Rollback()
 			return 0, err
 		}
 		info.GoodID = good.ID
 		err = tx.Create(&info).Error
-		if utils.LogContinue(err, utils.Warning) {
+		if err != nil {
 			tx.Rollback()
 			return 0, err
 		}
 
 		err = tx.Commit().Error
-		if utils.LogContinue(err, utils.Warning) {
+		if err != nil {
 			tx.Rollback()
 			return 0, err
 		}
@@ -139,7 +139,10 @@ func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp
 			ContentToken: req.ContentToken,
 			Tags:         req.Tags,
 		})
-		if err != nil || microRsp.Status != content.ContentCreateTagResponse_SUCCESS {
+		if utils.LogContinue(err, utils.Error) {
+			return err
+		}
+		if microRsp.Status != content.ContentCreateTagResponse_SUCCESS {
 			rsp.Status = buyinfo.BuyInfoCreateResponse_INVALID_TOKEN
 			return nil
 		}
@@ -149,8 +152,8 @@ func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp
 
 	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) {
 		id, err := insert()
-		if err != nil || id == 0 {
-			return nil
+		if utils.LogContinue(err, utils.Error) || id == 0 {
+			return err
 		}
 		rsp.Status = buyinfo.BuyInfoCreateResponse_SUCCESS
 		rsp.BuyInfoID = id
@@ -166,8 +169,8 @@ func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp
 
 		good.ContentID = req.ContentID
 		id, err := insert()
-		if err != nil || id == 0 {
-			return nil
+		if utils.LogContinue(err, utils.Error) || id == 0 {
+			return err
 		}
 		rsp.Status = buyinfo.BuyInfoCreateResponse_SUCCESS
 		rsp.BuyInfoID = id
@@ -240,7 +243,7 @@ func (a *srv) Find(ctx context.Context, req *buyinfo.BuyInfoFindRequest, rsp *bu
 	}
 
 	err := tb.Limit(req.Limit).Offset(req.Offset).Find(&res).Error
-	if utils.LogContinue(err, utils.Warning) {
+	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 	for _, v := range res {

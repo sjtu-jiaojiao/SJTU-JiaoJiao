@@ -1511,6 +1511,13 @@ define({ "api": [
             "optional": false,
             "field": "contentToken",
             "description": "<p>content token</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "fileID",
+            "description": "<p>24 bytes file id, if not empty only delete this file</p>"
           }
         ]
       }
@@ -1648,23 +1655,16 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "bytes",
-            "optional": true,
+            "optional": false,
             "field": "content",
-            "description": "<p>binary bytes, file accept <a href=\"https://github.com/h2non/filetype#image\">image</a> and <a href=\"https://github.com/h2non/filetype#video\">video</a> (note: only delete the file if empty)</p>"
+            "description": "<p>binary bytes, file accept <a href=\"https://github.com/h2non/filetype#image\">image</a> and <a href=\"https://github.com/h2non/filetype#video\">video</a></p>"
           },
           {
             "group": "Parameter",
             "type": "int32",
-            "optional": true,
-            "field": "type",
-            "description": "<p>1 for picture <br> 2 for video (note: only delete the file if empty)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "array",
             "optional": false,
-            "field": "tags",
-            "description": "<p>string array tags, simply overwrite original tags, clear if empty</p>"
+            "field": "type",
+            "description": "<p>1 for picture <br> 2 for video</p>"
           }
         ]
       }
@@ -1677,14 +1677,14 @@ define({ "api": [
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for not found <br> 4 for failed <br> 5 for invalid type</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for not found <br> 4 for invalid type</p>"
           },
           {
             "group": "Success 200",
             "type": "string",
-            "optional": true,
+            "optional": false,
             "field": "fileID",
-            "description": "<p>24 bytes updated file id (note: new file id differs from old one, meaningful only if content and type are not empty)</p>"
+            "description": "<p>24 bytes updated file id</p>"
           }
         ]
       }

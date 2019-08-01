@@ -48,7 +48,7 @@ func getBuyInfo(c *gin.Context) {
 		rsp, err := srv.Query(context.TODO(), &buyinfo.BuyInfoQueryRequest{
 			BuyInfoID: p.BuyInfoID,
 		})
-		if utils.LogContinue(err, utils.Warning, "BuyInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -107,7 +107,7 @@ func addBuyInfo(c *gin.Context) {
 			UserID:       p.UserID,
 			Tags:         p.Tags,
 		})
-		if utils.LogContinue(err, utils.Warning, "BuyInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -154,7 +154,7 @@ func findBuyInfo(c *gin.Context) {
 			Limit:     p.Limit,
 			Offset:    p.Offset,
 		})
-		if utils.LogContinue(err, utils.Warning, "BuyInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}

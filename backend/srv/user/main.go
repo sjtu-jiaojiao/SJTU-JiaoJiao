@@ -46,7 +46,7 @@ func (a *srv) Create(ctx context.Context, req *user.UserCreateRequest, rsp *user
 		}
 		utils.LogContinue(db.Ormer.Create(&usr).Error, utils.Warning)
 		rsp.Status = user.UserCreateResponse_SUCCESS
-	} else if utils.LogContinue(err, utils.Warning) {
+	} else if utils.LogContinue(err, utils.Error) {
 		return err
 	} else {
 		rsp.Status = user.UserCreateResponse_USER_EXIST
@@ -85,7 +85,7 @@ func (a *srv) Query(ctx context.Context, req *user.UserQueryRequest, rsp *user.U
 	err := db.Ormer.First(&usr).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil
-	} else if utils.LogContinue(err, utils.Warning) {
+	} else if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 	parseUser(&usr, rsp)
@@ -134,7 +134,7 @@ func (a *srv) Update(ctx context.Context, req *user.UserInfo, rsp *user.UserUpda
 		utils.AssignNotZero((*int32)(&req.Status), &usr.Status)
 		utils.AssignNotZero((*int32)(&req.Role), &usr.Role)
 		err := db.Ormer.Save(&usr).Error
-		if utils.LogContinue(err, utils.Warning) {
+		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
 		rsp.Status = user.UserUpdateResponse_SUCCESS
@@ -142,7 +142,7 @@ func (a *srv) Update(ctx context.Context, req *user.UserInfo, rsp *user.UserUpda
 		rsp.Status = user.UserUpdateResponse_NOT_FOUND
 		return nil
 	} else {
-		utils.Warning(err)
+		utils.Error(err)
 		return err
 	}
 	return nil
@@ -171,7 +171,7 @@ func (a *srv) Find(ctx context.Context, req *user.UserFindRequest, rsp *user.Use
 
 	var res []*db.User
 	err := db.Ormer.Where("user_name LIKE ?", "%"+req.UserName+"%").Limit(req.Limit).Offset(req.Offset).Find(&res).Error
-	if utils.LogContinue(err, utils.Warning) {
+	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 	for i, v := range res {

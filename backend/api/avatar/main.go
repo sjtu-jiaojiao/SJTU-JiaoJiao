@@ -35,30 +35,16 @@ func addAvatar(c *gin.Context) {
 	}
 	var p param
 
-	file, err := c.FormFile("file")
+	data, code, err := utils.GetQueryFile(c, "file", 1024*1024*5) // 5M
 	if err == nil && !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
-		if file.Size > 1024*1024*5 { // 5M
-			c.AbortWithStatus(413)
+		if code != 200 {
+			c.AbortWithStatus(code)
 			return
 		}
 
 		role := utils.GetRoleID(c, p.UserID)
-
 		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
-			return
-		}
-
-		f, err := file.Open()
-		if utils.LogContinue(err, utils.Warning) {
-			c.JSON(500, err)
-			return
-		}
-		defer f.Close()
-		data := make([]byte, file.Size)
-		_, err = f.Read(data)
-		if utils.LogContinue(err, utils.Warning) {
-			c.JSON(500, err)
 			return
 		}
 
@@ -68,7 +54,7 @@ func addAvatar(c *gin.Context) {
 			UserID: p.UserID,
 			File:   data,
 		})
-		if utils.LogContinue(err, utils.Warning, "Avatar service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}

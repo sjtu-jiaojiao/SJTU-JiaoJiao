@@ -53,6 +53,8 @@ func IsEmpty(val interface{}) bool {
 		return v == ""
 	case []byte:
 		return bytes.Equal(v, []byte{0})
+	case []string:
+		return len(v) == 0
 	default:
 		s := fmt.Sprintf("%d", val)
 		return s == "0"
