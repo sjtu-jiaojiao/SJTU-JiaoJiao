@@ -53,7 +53,7 @@ func getUserInfo(c *gin.Context) {
 		rsp, err := srv.Query(context.TODO(), &user.UserQueryRequest{
 			UserID: p.UserID,
 		})
-		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -103,7 +103,7 @@ func findUser(c *gin.Context) {
 			Limit:    p.Limit,
 			Offset:   p.Offset,
 		})
-		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -151,7 +151,7 @@ func addUser(c *gin.Context) {
 			StudentID:   p.StudentID,
 			StudentName: p.StudentName,
 		})
-		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -210,11 +210,11 @@ func updateUser(c *gin.Context) {
 			Telephone:   p.Telephone,
 			StudentID:   p.StudentID,
 			StudentName: p.StudentName,
-			Status:      user.UserInfo_Status(p.Status),
-			Role:        user.UserInfo_Role(p.Role),
+			Status:      user.UserInfo_Status(utils.EnumConvert(p.Status, user.UserInfo_Status_name)),
+			Role:        user.UserInfo_Role(utils.EnumConvert(p.Role, user.UserInfo_Role_name)),
 			ClearEmpty:  p.ClearEmpty,
 		})
-		if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}

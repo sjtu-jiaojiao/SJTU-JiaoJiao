@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
+	"jiaojiao/utils"
 
 	"github.com/micro/go-micro/client"
 )
@@ -13,14 +14,15 @@ type mockSrv struct{}
 // Create is sellinfo create mock
 func (a *mockSrv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, opts ...client.CallOption) (*sellinfo.SellInfoCreateResponse, error) {
 	var rsp sellinfo.SellInfoCreateResponse
-	if req.ValidTime == 0 || req.GoodName == "" || req.UserID == 0 {
+	if !utils.RequireParam(req.ValidTime, req.GoodName, req.UserID) {
 		rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
 		return &rsp, nil
 	}
-	if req.ContentID == "" && req.ContentToken == "" {
+
+	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) {
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
 		rsp.SellInfoID = 1000
-	} else if req.ContentID != "" && req.ContentToken != "" {
+	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) {
 		if req.ContentID == "error" {
 			return nil, errors.New("")
 		}
@@ -39,15 +41,15 @@ func (a *mockSrv) Create(ctx context.Context, req *sellinfo.SellInfoCreateReques
 // Query is sellinfo query mock
 func (a *mockSrv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, opts ...client.CallOption) (*sellinfo.SellInfoMsg, error) {
 	var rsp sellinfo.SellInfoMsg
-	if req.SellInfoID != 0 {
+	if utils.RequireParam(req.SellInfoID) {
 		if req.SellInfoID == 1000 {
 			rsp.SellInfoID = 1000
 			rsp.GoodName = "good"
 			rsp.ValidTime = 1234567890
 			rsp.Description = "very good!"
-			rsp.ContentID = "123456789abc123456789abc"
+			rsp.ContentID = "012345678901234567890123"
 			rsp.UserID = 1000
-		} else if req.SellInfoID == 2000 {
+		} else if req.SellInfoID == 3000 {
 			return nil, errors.New("")
 		}
 	}

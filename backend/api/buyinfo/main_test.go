@@ -4,18 +4,20 @@ import (
 	buyinfo "jiaojiao/srv/buyinfo/proto"
 	"jiaojiao/utils"
 	"net/url"
+	"strconv"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func Test_getBuyInfo(t *testing.T) {
-	tf := func(code int, path string, id int, cid string) {
+	tf := func(code int, path string, cid string) {
 		c, d := utils.GetTestData(setupRouter, "GET", "/buyInfo/"+path, nil, "")
 
 		So(c, ShouldEqual, code)
 		if d != nil {
-			So(d["buyInfoID"], ShouldEqual, id)
+			v, _ := strconv.Atoi(path)
+			So(d["buyInfoID"], ShouldEqual, v)
 			So(d["contentID"], ShouldEqual, cid)
 		}
 	}
@@ -27,9 +29,9 @@ func Test_getBuyInfo(t *testing.T) {
 			Admin: true,
 		}, "GET", "/buyInfo/1000", nil), ShouldBeZeroValue)
 
-		tf(400, "0", 0, "")
-		tf(200, "1000", 1000, "123456789abc123456789abc")
-		tf(500, "2000", 0, "")
+		tf(400, "0", "")
+		tf(200, "1000", "012345678901234567890123")
+		tf(500, "3000", "")
 	})
 }
 

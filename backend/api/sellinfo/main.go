@@ -48,7 +48,7 @@ func getSellInfo(c *gin.Context) {
 		rsp, err := srv.Query(context.TODO(), &sellinfo.SellInfoQueryRequest{
 			SellInfoID: p.SellInfoID,
 		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -73,13 +73,14 @@ func getSellInfo(c *gin.Context) {
  */
 func addSellInfo(c *gin.Context) {
 	type param struct {
-		ValidTime    int64   `form:"validTime" binding:"required"`
-		GoodName     string  `form:"goodName" binding:"required"`
-		Price        float64 `form:"price"`
-		Description  string  `form:"description"`
-		ContentID    string  `form:"contentID"`
-		ContentToken string  `form:"contentToken"`
-		UserID       int32   `form:"userID" binding:"required"`
+		ValidTime    int64    `form:"validTime" binding:"required"`
+		GoodName     string   `form:"goodName" binding:"required"`
+		Price        float64  `form:"price"`
+		Description  string   `form:"description"`
+		ContentID    string   `form:"contentID"`
+		ContentToken string   `form:"contentToken"`
+		UserID       int32    `form:"userID" binding:"required"`
+		Tags         []string `form:"tags"`
 	}
 	var p param
 	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
@@ -104,8 +105,9 @@ func addSellInfo(c *gin.Context) {
 			ContentID:    p.ContentID,
 			ContentToken: p.ContentToken,
 			UserID:       p.UserID,
+			Tags:         p.Tags,
 		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -145,14 +147,14 @@ func findSellInfo(c *gin.Context) {
 			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
 		rsp, err := srv.Find(context.TODO(), &sellinfo.SellInfoFindRequest{
 			UserID:    p.UserID,
-			Status:    sellinfo.SellStatus(p.Status),
+			Status:    sellinfo.SellStatus(utils.EnumConvert(p.Status, sellinfo.SellStatus_name)),
 			GoodName:  p.GoodName,
 			LowPrice:  p.LowPrice,
 			HighPrice: p.HighPrice,
 			Limit:     p.Limit,
 			Offset:    p.Offset,
 		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}

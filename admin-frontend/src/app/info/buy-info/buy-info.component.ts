@@ -38,11 +38,13 @@ export class BuyInfoComponent implements OnInit {
           return '完成';
         case 4: 
           return '失效';
+        case 5:
+          return '关闭';
       }
   }
 
   stringToDate(params) {
-      const date = new Date(params);
+      const date = new Date(params*1000);
       return Format(date,'yyyy-MM-dd HH:mm:ss');
       }
 

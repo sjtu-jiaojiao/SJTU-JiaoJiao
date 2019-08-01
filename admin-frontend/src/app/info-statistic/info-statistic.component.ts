@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { EChartOption} from 'echarts';
 import * as echarts from 'echarts/lib/echarts';
+import { InfoService } from '../info.service';
+import { buyInfo, sellInfo } from 'src/app/entity/info';
+import {prepareBoxplotData} from 'echarts/extension/dataTool';
+import { Transaction } from '../entity/transaction';
+import { TransactionService } from '../transaction.service';
+import { Format } from '../Formatter/format';
 const name = ['LJH', 'WXZ', 'ZWJ', 'KHQ', 'MZD', 'ZEL', 'JZM', 'HJT', 'TRUMP',
 'LJH2', 'WXZ2', 'ZWJ2', 'KHQ2', 'MZD2', 'ZEL2', 'JZM2', 'HJT2', 'TRUMP2',
 'LJH3', 'WXZ3', 'ZWJ3', 'KHQ3', 'MZD3', 'ZEL3', 'JZM3', 'HJT3', 'TRUMP3'];
@@ -15,108 +21,210 @@ export class InfoStatisticComponent implements OnInit {
   tsoption: any;
   lqoption: any;
   goodoption: any;
-  constructor() { }
+  bi: buyInfo[]=[];
+  si: sellInfo[]=[];
+  tr: Transaction[]=[];
+  pl: boolean = false;
+  constructor(private trs: TransactionService, private is: InfoService) { }
   ngOnInit() {
-    this.cld();
-    this.fdg();
-    this.ts();
-    this.lq();
-    this.good();
+    this.is.getBuyInfos().subscribe(
+        e => {this.bi = e.buyInfo;
+            this.is.getSellInfos().subscribe(
+                e => {
+                    this.si = e.sellInfo;
+                    this.cloudGrpah();
+                    this.forceGraph();
+                    this.calenderGraph();
+                    this.lineGraph();
+                    this.boxGraph();    
+                    const now = new Date().getFullYear()
+                    this.tr = this.trs.getAllTR(6,new Date(now,1,1).getTime()/1000, new Date(now+1,1,1).getTime()/1000);      
+                    this.bi = this.is.getAllBuyInfo();          
+                    this.si = this.is.getAllSellInfo();
+                    this.getAllInfo();
+                    this.getAllTR(new Date(now,1,1).getTime()/1000, new Date(now+1,1,1).getTime()/1000);
+                }
+  );})
   }
-  good() {
-    const jsdata1: any[][] = [['2019-01-01', 18.5, 3], ['2019-01-02', 12.5, 3], ['2019-01-01', 42.5, 5], ['2019-01-03', 65, 5],
-    ['2019-01-05', 23.5, 5], ['2019-01-04', 18, 5], ['2019-01-02', 18, 4]];
-    const jsdata2: any[][] = [['2019-01-01', 32.5, 2], ['2019-01-02', 122.5, 4], ['2019-01-01', 41.5, 5], ['2019-01-07', 75, 5],
-    ['2019-01-03', 21.5, 5], ['2019-01-04', 177, 5], ['2019-01-02', 66, 5]];
-    const jsdata3: any[][]  = [['2019-01-01', 11], ['2019-01-06', 12.5, 4], ['2019-01-01', 4.5, 3], ['2019-01-03', 15, 3],
-    ['2019-01-03', 11.5, 5], ['2019-01-04', 17, 3], ['2019-01-02', 16, 5]];
-    const itemstyle = {
-    normal: {
-        opacity: 0.8,
-        shadowBlur: 10,
-        shadowOffsetX: 0,
-        shadowOffsetY: 0,
-        shadowColor: 'rgba(0, 0, 0, 0.3)'
-    }
-};
-    this.goodoption = {
+  pauseLine(){
+      this.pl=!this.pl;
+  }
+
+  getAllTR(beg, end){
+    setTimeout(() => {
+        this.tr = this.trs.getAllTR(6,beg,end);
+        if(!this.pl){
+            this.calenderGraph();
+           this.forceGraph();
+        }
+        this.getAllTR(beg,end);
+    }, 10000);
+  }
+  getAllInfo(){
+      setTimeout(() => {
+          this.bi = this.is.getAllBuyInfo();
+          this.bi = this.bi.sort( (a,b) => a.releaseTime - b.releaseTime);
+          this.si = this.is.getAllSellInfo();
+          this.si = this.si.sort( (a,b) => a.releaseTime - b.releaseTime);
+          if(!this.pl)this.lineGraph();
+          this.getAllInfo();
+      }, 10000);
+  }
+
+  boxGraph() {
+    var data = prepareBoxplotData([
+    [850, 740, 900, 1070, 930, 850, 950, 980, 980, 880, 1000, 980, 930, 650, 760, 810, 1000, 1000, 960, 960],
+    [960, 940, 960, 940, 880, 800, 850, 880, 900, 840, 830, 790, 810, 880, 880, 830, 800, 790, 760, 800],
+    [880, 880, 880, 860, 720, 720, 620, 860, 970, 950, 880, 910, 850, 870, 840, 840, 850, 840, 840, 840],
+    [890, 810, 810, 820, 800, 770, 760, 740, 750, 760, 910, 920, 890, 860, 880, 720, 840, 850, 850, 780],
+    [890, 840, 780, 810, 760, 810, 790, 810, 820, 850, 870, 870, 810, 740, 810, 940, 950, 800, 810, 870]
+]);
+this.goodoption = {
+    backgroundColor: '#01193d',
+    title: [
+        {
+            text: 'Price Trend',
+            left: 'center',
+        }
+    ],
+    tooltip: {
+        trigger: 'item',
+        axisPointer: {
+            type: 'shadow'
+        }
+    },
     dataZoom: [
         {
             show: true,
             realtime: true,
-            start: 65,
-            end: 85
+            start: 0,
+            end: 40
         },
         {
             type: 'inside',
             realtime: true,
-            start: 65,
-            end: 85
+            start: 0,
+            end: 40
         }
     ],
-      xAxis :
-      {
-          type: 'category',
-      },
-        backgroundColor: '#01193d',
-        title: {
-            text: 'Price Trend',
+    grid: {
+        left: '10%',
+        right: '10%',
+        bottom: '15%'
+    },
+    xAxis: {
+        type: 'category',
+        data: data.axisData,
+        boundaryGap: true,
+        nameGap: 30,
+        axisLine: {onZero: false},
+        splitArea: {
+            show: false
         },
-        color: [
-            '#dd4444', '#fec42c', '#80F1BE'
-        ],
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                label: {
-                    show: true,
-                    backgroundColor: '#004E52'
-                },
-                type: 'cross'
+        axisLabel: {
+            formatter: 'tag {value}'
+        },
+        splitLine: {
+            show: false
+        },
+    },
+    yAxis: {
+        type: 'value',
+        name: 'yuan'
+    },
+    series: [
+        {
+            name: 'boxplot',
+            type: 'boxplot',
+            data: data.boxData,
+            tooltip: {
+                formatter: function (param) {
+                    return [
+                        'tag ' + param.name + ': ',
+                        'upper: ' + param.data[5],
+                        'Q3: ' + param.data[4],
+                        'median: ' + param.data[3],
+                        'Q1: ' + param.data[2],
+                        'lower: ' + param.data[1]
+                    ].join('<br/>');
+                }
             }
-        },
-        legend: {
-            y: 'top',
-            data: ['Book', 'Shoe', 'Mouse'],
-        },
-        yAxis: {
-            type: 'value',
-            min: 0,
-            max: 'datamax',
-            name: 'Price',
-            splitLine: {
-                show: true
-            }
-        },
-        series: [{
-            name: 'Book',
-            type: 'scatter',
-            symbolSize: t => 3 * t[2],
-            itemStyle: itemstyle,
-            data: jsdata1
-        }, {
-            name: 'Shoe',
-            type: 'scatter',
-            symbolSize: t => 3 * t[2],
-            itemStyle: itemstyle,
-            data: jsdata2
         },
         {
-            name: 'Mouse',
+            name: 'outlier',
             type: 'scatter',
-            symbolSize: t => 3 * t[2],
-            itemStyle: itemstyle,
-            data: jsdata3
+            data: data.outliers
         }
-
     ]
-    };
+};
   }
-  ts() {
+  cloudGrpah() {
+    this.cldoption = {
+    backgroundColor: '#01193d',
+      title: {
+      text: 'Label WordCloud',
+      left: 'center',
+  },
+  tooltip: {},
+  series: [{
+      type: 'wordCloud',
+      shape: 'circle',
+
+      left: 'center',
+      top: 'center',
+      sizeRange: [12, 30],
+      rotationRange: [-90, 90],
+      rotationStep: 45,
+      gridSize: 8,
+      drawOutOfBound: false,
+      textStyle: {
+          normal: {
+              fontFamily: 'sans-serif',
+              fontWeight: 'bold',
+              color: () => {
+                  // Random color
+                  return 'rgb(' + [
+                      Math.round(Math.random() * 250),
+                      Math.round(Math.random() * 250),
+                      Math.round(Math.random() * 250)
+                  ].join(',') + ')';
+              }
+          },
+          emphasis: {
+              shadowBlur: 10,
+              shadowColor: '#333'
+          }
+      },
+      data: name.map( node => {return { name: node,
+      value: Math.round(Math.random() * 1000),
+      textStyle: {
+          normal: {},
+          emphasis: {}
+      }
+  }; }
+  )
+  }]
+};
+  }
+  calenderGraph() {
+    let td =new Map();
+    this.tr.forEach( e => {
+        if(!e)return;
+       const str = Format(new Date(e.createTime*1000),'yyyy-MM-dd');
+       if(str in td)
+        td[str]+=1;
+        else 
+        td[str]=1;
+    });
+    let tdata = [];
+    for(let i in td){
+        tdata.push([i,td[i]]);
+    }
     this.tsoption = {
       backgroundColor: '#01193d',
       title: {
-          text: 'Transaction Calendar'
+          text: 'Transaction Calendar',
+          left: 'center'
       },
       tooltip : {
           trigger: 'item'
@@ -165,137 +273,144 @@ export class InfoStatisticComponent implements OnInit {
             type: 'effectScatter',
             coordinateSystem: 'calendar',
             symbolSize: (val) => {
-                return val[1] / 40;
+                return val[1];
             },
             showEffectOn: 'render',
             rippleEffect: {
                 brushType: 'stroke'
             },
             hoverAnimation: true,
+            tooltip: {
+                formatter:(param)=>
+                param.data[1] + ' completed transactions created in ' +param.data[0]
+            },
             itemStyle: {
                     color: '#f4e925',
                     shadowBlur: 10,
                     shadowColor: '#333'
             },
-              data: [['2019-01-02', 900], ['2019-01-03', 877], ['2019-01-04', 699], ['2019-01-07', 200], ['2019-01-10', 100],
-              ['2019-01-10', 430], ['2019-02-01', 250], ['2019-02-10', 430],
-              ['2019-03-10', 430], ['2019-04-01', 250], ['2019-05-10', 430],
-              ['2019-08-11', 430], ['2019-07-04', 250], ['2019-03-11', 430],
-              ['2019-09-23', 430], ['2019-06-01', 250], ['2019-12-12', 430]]
+              data: tdata
           }]
         };
   }
-  cld() {
-    this.cldoption = {
-    backgroundColor: '#01193d',
-      title: {
-      text: 'Label WordCloud'
-  },
-  tooltip: {},
-  series: [{
-      type: 'wordCloud',
-      shape: 'circle',
-
-      left: 'center',
-      top: 'center',
-      sizeRange: [12, 30],
-      rotationRange: [-90, 90],
-      rotationStep: 45,
-      gridSize: 8,
-      drawOutOfBound: false,
-      textStyle: {
-          normal: {
-              fontFamily: 'sans-serif',
-              fontWeight: 'bold',
-              color: () => {
-                  // Random color
-                  return 'rgb(' + [
-                      Math.round(Math.random() * 250),
-                      Math.round(Math.random() * 250),
-                      Math.round(Math.random() * 250)
-                  ].join(',') + ')';
+  forceGraph() {
+    let td =new Map();
+    this.tr.forEach( e => {
+        if(!e)return;
+        if(e.category==2)
+        this.is.getBuyInfo(e.infoID).subscribe(info => {
+            const other = info.userID;
+            if(e.userID in td)
+                if(other in td[e.userID])
+                    td[e.userID][td] +=1;
+                else td[e.userID][td] =1;
+            else {
+                td[e.userID] = new Map();
+                td[e.userID][td] = 1;
+            }
+        });
+        if(e.category==1)
+        this.is.getSellInfo(e.infoID).subscribe(info => {
+            const other = info.userID;
+            if(other in td)
+                if(e.userID in td[other])
+                    td[other][e.userID] +=1;
+                else td[other][e.userID] =1;
+            else {
+                td[other] = new Map();
+                td[other][e.userID] = 1;
+            }
+        });
+    });
+    setTimeout(( )=> {
+        const E = [];
+        const V = [];
+        for( let i in td){
+            let sum = 0;
+            for( let j in td[i]){
+                E.push( 
+                    {source: i, target: j
+                    , value: td[i][j], lineStyle: {
+                      width: td[i][j]
+                    }});
+                sum += td[i][j];
+            }
+            V.push({name: i, itemStyle: {
+                color: '#60acfc'
+            }, value : sum, symbolSize: sum*5,
+          draggable: true})
+        }
+        this.fdgoption = {
+        backgroundColor: '#01193d',
+          title: {
+              text: 'Transaction Network',
+              left: 'center',
+          },
+          tooltip: {},
+          animationDurationUpdate: 1500,
+          animationEasingUpdate: 'quinticInOut',
+          series : [
+              {
+                  type: 'graph',
+                  layout: 'force',
+                  data: V, edges: E,
+            label: {
+              emphasis: {
+                  position: 'right',
+                  show: true
               }
           },
-          emphasis: {
-              shadowBlur: 10,
-              shadowColor: '#333'
-          }
-      },
-      data: name.map( node => {return { name: node,
-      value: Math.round(Math.random() * 1000),
-      textStyle: {
-          normal: {},
-          emphasis: {}
-      }
-  }; }
-  )
-  }]
-};
-  }
-  fdg() {
-    const E = name.map(node => {
-      const e = Math.floor(Math.random() * 10);
-      return {source: node, target: name[Math.floor(Math.random() * 27)]
-      , value: e, lineStyle: {
-        width: e * 0.3
-      }};
-  }).filter(node => node.source !== node.target);
-    const V = name.map(node => {
-      const v = E.filter(n => n.source === node || n.target === node ).reduce((total, currentValue, currentIndex, arr) => {
-      return total + currentValue.value;
-  }, 0);
-      return { name: node,
-      itemStyle: {
-        color: v < 10 ?'#60acfc': '#ff7c7c'
-      }, value : v, symbolSize: v,
-  draggable: true};
-});
-    this.fdgoption = {
-    backgroundColor: '#01193d',
-      title: {
-          text: 'Transaction Network'
-      },
-      tooltip: {},
-      animationDurationUpdate: 1500,
-      animationEasingUpdate: 'quinticInOut',
-      series : [
-          {
-              type: 'graph',
-              layout: 'force',
-              data: V, edges: E,
-        label: {
-          emphasis: {
-              position: 'right',
-              show: true
-          }
-      },
-      force: {
-        repulsion : 100
-      },
-      roam: true,
-      focusNodeAdjacency: true,
-      lineStyle: {
-          normal: {
-              color :'source',
-              type : 'solid',
-              width: 0.5,
-              curveness: 0.2,
-              opacity: 0.7
+          force: {
+            repulsion : 100
+          },
+          roam: true,
+          focusNodeAdjacency: true,
+          lineStyle: {
+              normal: {
+                  color :'source',
+                  type : 'solid',
+                  width: 0.5,
+                  curveness: 0.2,
+                  opacity: 0.7
+              }
           }
       }
+              ]
+          };
+
+    },1000)
   }
-          ]
-      };
+  fmt(t: Date) {
+    return [t.getFullYear(), t.getMonth() + 1, t.getDate()].join('/');
   }
-  lq() {
-    const date =  [
-        '2009/6/12 2:00', '2009/6/12 3:00', '2009/6/12 4:00', '2009/6/12 5:00', '2009/6/12 6:00',
-        '2009/6/12 7:00', '2009/6/12 8:00', '2009/6/12 9:00', '2009/6/12 10:00', '2009/6/12 11:00',
-        '2009/6/12 12:00', '2009/6/12 13:00', '2009/6/12 14:00', '2009/6/12 15:00', '2009/6/12 16:00',
-        '2009/6/12 17:00', '2009/6/12 18:00', '2009/6/12 19:00', '2009/6/12 20:00', '2009/6/12 21:00',
-        '2009/6/12 22:00', '2009/6/12 23:00'].map( (str) => {
-        return str.replace(' ', '\n'); }
-        );
+  lineGraph() {
+    let bd =new Map();
+    this.bi.forEach( e => {
+        if(!e||e.releaseTime<0)return;
+       const str = this.fmt(new Date(e.releaseTime*1000));
+       if(str in bd)
+        bd[str]+=1;
+        else 
+        bd[str]=1;
+    });
+    let sd =new Map();
+    this.si.forEach( e => {
+        if(!e||e.releaseTime<0)return;
+       const str = this.fmt(new Date(e.releaseTime*1000));
+       if(str in sd)
+        sd[str]+=1;
+        else 
+        sd[str]=1;
+    });
+    let bdata = [];
+    for(let i in bd){
+        bdata.push([i,bd[i]]);
+    }
+
+    let sdata = [];
+    for(let i in sd){
+        sdata.push([i,sd[i]]);
+    }
     this.lqoption = {
     backgroundColor: '#01193d',
     title : {
@@ -324,104 +439,88 @@ export class InfoStatisticComponent implements OnInit {
         {
             show: true,
             realtime: true,
-            start: 65,
-            end: 85
+            start: 0,
+            end: 100
         },
         {
             type: 'inside',
             realtime: true,
-            start: 65,
-            end: 85
+            start: 0,
+            end: 100
         }
     ],
     xAxis : [
         {
-            type : 'category',
+            type : 'time',
             boundaryGap : false,
             axisLine: {onZero: false},
-            data : date
         }],
     yAxis: [
         {
             name: '新增购买信息',
             type: 'value',
-            max: 500
+            max: (value) => value.max*3/2
         },
         {
             name: '新增出售信息',
             nameLocation: 'start',
-            max: 500,
             type: 'value',
-            inverse: true
+            inverse: true,
+            max: (value) => value.max*3/2
         }
     ],
     series: [
         {
             name: '购买',
-            type: 'line',
-            animation: false,
-            smooth: true,
-            showAllSymbol: true,
+            yAxisIndex: 0,
+            type:'line',
+            smooth:true,
             symbol: 'circle',
-            symbolSize: 6,
+            symbolSize: 1,
+            sampling: 'average',
+            itemStyle: {
+                normal: {
+                    color: '#d68262'
+                }
+            },
             areaStyle: {
                 normal: {
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                         offset: 0,
-                        color: 'rgba(137, 189, 27, 0.9)'
+                        color: '#d68262'
                     }, {
-                        offset: 0.8,
-                        color: 'rgba(137, 189, 27, 0)'
-                    }], false),
-                    shadowColor: 'rgba(0, 0, 0, 0.1)',
-                    shadowBlur: 10
+                        offset: 1,
+                        color: '#ffe'
+                    }])
                 }
             },
-            itemStyle: {
-                normal: {
-                    color: 'rgb(137,189,27)',
-                    borderColor: 'rgba(137,189,2,0.27)',
-                    borderWidth: 12
-                }
-            },
-            lineStyle: {
-                width: 1
-            },
-            data: date.map(_ => Math.floor(Math.random() * 50))
+            data: bdata
         },
         {
             name: '出售',
             type: 'line',
             yAxisIndex: 1,
-            animation: false,
+            symbolSize: 5,
             smooth: true,
-            showAllSymbol: true,
             symbol: 'circle',
-            symbolSize: 6,
-            areaStyle: {
-                normal: {
-                    color: new echarts.graphic.LinearGradient(0, 1, 0,0 , [{
-                        offset: 0,
-                        color: 'rgba(219, 50, 51, 0.9)'
-                    }, {
-                        offset: 0.8,
-                        color: 'rgba(219, 50, 51, 0)'
-                    }], false),
-                    shadowColor: 'rgba(0, 0, 0, 0.1)',
-                    shadowBlur: 10
-                }
-            },
+            sampling: 'average',
             itemStyle: {
                 normal: {
-                    color: 'rgb(219,50,51)',
-                    borderColor: 'rgba(219,50,51,0.2)',
-                    borderWidth: 12
+                    color: '#8ec6ad'
                 }
             },
-            lineStyle: {
-                width: 1
+            areaStyle: {
+                normal: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: '#8ec6ad'
+                    }, {
+                        offset: 1,
+                        color: '#ffe'
+                    }])
+                }
             },
-            data: date.map(_ => Math.floor(Math.random() * 50))
+            data: sdata
         }
     ]
 };

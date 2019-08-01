@@ -11,11 +11,8 @@
                 <span class="badge">交易ID</span>{{info.sellInfoID}}
           </div>
           <div class='infoitem'>
-                <span class="badge">交易类型</span>{{'出售'}}
+                <span class="badge">交易类型</span>{{type=='sellInfo'?'出售':'求购'}}
           </div>    
-          <div class='infoitem'>
-                <span class="badge">交易内容(待微服务)</span>{{info.contentID}}
-          </div>
         <div class='infoitem'>
           <span class="badge">发起用户</span>
           <a routerLink="/user/{{info.userID}}">{{info.userID}}
@@ -47,6 +44,7 @@
               <nz-option nzLabel="预约" [nzValue]="2"></nz-option>
               <nz-option nzLabel="完成" [nzValue]="3"></nz-option>
               <nz-option nzLabel="失效" [nzValue]="4"></nz-option>
+              <nz-option nzLabel="关闭" [nzValue]="5"></nz-option>
             </nz-select>
         </div>
         <div class='infoitem'>
@@ -72,17 +70,19 @@
           <button (click)="goBack()" nz-button nzType="dashed"><i nz-icon type="left-circle" theme="outline"></i>返回</button>
           <button (click)="save()" nz-button nzType="primary"><i nz-icon type="save" theme="outline"></i>保存</button>
       </div>
-      <div nz-col [nzSpan]="8">
+      <div nz-col [nzSpan]="16">
           <nz-card nzType="inner">
-      <nz-carousel nzAutoPlay>
-          <div nz-carousel-content *ngFor="let content of contents">
-              <embed *ngIf="content.type==2"
-              src="/api/file/{{content.fileID}}" />   
-              <img *ngIf="content.type==1"
-              src="/api/file/{{content.fileID}}" />   
-          </div>
-        </nz-carousel>
-          </nz-card>
+              <nz-carousel>
+                  <div nz-carousel-content *ngFor="let content of contents">
+                      <video id='content'*ngIf="content.type==2"
+                      src="/api/file/{{content.fileID}}" controls></video> 
+                      <img  id='content'*ngIf="content.type==1"
+                      src="/api/file/{{content.fileID}}" />   
+                  </div>
+                </nz-carousel>
+                  </nz-card>
+      </div>
+      <div nz-col [nzSpan]="8">
           <nz-card nzTitle="交易状态">
               <nz-timeline nzMode="alternate">
                       <nz-timeline-item>创建交易 2019-07-01</nz-timeline-item>

@@ -1,5 +1,4 @@
-
-        <nz-card   nzTitle="系统状态">
+<!--<nz-card   nzTitle="系统状态">
                 <div nz-row [nzGutter]="8">
                   <div nz-col [nzSpan]="8">
                     <nz-card *ngIf="userNum" nzType="inner" nzTitle="总用户数">
@@ -18,6 +17,9 @@
                   </div>
                 </div>
         </nz-card>
+-->
+
+        
         <nz-card *ngIf="hst" nzTitle="站点通知">
                 <nz-timeline [nzPending]="" nzMode="alternate">
                    <nz-timeline-item *ngFor="let item of hst" [nzColor]="getColor(item)">

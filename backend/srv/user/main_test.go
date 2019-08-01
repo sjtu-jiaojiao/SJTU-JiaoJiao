@@ -56,16 +56,16 @@ func TestUserQuery(t *testing.T) {
 		tf(0, "")
 		err := db.Ormer.Create(&db.User{
 			ID:          1000,
-			UserName:    "jiang",
-			AvatarID:    "5d23ea2c32311335f935cd14",
+			UserName:    "test",
+			AvatarID:    "012345678901234567890123",
 			Telephone:   "12345678901",
-			StudentID:   "1234",
+			StudentID:   "10000",
 			StudentName: "jiang",
 		}).Error
 
 		So(err, ShouldBeNil)
 		req.UserID = 1000
-		tf(1000, "1234")
+		tf(1000, "10000")
 		defer func() { So(db.Ormer.Delete(&db.User{ID: 1000}).Error, ShouldBeNil) }()
 
 		req.UserID = 1001
@@ -76,52 +76,51 @@ func TestUserQuery(t *testing.T) {
 func TestUserUpdate(t *testing.T) {
 	var req user.UserInfo
 
-	tf := func(status user.UserUpdateResponse_Status, uid int, uname string, telephone string) {
+	tf := func(status user.UserUpdateResponse_Status, name string, telephone string) {
 		var s srv
 		var rsp user.UserUpdateResponse
 		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, status)
 
 		info := db.User{
-			ID: 2000,
+			ID: 1100,
 		}
 		err := db.Ormer.First(&info).Error
 		So(err, ShouldBeNil)
-		So(info.ID, ShouldEqual, uid)
-		So(info.UserName, ShouldEqual, uname)
+		So(info.UserName, ShouldEqual, name)
 		So(info.Telephone, ShouldEqual, telephone)
 	}
 	Convey("Test User Update", t, func() {
 		err := db.Ormer.Create(&db.User{
-			ID:          2000,
-			UserName:    "test1",
-			AvatarID:    "1234",
+			ID:          1100,
+			UserName:    "test",
+			AvatarID:    "012345678901234567890123",
 			Telephone:   "12345678901",
-			StudentID:   "1234",
+			StudentID:   "11000",
 			StudentName: "jiang",
 			Status:      int32(user.UserInfo_NORMAL),
 			Role:        int32(user.UserInfo_USER),
 		}).Error
 		So(err, ShouldBeNil)
-		defer func() { So(db.Ormer.Delete(&db.User{ID: 2000}).Error, ShouldBeNil) }()
+		defer func() { So(db.Ormer.Delete(&db.User{ID: 1100}).Error, ShouldBeNil) }()
 
-		tf(user.UserUpdateResponse_INVALID_PARAM, 2000, "test1", "12345678901")
+		tf(user.UserUpdateResponse_INVALID_PARAM, "test", "12345678901")
 
-		req.UserID = 3000
-		tf(user.UserUpdateResponse_NOT_FOUND, 2000, "test1", "12345678901")
+		req.UserID = 1101
+		tf(user.UserUpdateResponse_NOT_FOUND, "test", "12345678901")
 
-		req.UserID = 2000
-		tf(user.UserUpdateResponse_SUCCESS, 2000, "test1", "12345678901")
+		req.UserID = 1100
+		tf(user.UserUpdateResponse_SUCCESS, "test", "12345678901")
 
-		req.UserName = "test2"
-		tf(user.UserUpdateResponse_SUCCESS, 2000, "test2", "12345678901")
+		req.UserName = "test1"
+		tf(user.UserUpdateResponse_SUCCESS, "test1", "12345678901")
 
 		req.Telephone = "56781234678"
-		tf(user.UserUpdateResponse_SUCCESS, 2000, "test2", "56781234678")
+		tf(user.UserUpdateResponse_SUCCESS, "test1", "56781234678")
 
 		req.ClearEmpty = true
 		req.Telephone = ""
-		tf(user.UserUpdateResponse_SUCCESS, 2000, "test2", "")
+		tf(user.UserUpdateResponse_SUCCESS, "test1", "")
 	})
 }
 
@@ -137,40 +136,42 @@ func TestUserFind(t *testing.T) {
 	}
 	Convey("Test User Find", t, func() {
 		err := db.Ormer.Create(&db.User{
-			ID:          2500,
+			ID:          1200,
 			UserName:    "test1",
-			AvatarID:    "123123",
+			AvatarID:    "012345678901234567890123",
 			Telephone:   "12345678901",
-			StudentID:   "1234",
+			StudentID:   "12000",
 			StudentName: "jiang",
 			Status:      1,
 		}).Error
 		So(err, ShouldBeNil)
+		defer func() {
+			So(db.Ormer.Delete(&db.User{ID: 1200}).Error, ShouldBeNil)
+		}()
 
-		tf(1, 0, 2500, "1234")
+		tf(1, 0, 1200, "12000")
 
 		err = db.Ormer.Create(&db.User{
-			ID:          2501,
+			ID:          1201,
 			UserName:    "test2",
-			AvatarID:    "123123",
+			AvatarID:    "012345678901234567890123",
 			Telephone:   "12345678902",
-			StudentID:   "12345",
+			StudentID:   "12010",
 			StudentName: "jiangzm",
 			Status:      1,
 		}).Error
 		So(err, ShouldBeNil)
 		defer func() {
-			So(db.Ormer.Delete(&db.User{ID: 2500}).Error, ShouldBeNil)
-			So(db.Ormer.Delete(&db.User{ID: 2501}).Error, ShouldBeNil)
+			So(db.Ormer.Delete(&db.User{ID: 1201}).Error, ShouldBeNil)
 		}()
 
-		tf(2, 1, 2501, "12345")
+		tf(2, 1, 1201, "12010")
 
 		req.Limit = 1
-		tf(1, 0, 2500, "1234")
+		tf(1, 0, 1200, "12000")
 
 		req.Offset = 1
-		tf(1, 0, 2501, "12345")
+		tf(1, 0, 1201, "12010")
 	})
 }
 

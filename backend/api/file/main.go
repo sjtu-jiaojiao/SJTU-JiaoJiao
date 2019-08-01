@@ -50,7 +50,7 @@ func getFile(c *gin.Context) {
 		rsp, err := srv.Query(context.TODO(), &file.FileRequest{
 			FileID: p.FileID,
 		})
-		if utils.LogContinue(err, utils.Warning, "File service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -58,7 +58,7 @@ func getFile(c *gin.Context) {
 		if rsp.Status == file.FileQueryResponse_SUCCESS {
 			if filetype.IsImage(rsp.File) || filetype.IsAudio(rsp.File) || filetype.IsVideo(rsp.File) {
 				t, err := filetype.Match(rsp.File)
-				if utils.LogContinue(err, utils.Warning, "File format error: %v", err) {
+				if utils.LogContinue(err, utils.Error) {
 					c.JSON(500, err)
 					return
 				}

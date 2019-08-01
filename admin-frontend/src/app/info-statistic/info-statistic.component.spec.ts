@@ -24,6 +24,7 @@ import 'echarts-wordcloud';
 import { CallbackComponent } from '../callback/callback.component';
 import { SellInfoComponent } from '../info/sell-info/sell-info.component';
 import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
+import { buyInfo, sellInfo } from '../entity/info';
 describe('InfoStatisticComponent', () => {
   let component: InfoStatisticComponent;
   let fixture: ComponentFixture<InfoStatisticComponent>;
@@ -71,5 +72,8 @@ describe('InfoStatisticComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    component.bi = [ new buyInfo()];
+    component.si = [ new sellInfo()];
+    expect(component.fmt(new Date(1563134054000))).toEqual('2019/7/15');
   });
 });

@@ -45,7 +45,7 @@ func (a *srv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, rsp *
 	err := db.Ormer.First(&info).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil
-	} else if utils.LogContinue(err, utils.Warning) {
+	} else if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 	good := db.Good{
@@ -54,12 +54,12 @@ func (a *srv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, rsp *
 	err = db.Ormer.First(&good).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil
-	} else if utils.LogContinue(err, utils.Warning) {
+	} else if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 
 	rsp.BuyInfoID = info.ID
-	rsp.Status = buyinfo.BuyStatus(info.Status)
+	rsp.Status = buyinfo.BuyStatus(utils.EnumConvert(info.Status, buyinfo.BuyStatus_name))
 	rsp.ReleaseTime = info.ReleaseTime.Unix()
 	rsp.ValidTime = info.ValidTime.Unix()
 	rsp.GoodName = good.GoodName
@@ -84,6 +84,7 @@ func (a *srv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, rsp *
  * @apiParam {double} [price] good price
  * @apiParam {string} [contentID] content id of good
  * @apiParam {string} [contentToken] content token
+ * @apiParam {list} [tags] {string} tag
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
  * @apiSuccess {int32} buyInfoID created buyInfoID
  * @apiUse DBServerDown
@@ -107,42 +108,56 @@ func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp
 
 	insert := func() (int32, error) {
 		tx := db.Ormer.Begin()
-		if utils.LogContinue(tx.Error, utils.Warning) {
+		if tx.Error != nil {
 			return 0, tx.Error
 		}
 		err := tx.Create(&good).Error
-		if utils.LogContinue(err, utils.Warning) {
+		if err != nil {
 			tx.Rollback()
 			return 0, err
 		}
 		info.GoodID = good.ID
 		err = tx.Create(&info).Error
-		if utils.LogContinue(err, utils.Warning) {
+		if err != nil {
 			tx.Rollback()
 			return 0, err
 		}
 
 		err = tx.Commit().Error
-		if utils.LogContinue(err, utils.Warning) {
+		if err != nil {
 			tx.Rollback()
 			return 0, err
 		}
 		return info.ID, nil
 	}
 
+	srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} { return content.NewContentService(name, c) },
+		func() interface{} { return mock.NewContentService() }).(content.ContentService)
+	if utils.RequireParam(req.Tags) {
+		microRsp, err := srv.CreateTag(context.TODO(), &content.ContentCreateTagRequest{
+			ContentID:    req.ContentID,
+			ContentToken: req.ContentToken,
+			Tags:         req.Tags,
+		})
+		if utils.LogContinue(err, utils.Error) {
+			return err
+		}
+		if microRsp.Status != content.ContentCreateTagResponse_SUCCESS {
+			rsp.Status = buyinfo.BuyInfoCreateResponse_INVALID_TOKEN
+			return nil
+		}
+		req.ContentID = microRsp.ContentID
+		req.ContentToken = microRsp.ContentToken
+	}
+
 	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) {
 		id, err := insert()
-		if err != nil || id == 0 {
-			return nil
+		if utils.LogContinue(err, utils.Error) || id == 0 {
+			return err
 		}
 		rsp.Status = buyinfo.BuyInfoCreateResponse_SUCCESS
 		rsp.BuyInfoID = id
 	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) {
-		srv := utils.CallMicroService("content", func(name string, c client.Client) interface{} {
-			return content.NewContentService(name, c)
-		}, func() interface{} {
-			return mock.NewContentService()
-		}).(content.ContentService)
 		microRsp, err := srv.Check(context.TODO(), &content.ContentCheckRequest{
 			ContentID:    req.ContentID,
 			ContentToken: req.ContentToken,
@@ -154,8 +169,8 @@ func (a *srv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, rsp
 
 		good.ContentID = req.ContentID
 		id, err := insert()
-		if err != nil || id == 0 {
-			return nil
+		if utils.LogContinue(err, utils.Error) || id == 0 {
+			return err
 		}
 		rsp.Status = buyinfo.BuyInfoCreateResponse_SUCCESS
 		rsp.BuyInfoID = id
@@ -228,13 +243,13 @@ func (a *srv) Find(ctx context.Context, req *buyinfo.BuyInfoFindRequest, rsp *bu
 	}
 
 	err := tb.Limit(req.Limit).Offset(req.Offset).Find(&res).Error
-	if utils.LogContinue(err, utils.Warning) {
+	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 	for _, v := range res {
 		rsp.BuyInfo = append(rsp.BuyInfo, &buyinfo.BuyInfoMsg{
 			BuyInfoID:   v.BuyInfoID,
-			Status:      buyinfo.BuyStatus(v.Status),
+			Status:      buyinfo.BuyStatus(utils.EnumConvert(v.Status, buyinfo.BuyStatus_name)),
 			ReleaseTime: v.ReleaseTime.Unix(),
 			ValidTime:   v.ValidTime.Unix(),
 			GoodName:    v.GoodName,

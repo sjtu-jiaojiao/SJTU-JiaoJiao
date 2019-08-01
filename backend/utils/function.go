@@ -53,6 +53,8 @@ func IsEmpty(val interface{}) bool {
 		return v == ""
 	case []byte:
 		return bytes.Equal(v, []byte{0})
+	case []string:
+		return len(v) == 0
 	default:
 		s := fmt.Sprintf("%d", val)
 		return s == "0"
@@ -98,4 +100,25 @@ func GetQueryFile(c *gin.Context, name string, maxsize int64) ([]byte, int, erro
 		return data, 200, nil
 	}
 	return nil, 500, err
+}
+
+// EnumConvert convert int32 to enum
+func EnumConvert(v int32, n map[int32]string) int32 {
+	if n[v] != "" {
+		return v
+	}
+	return 0
+}
+
+// CheckFile check if file valid
+func CheckFile(file []byte, f ...func(buf []byte) bool) bool {
+	if CheckInTest() {
+		return string(file) == "valid_file"
+	}
+	for _, v := range f {
+		if !v(file) {
+			return false
+		}
+	}
+	return true
 }

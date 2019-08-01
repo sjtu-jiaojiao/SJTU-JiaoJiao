@@ -38,13 +38,13 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 	}
 
 	var toUserID int32
-	if req.Category == transaction.TransactionCreateRequest_SELL {
+	if req.Category == transaction.Category_SELL {
 		microSrv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
 			func() interface{} { return mocksell.NewSellInfoService() }).(sellinfo.SellInfoService)
 		srvRsp, err := microSrv.Query(context.TODO(), &sellinfo.SellInfoQueryRequest{
 			SellInfoID: req.InfoID,
 		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
 		if srvRsp.UserID == 0 {
@@ -58,7 +58,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 		srvRsp, err := microSrv.Query(context.TODO(), &buyinfo.BuyInfoQueryRequest{
 			BuyInfoID: req.InfoID,
 		})
-		if utils.LogContinue(err, utils.Warning, "BuyInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
 		if srvRsp.UserID == 0 {
@@ -79,7 +79,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 	err := db.Ormer.Create(&tran).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil
-	} else if utils.LogContinue(err, utils.Warning) {
+	} else if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 
@@ -113,12 +113,12 @@ func (a *srv) Update(ctx context.Context, req *transaction.TransactionUpdateRequ
 	if gorm.IsRecordNotFoundError(err) {
 		rsp.Status = transaction.TransactionUpdateResponse_NOT_FOUND
 		return nil
-	} else if utils.LogContinue(err, utils.Warning) {
+	} else if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 	tran.Status = int32(req.Status)
 	err = db.Ormer.Save(&tran).Error
-	if utils.LogContinue(err, utils.Warning) {
+	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 
@@ -164,7 +164,7 @@ func (a *srv) Find(ctx context.Context, req *transaction.TransactionFindRequest,
 	if req.InfoID != 0 {
 		tx = tx.Where("info_id = ?", req.InfoID)
 	}
-	if req.Category != transaction.TransactionFindRequest_CATEGORY_UNKNOWN {
+	if req.Category != transaction.Category_CATEGORY_UNKNOWN {
 		tx = tx.Where("category = ?", int32(req.Category))
 	}
 	if req.UserID != 0 {
@@ -189,11 +189,11 @@ func (a *srv) Find(ctx context.Context, req *transaction.TransactionFindRequest,
 		rsp.Transactions = append(rsp.Transactions, &transaction.TransactionMsg{
 			TransactionID: v.ID,
 			InfoID:        v.InfoID,
-			Category:      transaction.TransactionMsg_Category(v.Category),
+			Category:      transaction.Category(utils.EnumConvert(v.Category, transaction.Category_name)),
 			FromUserID:    v.FromUserID,
 			ToUserID:      v.ToUserID,
 			CreateTime:    v.CreateTime.Unix(),
-			Status:        transaction.TransStatus(v.Status),
+			Status:        transaction.TransStatus(utils.EnumConvert(v.Status, transaction.TransStatus_name)),
 		})
 	}
 	rsp.Status = transaction.TransactionFindResponse_SUCCESS

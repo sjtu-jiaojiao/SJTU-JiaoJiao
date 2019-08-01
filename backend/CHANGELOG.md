@@ -1,4 +1,18 @@
 # 后端API更新日志
+## v0.2.2 2019-08-01
+### 禁用
+1. `DELETE /content` 删除单独content file暂不可用
+
+### 新增
+1. tag相关功能已可以使用
+
+### API修改
+1. `PUT /content` 参数均为必选，将删除content file功能移至 `DELETE`
+2. `DELETE /content` 允许删除content file（暂不可用）
+
+### BUG修复
+1. 字段值检查已添加，非法数值会被视为0
+
 ## v0.2.1 2019-07-30
 ### 修复
 1. content相关API已可使用

@@ -32,7 +32,7 @@ export class InfoDetailComponent implements OnInit {
   private fileService:FileService
 ) {}
 stringToDate(params) {
-    const date = new Date(params);
+    const date = new Date(params*1000);
     return Format(date,'yyyy-MM-dd HH:mm:ss');
     }
 
@@ -44,8 +44,9 @@ stringToDate(params) {
     getContent(): void {
     this.fileService.getContent(this.info.contentID).subscribe(
         e => {
+            console.log(e);
+            if(e)
             this.contents = e.files;
-            console.log(this.contents);
         }
     )
     }
@@ -53,24 +54,28 @@ stringToDate(params) {
     this.location.back();
   }
     getinfo(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+    const id = parseInt(this.route.snapshot.paramMap.get('id'));
     if(this.type === 'sellInfo')
     this.infoService.getSellInfo(id)
       .subscribe(info => {
+          if(!info)return;
           this.info = info;
-          this.deadLine = new Date(this.info.validTime);
+          this.deadLine = new Date(this.info.validTime*1000);
+          this.getContent();
       });
     else if(this.type === 'buyInfo')
     this.infoService.getBuyInfo(id)
       .subscribe(info => {
+        if(!info)return;
           this.info = info;
-          this.deadLine = new Date(this.info.validTime);
+          this.deadLine = new Date(this.info.validTime*1000);
+          this.getContent();
       });
   }
 
     save(): void {
     if(!this.info) return;
-    this.info.validTime = this.deadLine.getTime().toString();
+    this.info.validTime = this.deadLine.getTime()/1000;
     if(this.type==='sellInfo')
     this.infoService.updateSellInfo(this.info)
         .subscribe(() => this.goBack());
