@@ -16,7 +16,12 @@
           </div>
 
         
-        <div class='outer-div' id='lq'>
-          <div echarts theme="dark" class='btc' [loading]="true" [options]="lqoption"></div>
+        <div class='outer-div' id='lq'>    
+          <div echarts theme="dark" class='btc' [loading]="true" [options]="lqoption">
+            </div>
+            <button id='pause' [nzSize]="'small'" nz-button nzType="default" (click) ="pauseLine()">
+              <i nz-icon *ngIf='!pl' nzType="pause"></i>
+              <i nz-icon *ngIf='pl' nzType="caret-right"></i>
+            </button>
         </div>
         

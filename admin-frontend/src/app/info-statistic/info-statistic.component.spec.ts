@@ -74,10 +74,6 @@ describe('InfoStatisticComponent', () => {
     expect(component).toBeTruthy();
     component.bi = [ new buyInfo()];
     component.si = [ new sellInfo()];
-    component.good();
-    component.lq();
-    component.fdg();
-    component.ts();
     expect(component.fmt(new Date(1563134054000))).toEqual('2019/7/15');
   });
 });
