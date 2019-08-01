@@ -59,7 +59,7 @@ func (a *srv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, rsp *
 	}
 
 	rsp.BuyInfoID = info.ID
-	rsp.Status = buyinfo.BuyStatus(info.Status)
+	rsp.Status = buyinfo.BuyStatus(utils.EnumConvert(info.Status, buyinfo.BuyStatus_name))
 	rsp.ReleaseTime = info.ReleaseTime.Unix()
 	rsp.ValidTime = info.ValidTime.Unix()
 	rsp.GoodName = good.GoodName
@@ -249,7 +249,7 @@ func (a *srv) Find(ctx context.Context, req *buyinfo.BuyInfoFindRequest, rsp *bu
 	for _, v := range res {
 		rsp.BuyInfo = append(rsp.BuyInfo, &buyinfo.BuyInfoMsg{
 			BuyInfoID:   v.BuyInfoID,
-			Status:      buyinfo.BuyStatus(v.Status),
+			Status:      buyinfo.BuyStatus(utils.EnumConvert(v.Status, buyinfo.BuyStatus_name)),
 			ReleaseTime: v.ReleaseTime.Unix(),
 			ValidTime:   v.ValidTime.Unix(),
 			GoodName:    v.GoodName,

@@ -3,14 +3,14 @@ package main
 import (
 	"context"
 	"errors"
-	db "jiaojiao/database"
 	avatar "jiaojiao/srv/avatar/proto"
-	"jiaojiao/srv/file/mock"
+	mockFile "jiaojiao/srv/file/mock"
 	file "jiaojiao/srv/file/proto"
+	mockUser "jiaojiao/srv/user/mock"
+	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 
 	"github.com/h2non/filetype"
-	"github.com/jinzhu/gorm"
 	"github.com/micro/go-micro/client"
 )
 
@@ -35,49 +35,46 @@ func (a *srv) Create(ctx context.Context, req *avatar.AvatarCreateRequest, rsp *
 		return nil
 	}
 
-	if !utils.CheckInTest() && !filetype.IsImage(req.File) {
+	if !utils.CheckFile(req.File, filetype.IsImage) {
 		rsp.Status = avatar.AvatarCreateResponse_INVALID_TYPE
 		return nil
 	}
 
-	usr := db.User{
-		ID: req.UserID,
-	}
-	err := db.Ormer.First(&usr).Error
-	if gorm.IsRecordNotFoundError(err) {
-		rsp.Status = avatar.AvatarCreateResponse_NOT_FOUND
-		return nil
-	} else if utils.LogContinue(err, utils.Error) {
-		return err
-	}
-
-	srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
-		func() interface{} { return mock.NewFileService() }).(file.FileService)
-	microRsp, err := srv.Create(context.TODO(), &file.FileCreateRequest{
+	// upload file
+	srvFile := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
+		func() interface{} { return mockFile.NewFileService() }).(file.FileService)
+	fileRsp, err := srvFile.Create(context.TODO(), &file.FileCreateRequest{
 		File: req.File,
 	})
 	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
-	if microRsp.Status != file.FileCreateResponse_SUCCESS {
-		_, s := utils.LogContinueS("File create return "+microRsp.Status.String(), utils.Error)
+	if fileRsp.Status != file.FileCreateResponse_SUCCESS {
+		_, s := utils.LogContinueS("File create return "+fileRsp.Status.String(), utils.Error)
 		return errors.New(s)
 	}
 
-	usr.AvatarID = microRsp.FileID
-	err = db.Ormer.Save(&usr).Error
+	// update user
+	srvUser := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
+		func() interface{} { return mockUser.NewUserService() }).(user.UserService)
+	userRsp, err := srvUser.Update(context.TODO(), &user.UserInfo{
+		UserID:   req.UserID,
+		AvatarID: fileRsp.FileID,
+	})
 	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
+	if userRsp.Status != user.UserUpdateResponse_SUCCESS {
+		_, s := utils.LogContinueS("User update return "+userRsp.Status.String(), utils.Error)
+		return errors.New(s)
+	}
 
-	rsp.AvatarID = microRsp.FileID
+	rsp.AvatarID = fileRsp.FileID
 	rsp.Status = avatar.AvatarCreateResponse_SUCCESS
 	return nil
 }
 
 func main() {
-	db.InitORM("userdb", new(db.User))
-	defer db.CloseORM()
 	service := utils.InitMicroService("avatar")
 	utils.LogPanic(avatar.RegisterAvatarHandler(service.Server(), new(srv)))
 	utils.RunMicroService(service)

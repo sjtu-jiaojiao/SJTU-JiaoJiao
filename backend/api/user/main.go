@@ -210,8 +210,8 @@ func updateUser(c *gin.Context) {
 			Telephone:   p.Telephone,
 			StudentID:   p.StudentID,
 			StudentName: p.StudentName,
-			Status:      user.UserInfo_Status(p.Status),
-			Role:        user.UserInfo_Role(p.Role),
+			Status:      user.UserInfo_Status(utils.EnumConvert(p.Status, user.UserInfo_Status_name)),
+			Role:        user.UserInfo_Role(utils.EnumConvert(p.Role, user.UserInfo_Role_name)),
 			ClearEmpty:  p.ClearEmpty,
 		})
 		if utils.LogContinue(err, utils.Error) {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	buyinfo "jiaojiao/srv/buyinfo/proto"
+	"jiaojiao/utils"
 
 	"github.com/micro/go-micro/client"
 )
@@ -13,14 +14,15 @@ type mockSrv struct{}
 // Find is buyinfo create mock
 func (a *mockSrv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest, opts ...client.CallOption) (*buyinfo.BuyInfoCreateResponse, error) {
 	var rsp buyinfo.BuyInfoCreateResponse
-	if req.ValidTime == 0 || req.GoodName == "" || req.UserID == 0 {
+	if !utils.RequireParam(req.ValidTime, req.GoodName, req.UserID) {
 		rsp.Status = buyinfo.BuyInfoCreateResponse_INVALID_PARAM
 		return &rsp, nil
 	}
-	if req.ContentID == "" && req.ContentToken == "" {
+
+	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) {
 		rsp.Status = buyinfo.BuyInfoCreateResponse_SUCCESS
 		rsp.BuyInfoID = 1000
-	} else if req.ContentID != "" && req.ContentToken != "" {
+	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) {
 		if req.ContentID == "error" {
 			return nil, errors.New("")
 		}
@@ -39,15 +41,15 @@ func (a *mockSrv) Create(ctx context.Context, req *buyinfo.BuyInfoCreateRequest,
 // Find is buyinfo query mock
 func (a *mockSrv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, opts ...client.CallOption) (*buyinfo.BuyInfoMsg, error) {
 	var rsp buyinfo.BuyInfoMsg
-	if req.BuyInfoID != 0 {
+	if utils.RequireParam(req.BuyInfoID) {
 		if req.BuyInfoID == 1000 {
 			rsp.BuyInfoID = 1000
 			rsp.GoodName = "good"
 			rsp.ValidTime = 1234567890
 			rsp.Description = "very good!"
-			rsp.ContentID = "123456789abc123456789abc"
+			rsp.ContentID = "012345678901234567890123"
 			rsp.UserID = 1000
-		} else if req.BuyInfoID == 2000 {
+		} else if req.BuyInfoID == 3000 {
 			return nil, errors.New("")
 		}
 	}
