@@ -357,7 +357,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
  * @apiName Message.Query
  * @apiDescription Query New Message
  *
- * @apiParam {int32} user user who wants to pull new message
+ * @apiParam {int32} userID user who wants to pull new message
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
  * @apiSuccess {list} news see below NewMessage
  * @apiSuccess (NewMessage) {int32} fromUser user who launch the chat at first time
@@ -372,7 +372,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
  * @apiUse DBServerDown
  */
 func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *message.MessageQueryResponse) error {
-	if !utils.RequireParam(req.User) {
+	if !utils.RequireParam(req.UserID) {
 		rsp.Status = message.MessageQueryResponse_INVALID_PARAM
 		return nil
 	}
@@ -397,7 +397,7 @@ func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *
 	cur, err := collection.Find(ctx, bson.M{
 		"$or": bson.A{
 			bson.M{
-				"fromUser": req.User,
+				"fromUser": req.UserID,
 				"badge":    bson.M{"$gt": 0},
 				"infos": bson.M{
 					"$elemMatch": bson.M{
@@ -407,7 +407,7 @@ func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *
 				},
 			},
 			bson.M{
-				"toUser": req.User,
+				"toUser": req.UserID,
 				"badge":  bson.M{"$gt": 0},
 				"infos": bson.M{
 					"$elemMatch": bson.M{

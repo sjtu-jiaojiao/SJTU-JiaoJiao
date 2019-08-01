@@ -14,6 +14,7 @@ func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
 	rg.GET("/message", findMessage)
 	rg.POST("/message", addMessage)
+	rg.GET("/message/:userID", getMessage)
 	return router
 }
 
@@ -122,6 +123,47 @@ func findMessage(c *gin.Context) {
 			FromUser: p.FromUser,
 			ToUser:   p.ToUser,
 			Way:      p.Way,
+		})
+		if utils.LogContinue(err, utils.Warning, "Message service error: %v", err) {
+			c.JSON(500, err)
+			return
+		}
+		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+/**
+ * @api {get} /message/:userID GetMessage
+ * @apiVersion 1.0.0
+ * @apiGroup Message
+ * @apiPermission self/admin
+ * @apiName GetMessage
+ * @apiDescription Get all new message about user
+ *
+ * @apiParam {--} Param see [Message Service](#api-Service-Message_Query)
+ * @apiSuccess (Success 200) {Response} response see [Message Service](#api-Service-Message_Query)
+ * @apiUse InvalidParam
+ * @apiUse MessageServiceDown
+ */
+func getMessage(c *gin.Context) {
+	type param struct {
+		UserID int32 `uri:"userID" binding:"required,min=1"`
+	}
+	var p param
+
+	if !utils.LogContinue(c.ShouldBindUri(&p), utils.Warning) {
+		role := utils.GetRoleID(c, int32(p.UserID))
+		if !(role.Self || role.Admin) {
+			c.Status(403)
+			return
+		}
+
+		srv := utils.CallMicroService("message", func(name string, c client.Client) interface{} { return message.NewMessageService(name, c) },
+			func() interface{} { return mock.NewMessageService() }).(message.MessageService)
+		rsp, err := srv.Query(context.TODO(), &message.MessageQueryRequest{
+			UserID: p.UserID,
 		})
 		if utils.LogContinue(err, utils.Warning, "Message service error: %v", err) {
 			c.JSON(500, err)

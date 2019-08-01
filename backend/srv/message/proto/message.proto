@@ -3,6 +3,7 @@ syntax = "proto3";
 service Message {
     rpc Create (MessageCreateRequest) returns (MessageCreateResponse);
     rpc Find (MessageFindRequest) returns (MessageFindResponse);
+    rpc Query (MessageQueryRequest) returns (MessageQueryResponse);
 }
 
 message MessageInfo{
@@ -78,7 +79,7 @@ message NewMessage{
 }
 
 message MessageQueryRequest{
-    int32 user = 1;
+    int32 userID = 1;
 }
 
 message MessageQueryResponse{

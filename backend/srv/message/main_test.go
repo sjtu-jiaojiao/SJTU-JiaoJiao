@@ -264,20 +264,20 @@ func TestQuery(t *testing.T) {
 		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, message.MessageQueryResponse_INVALID_PARAM)
 
-		req.User = 1001
+		req.UserID = 1001
 		testBase(2, message.MessageQueryResponse_SUCCESS)
 		So(rsp.News[0].Badge, ShouldEqual, 1)
 		So(rsp.News[1].Badge, ShouldEqual, 2)
 		So(rsp.News[1].Info.Text, ShouldEqual, "你好，我是小明5(⊙﹏⊙)，🔺")
 
-		req.User = 2001
+		req.UserID = 2001
 		testBase(0, message.MessageQueryResponse_NOT_FOUND)
 
-		req.User = 2002
+		req.UserID = 2002
 		testBase(1, message.MessageQueryResponse_SUCCESS)
 		So(rsp.News[0].Info.Text, ShouldEqual, "你好，我是小明3(⊙﹏⊙)，🔺")
 
-		req.User = 2003
+		req.UserID = 2003
 		testBase(0, message.MessageQueryResponse_NOT_FOUND)
 
 		defer func() {

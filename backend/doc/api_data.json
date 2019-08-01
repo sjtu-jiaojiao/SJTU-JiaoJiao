@@ -777,6 +777,68 @@
     }
   },
   {
+    "type": "get",
+    "url": "/message/:userID",
+    "title": "GetMessage",
+    "version": "1.0.0",
+    "group": "Message",
+    "permission": [
+      {
+        "name": "self/admin"
+      }
+    ],
+    "name": "GetMessage",
+    "description": "<p>Get all new message about user</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "--",
+            "optional": false,
+            "field": "Param",
+            "description": "<p>see <a href=\"#api-Service-Message_Query\">Message Service</a></p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-Message_Query\">Message Service</a></p>"
+          }
+        ]
+      }
+    },
+    "filename": "api/message/main.go",
+    "groupTitle": "Message",
+    "error": {
+      "fields": {
+        "Error 400": [
+          {
+            "group": "Error 400",
+            "optional": false,
+            "field": "InvalidParam",
+            "description": "<p>Invalid param</p>"
+          }
+        ],
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "MessageServiceDown",
+            "description": "<p>Message service down</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "post",
     "url": "/sellInfo",
     "title": "AddSellInfo",
@@ -2134,7 +2196,7 @@
             "group": "Parameter",
             "type": "int32",
             "optional": false,
-            "field": "user",
+            "field": "userID",
             "description": "<p>user who wants to pull new message</p>"
           }
         ]

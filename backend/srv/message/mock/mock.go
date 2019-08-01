@@ -9,6 +9,12 @@ import (
 
 type mockMessageSrv struct{}
 
+func (a *mockMessageSrv) Find(ctx context.Context, in *message.MessageFindRequest, opts ...client.CallOption) (*message.MessageFindResponse, error) {
+	var rsp message.MessageFindResponse
+	// TODO
+	return &rsp, nil
+}
+
 func (a *mockMessageSrv) Query(ctx context.Context, in *message.MessageQueryRequest, opts ...client.CallOption) (*message.MessageQueryResponse, error) {
 	var rsp message.MessageQueryResponse
 	// TODO
