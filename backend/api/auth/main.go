@@ -69,7 +69,7 @@ func getAuth(c *gin.Context) {
 			rsp, err := srv.Auth(context.TODO(), &auth.AuthRequest{
 				Code: code.Code,
 			})
-			if utils.LogContinue(err, utils.Warning, "Auth service error: %v", err) {
+			if utils.LogContinue(err, utils.Error) {
 				c.JSON(500, err)
 				return
 			}
@@ -81,7 +81,7 @@ func getAuth(c *gin.Context) {
 					StudentID:   rsp.StudentID,
 					StudentName: rsp.StudentName,
 				})
-				if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
+				if utils.LogContinue(err, utils.Error) {
 					c.JSON(500, err)
 					return
 				}

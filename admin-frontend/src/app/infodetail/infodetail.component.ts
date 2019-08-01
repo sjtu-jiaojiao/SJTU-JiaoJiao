@@ -44,6 +44,7 @@ stringToDate(params) {
     getContent(): void {
     this.fileService.getContent(this.info.contentID).subscribe(
         e => {
+            console.log(e);
             if(e)
             this.contents = e.files;
         }
@@ -53,13 +54,14 @@ stringToDate(params) {
     this.location.back();
   }
     getinfo(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+    const id = parseInt(this.route.snapshot.paramMap.get('id'));
     if(this.type === 'sellInfo')
     this.infoService.getSellInfo(id)
       .subscribe(info => {
           if(!info)return;
           this.info = info;
           this.deadLine = new Date(this.info.validTime*1000);
+          this.getContent();
       });
     else if(this.type === 'buyInfo')
     this.infoService.getBuyInfo(id)
@@ -67,6 +69,7 @@ stringToDate(params) {
         if(!info)return;
           this.info = info;
           this.deadLine = new Date(this.info.validTime*1000);
+          this.getContent();
       });
   }
 

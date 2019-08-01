@@ -30,7 +30,7 @@
               <span class="badge">用户ID</span>{{user.userID}}
         </div>
         <div class='useritem'>
-          <span class="badge">用户名</span>{{user.userName}}
+          <span class="badge">用户名</span>{{user.userName.length>10?user.userName.substr(0,10)+'...':user.userName}}
       </div>
       <div class='useritem'>
           <span class="badge">封禁</span>{{user.status==2?'是':'否'}}

@@ -30,12 +30,11 @@ func Test_getAuth(t *testing.T) {
 		So(r.Code, ShouldEqual, 301)
 
 		tf(200, "invalid", auth.AuthResponse_INVALID_CODE, 0, 0)
-		tf(200, "valid_user", auth.AuthResponse_SUCCESS, 1, user.UserInfo_USER)
-		tf(200, "valid_admin", auth.AuthResponse_SUCCESS, 2, user.UserInfo_ADMIN)
-
+		tf(200, "valid_user", auth.AuthResponse_SUCCESS, 1000, user.UserInfo_USER)
+		tf(200, "valid_admin", auth.AuthResponse_SUCCESS, 1001, user.UserInfo_ADMIN)
 		tf(200, "frozen_user", auth.AuthResponse_FROZEN_USER, 0, 0)
-		tf(500, "down", 0, 0, 0)
-		tf(500, "userdown", 0, 0, 0)
+		tf(500, "error", 0, 0, 0)
+		tf(500, "user_error", 0, 0, 0)
 	})
 }
 

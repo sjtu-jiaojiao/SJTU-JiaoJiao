@@ -30,12 +30,12 @@ func TestSrvContentCreate(t *testing.T) {
 		req.Content = []byte{0}
 		tf(content.ContentCreateResponse_INVALID_PARAM, false)
 
-		req.Type = content.ContentCreateRequest_PICTURE
+		req.Type = content.Type_PICTURE
 		tf(content.ContentCreateResponse_INVALID_PARAM, false)
 		req.Type = 0
 		req.Content = []byte{1, 2, 3, 4, 5, 6}
 		tf(content.ContentCreateResponse_INVALID_PARAM, false)
-		req.Type = content.ContentCreateRequest_PICTURE
+		req.Type = content.Type_PICTURE
 		req.ContentID = "1234"
 		tf(content.ContentCreateResponse_INVALID_PARAM, false)
 		req.ContentID = ""

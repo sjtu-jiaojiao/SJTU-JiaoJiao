@@ -16,12 +16,13 @@ enum TransStatus {
     DONE = 6;
 }
 
+enum Category {
+    CATEGORY_UNKNOWN = 0;
+    SELL = 1;
+    BUY = 2;
+}
+
 message TransactionCreateRequest {
-    enum Category {
-        UNKNOWN = 0;
-        SELL = 1;
-        BUY = 2;
-    }
     int32 infoID = 1;
     Category category = 2;
     int32 fromUserID = 3;
@@ -54,11 +55,6 @@ message TransactionUpdateResponse {
 }
 
 message TransactionMsg {
-    enum Category {
-        CATEGORY_UNKNOWN = 0;
-        SELL = 1;
-        BUY = 2;
-    }
     int32 transactionID = 1;
     int32 infoID = 2;
     Category category = 3;
@@ -69,11 +65,6 @@ message TransactionMsg {
 }
 
 message TransactionFindRequest {
-    enum Category {
-        CATEGORY_UNKNOWN = 0;
-        SELL = 1;
-        BUY = 2;
-    }
     int32 infoID = 1;
     Category category = 2;
     int32 userID = 3;

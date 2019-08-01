@@ -41,6 +41,7 @@ message BuyInfoCreateRequest {
     string contentID = 5;
     string contentToken = 6;
     int32 userID = 7;
+    repeated string tags = 8;
 }
 
 message BuyInfoCreateResponse {

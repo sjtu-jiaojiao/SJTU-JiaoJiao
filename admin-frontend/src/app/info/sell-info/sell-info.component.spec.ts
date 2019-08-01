@@ -83,6 +83,7 @@ describe('SellInfoComponent', () => {
     expect(c.getstate(2)).toEqual('预约');
     expect(c.getstate(3)).toEqual('完成');
     expect(c.getstate(4)).toEqual('失效');
+    expect(c.getstate(5)).toEqual('关闭');
     expect(c.stringToDate(1563134054)).toEqual('2019-07-15 03:54:14');
     c.checkcount();
     c.searchUserID = '';

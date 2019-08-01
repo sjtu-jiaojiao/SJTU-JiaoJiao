@@ -28,13 +28,13 @@ func Test_deleteContent(t *testing.T) {
 		}, "DELETE", "/content?contentID=1000&contentToken=valid_token", nil), ShouldBeZeroValue)
 
 		tf(400, "", "", 0)
-		tf(400, "1000", "", 0)
+		tf(400, "012345678901234567890123", "", 0)
 		tf(400, "", "valid_token", 0)
-		tf(200, "1000", "valid_token", content.ContentDeleteResponse_SUCCESS)
-		tf(200, "1000", "invalid_token", content.ContentDeleteResponse_INVALID_TOKEN)
-		tf(200, "1001", "valid_token", content.ContentDeleteResponse_INVALID_TOKEN)
-		tf(200, "1001", "invalid_token", content.ContentDeleteResponse_INVALID_TOKEN)
-		tf(500, "2000", "valid_token", 0)
+		tf(200, "012345678901234567890123", "valid_token", content.ContentDeleteResponse_SUCCESS)
+		tf(200, "012345678901234567890123", "invalid_token", content.ContentDeleteResponse_INVALID_TOKEN)
+		tf(200, "12345", "valid_token", content.ContentDeleteResponse_INVALID_TOKEN)
+		tf(200, "12345", "invalid_token", content.ContentDeleteResponse_INVALID_TOKEN)
+		tf(500, "987654321098765432109876", "valid_token", 0)
 	})
 }
 

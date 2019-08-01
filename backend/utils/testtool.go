@@ -25,7 +25,9 @@ func StartTestServer(f func() *gin.Engine, m string, p string, b io.Reader,
 		setter(req)
 	}
 	router.ServeHTTP(w, req)
-	defer req.Body.Close()
+	if req.Body != nil {
+		req.Body.Close()
+	}
 	return w
 }
 
