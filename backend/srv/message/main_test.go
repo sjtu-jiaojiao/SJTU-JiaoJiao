@@ -36,7 +36,7 @@ func TestCreate(t *testing.T) {
 		So(chat.Badge, ShouldEqual, 3)
 		So(len(chat.Infos), ShouldEqual, 3)
 		So(chat.Infos[0].Forward, ShouldEqual, false)
-		So(chat.Infos[1].Text, ShouldEqual, "1234567890abcdef12345678")
+		So(chat.Infos[1].Msg, ShouldEqual, "1234567890abcdef12345678")
 	}
 
 	Convey("Test Create Message", t, func() {

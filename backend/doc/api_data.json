@@ -660,7 +660,7 @@
     "group": "Message",
     "permission": [
       {
-        "name": "self/admin"
+        "name": "self"
       }
     ],
     "name": "AddMessage",
@@ -673,7 +673,7 @@
             "type": "--",
             "optional": false,
             "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Message_Create\">Message Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-Message_Create\">Message Service</a> <br> Self userID should in fromUser</p>"
           }
         ]
       }
@@ -2092,17 +2092,10 @@
           },
           {
             "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "text",
-            "description": "<p>plain message text if type is text</p>"
-          },
-          {
-            "group": "Parameter",
             "type": "bytes",
-            "optional": true,
-            "field": "file",
-            "description": "<p>file stream bytes, valid only if type is picture or video</p>"
+            "optional": false,
+            "field": "msg",
+            "description": "<p>file stream bytes if type is picture or video, plain text if type is text</p>"
           }
         ]
       }
@@ -2165,11 +2158,12 @@
             "type": "int32",
             "optional": false,
             "field": "way",
-            "description": "<p>1 for only pull message <br> 2 for read message <br> 3 for query history message</p>"
+            "description": "<p>1 for read message <br> 2 for query history message <br> Note: only 1 will set unread to false</p>"
           },
           {
             "group": "Parameter",
-            "type": "int32",
+            "type": "uint32",
+            "size": "0-20",
             "optional": false,
             "field": "limit",
             "defaultValue": "20",
@@ -2177,7 +2171,7 @@
           },
           {
             "group": "Parameter",
-            "type": "int32",
+            "type": "uint32",
             "optional": false,
             "field": "offset",
             "defaultValue": "0",
@@ -2249,7 +2243,7 @@
           },
           {
             "group": "MessageInfo",
-            "type": "string",
+            "type": "bytes",
             "optional": false,
             "field": "text",
             "description": "<p>plain message text if type is text <br> fileID if type is picture or video</p>"
@@ -2286,7 +2280,7 @@
     "version": "1.0.0",
     "group": "Service",
     "name": "Message_Query",
-    "description": "<p>Query New Message</p>",
+    "description": "<p>Query New Message, do NOT set read</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2345,7 +2339,7 @@
             "type": "MessageInfo",
             "optional": false,
             "field": "info",
-            "description": "<p>see below MessageInfo</p>"
+            "description": "<p>newest one msg for each dialog, see below MessageInfo</p>"
           }
         ],
         "MessageInfo": [
@@ -2382,7 +2376,7 @@
             "type": "bool",
             "optional": false,
             "field": "unread",
-            "description": "<p>false for having read <br> true for not having read</p>"
+            "description": "<p>always true</p>"
           }
         ]
       }

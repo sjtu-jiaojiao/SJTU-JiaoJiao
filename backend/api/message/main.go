@@ -27,30 +27,29 @@ func setupRouter() *gin.Engine {
  * @api {post} /message AddMessage
  * @apiVersion 1.0.0
  * @apiGroup Message
- * @apiPermission self/admin
+ * @apiPermission self
  * @apiName AddMessage
  * @apiDescription Add chat message
  *
- * @apiParam {--} Param see [Message Service](#api-Service-Message_Create)
+ * @apiParam {--} Param see [Message Service](#api-Service-Message_Create) <br> Self userID should in fromUser
  * @apiSuccess (Success 200) {Response} response see [Message Service](#api-Service-Message_Create)
  * @apiUse InvalidParam
  * @apiUse MessageServiceDown
  */
 func addMessage(c *gin.Context) {
 	type param struct {
-		FromUser int32                             `form:"fromUser" binding:"required"`
-		ToUser   int32                             `form:"toUser" binding:"required"`
-		Type     message.MessageCreateRequest_Type `form:"type" binding:"required"`
-		Text     string                            `form:"text"`
+		FromUser int32 `form:"fromUser" binding:"required"`
+		ToUser   int32 `form:"toUser" binding:"required"`
+		Type     int32 `form:"type" binding:"required"`
 	}
 	var p param
-	var data []byte
+	var msg []byte
 
 	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
-		if p.Type == message.MessageCreateRequest_PICTURE || p.Type == message.MessageCreateRequest_VIDEO {
+		if p.Type == int32(message.Type_PICTURE) || p.Type == int32(message.Type_VIDEO) {
 			var code int
 			var err error
-			data, code, err = utils.GetQueryFile(c, "file", 1024*1024*50) // 50M
+			msg, code, err = utils.GetQueryFile(c, "msg", int64(utils.If(p.Type == int32(message.Type_PICTURE), 1024*1024*5, 1024*1024*50).(int)))
 			if err != nil {
 				c.AbortWithStatus(400)
 				return
@@ -59,10 +58,16 @@ func addMessage(c *gin.Context) {
 				c.AbortWithStatus(code)
 				return
 			}
+		} else {
+			s := c.PostForm("msg")
+			if s != "" {
+				msg = []byte(s)
+			} else {
+				msg = []byte{0}
+			}
 		}
-		role1 := utils.GetRoleID(c, int32(p.FromUser))
-		role2 := utils.GetRoleID(c, int32(p.FromUser))
-		if !(role1.Self || role1.Admin || role2.Self || role2.Admin) {
+		role := utils.GetRoleID(c, int32(p.FromUser))
+		if !role.Self {
 			c.Status(403)
 			return
 		}
@@ -72,11 +77,10 @@ func addMessage(c *gin.Context) {
 		rsp, err := srv.Create(context.TODO(), &message.MessageCreateRequest{
 			FromUser: p.FromUser,
 			ToUser:   p.ToUser,
-			Type:     p.Type,
-			Text:     p.Text,
-			File:     data,
+			Type:     message.Type(utils.EnumConvert(p.Type, message.Type_name)),
+			Msg:      msg,
 		})
-		if utils.LogContinue(err, utils.Warning, "Message service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -101,17 +105,17 @@ func addMessage(c *gin.Context) {
  */
 func findMessage(c *gin.Context) {
 	type param struct {
-		FromUser int32                          `form:"fromUser" binding:"required"`
-		ToUser   int32                          `form:"toUser" binding:"required"`
-		Way      message.MessageFindRequest_Way `form:"way" binding:"required"`
-		Limit    int32                          `form:"limit"`
-		Offset   int32                          `form:"offset"`
+		FromUser int32 `form:"fromUser" binding:"required"`
+		ToUser   int32 `form:"toUser" binding:"required"`
+		Way      int32 `form:"way" binding:"required"`
+		Limit    int32 `form:"limit"`
+		Offset   int32 `form:"offset"`
 	}
 	var p param
 
-	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
 		role1 := utils.GetRoleID(c, int32(p.FromUser))
-		role2 := utils.GetRoleID(c, int32(p.FromUser))
+		role2 := utils.GetRoleID(c, int32(p.ToUser))
 		if !(role1.Self || role1.Admin || role2.Self || role2.Admin) {
 			c.Status(403)
 			return
@@ -122,9 +126,9 @@ func findMessage(c *gin.Context) {
 		rsp, err := srv.Find(context.TODO(), &message.MessageFindRequest{
 			FromUser: p.FromUser,
 			ToUser:   p.ToUser,
-			Way:      p.Way,
+			Way:      message.MessageFindRequest_Way(utils.EnumConvert(p.Way, message.MessageFindRequest_Way_name)),
 		})
-		if utils.LogContinue(err, utils.Warning, "Message service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -155,7 +159,7 @@ func getMessage(c *gin.Context) {
 
 	if !utils.LogContinue(c.ShouldBindUri(&p), utils.Warning) {
 		role := utils.GetRoleID(c, int32(p.UserID))
-		if !(role.Self || role.Admin) {
+		if !role.Self && !role.Admin {
 			c.Status(403)
 			return
 		}
@@ -165,7 +169,7 @@ func getMessage(c *gin.Context) {
 		rsp, err := srv.Query(context.TODO(), &message.MessageQueryRequest{
 			UserID: p.UserID,
 		})
-		if utils.LogContinue(err, utils.Warning, "Message service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}

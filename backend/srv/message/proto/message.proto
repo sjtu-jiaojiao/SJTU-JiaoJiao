@@ -6,32 +6,26 @@ service Message {
     rpc Query (MessageQueryRequest) returns (MessageQueryResponse);
 }
 
-message MessageInfo{
-    enum Type {
-        UNKNOWN = 0;
-        TEXT = 1;
-        PICTURE = 2;
-        VIDEO = 3;
-    }
+enum Type {
+    UNKNOWN = 0;
+    TEXT = 1;
+    PICTURE = 2;
+    VIDEO = 3;
+}
+
+message MessageInfo {
     int64 time = 1;
     bool forward = 2;
     Type type = 3;
-    string text = 4;
+    string msg = 4;
     bool unread = 5;
 }
 
-message MessageCreateRequest{
-    enum Type {
-        UNKNOWN = 0;
-        TEXT = 1;
-        PICTURE = 2;
-        VIDEO = 3;
-    }
+message MessageCreateRequest {
     int32 fromUser = 1;
     int32 toUser = 2;
     Type type = 3;
-    string text = 4;
-    bytes file = 5;
+    bytes msg = 4;
 }
 
 message MessageCreateResponse {
@@ -39,6 +33,7 @@ message MessageCreateResponse {
         UNKNOWN = 0;
         INVALID_PARAM = -1;
         SUCCESS = 1;
+        INVALID_TYPE = 2;
     }
     Status status = 1;
 }
@@ -46,15 +41,14 @@ message MessageCreateResponse {
 message MessageFindRequest {
     enum Way {
         UNKNOWN = 0;
-        ONLY_PULL = 1;
-        READ_MESSAGE = 2;
-        HISTORY = 3;
+        READ_MESSAGE = 1;
+        HISTORY = 2;
     }
     int32 fromUser = 1;
     int32 toUser = 2;
     Way way = 3;
-    int32 limit = 4;
-    int32 offset = 5;
+    uint32 limit = 4;
+    uint32 offset = 5;
 }
 
 message MessageFindResponse {
@@ -62,7 +56,6 @@ message MessageFindResponse {
         UNKNOWN = 0;
         INVALID_PARAM = -1;
         SUCCESS = 1;
-        NOT_FOUND = 2;
     }
     Status status = 1;
     int32 fromUser = 2;
@@ -71,23 +64,22 @@ message MessageFindResponse {
     repeated MessageInfo infos = 5;
 }
 
-message NewMessage{
+message NewMessage {
     int32 fromUser = 1;
     int32 toUser = 2;
     int32 badge = 3;
     MessageInfo info = 4;
 }
 
-message MessageQueryRequest{
+message MessageQueryRequest {
     int32 userID = 1;
 }
 
-message MessageQueryResponse{
+message MessageQueryResponse {
     enum Status {
         UNKNOWN = 0;
         INVALID_PARAM = -1;
         SUCCESS = 1;
-        NOT_FOUND = 2;
     }
     Status status = 1;
     repeated NewMessage news = 2;
