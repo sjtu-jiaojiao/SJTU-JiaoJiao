@@ -19,6 +19,7 @@ import {TimeStamptoDate, TimeStampNow, DatetoTimeStamp} from "../../Utils/TimeSt
 import Video from "react-native-video";
 import {isValidTimeValid, isPriceValid} from "../../Utils/CheckValidity";
 import HTTP from "../../Network/Network";
+import {isLogin} from "../../Config";
 
 const {width, height, scale} = Dimensions.get('window');
 
@@ -172,8 +173,7 @@ export default class ReleaseScreen extends Component {
     render() {
         const buttons = ['出售信息', '求购信息'];
         const { selectedIndex } = this.state;
-
-        if (Config.userInfo.userID === -1) {
+        if (isLogin() === false) {
             Alert.alert(
                 '未登录',
                 '无法在未登录状态下发布信息，是否切换至登录界面？',
@@ -195,6 +195,7 @@ export default class ReleaseScreen extends Component {
             );
             return (<View/>);
         } else {
+            Config.isReleaseRender = true;
             return (
                 <ScrollView>
                     <View style={{backgroundColor: '#EFEFF5'}}>

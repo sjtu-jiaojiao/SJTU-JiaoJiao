@@ -368,6 +368,8 @@ export default class UserInfoScreen extends Component {
                                         studentID: '',
                                         studentName: '',
                                     };
+                                    Config.isContactRender = false;
+                                    Config.isReleaseRender = false;
                                     this.props.navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0);
                                 }
                             },

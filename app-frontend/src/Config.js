@@ -9,6 +9,20 @@ let Config = {
         studentID: '',
         studentName: '',
     },
+    isReleaseRender: false,
+    isContactRender: false,
+};
+
+export const isLogin = () => {
+    return Config.userInfo.userID !== -1;
+};
+
+export const isReleaseRendered = () => {
+    return Config.isReleaseRender;
+};
+
+export const isContactRendered = () => {
+    return Config.isContactRender;
 };
 
 export default Config;

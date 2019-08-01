@@ -1,162 +1,133 @@
 import React, {Component} from 'react';
 import {
-    View, Text, StyleSheet, ScrollView, Alert,
+    View, Text, StyleSheet, FlatList, Alert,
     Image, TouchableOpacity, NativeModules, Dimensions
 } from 'react-native';
-import Config from "../../Config";
+import {Avatar, ListItem} from "react-native-elements";
+import Config, {isLogin} from "../../Config";
 
-var ImagePicker = NativeModules.ImageCropPicker;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    button: {
-        backgroundColor: 'blue',
-        marginBottom: 10
-    },
-    text: {
-        color: 'white',
-        fontSize: 20,
-        textAlign: 'center'
-    }
-});
-
-export default class App extends Component {
-
-    constructor() {
-        super();
+export default class ContactScreen extends Component {
+    constructor(props) {
+        super(props);
         this.state = {
-            image: null,
-            images: null
+            refreshing: false,
+            contactPerson: [
+                {"nickname":"Alex Black","location":"London","avatar":"1","header":"A"},
+                {"nickname":"Alex Proti","location":"Moscow","avatar":"5","header":"A"},
+                {"nickname":"Andrew Smith","location":"Kiev","avatar":"3","header":"A"},
+                {"nickname":"Ann Ryder","location":"Kiev","avatar":"7","header":"A"},
+                {"nickname":"Daniel Ricci","location":"Kiev","avatar":"8","header":"D"},
+                {"nickname":"Ivan Ivanov","location":"Kiev","avatar":"3","header":"I"},
+                {"nickname":"Kate Lebedeva","location":"Odessa","avatar":"6","header":"K"},
+                {"nickname":"Kate Shy","location":"Kiev","avatar":"10","header":"K"},
+                {"nickname":"Michael Fold","location":"Praha","avatar":"1","header":"M"},
+                {"nickname":"Nadya Lovin","location":"Moscow","avatar":"2","header":"N"},
+                {"nickname":"Oleg Price","location":"Odessa","avatar":"4","header":"O"},
+                {"nickname":"Oleg Ryzhkov","location":"Kiev","avatar":"5","header":"O"},
+                {"nickname":"Olga Blare","location":"Praha","avatar":"9","header":"O"},
+                {"nickname":"Svetlana Kot","location":"Milan","avatar":"10","header":"S"}
+            ]
         };
     }
 
-    pickSingleBase64(cropit) {
-        ImagePicker.openPicker({
-            width: 300,
-            height: 300,
-            cropping: cropit,
-            includeBase64: true,
-            includeExif: true,
-        }).then(image => {
-            console.log('received base64 image');
-            this.setState({
-                image: {uri: `data:${image.mime};base64,`+ image.data, width: image.width, height: image.height},
-                images: null
-            });
-        }).catch(e => alert(e));
-    }
+    static navigationOptions = {
+        headerTitle: (<Text style={{flex:1, color: '#298BFF', fontSize: 23, textAlign: 'center'}}>我的消息</Text>),
+    };
 
-    pickSingle(cropit, circular=false, mediaType) {
-        ImagePicker.openPicker({
-            width: 500,
-            height: 500,
-            cropping: cropit,
-            cropperCircleOverlay: circular,
-            compressImageMaxWidth: 1000,
-            compressImageMaxHeight: 1000,
-            compressImageQuality: 1,
-            compressVideoPreset: 'MediumQuality',
-            includeExif: true,
-            includeBase64: true,
-        }).then(image => {
-            console.warn('received base64 image');
-            console.warn((Config.fetchPrefix + addType));
-            fetch((Config.fetchPrefix + addType), {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    Authorization: ('Bearer ' + Config.JaccountToken.token),
-                },
-                body: ('userID=' + Config.userInfo.userID + '&validTime=20&goodName=' + this.state.goodName),
-            })
-                .then((response) => {
-                    if(response.ok) {
-                        Alert.alert(
-                            '发布成功',
-                            '成功发布该交易信息：' + this.state.goodName,
-                            [
-                                {text: '好', onPress: () => {}}
-                            ],
-                            {cancelable: false},
-                        )
-                        this.setState({
-                            goodName: '',
-                            Discription: '',
-                            Price: '',
-                        });
-                    } else {
-                        Alert.alert(
-                            '出错啦',
-                            '网络可能出了问题，请再试一次吧',
-                            [
-                                {text: '好', onPress: () => {}}
-                            ],
-                            {cancelable: false},
-                        )
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-            this.setState({
-                image: {uri: `data:${image.mime};base64,`+ image.data, width: image.width, height: image.height},
-                images: null
-            });
-        }).catch(e => {
-            console.log(e);
-            Alert.alert(e.message ? e.message : e);
+    componentDidMount() {
+        /*this.setState({
+            refreshing: true
         });
-    }
-/*
-    renderVideo(video) {
-        console.log('rendering video');
-        return (<View style={{height: 300, width: 300}}>
-            <Video source={{uri: video.uri, type: video.mime}}
-                   style={{position: 'absolute',
-                       top: 0,
-                       left: 0,
-                       bottom: 0,
-                       right: 0
-                   }}
-                   rate={1}
-                   paused={false}
-                   volume={1}
-                   muted={false}
-                   resizeMode={'cover'}
-                   onError={e => console.log(e)}
-                   onLoad={load => console.log(load)}
-                   repeat={true} />
-        </View>);
-    }*/
-
-    renderImage(image) {
-        return <Image style={{width: 300, height: 300, resizeMode: 'contain'}} source={image} />
+        this.props.fetchContacts()
+            .then(_ => {
+                this.setState({
+                    refreshing: false
+                })
+            })*/
     }
 
-    renderAsset(image) {
-        if (image.mime && image.mime.toLowerCase().indexOf('video/') !== -1) {
-            return this.renderVideo(image);
-        }
+    getRemoteAvatar = (id) => {
+        return `https://loremflickr.com/70/70/people?lock=${id}`
+    };
 
-        return this.renderImage(image);
-    }
+    keyExtractor = (item, index) => index.toString();
+
+    renderItem = ({ item }) => {
+        return (
+            <View>
+                <ListItem
+                    topDivider
+                    bottomDivider
+                    containerStyle={styles.listItem}
+                    leftAvatar={{ source: { uri: this.getRemoteAvatar(item.avatar) } }}
+                    rightIcon={<Avatar
+                        rounded size='small'
+                        source={require('../../assets/icons/right.png')}
+                        overlayContainerStyle={{backgroundColor: 'white'}}
+                    />}
+                    title={item.nickname}
+                    subtitle={item.location}
+                    subtitleStyle={styles.subtitleStyle}
+                    onPress={() => { this.props.navigation.navigate('Message', { user: item }) }}
+                />
+            </View>
+        )
+    };
 
     render() {
-        return (<View style={styles.container}>
-            <ScrollView>
-                {this.state.image ? this.renderAsset(this.state.image) : null}
-                {this.state.images ? this.state.images.map(i => <View key={i.uri}>{this.renderAsset(i)}</View>) : null}
-            </ScrollView>
-
-            <TouchableOpacity onPress={() => this.pickSingle(true)} style={styles.button}>
-                <Text style={styles.text}>Select Single</Text>
-            </TouchableOpacity>
-
-        </View>);
+        if (!isLogin()) {
+            Alert.alert(
+                '未登录',
+                '无法在未登录状态下进入消息界面，是否切换至登录界面？',
+                [
+                    {
+                        text: '取消',
+                        onPress: () => {
+                            this.props.navigation.navigate('Home');
+                        },
+                        style: 'cancel',
+                    },
+                    {
+                        text: '确定', onPress: () => {
+                            this.props.navigation.navigate('Login');
+                        }
+                    },
+                ],
+                {cancelable: false},
+            );
+            return (<View/>);
+        } else {
+            Config.isContactRender = true;
+            return (
+                <FlatList
+                    style={styles.container}
+                    contentContainerStyle={styles.contentContainerStyle}
+                    keyExtractor={this.keyExtractor}
+                    data={this.state.contactPerson}
+                    renderItem={this.renderItem}
+                    onRefresh={() => null}
+                    refreshing={this.state.refreshing}
+                />
+            );
+        }
     }
 }
+
+let styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#EFEFF5"
+    },
+    contentContainerStyle: {
+        paddingBottom: 20,
+    },
+    listItem: {
+        paddingTop: 8,
+        paddingBottom: 8
+    },
+    subtitleStyle: {
+        fontSize: 14,
+        color: '#858585'
+    }
+});
+

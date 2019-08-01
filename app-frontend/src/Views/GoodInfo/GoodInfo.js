@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions, Alert} from 'react-native';
 import HTTP from '../../Network/Network';
 import {parseStatus, parseTimeStamp} from "../../Utils/ParseInfo";
 import MyAvatar from '../../Components/MyAvatar';
 import Video from "react-native-video";
 import Config from "../../Config";
-import {Avatar} from "react-native-elements";
+import {Avatar, Button} from "react-native-elements";
+import {NavigationActions} from "react-navigation";
 
 const {width, height, scale} = Dimensions.get('window');
 
@@ -80,7 +81,6 @@ class InfoPart extends Component {
                         <Text style={styles.ratingText}>暂无</Text>
                     </Text>
                 </View>
-                <View style={{height: 20, backgroundColor: '#EFEFF5'}}/>
             </View>
         );
     }
@@ -92,7 +92,7 @@ class ImagePart extends Component {
         this.state = {
             loaded: false,
             contentToken: '',
-            files: '',
+            files: [],
         };
         this.keyID = 0;
     };
@@ -168,7 +168,6 @@ class ImagePart extends Component {
                     <View style={{backgroundColor: '#FCFCFC'}}>
                         {this.state.files.length > 0 ? this.state.files.map(file => <View key={this.keyID++}>{this.renderAsset(file)}</View>) : null}
                     </View>
-                    <View style={{height: 20, backgroundColor: '#EFEFF5'}}/>
                 </View>
             );
         }
@@ -223,7 +222,7 @@ class UserPart extends  Component {
             let userName = this.state.userName;
             //console.warn(userName);
             return (
-                <View style={{backgroundColor: '#FCFCFC', marginBottom: 20}}>
+                <View style={{backgroundColor: '#FCFCFC'}}>
                     <View style={{
                         backgroundColor: '#FCFCFC',
                         flexDirection: 'row',
@@ -242,7 +241,6 @@ class UserPart extends  Component {
                         </View>
                         <MyAvatar avatarID={this.state.avatarID}/>
                     </View>
-                    <View style={{height: 10, backgroundColor: '#EFEFF5'}}/>
                 </View>
             )
         }
@@ -320,13 +318,39 @@ export default class GoodInfoScreen extends Component {
             //console.warn(TimeStamptoDate(this.state.SellInfoList[0].releaseTime));
             //console.warn(TimeStampNow());
             //console.warn(TimeStamptoDate(TimeStampNow()));
+            let ReserveButtonColor = this.state.status === 1 ? 'red' : 'grey';
             return (
                 <ScrollView>
                     <View style={{backgroundColor: '#EFEFF5'}}>
                         <InfoPart infoType={this.infoType} item={this.state}/>
+                        <View style={{height: 20, backgroundColor: '#EFEFF5'}}/>
                         {this.state.contentID === undefined? null : <ImagePart contentID={this.state.contentID}/>}
+                        <View style={{height: 20, backgroundColor: '#EFEFF5'}}/>
                         <UserPart userID={this.state.userID} navigate={(params) => this.navigate(params)}/>
+                        <View style={{height: 20, backgroundColor: '#EFEFF5'}}/>
+                        <Button
+                            title='申请预约'
+                            titleStyle={{color: 'white', fontSize: 17}}
+                            buttonStyle={{backgroundColor: ReserveButtonColor}}
+                            containerStyle={{width: 160, marginLeft: (width / 2 - 80)}}
+                            raised={true}
+                            onPress={() => {
+                                if (this.state.status === 1) {
+                                    Alert.alert(
+                                        '成功预约！',
+                                        '您已经成功预约了该交易信息，请等待对方答复',
+                                        [
+                                            {text: '好', onPress: () => {
+                                                    this.setState({isChangeTelephoneVisible: true})
+                                                }}
+                                        ],
+                                        {cancelable: false},
+                                    )
+                                }
+                            }}
+                        />
                     </View>
+                    <View style={{height: 20, backgroundColor: '#EFEFF5'}}/>
                 </ScrollView>
             )
         }

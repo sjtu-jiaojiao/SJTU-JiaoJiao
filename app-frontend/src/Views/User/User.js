@@ -116,7 +116,7 @@ export default class UserScreen extends Component {
                         }}
                 ],
                 {cancelable: false},
-            )
+            );
             return null;
         }
         else {

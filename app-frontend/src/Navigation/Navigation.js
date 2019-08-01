@@ -24,6 +24,9 @@ import GoodInfoScreen from '../Views/GoodInfo/GoodInfo';
 import UserInfoForOthersScreen from "../Views/UserInfoForOthers/UserInfoForOthors";
 import SellInfoForOthersScreen from "../Views/SellInfoForOthers/SellInfoForOthers";
 import BuyInfoForOthersScreen from "../Views/BuyInfoForOthers/BuyInfoForOthers";
+import MessageScreen from '../Views/Message/Message';
+import Config from "../Config";
+import {isLogin, isContactRendered, isReleaseRendered} from "../Config";
 
 const HomeStack = createStackNavigator({
     Home: { screen: HomeScreen },
@@ -34,6 +37,7 @@ const HomeStack = createStackNavigator({
     UserInfoForOthers: { screen: UserInfoForOthersScreen},
     SellInfoForOthers: { screen: SellInfoForOthersScreen },
     BuyInfoForOthers: { screen: BuyInfoForOthersScreen },
+    Message: { screen: MessageScreen },
     TestPage: { screen: TestPage },
 });
 
@@ -47,6 +51,7 @@ const ContactStack = createStackNavigator({
     UserInfoForOthers: { screen: UserInfoForOthersScreen},
     SellInfoForOthers: { screen: SellInfoForOthersScreen },
     BuyInfoForOthers: { screen: BuyInfoForOthersScreen },
+    Message: { screen: MessageScreen },
 });
 
 const UserStack = createStackNavigator({
@@ -60,6 +65,7 @@ const UserStack = createStackNavigator({
     UserInfoForOthers: { screen: UserInfoForOthersScreen},
     SellInfoForOthers: { screen: SellInfoForOthersScreen },
     BuyInfoForOthers: { screen: BuyInfoForOthersScreen },
+    Message: { screen: MessageScreen },
 });
 
 const TabBar = createBottomTabNavigator({
@@ -70,8 +76,10 @@ const TabBar = createBottomTabNavigator({
 },{
     defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: (args) => {
-            if (args.navigation.state.routeName === 'Release') {
+            if (args.navigation.state.routeName === 'Release' && (!isLogin() || !isReleaseRendered())) {
                 navigation.reset([NavigationActions.navigate({routeName: 'Release'})], 0);
+            } else if (args.navigation.state.routeName === 'Contact' && (!isLogin() || !isContactRendered())) {
+                navigation.reset([NavigationActions.navigate({routeName: 'Contact'})], 0);
             } else {
                 args.defaultHandler();
             }
