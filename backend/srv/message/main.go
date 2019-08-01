@@ -350,6 +350,104 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 	return nil
 }
 
+/**
+ * @api {rpc} /rpc Message.Query
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName Message.Query
+ * @apiDescription Query New Message
+ *
+ * @apiParam {int32} user user who wants to pull new message
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
+ * @apiSuccess {list} news see below NewMessage
+ * @apiSuccess (NewMessage) {int32} fromUser user who launch the chat at first time
+ * @apiSuccess (NewMessage) {int32} toUser user who accept the chat at first time
+ * @apiSuccess (NewMessage) {int32} badge count of message still unread
+ * @apiSuccess (NewMessage) {MessageInfo} info see below MessageInfo
+ * @apiSuccess (MessageInfo) {int64} time message create time
+ * @apiSuccess (MessageInfo) {bool} forward false for chat from toUser to fromUser <br> true for chat from fromUser to toUser
+ * @apiSuccess (MessageInfo) {int32} type 1 for text <br> 2 for picture <br> 3 for video
+ * @apiSuccess (MessageInfo) {string} text plain message text if type is text <br> fileID if type is picture or video
+ * @apiSuccess (MessageInfo) {bool} unread false for having read <br> true for not having read
+ * @apiUse DBServerDown
+ */
+func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *message.MessageQueryResponse) error {
+	if !utils.RequireParam(req.User) {
+		rsp.Status = message.MessageQueryResponse_INVALID_PARAM
+		return nil
+	}
+
+	decodeRes := func(src *ChatLog, dest *message.NewMessage) {
+		dest.FromUser = src.FromUser
+		dest.ToUser = src.ToUser
+		dest.Badge = src.Badge
+		dest.Info = &message.MessageInfo{
+			Time:    src.Infos[0].Time.Unix(),
+			Forward: src.Infos[0].Forward,
+			Type:    src.Infos[0].Type,
+			Text:    src.Infos[0].Text,
+			Unread:  src.Infos[0].Unread,
+		}
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	collection := db.MongoDatabase.Collection("message")
+
+	cur, err := collection.Find(ctx, bson.M{
+		"$or": bson.A{
+			bson.M{
+				"fromUser": req.User,
+				"badge":    bson.M{"$gt": 0},
+				"infos": bson.M{
+					"$elemMatch": bson.M{
+						"forward": false,
+						"unread":  true,
+					},
+				},
+			},
+			bson.M{
+				"toUser": req.User,
+				"badge":  bson.M{"$gt": 0},
+				"infos": bson.M{
+					"$elemMatch": bson.M{
+						"forward": true,
+						"unread":  true,
+					},
+				},
+			},
+		},
+	}, &options.FindOptions{Projection: bson.M{
+		"infos": bson.M{
+			"$slice": 1,
+		},
+	}})
+	if utils.LogContinue(err, utils.Warning) {
+		rsp.Status = message.MessageQueryResponse_NOT_FOUND
+		return nil
+	}
+
+	for cur.Next(ctx) {
+		var res ChatLog
+		var newMessage message.NewMessage
+		err = cur.Decode(&res)
+		if utils.LogContinue(err, utils.Warning) {
+			rsp.Status = message.MessageQueryResponse_UNKNOWN
+			return nil
+		}
+
+		decodeRes(&res, &newMessage)
+		rsp.News = append(rsp.News, &newMessage)
+	}
+
+	if rsp.News == nil || len(rsp.News) == 0 {
+		rsp.Status = message.MessageQueryResponse_NOT_FOUND
+		return nil
+	}
+	rsp.Status = message.MessageQueryResponse_SUCCESS
+	return nil
+}
+
 func main() {
 	db.InitMongoDB("messagemongo")
 	service := utils.InitMicroService("message")

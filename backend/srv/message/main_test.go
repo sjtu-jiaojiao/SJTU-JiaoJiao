@@ -192,6 +192,105 @@ func TestFind(t *testing.T) {
 
 }
 
+func TestQuery(t *testing.T) {
+	var s srv
+	var req message.MessageQueryRequest
+	var rsp message.MessageQueryResponse
+	filter1 := primitive.M{
+		"fromUser": 1001,
+		"toUser":   2001,
+	}
+	filter2 := primitive.M{
+		"fromUser": 1001,
+		"toUser":   2002,
+	}
+	filter3 := primitive.M{
+		"fromUser": 2003,
+		"toUser":   1001,
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	collection := db.MongoDatabase.Collection("message")
+
+	prepareData := func() {
+		_, err := collection.DeleteOne(ctx, filter1)
+		So(err, ShouldBeNil)
+		_, err = collection.DeleteOne(ctx, filter2)
+		So(err, ShouldBeNil)
+		_, err = collection.DeleteOne(ctx, filter3)
+		So(err, ShouldBeNil)
+
+		_, err = collection.InsertMany(ctx, bson.A{
+			bson.M{
+				"fromUser": 1001,
+				"toUser":   2001,
+				"badge":    1,
+				"infos": bson.A{
+					bson.M{"time": time.Now(), "forward": false, "type": message.MessageInfo_TEXT, "text": "你好，我是小明1(⊙﹏⊙)，🔺", "unread": true},
+					bson.M{"time": time.Now(), "forward": false, "type": message.MessageInfo_TEXT, "text": "你好，我是小明2(⊙﹏⊙)，🔺", "unread": false},
+				},
+			},
+			bson.M{
+				"fromUser": 1001,
+				"toUser":   2002,
+				"badge":    1,
+				"infos": bson.A{
+					bson.M{"time": time.Now(), "forward": true, "type": message.MessageInfo_TEXT, "text": "你好，我是小明3(⊙﹏⊙)，🔺", "unread": true},
+					bson.M{"time": time.Now(), "forward": false, "type": message.MessageInfo_TEXT, "text": "你好，我是小明4(⊙﹏⊙)，🔺", "unread": false},
+				},
+			},
+			bson.M{
+				"fromUser": 2003,
+				"toUser":   1001,
+				"badge":    2,
+				"infos": bson.A{
+					bson.M{"time": time.Now(), "forward": true, "type": message.MessageInfo_TEXT, "text": "你好，我是小明5(⊙﹏⊙)，🔺", "unread": true},
+					bson.M{"time": time.Now(), "forward": true, "type": message.MessageInfo_TEXT, "text": "你好，我是小明6(⊙﹏⊙)，🔺", "unread": true},
+				},
+			},
+		})
+		So(err, ShouldBeNil)
+	}
+
+	testBase := func(newsLen int, status message.MessageQueryResponse_Status) {
+		rsp.Reset()
+		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, status)
+		So(len(rsp.News), ShouldEqual, newsLen)
+	}
+	Convey("Test Find Message", t, func() {
+		prepareData()
+
+		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, message.MessageQueryResponse_INVALID_PARAM)
+
+		req.User = 1001
+		testBase(2, message.MessageQueryResponse_SUCCESS)
+		So(rsp.News[0].Badge, ShouldEqual, 1)
+		So(rsp.News[1].Badge, ShouldEqual, 2)
+		So(rsp.News[1].Info.Text, ShouldEqual, "你好，我是小明5(⊙﹏⊙)，🔺")
+
+		req.User = 2001
+		testBase(0, message.MessageQueryResponse_NOT_FOUND)
+
+		req.User = 2002
+		testBase(1, message.MessageQueryResponse_SUCCESS)
+		So(rsp.News[0].Info.Text, ShouldEqual, "你好，我是小明3(⊙﹏⊙)，🔺")
+
+		req.User = 2003
+		testBase(0, message.MessageQueryResponse_NOT_FOUND)
+
+		defer func() {
+			_, err := collection.DeleteOne(ctx, filter1)
+			So(err, ShouldBeNil)
+			_, err = collection.DeleteOne(ctx, filter2)
+			So(err, ShouldBeNil)
+			_, err = collection.DeleteOne(ctx, filter3)
+			So(err, ShouldBeNil)
+		}()
+	})
+}
+
 func TestMain(m *testing.M) {
 	main()
 	m.Run()

@@ -2122,6 +2122,129 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
+    "title": "Message.Query",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "Message_Query",
+    "description": "<p>Query New Message</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "user",
+            "description": "<p>user who wants to pull new message</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "list",
+            "optional": false,
+            "field": "news",
+            "description": "<p>see below NewMessage</p>"
+          }
+        ],
+        "NewMessage": [
+          {
+            "group": "NewMessage",
+            "type": "int32",
+            "optional": false,
+            "field": "fromUser",
+            "description": "<p>user who launch the chat at first time</p>"
+          },
+          {
+            "group": "NewMessage",
+            "type": "int32",
+            "optional": false,
+            "field": "toUser",
+            "description": "<p>user who accept the chat at first time</p>"
+          },
+          {
+            "group": "NewMessage",
+            "type": "int32",
+            "optional": false,
+            "field": "badge",
+            "description": "<p>count of message still unread</p>"
+          },
+          {
+            "group": "NewMessage",
+            "type": "MessageInfo",
+            "optional": false,
+            "field": "info",
+            "description": "<p>see below MessageInfo</p>"
+          }
+        ],
+        "MessageInfo": [
+          {
+            "group": "MessageInfo",
+            "type": "int64",
+            "optional": false,
+            "field": "time",
+            "description": "<p>message create time</p>"
+          },
+          {
+            "group": "MessageInfo",
+            "type": "bool",
+            "optional": false,
+            "field": "forward",
+            "description": "<p>false for chat from toUser to fromUser <br> true for chat from fromUser to toUser</p>"
+          },
+          {
+            "group": "MessageInfo",
+            "type": "int32",
+            "optional": false,
+            "field": "type",
+            "description": "<p>1 for text <br> 2 for picture <br> 3 for video</p>"
+          },
+          {
+            "group": "MessageInfo",
+            "type": "string",
+            "optional": false,
+            "field": "text",
+            "description": "<p>plain message text if type is text <br> fileID if type is picture or video</p>"
+          },
+          {
+            "group": "MessageInfo",
+            "type": "bool",
+            "optional": false,
+            "field": "unread",
+            "description": "<p>false for having read <br> true for not having read</p>"
+          }
+        ]
+      }
+    },
+    "filename": "srv/message/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
     "title": "SellInfo.Create",
     "version": "1.0.0",
     "group": "Service",

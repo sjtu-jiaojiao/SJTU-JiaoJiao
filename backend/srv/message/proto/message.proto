@@ -69,3 +69,25 @@ message MessageFindResponse {
     int32 badge = 4;
     repeated MessageInfo infos = 5;
 }
+
+message NewMessage{
+    int32 fromUser = 1;
+    int32 toUser = 2;
+    int32 badge = 3;
+    MessageInfo info = 4;
+}
+
+message MessageQueryRequest{
+    int32 user = 1;
+}
+
+message MessageQueryResponse{
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
+    repeated NewMessage news = 2;
+}
