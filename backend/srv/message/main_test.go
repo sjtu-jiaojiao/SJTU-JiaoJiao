@@ -31,7 +31,7 @@ func TestCreate(t *testing.T) {
 		So(count, ShouldEqual, 1)
 		So(err, ShouldBeNil)
 
-		var chat ChatLog
+		var chat chatLog
 		So(collection.FindOne(ctx, filter).Decode(&chat), ShouldBeNil)
 		So(chat.Badge, ShouldEqual, 3)
 		So(len(chat.Infos), ShouldEqual, 3)

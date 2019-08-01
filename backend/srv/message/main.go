@@ -22,7 +22,7 @@ import (
 
 type srv struct{}
 
-type MsgInfo struct {
+type msgInfo struct {
 	Time    time.Time    `bson:"time"`
 	Forward bool         `bson:"forward"`
 	Type    message.Type `bson:"type"`
@@ -30,12 +30,12 @@ type MsgInfo struct {
 	Unread  bool         `bson:"unread"`
 }
 
-type ChatLog struct {
+type chatLog struct {
 	ID       primitive.ObjectID `bson:"_id"`
 	FromUser int32              `bson:"fromUser"`
 	ToUser   int32              `bson:"toUser"`
 	Badge    int32              `bson:"badge"`
-	Infos    []MsgInfo          `bson:"infos"`
+	Infos    []msgInfo          `bson:"infos"`
 }
 
 /**
@@ -87,7 +87,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("message")
-	var res1, res2 ChatLog
+	var res1, res2 chatLog
 	err1 := collection.FindOne(ctx, bson.M{
 		"fromUser": req.FromUser,
 		"toUser":   req.ToUser,
@@ -203,7 +203,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 		req.Limit = 20
 	}
 
-	decodeRes := func(src *ChatLog, dest *message.MessageFindResponse) {
+	decodeRes := func(src *chatLog, dest *message.MessageFindResponse) {
 		dest.FromUser = src.FromUser
 		dest.ToUser = src.ToUser
 		dest.Badge = src.Badge
@@ -221,7 +221,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("message")
-	var res1, res2 ChatLog
+	var res1, res2 chatLog
 	err1 := collection.FindOne(ctx, bson.M{
 		"fromUser": req.FromUser,
 		"toUser":   req.ToUser,
@@ -240,13 +240,13 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 	} else if err1 != nil && err2 != nil {
 		rsp.Status = message.MessageFindResponse_SUCCESS
 		return nil
-	} else {
+	} else if err1 == nil && err2 == nil {
 		rsp.Status = message.MessageFindResponse_INVALID_PARAM
 		return nil
 	}
 
 	if req.Way == message.MessageFindRequest_READ_MESSAGE {
-		var res ChatLog
+		var res chatLog
 		cur, err := collection.Aggregate(ctx, bson.A{
 			bson.M{
 				"$match": bson.M{
@@ -307,7 +307,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 			return err
 		}
 	} else {
-		var res ChatLog
+		var res chatLog
 		err := collection.FindOne(ctx, bson.M{
 			"fromUser": rsp.FromUser,
 			"toUser":   rsp.ToUser,
@@ -355,7 +355,7 @@ func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *
 		return nil
 	}
 
-	decodeRes := func(src *ChatLog, dest *message.NewMessage) {
+	decodeRes := func(src *chatLog, dest *message.NewMessage) {
 		dest.FromUser = src.FromUser
 		dest.ToUser = src.ToUser
 		dest.Badge = src.Badge
@@ -405,7 +405,7 @@ func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *
 	}
 
 	for cur.Next(ctx) {
-		var res ChatLog
+		var res chatLog
 		var newMessage message.NewMessage
 		err = cur.Decode(&res)
 		if utils.LogContinue(err, utils.Error) {
