@@ -9,6 +9,8 @@ import (
 	"jiaojiao/utils"
 	"time"
 
+	"go.mongodb.org/mongo-driver/mongo/options"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -92,11 +94,16 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 			"toUser":   req.ToUser,
 		}, bson.M{"$push": bson.M{
 			"infos": bson.M{
-				"time":    time.Now(),
-				"forward": true,
-				"type":    req.Type,
-				"text":    req.Text,
-				"unread":  true,
+				"$each": bson.A{
+					bson.M{
+						"time":    time.Now(),
+						"forward": true,
+						"type":    req.Type,
+						"text":    req.Text,
+						"unread":  true,
+					},
+				},
+				"$position": 0,
 			},
 		}})
 		if utils.LogContinue(err, utils.Warning) {
@@ -122,11 +129,16 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 			"toUser":   req.FromUser,
 		}, bson.M{"$push": bson.M{
 			"infos": bson.M{
-				"time":    time.Now(),
-				"forward": false,
-				"type":    req.Type,
-				"text":    req.Text,
-				"unread":  true,
+				"$each": bson.A{
+					bson.M{
+						"time":    time.Now(),
+						"forward": false,
+						"type":    req.Type,
+						"text":    req.Text,
+						"unread":  true,
+					},
+				},
+				"$position": 0,
 			},
 		}})
 		if utils.LogContinue(err, utils.Warning) {
@@ -199,17 +211,33 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 		return nil
 	}
 
+	decodeRes := func(src *ChatLog, dest *message.MessageFindResponse) {
+		dest.FromUser = src.FromUser
+		dest.ToUser = src.ToUser
+		dest.Badge = src.Badge
+		for _, v := range src.Infos {
+			dest.Infos = append(dest.Infos, &message.MessageInfo{
+				Time:    v.Time.Unix(),
+				Forward: v.Forward,
+				Type:    v.Type,
+				Text:    v.Text,
+				Unread:  v.Unread,
+			})
+		}
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("message")
-	_, err1 := collection.Find(ctx, bson.M{
+	var res1, res2 ChatLog
+	err1 := collection.FindOne(ctx, bson.M{
 		"fromUser": req.FromUser,
 		"toUser":   req.ToUser,
-	})
-	_, err2 := collection.Find(ctx, bson.M{
+	}).Decode(&res1)
+	err2 := collection.FindOne(ctx, bson.M{
 		"fromUser": req.ToUser,
 		"toUser":   req.FromUser,
-	})
+	}).Decode(&res2)
 
 	if err1 == nil && err2 != nil {
 		rsp.FromUser = req.FromUser
@@ -225,38 +253,71 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 		return nil
 	}
 
-	if req.Way == message.MessageFindRequest_ONLY_PULL {
-		err := collection.FindOne(ctx, bson.M{
-			"fromUser": rsp.FromUser,
-			"toUser":   rsp.ToUser,
-			"infos": bson.M{
-				"forward": req.FromUser == rsp.FromUser,
-				"unread":  true,
+	if req.Way == message.MessageFindRequest_ONLY_PULL || req.Way == message.MessageFindRequest_READ_MESSAGE {
+		var res ChatLog
+		cur, err := collection.Aggregate(ctx, bson.A{
+			bson.M{
+				"$match": bson.M{
+					"fromUser": rsp.FromUser,
+					"toUser":   rsp.ToUser,
+				},
 			},
-		}).Decode(&rsp)
+			bson.M{
+				"$project": bson.M{
+					"fromUser": 1,
+					"toUser":   1,
+					"badge":    1,
+					"infos": bson.M{
+						"$filter": bson.M{
+							"input": "$infos",
+							"as":    "item",
+							"cond": bson.M{
+								"$and": bson.A{
+									bson.M{"$eq": bson.A{"$$item.forward", req.FromUser == rsp.FromUser}},
+									bson.M{"$eq": bson.A{"$$item.unread", true}},
+								},
+							},
+						},
+					},
+				},
+			},
+		})
 		if utils.LogContinue(err, utils.Warning) {
 			rsp.Status = message.MessageFindResponse_UNKNOWN
 			return nil
 		}
-		rsp.Status = message.MessageFindResponse_SUCCESS
-		return nil
-	} else if req.Way == message.MessageFindRequest_READ_MESSAGE {
-		err := collection.FindOneAndUpdate(ctx, bson.M{
-			"fromUser": rsp.FromUser,
-			"toUser":   rsp.ToUser,
-			"infos": bson.M{
-				"forward": req.FromUser == rsp.FromUser,
-				"unread":  true,
-			},
-		}, bson.M{
-			"$set": bson.M{
-				"badge":  0,
-				"unread": false,
-			},
-		}).Decode(&rsp)
+		cur.Next(ctx)
+		err = cur.Decode(&res)
 		if utils.LogContinue(err, utils.Warning) {
 			rsp.Status = message.MessageFindResponse_UNKNOWN
 			return nil
+		}
+
+		decodeRes(&res, rsp)
+
+		if req.Way == message.MessageFindRequest_READ_MESSAGE {
+			_, err := collection.UpdateMany(ctx, bson.M{
+				"fromUser":      rsp.FromUser,
+				"toUser":        rsp.ToUser,
+				"infos.forward": req.FromUser == rsp.FromUser,
+				"infos.unread":  true,
+			}, bson.M{
+				"$set": bson.M{
+					"badge":                0,
+					"infos.$[elem].unread": false,
+				},
+			}, &options.UpdateOptions{
+				ArrayFilters: &options.ArrayFilters{
+					Filters: bson.A{bson.M{
+						"elem.forward": req.FromUser == rsp.FromUser,
+						"elem.unread":  true,
+					}},
+				},
+			})
+			if utils.LogContinue(err, utils.Warning) {
+				rsp.Status = message.MessageFindResponse_UNKNOWN
+				return nil
+			}
 		}
 		rsp.Status = message.MessageFindResponse_SUCCESS
 		return nil
