@@ -18,11 +18,20 @@ export class InfoService {
   private sellinfoUrl = 'api/sellInfo';  // URL to web api
   private buyinfoUrl = 'api/buyInfo';
   constructor(private http: HttpClient) { }
-  bi: buyInfo[];
-  si: sellInfo[];
+  bi: buyInfo[] = [];
+  si: sellInfo[] = [];
 
+  getAcInfo(){
+    return this.bi.filter( a => a.status<3).length+ this.si.filter(a =>a.status<3).length;
+  }
+  getInfoNum(){
+    return this.bi.length + this.si.length;
+  }
+  getReserveInfoNum(){
+    return this.bi.filter( a=> a.status ==2).length+ this.si.filter(a=> a.status ==2).length;
+  }
   getAllSellInfo(): sellInfo[]{
-    if(!this.si)
+    if(this.si.length==0)
     {
       this.getSellInfos().subscribe(e=>
         {
@@ -34,7 +43,7 @@ export class InfoService {
   }
   
   getAllBuyInfo(): buyInfo[]{
-    if(!this.bi)
+    if(this.bi.length==0)
     {
       this.getBuyInfos().subscribe(e=>
         {
@@ -49,7 +58,7 @@ export class InfoService {
     if(!(this.bi.length%100) && !dynamic)
       this.getBuyInfos(null,null,null,null,offset).subscribe(
           e => {
-              if(e){
+              if(e&&Object.keys(e).length!=0){
               this.bi=this.bi.concat(e.buyInfo);
               if(e.buyInfo.length!=100)
               dynamic =! dynamic;
@@ -61,10 +70,9 @@ export class InfoService {
           setTimeout(() => {
               this.getBuyInfos(null,null,null,null,offset).subscribe(
                   e => {
-                      if(e)
+                      if(e&&Object.keys(e).length!=0)
                       this.bi=this.bi.concat(e.buyInfo);
                       this.getMoreBuy(this.bi.length-1, true);
-                      console.log(this.bi);
           }
       );}, 5000 );
       }
@@ -74,7 +82,7 @@ getMoreSell(offset, dynamic){
     if(!(this.si.length%100) && !dynamic)
       this.getSellInfos(null,null,null,null,offset).subscribe(
           e => {
-              if(e){
+              if(e&&Object.keys(e).length!=0){
               this.si= this.si.concat(e.sellInfo);   
               if(e.sellInfo.length!=100)
                 dynamic=!dynamic;
@@ -86,7 +94,7 @@ getMoreSell(offset, dynamic){
       setTimeout(() => {
           this.getSellInfos(null,null,null,null,offset).subscribe(
               e => {
-                  if(e)
+                  if(e&&Object.keys(e).length!=0)
                   this.si=this.si.concat(e.sellInfo);
                   this.getMoreSell(this.si.length-1,true);
       }
@@ -105,15 +113,18 @@ getMoreSell(offset, dynamic){
   getSellInfos(userID: string = null, status: number = null, goodName: string = null,limit:number=null, offset: number=null): Observable<InfoResponse> {    
     let url = `${this.sellinfoUrl}?`;
     if(userID && userID.trim()) url += `userID=${userID}&`;
+
     if(status) url+= `status=${status}&`;
     if(goodName && goodName.trim()) url+=`goodName=${goodName}&`;
     if(limit) url+= `limit=${limit}&`;
     if(offset) url+=`offset=${offset}&`;
+
     return this.http.get<InfoResponse>(url)
       .pipe(
         catchError(this.handleError<InfoResponse>('getSellInfos'))
       );
-  }
+
+    }
 
   /** PUT: update the info on the server */
   updateSellInfo(info: any): Observable<any> {
@@ -123,7 +134,8 @@ getMoreSell(offset, dynamic){
   }
 
   /** GET infos from the server */
-  getBuyInfos(userID: string = null, status: number = null, goodName: string = null,limit:number=null, offset: number=null): Observable<InfoResponse> {    
+  getBuyInfos(userID: string = null, status: number = null, goodName: string = null,limit:number=null, offset: number=null):
+   Observable<InfoResponse> {    
     let url = `${this.buyinfoUrl}?`;
     if(userID && userID.trim()) url += `userID=${userID}&`;
     if(status) url+= `status=${status}&`;
