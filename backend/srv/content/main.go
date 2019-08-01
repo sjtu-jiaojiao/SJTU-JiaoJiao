@@ -67,7 +67,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 		return nil
 	}
 
-	if !utils.CheckInTest() && !filetype.IsImage(req.Content) && !filetype.IsVideo(req.Content) {
+	if !utils.CheckFile(req.Content, filetype.IsImage, filetype.IsVideo) {
 		rsp.Status = content.ContentCreateResponse_INVALID_TYPE
 		return nil
 	}
