@@ -79,6 +79,12 @@ func (a *mockSrv) Delete(ctx context.Context, req *content.ContentDeleteRequest,
 	return &rsp, nil
 }
 
+// CreateTag is tag create mock
+func (a *mockSrv) CreateTag(ctx context.Context, req *content.ContentCreateTagRequest, opts ...client.CallOption) (*content.ContentCreateTagResponse, error) {
+	// TODO
+	return nil, nil
+}
+
 // NewContentService is content service mock
 func NewContentService() content.ContentService {
 	return new(mockSrv)

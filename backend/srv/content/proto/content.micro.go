@@ -35,6 +35,7 @@ var _ server.Option
 
 type ContentService interface {
 	Create(ctx context.Context, in *ContentCreateRequest, opts ...client.CallOption) (*ContentCreateResponse, error)
+	CreateTag(ctx context.Context, in *ContentCreateTagRequest, opts ...client.CallOption) (*ContentCreateTagResponse, error)
 	Update(ctx context.Context, in *ContentUpdateRequest, opts ...client.CallOption) (*ContentUpdateResponse, error)
 	Delete(ctx context.Context, in *ContentDeleteRequest, opts ...client.CallOption) (*ContentDeleteResponse, error)
 	Query(ctx context.Context, in *ContentQueryRequest, opts ...client.CallOption) (*ContentQueryResponse, error)
@@ -62,6 +63,16 @@ func NewContentService(name string, c client.Client) ContentService {
 func (c *contentService) Create(ctx context.Context, in *ContentCreateRequest, opts ...client.CallOption) (*ContentCreateResponse, error) {
 	req := c.c.NewRequest(c.name, "Content.Create", in)
 	out := new(ContentCreateResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentService) CreateTag(ctx context.Context, in *ContentCreateTagRequest, opts ...client.CallOption) (*ContentCreateTagResponse, error) {
+	req := c.c.NewRequest(c.name, "Content.CreateTag", in)
+	out := new(ContentCreateTagResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -113,6 +124,7 @@ func (c *contentService) Check(ctx context.Context, in *ContentCheckRequest, opt
 
 type ContentHandler interface {
 	Create(context.Context, *ContentCreateRequest, *ContentCreateResponse) error
+	CreateTag(context.Context, *ContentCreateTagRequest, *ContentCreateTagResponse) error
 	Update(context.Context, *ContentUpdateRequest, *ContentUpdateResponse) error
 	Delete(context.Context, *ContentDeleteRequest, *ContentDeleteResponse) error
 	Query(context.Context, *ContentQueryRequest, *ContentQueryResponse) error
@@ -122,6 +134,7 @@ type ContentHandler interface {
 func RegisterContentHandler(s server.Server, hdlr ContentHandler, opts ...server.HandlerOption) error {
 	type content interface {
 		Create(ctx context.Context, in *ContentCreateRequest, out *ContentCreateResponse) error
+		CreateTag(ctx context.Context, in *ContentCreateTagRequest, out *ContentCreateTagResponse) error
 		Update(ctx context.Context, in *ContentUpdateRequest, out *ContentUpdateResponse) error
 		Delete(ctx context.Context, in *ContentDeleteRequest, out *ContentDeleteResponse) error
 		Query(ctx context.Context, in *ContentQueryRequest, out *ContentQueryResponse) error
@@ -140,6 +153,10 @@ type contentHandler struct {
 
 func (h *contentHandler) Create(ctx context.Context, in *ContentCreateRequest, out *ContentCreateResponse) error {
 	return h.ContentHandler.Create(ctx, in, out)
+}
+
+func (h *contentHandler) CreateTag(ctx context.Context, in *ContentCreateTagRequest, out *ContentCreateTagResponse) error {
+	return h.ContentHandler.CreateTag(ctx, in, out)
 }
 
 func (h *contentHandler) Update(ctx context.Context, in *ContentUpdateRequest, out *ContentUpdateResponse) error {

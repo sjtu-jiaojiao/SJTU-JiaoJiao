@@ -72,9 +72,9 @@ func addContent(c *gin.Context) {
 			ContentID:    p.ContentID,
 			ContentToken: p.ContentToken,
 			Content:      data,
-			Type:         content.ContentCreateRequest_Type(p.Type),
+			Type:         content.Type(p.Type),
 		})
-		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -116,7 +116,7 @@ func deleteContent(c *gin.Context) {
 			ContentID:    p.ContentID,
 			ContentToken: p.ContentToken,
 		})
-		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -172,9 +172,9 @@ func updateContent(c *gin.Context) {
 			ContentToken: p.ContentToken,
 			FileID:       p.FileID,
 			Content:      data,
-			Type:         content.ContentUpdateRequest_Type(p.Type),
+			Type:         content.Type(p.Type),
 		})
-		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -220,7 +220,7 @@ func getContent(c *gin.Context) {
 		rsp, err := srv.Query(context.TODO(), &content.ContentQueryRequest{
 			ContentID: p.ContentID,
 		})
-		if utils.LogContinue(err, utils.Warning, "Content service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}

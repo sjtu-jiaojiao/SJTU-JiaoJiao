@@ -33,12 +33,12 @@ func (a *srvFile) Query(ctx context.Context, req *file.FileRequest, rsp *file.Fi
 	}
 
 	bucket, err := gridfs.NewBucket(db.MongoDatabase)
-	if utils.LogContinue(err, utils.Warning) {
+	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 
 	fid, err := primitive.ObjectIDFromHex(req.FileID)
-	if utils.LogContinue(err, utils.Warning) {
+	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 
@@ -74,12 +74,12 @@ func (a *srvFile) Create(ctx context.Context, req *file.FileCreateRequest, rsp *
 	}
 
 	bucket, err := gridfs.NewBucket(db.MongoDatabase)
-	if utils.LogContinue(err, utils.Warning) {
+	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 
 	objID, err := bucket.UploadFromStream("", bytes.NewReader(req.File))
-	if utils.LogContinue(err, utils.Warning) {
+	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 	rsp.FileID = objID.Hex()

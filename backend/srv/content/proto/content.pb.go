@@ -20,32 +20,32 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type ContentCreateRequest_Type int32
+type Type int32
 
 const (
-	ContentCreateRequest_UNKNOWN ContentCreateRequest_Type = 0
-	ContentCreateRequest_PICTURE ContentCreateRequest_Type = 1
-	ContentCreateRequest_VIDEO   ContentCreateRequest_Type = 2
+	Type_UNKNOWN Type = 0
+	Type_PICTURE Type = 1
+	Type_VIDEO   Type = 2
 )
 
-var ContentCreateRequest_Type_name = map[int32]string{
+var Type_name = map[int32]string{
 	0: "UNKNOWN",
 	1: "PICTURE",
 	2: "VIDEO",
 }
 
-var ContentCreateRequest_Type_value = map[string]int32{
+var Type_value = map[string]int32{
 	"UNKNOWN": 0,
 	"PICTURE": 1,
 	"VIDEO":   2,
 }
 
-func (x ContentCreateRequest_Type) String() string {
-	return proto.EnumName(ContentCreateRequest_Type_name, int32(x))
+func (x Type) String() string {
+	return proto.EnumName(Type_name, int32(x))
 }
 
-func (ContentCreateRequest_Type) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{0, 0}
+func (Type) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_61cc9617ce0cf609, []int{0}
 }
 
 type ContentCreateResponse_Status int32
@@ -82,32 +82,38 @@ func (ContentCreateResponse_Status) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_61cc9617ce0cf609, []int{1, 0}
 }
 
-type ContentUpdateRequest_Type int32
+type ContentCreateTagResponse_Status int32
 
 const (
-	ContentUpdateRequest_UNKNOWN ContentUpdateRequest_Type = 0
-	ContentUpdateRequest_PICTURE ContentUpdateRequest_Type = 1
-	ContentUpdateRequest_VIDEO   ContentUpdateRequest_Type = 2
+	ContentCreateTagResponse_UNKNOWN       ContentCreateTagResponse_Status = 0
+	ContentCreateTagResponse_INVALID_PARAM ContentCreateTagResponse_Status = -1
+	ContentCreateTagResponse_SUCCESS       ContentCreateTagResponse_Status = 1
+	ContentCreateTagResponse_INVALID_TOKEN ContentCreateTagResponse_Status = 2
+	ContentCreateTagResponse_INVALID_TYPE  ContentCreateTagResponse_Status = 3
 )
 
-var ContentUpdateRequest_Type_name = map[int32]string{
-	0: "UNKNOWN",
-	1: "PICTURE",
-	2: "VIDEO",
+var ContentCreateTagResponse_Status_name = map[int32]string{
+	0:  "UNKNOWN",
+	-1: "INVALID_PARAM",
+	1:  "SUCCESS",
+	2:  "INVALID_TOKEN",
+	3:  "INVALID_TYPE",
 }
 
-var ContentUpdateRequest_Type_value = map[string]int32{
-	"UNKNOWN": 0,
-	"PICTURE": 1,
-	"VIDEO":   2,
+var ContentCreateTagResponse_Status_value = map[string]int32{
+	"UNKNOWN":       0,
+	"INVALID_PARAM": -1,
+	"SUCCESS":       1,
+	"INVALID_TOKEN": 2,
+	"INVALID_TYPE":  3,
 }
 
-func (x ContentUpdateRequest_Type) String() string {
-	return proto.EnumName(ContentUpdateRequest_Type_name, int32(x))
+func (x ContentCreateTagResponse_Status) String() string {
+	return proto.EnumName(ContentCreateTagResponse_Status_name, int32(x))
 }
 
-func (ContentUpdateRequest_Type) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{2, 0}
+func (ContentCreateTagResponse_Status) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_61cc9617ce0cf609, []int{3, 0}
 }
 
 type ContentUpdateResponse_Status int32
@@ -118,8 +124,7 @@ const (
 	ContentUpdateResponse_SUCCESS       ContentUpdateResponse_Status = 1
 	ContentUpdateResponse_INVALID_TOKEN ContentUpdateResponse_Status = 2
 	ContentUpdateResponse_NOT_FOUND     ContentUpdateResponse_Status = 3
-	ContentUpdateResponse_FAILED        ContentUpdateResponse_Status = 4
-	ContentUpdateResponse_INVALID_TYPE  ContentUpdateResponse_Status = 5
+	ContentUpdateResponse_INVALID_TYPE  ContentUpdateResponse_Status = 4
 )
 
 var ContentUpdateResponse_Status_name = map[int32]string{
@@ -128,8 +133,7 @@ var ContentUpdateResponse_Status_name = map[int32]string{
 	1:  "SUCCESS",
 	2:  "INVALID_TOKEN",
 	3:  "NOT_FOUND",
-	4:  "FAILED",
-	5:  "INVALID_TYPE",
+	4:  "INVALID_TYPE",
 }
 
 var ContentUpdateResponse_Status_value = map[string]int32{
@@ -138,8 +142,7 @@ var ContentUpdateResponse_Status_value = map[string]int32{
 	"SUCCESS":       1,
 	"INVALID_TOKEN": 2,
 	"NOT_FOUND":     3,
-	"FAILED":        4,
-	"INVALID_TYPE":  5,
+	"INVALID_TYPE":  4,
 }
 
 func (x ContentUpdateResponse_Status) String() string {
@@ -147,7 +150,7 @@ func (x ContentUpdateResponse_Status) String() string {
 }
 
 func (ContentUpdateResponse_Status) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{3, 0}
+	return fileDescriptor_61cc9617ce0cf609, []int{5, 0}
 }
 
 type ContentDeleteResponse_Status int32
@@ -157,6 +160,7 @@ const (
 	ContentDeleteResponse_INVALID_PARAM ContentDeleteResponse_Status = -1
 	ContentDeleteResponse_SUCCESS       ContentDeleteResponse_Status = 1
 	ContentDeleteResponse_INVALID_TOKEN ContentDeleteResponse_Status = 2
+	ContentDeleteResponse_NOT_FOUND     ContentDeleteResponse_Status = 3
 )
 
 var ContentDeleteResponse_Status_name = map[int32]string{
@@ -164,6 +168,7 @@ var ContentDeleteResponse_Status_name = map[int32]string{
 	-1: "INVALID_PARAM",
 	1:  "SUCCESS",
 	2:  "INVALID_TOKEN",
+	3:  "NOT_FOUND",
 }
 
 var ContentDeleteResponse_Status_value = map[string]int32{
@@ -171,6 +176,7 @@ var ContentDeleteResponse_Status_value = map[string]int32{
 	"INVALID_PARAM": -1,
 	"SUCCESS":       1,
 	"INVALID_TOKEN": 2,
+	"NOT_FOUND":     3,
 }
 
 func (x ContentDeleteResponse_Status) String() string {
@@ -178,35 +184,7 @@ func (x ContentDeleteResponse_Status) String() string {
 }
 
 func (ContentDeleteResponse_Status) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{5, 0}
-}
-
-type ContentMsg_Type int32
-
-const (
-	ContentMsg_UNKNOWN ContentMsg_Type = 0
-	ContentMsg_PICTURE ContentMsg_Type = 1
-	ContentMsg_VIDEO   ContentMsg_Type = 2
-)
-
-var ContentMsg_Type_name = map[int32]string{
-	0: "UNKNOWN",
-	1: "PICTURE",
-	2: "VIDEO",
-}
-
-var ContentMsg_Type_value = map[string]int32{
-	"UNKNOWN": 0,
-	"PICTURE": 1,
-	"VIDEO":   2,
-}
-
-func (x ContentMsg_Type) String() string {
-	return proto.EnumName(ContentMsg_Type_name, int32(x))
-}
-
-func (ContentMsg_Type) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{6, 0}
+	return fileDescriptor_61cc9617ce0cf609, []int{7, 0}
 }
 
 type ContentQueryResponse_Status int32
@@ -237,7 +215,7 @@ func (x ContentQueryResponse_Status) String() string {
 }
 
 func (ContentQueryResponse_Status) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{8, 0}
+	return fileDescriptor_61cc9617ce0cf609, []int{10, 0}
 }
 
 type ContentCheckResponse_Status int32
@@ -268,17 +246,17 @@ func (x ContentCheckResponse_Status) String() string {
 }
 
 func (ContentCheckResponse_Status) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{10, 0}
+	return fileDescriptor_61cc9617ce0cf609, []int{12, 0}
 }
 
 type ContentCreateRequest struct {
-	ContentID            string                    `protobuf:"bytes,1,opt,name=contentID,proto3" json:"contentID,omitempty"`
-	ContentToken         string                    `protobuf:"bytes,2,opt,name=contentToken,proto3" json:"contentToken,omitempty"`
-	Content              []byte                    `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
-	Type                 ContentCreateRequest_Type `protobuf:"varint,4,opt,name=type,proto3,enum=ContentCreateRequest_Type" json:"type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
-	XXX_unrecognized     []byte                    `json:"-"`
-	XXX_sizecache        int32                     `json:"-"`
+	ContentID            string   `protobuf:"bytes,1,opt,name=contentID,proto3" json:"contentID,omitempty"`
+	ContentToken         string   `protobuf:"bytes,2,opt,name=contentToken,proto3" json:"contentToken,omitempty"`
+	Content              []byte   `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Type                 Type     `protobuf:"varint,4,opt,name=type,proto3,enum=Type" json:"type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *ContentCreateRequest) Reset()         { *m = ContentCreateRequest{} }
@@ -327,11 +305,11 @@ func (m *ContentCreateRequest) GetContent() []byte {
 	return nil
 }
 
-func (m *ContentCreateRequest) GetType() ContentCreateRequest_Type {
+func (m *ContentCreateRequest) GetType() Type {
 	if m != nil {
 		return m.Type
 	}
-	return ContentCreateRequest_UNKNOWN
+	return Type_UNKNOWN
 }
 
 type ContentCreateResponse struct {
@@ -397,22 +375,133 @@ func (m *ContentCreateResponse) GetFileID() string {
 	return ""
 }
 
+type ContentCreateTagRequest struct {
+	ContentID            string   `protobuf:"bytes,1,opt,name=contentID,proto3" json:"contentID,omitempty"`
+	ContentToken         string   `protobuf:"bytes,2,opt,name=contentToken,proto3" json:"contentToken,omitempty"`
+	Tags                 []string `protobuf:"bytes,4,rep,name=tags,proto3" json:"tags,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ContentCreateTagRequest) Reset()         { *m = ContentCreateTagRequest{} }
+func (m *ContentCreateTagRequest) String() string { return proto.CompactTextString(m) }
+func (*ContentCreateTagRequest) ProtoMessage()    {}
+func (*ContentCreateTagRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_61cc9617ce0cf609, []int{2}
+}
+
+func (m *ContentCreateTagRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ContentCreateTagRequest.Unmarshal(m, b)
+}
+func (m *ContentCreateTagRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ContentCreateTagRequest.Marshal(b, m, deterministic)
+}
+func (m *ContentCreateTagRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ContentCreateTagRequest.Merge(m, src)
+}
+func (m *ContentCreateTagRequest) XXX_Size() int {
+	return xxx_messageInfo_ContentCreateTagRequest.Size(m)
+}
+func (m *ContentCreateTagRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ContentCreateTagRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ContentCreateTagRequest proto.InternalMessageInfo
+
+func (m *ContentCreateTagRequest) GetContentID() string {
+	if m != nil {
+		return m.ContentID
+	}
+	return ""
+}
+
+func (m *ContentCreateTagRequest) GetContentToken() string {
+	if m != nil {
+		return m.ContentToken
+	}
+	return ""
+}
+
+func (m *ContentCreateTagRequest) GetTags() []string {
+	if m != nil {
+		return m.Tags
+	}
+	return nil
+}
+
+type ContentCreateTagResponse struct {
+	Status               ContentCreateTagResponse_Status `protobuf:"varint,1,opt,name=status,proto3,enum=ContentCreateTagResponse_Status" json:"status,omitempty"`
+	ContentID            string                          `protobuf:"bytes,2,opt,name=contentID,proto3" json:"contentID,omitempty"`
+	ContentToken         string                          `protobuf:"bytes,3,opt,name=contentToken,proto3" json:"contentToken,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                        `json:"-"`
+	XXX_unrecognized     []byte                          `json:"-"`
+	XXX_sizecache        int32                           `json:"-"`
+}
+
+func (m *ContentCreateTagResponse) Reset()         { *m = ContentCreateTagResponse{} }
+func (m *ContentCreateTagResponse) String() string { return proto.CompactTextString(m) }
+func (*ContentCreateTagResponse) ProtoMessage()    {}
+func (*ContentCreateTagResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_61cc9617ce0cf609, []int{3}
+}
+
+func (m *ContentCreateTagResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ContentCreateTagResponse.Unmarshal(m, b)
+}
+func (m *ContentCreateTagResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ContentCreateTagResponse.Marshal(b, m, deterministic)
+}
+func (m *ContentCreateTagResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ContentCreateTagResponse.Merge(m, src)
+}
+func (m *ContentCreateTagResponse) XXX_Size() int {
+	return xxx_messageInfo_ContentCreateTagResponse.Size(m)
+}
+func (m *ContentCreateTagResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ContentCreateTagResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ContentCreateTagResponse proto.InternalMessageInfo
+
+func (m *ContentCreateTagResponse) GetStatus() ContentCreateTagResponse_Status {
+	if m != nil {
+		return m.Status
+	}
+	return ContentCreateTagResponse_UNKNOWN
+}
+
+func (m *ContentCreateTagResponse) GetContentID() string {
+	if m != nil {
+		return m.ContentID
+	}
+	return ""
+}
+
+func (m *ContentCreateTagResponse) GetContentToken() string {
+	if m != nil {
+		return m.ContentToken
+	}
+	return ""
+}
+
 type ContentUpdateRequest struct {
-	ContentID            string                    `protobuf:"bytes,1,opt,name=contentID,proto3" json:"contentID,omitempty"`
-	ContentToken         string                    `protobuf:"bytes,2,opt,name=contentToken,proto3" json:"contentToken,omitempty"`
-	FileID               string                    `protobuf:"bytes,3,opt,name=fileID,proto3" json:"fileID,omitempty"`
-	Content              []byte                    `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
-	Type                 ContentUpdateRequest_Type `protobuf:"varint,5,opt,name=type,proto3,enum=ContentUpdateRequest_Type" json:"type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
-	XXX_unrecognized     []byte                    `json:"-"`
-	XXX_sizecache        int32                     `json:"-"`
+	ContentID            string   `protobuf:"bytes,1,opt,name=contentID,proto3" json:"contentID,omitempty"`
+	ContentToken         string   `protobuf:"bytes,2,opt,name=contentToken,proto3" json:"contentToken,omitempty"`
+	FileID               string   `protobuf:"bytes,3,opt,name=fileID,proto3" json:"fileID,omitempty"`
+	Content              []byte   `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	Type                 Type     `protobuf:"varint,5,opt,name=type,proto3,enum=Type" json:"type,omitempty"`
+	Tags                 []string `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *ContentUpdateRequest) Reset()         { *m = ContentUpdateRequest{} }
 func (m *ContentUpdateRequest) String() string { return proto.CompactTextString(m) }
 func (*ContentUpdateRequest) ProtoMessage()    {}
 func (*ContentUpdateRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{2}
+	return fileDescriptor_61cc9617ce0cf609, []int{4}
 }
 
 func (m *ContentUpdateRequest) XXX_Unmarshal(b []byte) error {
@@ -461,11 +550,18 @@ func (m *ContentUpdateRequest) GetContent() []byte {
 	return nil
 }
 
-func (m *ContentUpdateRequest) GetType() ContentUpdateRequest_Type {
+func (m *ContentUpdateRequest) GetType() Type {
 	if m != nil {
 		return m.Type
 	}
-	return ContentUpdateRequest_UNKNOWN
+	return Type_UNKNOWN
+}
+
+func (m *ContentUpdateRequest) GetTags() []string {
+	if m != nil {
+		return m.Tags
+	}
+	return nil
 }
 
 type ContentUpdateResponse struct {
@@ -480,7 +576,7 @@ func (m *ContentUpdateResponse) Reset()         { *m = ContentUpdateResponse{} }
 func (m *ContentUpdateResponse) String() string { return proto.CompactTextString(m) }
 func (*ContentUpdateResponse) ProtoMessage()    {}
 func (*ContentUpdateResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{3}
+	return fileDescriptor_61cc9617ce0cf609, []int{5}
 }
 
 func (m *ContentUpdateResponse) XXX_Unmarshal(b []byte) error {
@@ -527,7 +623,7 @@ func (m *ContentDeleteRequest) Reset()         { *m = ContentDeleteRequest{} }
 func (m *ContentDeleteRequest) String() string { return proto.CompactTextString(m) }
 func (*ContentDeleteRequest) ProtoMessage()    {}
 func (*ContentDeleteRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{4}
+	return fileDescriptor_61cc9617ce0cf609, []int{6}
 }
 
 func (m *ContentDeleteRequest) XXX_Unmarshal(b []byte) error {
@@ -573,7 +669,7 @@ func (m *ContentDeleteResponse) Reset()         { *m = ContentDeleteResponse{} }
 func (m *ContentDeleteResponse) String() string { return proto.CompactTextString(m) }
 func (*ContentDeleteResponse) ProtoMessage()    {}
 func (*ContentDeleteResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{5}
+	return fileDescriptor_61cc9617ce0cf609, []int{7}
 }
 
 func (m *ContentDeleteResponse) XXX_Unmarshal(b []byte) error {
@@ -601,51 +697,51 @@ func (m *ContentDeleteResponse) GetStatus() ContentDeleteResponse_Status {
 	return ContentDeleteResponse_UNKNOWN
 }
 
-type ContentMsg struct {
-	FileID               string          `protobuf:"bytes,1,opt,name=fileID,proto3" json:"fileID,omitempty"`
-	Type                 ContentMsg_Type `protobuf:"varint,2,opt,name=type,proto3,enum=ContentMsg_Type" json:"type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
+type FileMsg struct {
+	FileID               string   `protobuf:"bytes,1,opt,name=fileID,proto3" json:"fileID,omitempty"`
+	Type                 Type     `protobuf:"varint,2,opt,name=type,proto3,enum=Type" json:"type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ContentMsg) Reset()         { *m = ContentMsg{} }
-func (m *ContentMsg) String() string { return proto.CompactTextString(m) }
-func (*ContentMsg) ProtoMessage()    {}
-func (*ContentMsg) Descriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{6}
+func (m *FileMsg) Reset()         { *m = FileMsg{} }
+func (m *FileMsg) String() string { return proto.CompactTextString(m) }
+func (*FileMsg) ProtoMessage()    {}
+func (*FileMsg) Descriptor() ([]byte, []int) {
+	return fileDescriptor_61cc9617ce0cf609, []int{8}
 }
 
-func (m *ContentMsg) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ContentMsg.Unmarshal(m, b)
+func (m *FileMsg) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FileMsg.Unmarshal(m, b)
 }
-func (m *ContentMsg) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ContentMsg.Marshal(b, m, deterministic)
+func (m *FileMsg) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FileMsg.Marshal(b, m, deterministic)
 }
-func (m *ContentMsg) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ContentMsg.Merge(m, src)
+func (m *FileMsg) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FileMsg.Merge(m, src)
 }
-func (m *ContentMsg) XXX_Size() int {
-	return xxx_messageInfo_ContentMsg.Size(m)
+func (m *FileMsg) XXX_Size() int {
+	return xxx_messageInfo_FileMsg.Size(m)
 }
-func (m *ContentMsg) XXX_DiscardUnknown() {
-	xxx_messageInfo_ContentMsg.DiscardUnknown(m)
+func (m *FileMsg) XXX_DiscardUnknown() {
+	xxx_messageInfo_FileMsg.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ContentMsg proto.InternalMessageInfo
+var xxx_messageInfo_FileMsg proto.InternalMessageInfo
 
-func (m *ContentMsg) GetFileID() string {
+func (m *FileMsg) GetFileID() string {
 	if m != nil {
 		return m.FileID
 	}
 	return ""
 }
 
-func (m *ContentMsg) GetType() ContentMsg_Type {
+func (m *FileMsg) GetType() Type {
 	if m != nil {
 		return m.Type
 	}
-	return ContentMsg_UNKNOWN
+	return Type_UNKNOWN
 }
 
 type ContentQueryRequest struct {
@@ -659,7 +755,7 @@ func (m *ContentQueryRequest) Reset()         { *m = ContentQueryRequest{} }
 func (m *ContentQueryRequest) String() string { return proto.CompactTextString(m) }
 func (*ContentQueryRequest) ProtoMessage()    {}
 func (*ContentQueryRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{7}
+	return fileDescriptor_61cc9617ce0cf609, []int{9}
 }
 
 func (m *ContentQueryRequest) XXX_Unmarshal(b []byte) error {
@@ -690,7 +786,8 @@ func (m *ContentQueryRequest) GetContentID() string {
 type ContentQueryResponse struct {
 	Status               ContentQueryResponse_Status `protobuf:"varint,1,opt,name=status,proto3,enum=ContentQueryResponse_Status" json:"status,omitempty"`
 	ContentToken         string                      `protobuf:"bytes,2,opt,name=contentToken,proto3" json:"contentToken,omitempty"`
-	Files                []*ContentMsg               `protobuf:"bytes,3,rep,name=files,proto3" json:"files,omitempty"`
+	Files                []*FileMsg                  `protobuf:"bytes,3,rep,name=files,proto3" json:"files,omitempty"`
+	Tags                 []string                    `protobuf:"bytes,4,rep,name=tags,proto3" json:"tags,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
 	XXX_unrecognized     []byte                      `json:"-"`
 	XXX_sizecache        int32                       `json:"-"`
@@ -700,7 +797,7 @@ func (m *ContentQueryResponse) Reset()         { *m = ContentQueryResponse{} }
 func (m *ContentQueryResponse) String() string { return proto.CompactTextString(m) }
 func (*ContentQueryResponse) ProtoMessage()    {}
 func (*ContentQueryResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{8}
+	return fileDescriptor_61cc9617ce0cf609, []int{10}
 }
 
 func (m *ContentQueryResponse) XXX_Unmarshal(b []byte) error {
@@ -735,9 +832,16 @@ func (m *ContentQueryResponse) GetContentToken() string {
 	return ""
 }
 
-func (m *ContentQueryResponse) GetFiles() []*ContentMsg {
+func (m *ContentQueryResponse) GetFiles() []*FileMsg {
 	if m != nil {
 		return m.Files
+	}
+	return nil
+}
+
+func (m *ContentQueryResponse) GetTags() []string {
+	if m != nil {
+		return m.Tags
 	}
 	return nil
 }
@@ -754,7 +858,7 @@ func (m *ContentCheckRequest) Reset()         { *m = ContentCheckRequest{} }
 func (m *ContentCheckRequest) String() string { return proto.CompactTextString(m) }
 func (*ContentCheckRequest) ProtoMessage()    {}
 func (*ContentCheckRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{9}
+	return fileDescriptor_61cc9617ce0cf609, []int{11}
 }
 
 func (m *ContentCheckRequest) XXX_Unmarshal(b []byte) error {
@@ -800,7 +904,7 @@ func (m *ContentCheckResponse) Reset()         { *m = ContentCheckResponse{} }
 func (m *ContentCheckResponse) String() string { return proto.CompactTextString(m) }
 func (*ContentCheckResponse) ProtoMessage()    {}
 func (*ContentCheckResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_61cc9617ce0cf609, []int{10}
+	return fileDescriptor_61cc9617ce0cf609, []int{12}
 }
 
 func (m *ContentCheckResponse) XXX_Unmarshal(b []byte) error {
@@ -829,21 +933,22 @@ func (m *ContentCheckResponse) GetStatus() ContentCheckResponse_Status {
 }
 
 func init() {
-	proto.RegisterEnum("ContentCreateRequest_Type", ContentCreateRequest_Type_name, ContentCreateRequest_Type_value)
+	proto.RegisterEnum("Type", Type_name, Type_value)
 	proto.RegisterEnum("ContentCreateResponse_Status", ContentCreateResponse_Status_name, ContentCreateResponse_Status_value)
-	proto.RegisterEnum("ContentUpdateRequest_Type", ContentUpdateRequest_Type_name, ContentUpdateRequest_Type_value)
+	proto.RegisterEnum("ContentCreateTagResponse_Status", ContentCreateTagResponse_Status_name, ContentCreateTagResponse_Status_value)
 	proto.RegisterEnum("ContentUpdateResponse_Status", ContentUpdateResponse_Status_name, ContentUpdateResponse_Status_value)
 	proto.RegisterEnum("ContentDeleteResponse_Status", ContentDeleteResponse_Status_name, ContentDeleteResponse_Status_value)
-	proto.RegisterEnum("ContentMsg_Type", ContentMsg_Type_name, ContentMsg_Type_value)
 	proto.RegisterEnum("ContentQueryResponse_Status", ContentQueryResponse_Status_name, ContentQueryResponse_Status_value)
 	proto.RegisterEnum("ContentCheckResponse_Status", ContentCheckResponse_Status_name, ContentCheckResponse_Status_value)
 	proto.RegisterType((*ContentCreateRequest)(nil), "ContentCreateRequest")
 	proto.RegisterType((*ContentCreateResponse)(nil), "ContentCreateResponse")
+	proto.RegisterType((*ContentCreateTagRequest)(nil), "ContentCreateTagRequest")
+	proto.RegisterType((*ContentCreateTagResponse)(nil), "ContentCreateTagResponse")
 	proto.RegisterType((*ContentUpdateRequest)(nil), "ContentUpdateRequest")
 	proto.RegisterType((*ContentUpdateResponse)(nil), "ContentUpdateResponse")
 	proto.RegisterType((*ContentDeleteRequest)(nil), "ContentDeleteRequest")
 	proto.RegisterType((*ContentDeleteResponse)(nil), "ContentDeleteResponse")
-	proto.RegisterType((*ContentMsg)(nil), "ContentMsg")
+	proto.RegisterType((*FileMsg)(nil), "FileMsg")
 	proto.RegisterType((*ContentQueryRequest)(nil), "ContentQueryRequest")
 	proto.RegisterType((*ContentQueryResponse)(nil), "ContentQueryResponse")
 	proto.RegisterType((*ContentCheckRequest)(nil), "ContentCheckRequest")
@@ -853,44 +958,47 @@ func init() {
 func init() { proto.RegisterFile("content.proto", fileDescriptor_61cc9617ce0cf609) }
 
 var fileDescriptor_61cc9617ce0cf609 = []byte{
-	// 609 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0x4f, 0x6f, 0xda, 0x30,
-	0x1c, 0x5d, 0x12, 0x12, 0xc4, 0x0f, 0xa8, 0x3c, 0xaf, 0x54, 0x11, 0xea, 0x24, 0x66, 0xed, 0x80,
-	0x34, 0x29, 0x07, 0xda, 0xa9, 0x67, 0x94, 0xa4, 0x52, 0xd4, 0x12, 0x68, 0x80, 0x76, 0x3b, 0x55,
-	0x1d, 0xf3, 0xfe, 0xa8, 0x15, 0x30, 0x12, 0x34, 0x71, 0xd9, 0x37, 0xd8, 0x79, 0xd7, 0xed, 0x13,
-	0xed, 0x3b, 0xec, 0xb0, 0x7d, 0x8c, 0x4d, 0x71, 0x0c, 0x8e, 0xb3, 0x4c, 0x74, 0x6d, 0xb8, 0xfd,
-	0x9c, 0xf7, 0x6c, 0xff, 0xde, 0x7b, 0xb6, 0x81, 0xfa, 0x64, 0x36, 0x8d, 0xe8, 0x34, 0xb2, 0xe6,
-	0x8b, 0x59, 0x34, 0x23, 0xdf, 0x15, 0xd8, 0xb5, 0x93, 0x11, 0x7b, 0x41, 0xaf, 0x22, 0x1a, 0xd0,
-	0x0f, 0x4b, 0x1a, 0x46, 0x78, 0x1f, 0x2a, 0x1c, 0xe9, 0x39, 0xa6, 0xd2, 0x52, 0xda, 0x95, 0x40,
-	0x0c, 0x60, 0x02, 0x35, 0x5e, 0x8c, 0x66, 0xd7, 0x74, 0x6a, 0xaa, 0x0c, 0x20, 0x8d, 0x61, 0x13,
-	0xca, 0xbc, 0x36, 0xb5, 0x96, 0xd2, 0xae, 0x05, 0xeb, 0x12, 0x5b, 0x50, 0x8a, 0x56, 0x73, 0x6a,
-	0x96, 0x5a, 0x4a, 0x7b, 0xa7, 0xd3, 0xb4, 0xf2, 0x36, 0x60, 0x8d, 0x56, 0x73, 0x1a, 0x30, 0x1c,
-	0x79, 0x06, 0xa5, 0xb8, 0xc2, 0x55, 0x28, 0x8f, 0xfd, 0x13, 0xbf, 0x7f, 0xe1, 0xa3, 0x07, 0x71,
-	0x31, 0xf0, 0xec, 0xd1, 0x38, 0x70, 0x91, 0x82, 0x2b, 0xa0, 0x9f, 0x7b, 0x8e, 0xdb, 0x47, 0x2a,
-	0xf9, 0xac, 0x42, 0x23, 0x33, 0x61, 0x38, 0x9f, 0x4d, 0x43, 0x8a, 0x9f, 0x83, 0x11, 0x46, 0x57,
-	0xd1, 0x32, 0x64, 0xfd, 0xec, 0x74, 0x1e, 0x5b, 0xb9, 0x38, 0x6b, 0xc8, 0x40, 0x01, 0x07, 0xcb,
-	0x4a, 0xa8, 0xdb, 0x94, 0xd0, 0x72, 0x94, 0xd8, 0x03, 0xe3, 0xcd, 0xfb, 0x1b, 0xea, 0x39, 0xac,
-	0xe3, 0x4a, 0xc0, 0x2b, 0x32, 0x01, 0x23, 0x59, 0x4b, 0xee, 0xac, 0x09, 0x75, 0xcf, 0x3f, 0xef,
-	0x9e, 0x7a, 0xce, 0xe5, 0xa0, 0x1b, 0x74, 0x7b, 0xe8, 0xf7, 0xfa, 0xa7, 0xc4, 0xc0, 0xe1, 0xd8,
-	0xb6, 0xdd, 0xe1, 0x10, 0x29, 0xf8, 0xa1, 0x00, 0x8e, 0xfa, 0x27, 0xae, 0x8f, 0x54, 0x8c, 0xa0,
-	0xb6, 0x19, 0x7a, 0x39, 0x70, 0x91, 0x46, 0x7e, 0x09, 0x87, 0xc7, 0xf3, 0xd7, 0x85, 0x3a, 0x2c,
-	0xfa, 0xd2, 0xd2, 0x7d, 0xa5, 0x9d, 0x2f, 0xe5, 0x3b, 0xaf, 0xcb, 0xce, 0x4b, 0x1b, 0xbb, 0xb3,
-	0xf3, 0x3f, 0x95, 0x8d, 0xf3, 0xeb, 0x09, 0xb7, 0x39, 0x2f, 0xe3, 0xb2, 0xce, 0x8b, 0xfe, 0x54,
-	0xc9, 0xb7, 0x4f, 0xc5, 0xfb, 0x56, 0x87, 0x8a, 0xdf, 0x1f, 0x5d, 0x1e, 0xf7, 0xc7, 0xbe, 0x83,
-	0x34, 0x0c, 0x60, 0x1c, 0x77, 0xbd, 0x53, 0xd7, 0x41, 0xa5, 0xbf, 0x2c, 0xd5, 0xc9, 0x8b, 0x8d,
-	0xa3, 0x0e, 0xbd, 0xa1, 0x05, 0x3a, 0x4a, 0xbe, 0x09, 0x09, 0xd7, 0x53, 0x6f, 0x93, 0x50, 0xc6,
-	0x65, 0x24, 0x24, 0x67, 0x85, 0x4b, 0x45, 0x3e, 0x02, 0xf0, 0xa5, 0x7b, 0xe1, 0xdb, 0x94, 0x47,
-	0x8a, 0x94, 0xc1, 0xa7, 0x3c, 0x69, 0x2a, 0xdb, 0x2d, 0xb2, 0x04, 0xe5, 0xce, 0xf9, 0x3a, 0x80,
-	0x47, 0x7c, 0x96, 0xb3, 0x25, 0x5d, 0xac, 0x6e, 0xa5, 0x3a, 0xf9, 0x21, 0x8e, 0x1f, 0x67, 0x71,
-	0x41, 0x0f, 0x33, 0x82, 0xee, 0x5b, 0x79, 0xb0, 0x6c, 0x24, 0x6f, 0x73, 0x2c, 0x9f, 0x80, 0x1e,
-	0x8b, 0x10, 0x9a, 0x5a, 0x4b, 0x6b, 0x57, 0x3b, 0xd5, 0x54, 0xef, 0x41, 0xf2, 0x85, 0xf4, 0xee,
-	0x69, 0x8b, 0x14, 0x57, 0x95, 0x5c, 0x6c, 0x94, 0xb1, 0xdf, 0xd1, 0xc9, 0x75, 0x71, 0x79, 0xfc,
-	0x92, 0x7a, 0x9e, 0x92, 0x99, 0xb7, 0xa9, 0x27, 0xc1, 0xb2, 0x69, 0xf4, 0xfe, 0xbf, 0xed, 0xd8,
-	0xff, 0xf8, 0x0b, 0x62, 0x0a, 0x70, 0x18, 0x52, 0x3b, 0x5f, 0x55, 0x28, 0xf3, 0x25, 0xf1, 0x11,
-	0x18, 0xc9, 0x13, 0x82, 0x1b, 0xb9, 0x6f, 0x59, 0x73, 0x2f, 0xff, 0xa5, 0x89, 0x89, 0xc9, 0x0d,
-	0x24, 0x88, 0xd2, 0x55, 0x28, 0x88, 0x99, 0x0b, 0xed, 0x08, 0x8c, 0xe4, 0xdc, 0x09, 0xa2, 0x74,
-	0x15, 0x08, 0x62, 0xe6, 0x18, 0x1f, 0x82, 0xce, 0xf2, 0x85, 0x77, 0xad, 0x9c, 0x2c, 0x37, 0x1b,
-	0xd6, 0x3f, 0xb2, 0xaa, 0x33, 0x5d, 0x05, 0x2b, 0xed, 0xb3, 0x60, 0x49, 0xe2, 0xbf, 0x32, 0xd8,
-	0x5f, 0x8c, 0x83, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x65, 0x02, 0xc4, 0x92, 0x73, 0x08, 0x00,
-	0x00,
+	// 663 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x56, 0xcd, 0x6e, 0xd3, 0x4c,
+	0x14, 0xfd, 0xfc, 0x9b, 0xcf, 0xb7, 0x3f, 0x32, 0x43, 0x5b, 0xdc, 0xa8, 0x20, 0x6b, 0x56, 0x11,
+	0x48, 0x5e, 0xa4, 0x45, 0x65, 0xc1, 0x82, 0xca, 0x4e, 0x25, 0xab, 0xd4, 0x29, 0x8e, 0x43, 0x61,
+	0x55, 0x42, 0x19, 0x42, 0xd5, 0x28, 0x0e, 0xb1, 0xb3, 0xc8, 0x43, 0x74, 0xcd, 0x6b, 0xb0, 0xe5,
+	0x55, 0x58, 0xf2, 0x0a, 0x2c, 0x59, 0x80, 0x62, 0x4f, 0x3c, 0x1e, 0xc7, 0x51, 0x8a, 0x30, 0x74,
+	0xd5, 0x99, 0x9c, 0x99, 0xb9, 0xf7, 0x9c, 0x7b, 0xee, 0x35, 0x6c, 0x5c, 0x86, 0xc3, 0x98, 0x0c,
+	0x63, 0x6b, 0x34, 0x0e, 0xe3, 0x10, 0xdf, 0x08, 0xb0, 0x65, 0xa7, 0x3b, 0xf6, 0x98, 0xf4, 0x62,
+	0xe2, 0x93, 0x8f, 0x13, 0x12, 0xc5, 0x68, 0x0f, 0x34, 0x8a, 0x74, 0x1d, 0x43, 0x30, 0x85, 0x86,
+	0xe6, 0xb3, 0x0d, 0x84, 0x61, 0x9d, 0x2e, 0x82, 0xf0, 0x9a, 0x0c, 0x0d, 0x31, 0x01, 0x70, 0x7b,
+	0xc8, 0x80, 0x1a, 0x5d, 0x1b, 0x92, 0x29, 0x34, 0xd6, 0xfd, 0xf9, 0x12, 0xed, 0x82, 0x1c, 0x4f,
+	0x47, 0xc4, 0x90, 0x4d, 0xa1, 0xb1, 0xd9, 0x54, 0xac, 0x60, 0x3a, 0x22, 0x7e, 0xb2, 0x85, 0x6f,
+	0x44, 0xd8, 0x2e, 0xc4, 0x13, 0x8d, 0xc2, 0x61, 0x44, 0xd0, 0x63, 0x50, 0xa3, 0xb8, 0x17, 0x4f,
+	0xa2, 0x24, 0x9a, 0xcd, 0xe6, 0x7d, 0xab, 0x14, 0x67, 0x75, 0x12, 0x90, 0x4f, 0xc1, 0x7c, 0x1e,
+	0xe2, 0xaa, 0x3c, 0xa4, 0x92, 0x3c, 0x76, 0x40, 0x7d, 0x7f, 0x35, 0x20, 0xae, 0x93, 0xc4, 0xab,
+	0xf9, 0x74, 0x85, 0x2f, 0x41, 0x4d, 0xdf, 0x42, 0x6b, 0x50, 0xeb, 0x7a, 0x27, 0x5e, 0xfb, 0xdc,
+	0xd3, 0xff, 0x43, 0x75, 0xd8, 0x70, 0xbd, 0x97, 0x47, 0xcf, 0x5d, 0xe7, 0xe2, 0xec, 0xc8, 0x3f,
+	0x3a, 0xd5, 0x7f, 0xce, 0xff, 0x84, 0x19, 0xb0, 0xd3, 0xb5, 0xed, 0x56, 0xa7, 0xa3, 0x0b, 0xe8,
+	0x0e, 0x03, 0x06, 0xed, 0x93, 0x96, 0xa7, 0x8b, 0x48, 0x87, 0xf5, 0x6c, 0xeb, 0xf5, 0x59, 0x4b,
+	0x97, 0x70, 0x08, 0xf7, 0xb8, 0x34, 0x83, 0x5e, 0xbf, 0x3a, 0x85, 0x10, 0xc8, 0x71, 0xaf, 0x1f,
+	0x19, 0xb2, 0x29, 0x35, 0x34, 0x3f, 0xf9, 0x1f, 0xff, 0x10, 0xc0, 0x58, 0x7c, 0x91, 0x6a, 0xf0,
+	0xa4, 0xa0, 0x81, 0x69, 0x2d, 0x83, 0x56, 0x2e, 0xc3, 0xbf, 0xa1, 0xfb, 0x0b, 0xb3, 0x43, 0x77,
+	0xf4, 0xae, 0x52, 0x3b, 0xb0, 0x32, 0x92, 0xf2, 0x65, 0x94, 0xb7, 0x89, 0x5c, 0x6e, 0x13, 0x65,
+	0xc1, 0x26, 0x99, 0x72, 0x6a, 0x4e, 0xb9, 0xaf, 0x42, 0x66, 0x9d, 0x79, 0xec, 0xab, 0xac, 0xc3,
+	0xe3, 0x8a, 0x9a, 0xb1, 0x88, 0x45, 0xae, 0xf0, 0xc7, 0xd5, 0x2b, 0xb1, 0x01, 0x9a, 0xd7, 0x0e,
+	0x2e, 0x8e, 0xdb, 0x5d, 0xcf, 0xd1, 0xa5, 0x05, 0x61, 0x64, 0xfc, 0x2a, 0xd3, 0xc5, 0x21, 0x03,
+	0x52, 0xa1, 0x2e, 0xf8, 0x33, 0xa3, 0x6d, 0x7e, 0xf5, 0x2a, 0xda, 0x78, 0x5c, 0x81, 0x36, 0xfc,
+	0xe6, 0x6f, 0xd3, 0x83, 0x9f, 0x42, 0xed, 0xf8, 0x6a, 0x40, 0x4e, 0xa3, 0x7e, 0x4e, 0x23, 0x81,
+	0xab, 0xaa, 0x79, 0xed, 0x88, 0x8b, 0x2d, 0x76, 0x1f, 0xee, 0xd2, 0x3c, 0x5e, 0x4c, 0xc8, 0x78,
+	0x7a, 0x2b, 0x26, 0xf1, 0x77, 0x66, 0x0c, 0x7a, 0x8a, 0x92, 0x74, 0x50, 0x20, 0x69, 0xcf, 0x2a,
+	0x83, 0x15, 0x4b, 0xeb, 0x36, 0x86, 0x79, 0x00, 0xca, 0x2c, 0x99, 0xc8, 0x90, 0x4c, 0xa9, 0xb1,
+	0xd6, 0xfc, 0xdf, 0xa2, 0x39, 0xfb, 0xe9, 0x76, 0x69, 0xf7, 0x3a, 0xfd, 0x43, 0xee, 0x39, 0xa2,
+	0x45, 0x7c, 0x9e, 0x51, 0x65, 0x7f, 0x20, 0x97, 0xd7, 0xd5, 0x15, 0xdd, 0xa7, 0xdc, 0xd8, 0x4d,
+	0x6f, 0x5e, 0x45, 0x27, 0x07, 0x2b, 0x96, 0x9c, 0xfb, 0xfb, 0x69, 0x6b, 0xa0, 0x24, 0xbf, 0xe8,
+	0x09, 0x03, 0x14, 0xa6, 0x8b, 0x0f, 0x1f, 0x81, 0x3c, 0xab, 0x15, 0xfe, 0xa2, 0x35, 0xa8, 0x9d,
+	0xb9, 0x76, 0xd0, 0xf5, 0x5b, 0x7a, 0x7a, 0xd2, 0x75, 0x5a, 0x6d, 0x5d, 0x6c, 0x7e, 0x13, 0xa1,
+	0x46, 0xe3, 0x43, 0x87, 0xa0, 0xa6, 0x53, 0x00, 0x6d, 0x5b, 0x65, 0x5f, 0x14, 0xf5, 0x9d, 0xf2,
+	0x81, 0x8d, 0x9e, 0x81, 0x96, 0x8d, 0x0f, 0x64, 0x58, 0x4b, 0xc6, 0x5d, 0x7d, 0x77, 0xe9, 0xac,
+	0x99, 0x3d, 0x9d, 0x76, 0x32, 0xf6, 0x34, 0xd7, 0xbd, 0xd9, 0xd3, 0x85, 0xc6, 0x78, 0x08, 0x6a,
+	0xea, 0x65, 0x76, 0x90, 0x6b, 0x2f, 0xec, 0x60, 0xa1, 0x35, 0x1c, 0x80, 0x92, 0xd4, 0x37, 0xda,
+	0xb2, 0x4a, 0xbc, 0x54, 0xdf, 0xb6, 0x96, 0x78, 0x45, 0x49, 0x64, 0x64, 0xa7, 0xf2, 0x65, 0xc5,
+	0x4e, 0x71, 0x5a, 0xbf, 0x55, 0x93, 0x2f, 0xb5, 0xfd, 0x5f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xc1,
+	0x77, 0x71, 0xc0, 0xba, 0x09, 0x00, 0x00,
 }
