@@ -8,7 +8,7 @@
               <input [(ngModel)]="info.goodName" placeholder="name"/>
           </div>
           <div class='infoitem'>
-                <span class="badge">交易ID</span>{{info.sellInfoID}}
+                <span class="badge">交易ID</span>{{type=='sellInfo'?info.sellInfoID:info.buyInfoID}}
           </div>
           <div class='infoitem'>
                 <span class="badge">交易类型</span>{{type=='sellInfo'?'出售':'求购'}}

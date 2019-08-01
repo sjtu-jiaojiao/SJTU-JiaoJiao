@@ -80,7 +80,6 @@ describe('InfodetailComponent', () => {
     expect(component).toBeTruthy();
     //create
     setInterval(()=> {},1000);
-    component.save();
     component.goBack();
     expect(component.stringToDate(1563134054)).toEqual('2019-07-15 03:54:14');
     component.type = 'sellInfo';
@@ -90,5 +89,10 @@ describe('InfodetailComponent', () => {
     component.info = new sellInfo();
     component.info.contentID= '1';
     component.getContent();
+    component.deadLine=new Date(1563134051000);
+    component.save();    
+    component.type = 'sellInfo';
+    component.save();    
+
   });
 });

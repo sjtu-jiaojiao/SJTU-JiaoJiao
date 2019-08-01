@@ -89,6 +89,7 @@ describe('UserdetailComponent', () => {
     expect(component.getstate(2)).toEqual('预约');
     expect(component.getstate(3)).toEqual('完成');
     expect(component.getstate(4)).toEqual('失效');
+    expect(component.getstate(5)).toEqual('关闭');
     expect(fFormatter({value: 5, name: 'Jan'})).toEqual('5 activities in Jan');
     expect(component.stringToDate(1563134054)).toEqual('2019-07-15 03:54:14');
     const sI = new sellInfo;

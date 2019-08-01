@@ -116,9 +116,9 @@ func CheckFile(file []byte, f ...func(buf []byte) bool) bool {
 		return string(file) == "valid_file"
 	}
 	for _, v := range f {
-		if !v(file) {
-			return false
+		if v(file) {
+			return true
 		}
 	}
-	return true
+	return false
 }
