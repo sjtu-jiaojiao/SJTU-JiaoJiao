@@ -163,6 +163,11 @@ func TestFind(t *testing.T) {
 
 		req.Limit = 3
 		testBase(3, 0, message.MessageFindResponse_SUCCESS)
+		rsp.Infos[0].Text = "你好，我是小明1(⊙﹏⊙)，🔺"
+
+		req.Offset = 1
+		testBase(3, 0, message.MessageFindResponse_SUCCESS)
+		rsp.Infos[0].Text = "你好，我是小明2(⊙﹏⊙)，🔺"
 
 		req.FromUser = 2001
 		req.Way = message.MessageFindRequest_ONLY_PULL
@@ -172,6 +177,12 @@ func TestFind(t *testing.T) {
 		req.ToUser = 1001
 		testBase(1, 0, message.MessageFindResponse_SUCCESS)
 		So(rsp.Infos[0].Text, ShouldEqual, "你好，我是小明4(⊙﹏⊙)，🔺")
+
+		req.Way = message.MessageFindRequest_HISTORY
+		testBase(3, 0, message.MessageFindResponse_SUCCESS)
+
+		req.Way = message.MessageFindRequest_READ_MESSAGE
+		testBase(1, 0, message.MessageFindResponse_SUCCESS)
 
 		defer func() {
 			_, err := collection.DeleteOne(ctx, filter)
