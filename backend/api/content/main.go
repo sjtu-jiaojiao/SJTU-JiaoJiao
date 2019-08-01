@@ -72,7 +72,7 @@ func addContent(c *gin.Context) {
 			ContentID:    p.ContentID,
 			ContentToken: p.ContentToken,
 			Content:      data,
-			Type:         content.Type(p.Type),
+			Type:         content.Type(utils.EnumConvert(p.Type, content.Type_name)),
 		})
 		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
@@ -172,7 +172,7 @@ func updateContent(c *gin.Context) {
 			ContentToken: p.ContentToken,
 			FileID:       p.FileID,
 			Content:      data,
-			Type:         content.Type(p.Type),
+			Type:         content.Type(utils.EnumConvert(p.Type, content.Type_name)),
 		})
 		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)

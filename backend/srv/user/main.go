@@ -188,8 +188,8 @@ func parseUser(s *db.User, d *user.UserInfo) {
 	d.Telephone = s.Telephone
 	d.StudentID = s.StudentID
 	d.StudentName = s.StudentName
-	d.Status = user.UserInfo_Status(s.Status)
-	d.Role = user.UserInfo_Role(s.Role)
+	d.Status = user.UserInfo_Status(utils.EnumConvert(s.Status, user.UserInfo_Status_name))
+	d.Role = user.UserInfo_Role(utils.EnumConvert(s.Role, user.UserInfo_Role_name))
 }
 
 func main() {

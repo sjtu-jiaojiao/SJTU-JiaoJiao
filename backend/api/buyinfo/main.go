@@ -147,7 +147,7 @@ func findBuyInfo(c *gin.Context) {
 			func() interface{} { return mock.NewBuyInfoService() }).(buyinfo.BuyInfoService)
 		rsp, err := srv.Find(context.TODO(), &buyinfo.BuyInfoFindRequest{
 			UserID:    p.UserID,
-			Status:    buyinfo.BuyStatus(p.Status),
+			Status:    buyinfo.BuyStatus(utils.EnumConvert(p.Status, buyinfo.BuyStatus_name)),
 			GoodName:  p.GoodName,
 			LowPrice:  p.LowPrice,
 			HighPrice: p.HighPrice,

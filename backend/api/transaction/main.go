@@ -39,14 +39,14 @@ func setupRouter() *gin.Engine {
  */
 func findTransaction(c *gin.Context) {
 	type param struct {
-		InfoID         int32                                       `form:"infoID"`
-		Category       transaction.TransactionFindRequest_Category `form:"category"`
-		UserID         int32                                       `form:"userID"`
-		LowCreateTime  int64                                       `form:"lowCreateTime"`
-		HighCreateTime int64                                       `form:"highCreateTime"`
-		Status         transaction.TransStatus                     `form:"status"`
-		Limit          uint32                                      `form:"limit"`
-		Offset         uint32                                      `form:"offset"`
+		InfoID         int32  `form:"infoID"`
+		Category       int32  `form:"category"`
+		UserID         int32  `form:"userID"`
+		LowCreateTime  int64  `form:"lowCreateTime"`
+		HighCreateTime int64  `form:"highCreateTime"`
+		Status         int32  `form:"status"`
+		Limit          uint32 `form:"limit"`
+		Offset         uint32 `form:"offset"`
 	}
 	var p param
 
@@ -65,11 +65,11 @@ func findTransaction(c *gin.Context) {
 			func() interface{} { return mock.NewTransactionService() }).(transaction.TransactionService)
 		rsp, err := srv.Find(context.TODO(), &transaction.TransactionFindRequest{
 			InfoID:         p.InfoID,
-			Category:       p.Category,
+			Category:       transaction.Category(utils.EnumConvert(p.Category, transaction.Category_name)),
 			UserID:         p.UserID,
 			LowCreateTime:  p.LowCreateTime,
 			HighCreateTime: p.HighCreateTime,
-			Status:         p.Status,
+			Status:         transaction.TransStatus(utils.EnumConvert(p.Status, transaction.TransStatus_name)),
 			Limit:          p.Limit,
 			Offset:         p.Offset,
 		})
@@ -98,9 +98,9 @@ func findTransaction(c *gin.Context) {
  */
 func addTransaction(c *gin.Context) {
 	type param struct {
-		InfoID     int32                                         `form:"infoID"`
-		Category   transaction.TransactionCreateRequest_Category `form:"category"`
-		FromUserID int32                                         `form:"fromUserID"`
+		InfoID     int32 `form:"infoID"`
+		Category   int32 `form:"category"`
+		FromUserID int32 `form:"fromUserID"`
 	}
 	var p param
 	role := utils.GetRole(c)
@@ -114,7 +114,7 @@ func addTransaction(c *gin.Context) {
 			func() interface{} { return mock.NewTransactionService() }).(transaction.TransactionService)
 		rsp, err := srv.Create(context.TODO(), &transaction.TransactionCreateRequest{
 			InfoID:     p.InfoID,
-			Category:   p.Category,
+			Category:   transaction.Category(utils.EnumConvert(p.Category, transaction.Category_name)),
 			FromUserID: p.FromUserID,
 		})
 		if utils.LogContinue(err, utils.Error) {
@@ -142,8 +142,8 @@ func addTransaction(c *gin.Context) {
  */
 func updateTransaction(c *gin.Context) {
 	type param struct {
-		TransactionID int32                   `form:"transactionID"`
-		Status        transaction.TransStatus `form:"status"`
+		TransactionID int32 `form:"transactionID"`
+		Status        int32 `form:"status"`
 	}
 	var p param
 	role := utils.GetRole(c)
@@ -157,7 +157,7 @@ func updateTransaction(c *gin.Context) {
 			func() interface{} { return mock.NewTransactionService() }).(transaction.TransactionService)
 		rsp, err := srv.Update(context.TODO(), &transaction.TransactionUpdateRequest{
 			TransactionID: p.TransactionID,
-			Status:        p.Status,
+			Status:        transaction.TransStatus(utils.EnumConvert(p.Status, transaction.TransStatus_name)),
 		})
 		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
