@@ -2,7 +2,7 @@ syntax = "proto3";
 
 service Content {
     rpc Create (ContentCreateRequest) returns (ContentCreateResponse);
-    rpc CreateTag(ContentCreateTagRequest)returns (ContentCreateTagResponse);
+    rpc CreateTag (ContentCreateTagRequest) returns (ContentCreateTagResponse);
     rpc Update (ContentUpdateRequest) returns (ContentUpdateResponse);
     rpc Delete (ContentDeleteRequest) returns (ContentDeleteResponse);
     rpc Query (ContentQueryRequest) returns (ContentQueryResponse);
@@ -36,13 +36,13 @@ message ContentCreateResponse {
     string fileID = 4;
 }
 
-message ContentCreateTagRequest{
+message ContentCreateTagRequest {
     string contentID = 1;
     string contentToken = 2;
     repeated string tags = 4;
 }
 
-message ContentCreateTagResponse{
+message ContentCreateTagResponse {
     enum Status {
         UNKNOWN = 0;
         INVALID_PARAM = -1;
@@ -80,6 +80,7 @@ message ContentUpdateResponse {
 message ContentDeleteRequest {
     string contentID = 1;
     string contentToken = 2;
+    string fileID = 3;
 }
 
 message ContentDeleteResponse {

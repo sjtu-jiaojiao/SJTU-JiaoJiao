@@ -1555,7 +1555,7 @@
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 2 for invalid type</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for invalid type</p>"
           },
           {
             "group": "Success 200",
@@ -1639,7 +1639,7 @@
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 2 for invalid type</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for invalid type</p>"
           },
           {
             "group": "Success 200",

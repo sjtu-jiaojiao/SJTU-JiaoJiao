@@ -86,7 +86,6 @@ func getAuth(c *gin.Context) {
 					return
 				}
 
-				utils.Error(rsp2.User.Status)
 				// sign token
 				if rsp2.User.Status == user.UserInfo_NORMAL {
 					if rsp2.User.Role == user.UserInfo_USER {

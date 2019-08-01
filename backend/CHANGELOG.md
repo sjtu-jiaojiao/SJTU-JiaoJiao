@@ -1,4 +1,11 @@
 # 后端API更新日志
+## v0.3.0 2019-08-02
+### 修复
+1. `DELETE /content` 删除单独content file已可使用
+
+### 新增
+1. message相关功能已可以使用
+
 ## v0.2.2 2019-08-01
 ### 禁用
 1. `DELETE /content` 删除单独content file暂不可用
