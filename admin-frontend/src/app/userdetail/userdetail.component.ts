@@ -87,6 +87,8 @@ stringToDate(params) {
         return '完成';
       case 4: 
         return '失效';
+      case 5: 
+        return '关闭';
     }
 }
 
@@ -107,7 +109,6 @@ this.infos.forEach(element => {
     else 
       buyData[m-1] +=1;
 });
-  console.log(sellData)
     this.option = {
 title: {
 },

@@ -5,6 +5,7 @@ import { InfoService } from '../info.service';
 import { sellInfo } from './../entity/info';
 import { getCurrencySymbol } from '@angular/common';
 import { trigger, transition, style, state, animate } from '@angular/animations';
+import { Route } from '@angular/compiler/src/core';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,24 +13,33 @@ import { trigger, transition, style, state, animate } from '@angular/animations'
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  constructor(private ifService: InfoService, private wbService: WebsiteService,private usService: UserService) { }
+  constructor( 
+    private ifService: InfoService, private wbService: WebsiteService,private usService: UserService) { }
 
   site : any;
   hst: any[];
-  /*
-  userNum: number;
+  
+  rsInfoNum: number;
   infoNum: number;
   acInfoNum: number;
-  */
+  
   ngOnInit() {
     this.getHistory();
     this.wbService.getSite().subscribe(s => this.site= s);
-    //this.usService.getUsers().subscribe( e =>this.userNum = e.user.length);
-    //this.ifService.getSellInfos().subscribe( e => {
-    //  this.infoNum = e.sellInfo.length;
-    //this.acInfoNum = e.sellInfo.filter( e => e.status < 3).length;
-    //}
-    //  );
+    this.ifService.getAllBuyInfo();
+    this.ifService.getAllSellInfo();
+    this.infoNum = this.ifService.getInfoNum()
+    this.acInfoNum = this.ifService.getAcInfo();
+    this.rsInfoNum = this.ifService.getReserveInfoNum();
+    this.getInfo();
+  }
+  getInfo(){
+    setTimeout(() => {
+      this.infoNum = this.ifService.getInfoNum()
+      this.acInfoNum = this.ifService.getAcInfo();
+      this.rsInfoNum = this.ifService.getReserveInfoNum();
+      this.getInfo();
+    },10000);
   }
   getHistory(){
     this.wbService.getSiteHistory().subscribe( s =>this.hst =s.sort((a,b)=> a.time-b.time));
