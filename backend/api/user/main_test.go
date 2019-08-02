@@ -117,6 +117,7 @@ func Test_findUser(t *testing.T) {
 			Admin: true,
 		}, "GET", "/user?userName=test1", nil), ShouldBeZeroValue)
 
+		tf(403, false, 0, nil)
 		v.Set("userName", "test1")
 		tf(200, false, 1, nil)
 		tf(200, true, 1, "10000")

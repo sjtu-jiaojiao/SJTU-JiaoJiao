@@ -63,7 +63,8 @@ func addMessage(c *gin.Context) {
 			if s != "" {
 				msg = []byte(s)
 			} else {
-				msg = []byte{0}
+				c.AbortWithStatus(400)
+				return
 			}
 		}
 		role := utils.GetRoleID(c, int32(p.FromUser))

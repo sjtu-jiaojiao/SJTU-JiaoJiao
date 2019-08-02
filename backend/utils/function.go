@@ -4,6 +4,7 @@ package utils
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -52,7 +53,7 @@ func IsEmpty(val interface{}) bool {
 	case string:
 		return v == ""
 	case []byte:
-		return bytes.Equal(v, []byte{0})
+		return bytes.Equal(v, []byte{0}) || string(v) == ""
 	case []string:
 		return len(v) == 0
 	default:
@@ -78,7 +79,12 @@ response code could be 200 or 413 or 500
 */
 func GetQueryFile(c *gin.Context, name string, maxsize int64) ([]byte, int, error) {
 	if CheckInTest() {
-		return []byte("test_file"), 200, nil
+		s := c.PostForm(name)
+		if s != "" {
+			return []byte(s), 200, nil
+		} else {
+			return nil, 500, errors.New("")
+		}
 	}
 
 	file, err := c.FormFile(name)

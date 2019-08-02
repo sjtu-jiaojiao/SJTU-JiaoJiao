@@ -64,6 +64,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 		return nil
 	}
 
+	msg := req.Msg
 	// upload file
 	if req.Type == message.Type_PICTURE || req.Type == message.Type_VIDEO {
 		srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
@@ -80,11 +81,11 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 			return errors.New(s)
 		}
 
-		req.Msg = []byte(microRsp.FileID)
+		msg = []byte(microRsp.FileID)
 	}
 
 	// find existence
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("message")
 	var res1, res2 chatLog
@@ -112,7 +113,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 				"time":    time.Now(),
 				"forward": true,
 				"type":    req.Type,
-				"msg":     string(req.Msg),
+				"msg":     string(msg),
 				"unread":  true,
 			}},
 		})
@@ -127,42 +128,40 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 	from := req.FromUser
 	to := req.ToUser
 	forward := true
+	res := res1
 	if err1 != nil && err2 == nil {
 		from = req.ToUser
 		to = req.FromUser
 		forward = false
+		res = res2
 	}
 
 	_, err := collection.UpdateOne(ctx, bson.M{
 		"fromUser": from,
 		"toUser":   to,
-	}, bson.M{"$push": bson.M{
-		"infos": bson.M{
-			"$each": bson.A{
-				bson.M{
-					"time":    time.Now(),
-					"forward": forward,
-					"type":    req.Type,
-					"msg":     string(req.Msg),
-					"unread":  true,
+	}, bson.M{
+		"$push": bson.M{
+			"infos": bson.M{
+				"$each": bson.A{
+					bson.M{
+						"time":    time.Now(),
+						"forward": forward,
+						"type":    req.Type,
+						"msg":     string(msg),
+						"unread":  true,
+					},
 				},
+				"$position": 0,
 			},
-			"$position": 0,
 		},
-	}})
+		"$set": bson.M{
+			"badge": res.Badge + 1,
+		},
+	})
 	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 
-	_, err = collection.UpdateOne(ctx, bson.M{
-		"fromUser": from,
-		"toUser":   to,
-	}, bson.M{"$set": bson.M{
-		"badge": res1.Badge + 1,
-	}})
-	if utils.LogContinue(err, utils.Error) {
-		return err
-	}
 	rsp.Status = message.MessageCreateResponse_SUCCESS
 	return nil
 }
@@ -218,7 +217,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 		}
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("message")
 	var res1, res2 chatLog
@@ -336,7 +335,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
  * @apiDescription Query New Message, do NOT set read
  *
  * @apiParam {int32} userID user who wants to pull new message
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success
  * @apiSuccess {list} news see below NewMessage
  * @apiSuccess (NewMessage) {int32} fromUser user who launch the chat at first time
  * @apiSuccess (NewMessage) {int32} toUser user who accept the chat at first time
@@ -368,7 +367,7 @@ func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *
 		}
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("message")
 

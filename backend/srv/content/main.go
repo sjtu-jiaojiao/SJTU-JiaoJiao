@@ -20,6 +20,17 @@ import (
 
 type srv struct{}
 
+type files struct {
+	FileID primitive.ObjectID `bson:"fileID"`
+	Type   content.Type       `bson:"type"`
+}
+type result struct {
+	ID    primitive.ObjectID `bson:"_id"`
+	Token string             `bson:"token"`
+	Files []files            `bson:"files"`
+	Tags  []string           `bson:"tags"`
+}
+
 /**
  * @api {rpc} /rpc Content.Create
  * @apiVersion 1.0.0
@@ -79,7 +90,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 		}
 
 		token := uuid.NewV4().String()
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		collection := db.MongoDatabase.Collection("content")
 		res, err := collection.InsertOne(ctx, bson.M{
@@ -109,7 +120,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 			return err
 		}
 
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		collection := db.MongoDatabase.Collection("content")
 		rid, _ := primitive.ObjectIDFromHex(req.ContentID)
@@ -161,7 +172,7 @@ func (a *srv) CreateTag(ctx context.Context, req *content.ContentCreateTagReques
 
 	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) { // create new
 		token := uuid.NewV4().String()
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		collection := db.MongoDatabase.Collection("content")
 		res, err := collection.InsertOne(ctx, bson.M{
@@ -181,7 +192,7 @@ func (a *srv) CreateTag(ctx context.Context, req *content.ContentCreateTagReques
 			return nil
 		}
 
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		collection := db.MongoDatabase.Collection("content")
 		rid, err := primitive.ObjectIDFromHex(req.ContentID)
@@ -240,7 +251,7 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 	}
 
 	// check id
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("content")
 	rid, _ := primitive.ObjectIDFromHex(req.ContentID)
@@ -317,16 +328,8 @@ func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp
 		rsp.Status = content.ContentDeleteResponse_INVALID_PARAM
 		return nil
 	}
-	type files struct {
-		FileID primitive.ObjectID `bson:"fileID"`
-		Type   content.Type       `bson:"type"`
-	}
-	type result struct {
-		ID    primitive.ObjectID `bson:"_id"`
-		Files []files            `bson:"files"`
-	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("content")
 	rid, err := primitive.ObjectIDFromHex(req.ContentID)
@@ -421,18 +424,8 @@ func (a *srv) Query(ctx context.Context, req *content.ContentQueryRequest, rsp *
 		rsp.Status = content.ContentQueryResponse_INVALID_PARAM
 		return nil
 	}
-	type files struct {
-		FileID primitive.ObjectID `bson:"fileID"`
-		Type   content.Type       `bson:"type"`
-	}
-	type result struct {
-		ID    primitive.ObjectID `bson:"_id"`
-		Token string             `bson:"token"`
-		Files []files            `bson:"files"`
-		Tags  []string           `bson:"tags"`
-	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("content")
 	rid, err := primitive.ObjectIDFromHex(req.ContentID)
@@ -492,7 +485,7 @@ func validCheck(contentID string, contentToken string) bool {
 		return false
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("content")
 	rid, err := primitive.ObjectIDFromHex(contentID)

@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
 )
 
-type srvFile struct{}
+type srv struct{}
 
 /**
  * @api {rpc} /rpc File.Query
@@ -26,7 +26,7 @@ type srvFile struct{}
  * @apiSuccess {int64} size file size
  * @apiUse DBServerDown
  */
-func (a *srvFile) Query(ctx context.Context, req *file.FileRequest, rsp *file.FileQueryResponse) error {
+func (a *srv) Query(ctx context.Context, req *file.FileRequest, rsp *file.FileQueryResponse) error {
 	if !utils.RequireParam(req.FileID) {
 		rsp.Status = file.FileQueryResponse_INVALID_PARAM
 		return nil
@@ -67,7 +67,7 @@ func (a *srvFile) Query(ctx context.Context, req *file.FileRequest, rsp *file.Fi
  * @apiSuccess {string} fileID file id
  * @apiUse DBServerDown
  */
-func (a *srvFile) Create(ctx context.Context, req *file.FileCreateRequest, rsp *file.FileCreateResponse) error {
+func (a *srv) Create(ctx context.Context, req *file.FileCreateRequest, rsp *file.FileCreateResponse) error {
 	if !utils.RequireParam(req.File) {
 		rsp.Status = file.FileCreateResponse_INVALID_PARAM
 		return nil
@@ -98,8 +98,27 @@ func (a *srvFile) Create(ctx context.Context, req *file.FileCreateRequest, rsp *
  * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
  * @apiUse DBServerDown
  */
-func (a *srvFile) Delete(ctx context.Context, req *file.FileRequest, rsp *file.FileDeleteResponse) error {
-	// TODO
+func (a *srv) Delete(ctx context.Context, req *file.FileRequest, rsp *file.FileDeleteResponse) error {
+	if !utils.RequireParam(req.FileID) {
+		rsp.Status = file.FileDeleteResponse_INVALID_PARAM
+		return nil
+	}
+
+	bucket, err := gridfs.NewBucket(db.MongoDatabase)
+	if utils.LogContinue(err, utils.Error) {
+		return err
+	}
+
+	fid, err := primitive.ObjectIDFromHex(req.FileID)
+	if utils.LogContinue(err, utils.Warning) {
+		rsp.Status = file.FileDeleteResponse_NOT_FOUND
+		return nil
+	}
+	err = bucket.Delete(fid)
+	if utils.LogContinue(err, utils.Warning) {
+		rsp.Status = file.FileDeleteResponse_NOT_FOUND
+		return nil
+	}
 	rsp.Status = file.FileDeleteResponse_SUCCESS
 	return nil
 }
@@ -107,6 +126,6 @@ func (a *srvFile) Delete(ctx context.Context, req *file.FileRequest, rsp *file.F
 func main() {
 	db.InitMongoDB("filemongo")
 	service := utils.InitMicroService("file")
-	utils.LogPanic(file.RegisterFileHandler(service.Server(), new(srvFile)))
+	utils.LogPanic(file.RegisterFileHandler(service.Server(), new(srv)))
 	utils.RunMicroService(service)
 }
