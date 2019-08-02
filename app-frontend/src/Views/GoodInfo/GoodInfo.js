@@ -162,7 +162,7 @@ class ImagePart extends Component {
                 </View>
             );
         } else {
-            //console.warn(this.state.files);
+            console.warn(this.state.files);
             return (
                 <View style={{alignItems: 'center'}}>
                     <View style={{backgroundColor: '#FCFCFC'}}>

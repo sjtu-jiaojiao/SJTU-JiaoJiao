@@ -27,7 +27,7 @@ let ImagePicker = NativeModules.ImageCropPicker;
 
 class ReleaseImage extends Component {
     render () {
-        console.warn(this.props.image);
+        //console.warn(this.props.image);
         return (
             <TouchableOpacity onLongPress={() => {this.props.deleteImage(this.props.index)}}>
                 <Image style={{
@@ -455,7 +455,7 @@ export default class ReleaseScreen extends Component {
                                                                     {cancelable: false},
                                                                 );
                                                             } else {
-                                                                console.warn(response);
+                                                                //console.warn(response);
                                                                 Alert.alert(
                                                                     '出错啦',
                                                                     '网络可能出了问题，请再试一次吧',
@@ -496,7 +496,7 @@ export default class ReleaseScreen extends Component {
                                                     HTTP.addContent('/content', params)
                                                         .then((response) => {
                                                             if (response.status === 1) {
-                                                                console.warn('上传图片成功!');
+                                                                //console.warn('上传图片成功!');
                                                                 //console.warn(response);
                                                                 this.uploadImageSuccess = true;
                                                                 this.contentID = response.contentID;
@@ -512,7 +512,7 @@ export default class ReleaseScreen extends Component {
                                                                     HTTP.addContent('/content', params)
                                                                         .then((response) => {
                                                                             if (response.status === 1) {
-                                                                                console.warn('上传图片成功!');
+                                                                                //console.warn('上传图片成功!');
                                                                                 //console.warn(response);
                                                                             } else {
                                                                                 //console.warn(response);
@@ -576,7 +576,7 @@ export default class ReleaseScreen extends Component {
                                                                                     {cancelable: false},
                                                                                 );
                                                                             } else {
-                                                                                console.warn(response);
+                                                                                //console.warn(response);
                                                                                 Alert.alert(
                                                                                     '出错啦',
                                                                                     '网络可能出了问题，请再试一次吧',

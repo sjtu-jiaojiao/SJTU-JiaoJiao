@@ -27,7 +27,7 @@ export default class HTTP {
                     resolve(responseData);
                 })
                 .catch((err) => {
-                    console.warn(err);
+                    //console.warn(err);
                     reject(err);
                 });
         });
@@ -54,7 +54,7 @@ export default class HTTP {
                     resolve(responseData);
                 })
                 .catch((err) => {
-                    console.warn(err);
+                    //console.warn(err);
                     reject(err);
                 });
         });
@@ -93,8 +93,8 @@ export default class HTTP {
     }
 
     static addInfo(url, formData) {
-        console.warn((common_url + url));
-        console.warn(formData);
+        //console.warn((common_url + url));
+        //console.warn(formData);
         return new Promise(function (resolve, reject) {
             fetch((common_url + url), {
                 method: 'POST',
@@ -105,11 +105,11 @@ export default class HTTP {
                 body: formData,
             }).then((response) => response.json())
                 .then((responseData) => {
-                    console.warn(responseData);
+                    //console.warn(responseData);
                     resolve(responseData);
                 })
                 .catch((err) => {
-                    console.warn(err);
+                    //console.warn(err);
                     reject(err);
                 });
         });
