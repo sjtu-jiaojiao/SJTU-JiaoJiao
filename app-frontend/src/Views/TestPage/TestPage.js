@@ -1,95 +1,40 @@
-import React, {Component} from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    ScrollView,
-    RefreshControl, Image, TouchableOpacity,
-} from 'react-native';
-import jwt_decode from 'jwt-decode';
-import Config from "../../Config";
+import React from 'react'
+import { GiftedChat } from 'react-native-gifted-chat'
 
-export default class RefreshControlDemo extends Component {
-    static navigationOptions = {
-        title: 'RefreshControl',
-
-    };
-
+export default class TestPage extends React.Component {
     state = {
-        loaded:0,
-        isRefreshing: false,
-        data: Array.from(new Array(20)).map((val, i) => ({text: '初始化： ' + i, clicks: 0})),
+        messages: [],
     };
 
-    _onRefresh = () => {
-        this.setState({isRefreshing: true});
-        setTimeout(() => {
-            // prepend 10 items
-            const rowData = Array.from(new Array(10))
-                .map((val, i) => ({
-                    text: '第几次加载： ' + (+this.state.loaded + i),
-                    clicks: 0,
-                }))
-                .concat(this.state.data);
+    componentWillMount() {
+        this.setState({
+            messages: [
+                {
+                    _id: 1,
+                    text: 'This is a system message',
+                    createdAt: new Date(Date.UTC(2016, 5, 11, 17, 20, 0)),
+                    system: true,
+                    // Any additional custom parameters are passed through
+                },
+            ],
+        })
+    }
 
-            this.setState({
-                loaded: this.state.loaded + 10,
-                isRefreshing: false,
-                data: rowData,
-            });
-        }, 3000);
-    };
+    onSend(messages = []) {
+        this.setState(previousState => ({
+            messages: GiftedChat.append(previousState.messages, messages),
+        }))
+    }
 
     render() {
-        let imageUri = 'http://202.120.40.8:30711/v1/file/5d41bc5bc286640d0c7ec63e';
-        let imageWidth, imageHeight;
-        Image.getSize(imageUri)
-            .then((width, height) => {
-                imageWidth = 0.85 * width;
-                imageHeight = height * imageWidth / width;
-            })
-            .catch((error) => {
-                console.warn(error);
-            });
         return (
-            <TouchableOpacity onLongPress={() => {}}>
-                <Image style={{
-                    width: imageWidth,
-                    height: imageHeight,
-                    resizeMode: 'contain',
-                    borderColor: 'white',
-                    borderWidth: 1,
-                }} source={{uri: imageUri}} />
-            </TouchableOpacity>
-        );
-        /*return (
-            <ScrollView
-                style={{flex:1}}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.isRefreshing}
-                        onRefresh={this._onRefresh}
-                        tintColor="#ff0000"
-                        title="Loading..."
-                        titleColor="#00ff00"
-                        size={0}
-                        progressViewOffset={30}
-                        colors={['#0000ff','#ff0000', '#00ff00', ]}
-                        progressBackgroundColor="#ffff00"
-                    />
-                }>
-                    <TouchableOpacity onLongPress={() => {}}>
-                        <Image source={{uri: 'http://202.120.40.8:30711/v1/file/5d41bc5bc286640d0c7ec63e'}} />
-                    </TouchableOpacity>
-                 <View>
-                    {
-                        this.state.data.map((row, ii) => {
-                            return (<Text>{row.text}</Text>);
-                        })
-                    }
-                </View>
-            </ScrollView>
-        );*/
+            <GiftedChat
+                messages={this.state.messages}
+                onSend={messages => this.onSend(messages)}
+                user={{
+                    _id: 1,
+                }}
+            />
+        )
     }
 }
-0
