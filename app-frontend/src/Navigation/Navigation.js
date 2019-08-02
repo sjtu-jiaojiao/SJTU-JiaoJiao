@@ -19,34 +19,39 @@ import BuyInfoScreen from "../Views/BuyInfo/BuyInfo";
 import SellInfoScreen from "../Views/SellInfo/SellInfo";
 import SearchScreen from "../Views/Search/Search";
 import LoginScreen from "../Views/Login/Login";
-
-class Test extends Component {
-    render() {
-        return (
-            <View >
-                <Text>
-                    test page!
-                </Text>
-            </View>
-        )
-    }
-}
+import TestPage from '../Views/TestPage/TestPage';
+import GoodInfoScreen from '../Views/GoodInfo/GoodInfo';
+import UserInfoForOthersScreen from "../Views/UserInfoForOthers/UserInfoForOthors";
+import SellInfoForOthersScreen from "../Views/SellInfoForOthers/SellInfoForOthers";
+import BuyInfoForOthersScreen from "../Views/BuyInfoForOthers/BuyInfoForOthers";
+import MessageScreen from '../Views/Message/Message';
+import Config from "../Config";
+import {isLogin, isContactRendered, isReleaseRendered} from "../Config";
 
 const HomeStack = createStackNavigator({
     Home: { screen: HomeScreen },
     BuyInfo: { screen: BuyInfoScreen },
     SellInfo: { screen: SellInfoScreen },
     Search: { screen: SearchScreen },
+    GoodInfo: { screen: GoodInfoScreen },
+    UserInfoForOthers: { screen: UserInfoForOthersScreen},
+    SellInfoForOthers: { screen: SellInfoForOthersScreen },
+    BuyInfoForOthers: { screen: BuyInfoForOthersScreen },
+    Message: { screen: MessageScreen },
+    TestPage: { screen: TestPage },
 });
 
 const ReleaseStack = createStackNavigator({
     Release: { screen: ReleaseScreen },
-    Test: { screen: Test},
 });
 
 const ContactStack = createStackNavigator({
     Contact: { screen: ContactScreen },
-    Test: { screen: Test},
+    GoodInfo: { screen: GoodInfoScreen },
+    UserInfoForOthers: { screen: UserInfoForOthersScreen},
+    SellInfoForOthers: { screen: SellInfoForOthersScreen },
+    BuyInfoForOthers: { screen: BuyInfoForOthersScreen },
+    Message: { screen: MessageScreen },
 });
 
 const UserStack = createStackNavigator({
@@ -56,6 +61,11 @@ const UserStack = createStackNavigator({
     MyHistoryInfo: { screen: MyHistoryInfoScreen},
     UserInfo: { screen: UserInfoScreen},
     Login: { screen: LoginScreen },
+    GoodInfo: { screen: GoodInfoScreen },
+    UserInfoForOthers: { screen: UserInfoForOthersScreen},
+    SellInfoForOthers: { screen: SellInfoForOthersScreen },
+    BuyInfoForOthers: { screen: BuyInfoForOthersScreen },
+    Message: { screen: MessageScreen },
 });
 
 const TabBar = createBottomTabNavigator({
@@ -66,8 +76,10 @@ const TabBar = createBottomTabNavigator({
 },{
     defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: (args) => {
-            if (args.navigation.state.routeName === 'Release') {
+            if (args.navigation.state.routeName === 'Release' && (!isLogin() || !isReleaseRendered())) {
                 navigation.reset([NavigationActions.navigate({routeName: 'Release'})], 0);
+            } else if (args.navigation.state.routeName === 'Contact' && (!isLogin() || !isContactRendered())) {
+                navigation.reset([NavigationActions.navigate({routeName: 'Contact'})], 0);
             } else {
                 args.defaultHandler();
             }
@@ -147,7 +159,6 @@ const TabBar = createBottomTabNavigator({
 /*
 const AppStack = createStackNavigator({
     Tabs: TabBar,
-    TestPage: Test,
 }, {
     defaultNavigationOptions: {
         headerStyle: {
@@ -158,5 +169,3 @@ const AppStack = createStackNavigator({
 });*/
 
 export default createAppContainer(TabBar);
-
-export { Test };

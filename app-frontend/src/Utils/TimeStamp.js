@@ -1,6 +1,6 @@
 export const TimeStamptoDate = (time) => {
     let datetime = new Date();
-    datetime.setTime(time);
+    datetime.setTime(time * 1000);
     let year = datetime.getFullYear();
     let month = datetime.getMonth() + 1;
     let date = datetime.getDate();

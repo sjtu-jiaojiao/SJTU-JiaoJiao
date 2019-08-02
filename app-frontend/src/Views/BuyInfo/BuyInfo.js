@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {TimeStamptoDate, DatetoTimeStamp, TimeStampNow} from "../../Utils/TimeStamp";
 import {ListItem} from "react-native-elements";
+import {parseStatus, parseTimeStamp} from "../../Utils/ParseInfo";
 
 let dev = "http://202.120.40.8:30711/v1";
 
@@ -95,25 +96,31 @@ export default class BuyInfoScreen extends Component {
         return ('发布时间：' + date);
     };
 
-    renderItem = ({ item }) => (
-        <ListItem
-            bottomDivider
-            containerStyle={{height: 200}}
-            title={
-                <Text numberOfLines={1} style={{color: 'black', fontWeight: 'bold', fontSize: 20}}>求购物品：{item.goodName}</Text>
-            }
-            subtitle={
-                <View style={styles.subtitleView}>
-                    <Text numberOfLines={1} style={styles.ratingText}>{this.parseStatus(item.status)}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>商品描述：{item.description}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>出售价格：￥{item.price}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>{this.parseTimeStamp(item.releaseTime)}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>有效时间：{item.validTime}</Text>
-                    <Text numberOfLines={1} style={styles.ratingText}>商品标签：暂无</Text>
-                </View>
-            }
-        />
-    );
+    renderItem = ({ item }) => {
+        let buyInfoID = item.buyInfoID;
+        let header = ('求购：' + item.goodName);
+        let infoType = 'buyInfo';
+        return (
+            <TouchableOpacity onPress={() => this.props.navigation.push('GoodInfo', { infoType, buyInfoID, header })}>
+                <ListItem
+                    bottomDivider
+                    containerStyle={{height: 200}}
+                    title={
+                        <Text numberOfLines={1} style={{color: 'black', fontWeight: 'bold', fontSize: 20}}>出售物品：{item.goodName}</Text>
+                    }
+                    subtitle={
+                        <View style={styles.subtitleView}>
+                            <Text numberOfLines={1} style={styles.ratingText}>具体描述：{item.description}</Text>
+                            <Text numberOfLines={1} style={styles.ratingText}>信息状态：{parseStatus(item.status)}</Text>
+                            <Text numberOfLines={1} style={styles.ratingText}>出售价格：￥{item.price}</Text>
+                            <Text numberOfLines={1} style={styles.ratingText}>发布时间：{parseTimeStamp(item.releaseTime)}</Text>
+                            <Text numberOfLines={1} style={styles.ratingText}>物品标签：暂无</Text>
+                        </View>
+                    }
+                />
+            </TouchableOpacity>
+        );
+    };
 
     render() {
         if (this.state.loaded === false) {
@@ -124,10 +131,6 @@ export default class BuyInfoScreen extends Component {
             )
         }
         else {
-            //console.warn(this.state.SellInfoList[0].releaseTime);
-            //console.warn(TimeStamptoDate(this.state.SellInfoList[0].releaseTime));
-            //console.warn(TimeStampNow());
-            //console.warn(TimeStamptoDate(TimeStampNow()));
             return (
                 <View>
                     <FlatList
