@@ -59,7 +59,17 @@ func (a *mockSrv) Query(ctx context.Context, req *buyinfo.BuyInfoQueryRequest, o
 // Find is buyinfo find mock
 func (a *mockSrv) Find(ctx context.Context, req *buyinfo.BuyInfoFindRequest, opts ...client.CallOption) (*buyinfo.BuyInfoFindResponse, error) {
 	var rsp buyinfo.BuyInfoFindResponse
-	// TODO
+	info := buyinfo.BuyInfoMsg{UserID: 1000}
+	if req.UserID == 1000 {
+		if req.Status == 1 {
+			rsp.BuyInfo = append(rsp.BuyInfo, &info)
+		} else {
+			rsp.BuyInfo = append(rsp.BuyInfo, &info)
+			rsp.BuyInfo = append(rsp.BuyInfo, &info)
+		}
+	} else {
+		return nil, errors.New("")
+	}
 	return &rsp, nil
 }
 
