@@ -1,0 +1,41 @@
+- name: api-{{SERVICE_LNAME}}
+  path: api/{{SERVICE_LNAME}}
+  args:
+    - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+      - go
+    paths:
+      - /
+      - ../../utils
+    scripts:
+      - command: make doc
+        type: after
+        path: ../../
+        output: true
+- name: srv-{{SERVICE_LNAME}}
+  path: srv/{{SERVICE_LNAME}}
+  args:
+  - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+    - proto
+    - go
+    paths:
+    - /
+    - ../../utils
+    scripts:
+    - command: make proto SRV={{SERVICE_LNAME}}
+      type: before
+      path: ../../
+      output: true
+    - command: make doc
+      type: after
+      path: ../../
+      output: true

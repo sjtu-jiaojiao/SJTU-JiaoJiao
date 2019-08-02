@@ -34,4 +34,12 @@
      background-color: rgba(221, 221, 221, 0.548);
      left: .1em;
    }
-   
+
+   #tag{
+     width: 50%;
+   }
+
+   #content{
+    width:100%;
+    height:500px;
+   }

@@ -6,51 +6,19 @@ input{
    color: white;
  }
 
- 
- .badge {
-  display: inline-block;
-  font-size: small;
-  color: white;
-  padding: 0.8em 0.7em 0 0.7em;
-  background-color: #607D8B;
-  line-height: 0.9em;
-  position: relative;
-  left: -1px;
-  top: -4px;
-  height: 3em;
-  min-width: 16px;
-  text-align: right;
-  margin-right: .8em;
-  border-radius: 4px 0 0 4px;
-}
-
-
-#type {
+#searchid {
   float:right;
-  width: 10%;
+  width: 40%;
+}
+#searchname {
+  float:right;
+  width: 40%;
+}
+#type {
+  float:left;
+  width: 30%;
 }
 #tag {
   float:right;
-  width: 10%;
+  width: 100%;
 }
- .infoitem{
-   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-   position: relative;
-   cursor: pointer;
-   background-color: #EEE;
-   margin: .5em;
-   padding: .3em 0;
-   height: 3em;
-   border-radius: 4px;
- }
- 
-  
- .delete {
-  float: right;
-}
- .infoitem:hover {
-   color: #607D8B;
-   background-color: rgba(221, 221, 221, 0.548);
-   left: .1em;
- }
- 

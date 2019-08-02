@@ -6,6 +6,9 @@ go:
 notifications:
   email: false
 
+addons:
+  ssh_known_hosts: 202.120.40.8:30710
+
 services:
   - docker
 
@@ -35,18 +38,17 @@ before_script:
   - consul agent  -bootstrap -server -bind=127.0.0.1 -data-dir=./data/ 2>&1 1>consul.log &
   - sleep 3
   - cd backend
+  - consul kv import @consul.json
 
 script:
-  - consul kv import @consul.json
-  - go list -f '{{if len .TestGoFiles}}"s=`echo {{.Dir}} | tail -c 6` && [ $s == "utils" ] && go test -tags=test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} || go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}}"{{end}}' ./... | xargs -L 1 bash -c
+  - make test
   - gover
   - goveralls -coverprofile=gover.coverprofile -service=travis-ci -repotoken $COVERALLS_TOKEN
   - cp config_deploy.json config.json
-  - docker-compose build
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - make docker
 
 deploy:
   provider: script
-  script: bash dockerpush.sh
+  script: make deploy
   on:
     branch: master

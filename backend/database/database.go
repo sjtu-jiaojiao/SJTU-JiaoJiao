@@ -4,44 +4,60 @@ import (
 	"time"
 )
 
-// Test is db test table map
+// Test database map
 type Test struct {
-	Id       int32  `orm:"auto;pk;column(test_id)"`
-	TestName string `orm:"size(100)"`
+	ID       int32  `gorm:"auto_increment;primary_key"`
+	TestName string `gorm:"size:100"`
 }
 
-// AdminUser is db admin_user table map
-type AdminUser struct {
-	Id        int32  `orm:"auto;pk;column(admin_id)"`
-	StudentId string `orm:"size(32);index"`
-}
-
-// User is db user table map
+// User database map
 type User struct {
-	Id          int32  `orm:"auto;pk;column(user_id)"`
-	UserName    string `orm:"size(32)"`
-	AvatarId    string `orm:"type(char);size(24)"`
-	Telephone   string `orm:"type(char);size(11);null"`
-	StudentId   string `orm:"size(32);index"`
-	StudentName string `orm:"size(32)"`
-	Status      int32
+	ID          int32  `gorm:"auto_increment;primary_key"`
+	UserName    string `gorm:"size:32;not null"`
+	AvatarID    string `gorm:"type:char(24)"`
+	Telephone   string `gorm:"type:char(11)"`
+	StudentID   string `gorm:"size:32;index;not null"`
+	StudentName string `gorm:"size:32;not null"`
+	Status      int32  `gorm:"default:1;not null"`
+	Role        int32  `gorm:"default:1;not null"`
 }
 
-// SellInfo is db release table map
+// SellInfo database map
 type SellInfo struct {
-	Id          int32 `orm:"auto;pk;column(sell_info_id)"`
-	Status      int32
-	ReleaseTime time.Time `orm:"auto_now_add;type(datetime)"`
-	ValidTime   time.Time `orm:"type(datetime)"`
-	UserId      int32     `orm:"index"`
-	GoodId      int32     `orm:"index"`
+	ID          int32     `gorm:"auto_increment;primary_key"`
+	Status      int32     `gorm:"default:1;not null"`
+	ReleaseTime time.Time `gorm:"not null"`
+	ValidTime   time.Time `gorm:"not null"`
+	UserID      int32     `gorm:"not null;index"`
+	GoodID      int32     `gorm:"not null;index"`
 }
 
-// Good is db good table map
+// BuyInfo database map
+type BuyInfo struct {
+	ID          int32     `gorm:"auto_increment;primary_key"`
+	Status      int32     `gorm:"default:1;not null"`
+	ReleaseTime time.Time `gorm:"not null"`
+	ValidTime   time.Time `gorm:"not null"`
+	UserID      int32     `gorm:"not null;index"`
+	GoodID      int32     `gorm:"not null;index"`
+}
+
+//Transaction database map
+type Transaction struct {
+	ID         int32     `gorm:"auto_increment;primary_key"`
+	InfoID     int32     `gorm:"not null"`
+	Category   int32     `gorm:"not null"`
+	FromUserID int32     `gorm:"not null"`
+	ToUserID   int32     `gorm:"not null"`
+	CreateTime time.Time `gorm:"not null"`
+	Status     int32     `gorm:"not null;default:1"`
+}
+
+// Good database map
 type Good struct {
-	Id          int32  `orm:"auto;pk;column(good_id)"`
-	GoodName    string `orm:"size(128)"`
-	Price       float64
-	Description string `orm:"type(text);null"`
-	ContentId   string `orm:"type(char);size(24)"`
+	ID          int32   `gorm:"auto_increment;primary_key"`
+	GoodName    string  `gorm:"size:128;not null"`
+	Price       float64 `gorm:"default:0;not null"`
+	Description string  `gorm:"type:text"`
+	ContentID   string  `gorm:"type:char(24)"`
 }

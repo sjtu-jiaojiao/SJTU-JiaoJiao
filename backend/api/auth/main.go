@@ -26,6 +26,11 @@ type authCode struct {
 }
 
 /**
+ * @apiDefine InvalidParam
+ * @apiError (Error 400) InvalidParam Invalid param
+ */
+
+/**
  * @api {get} /auth GetAuth
  * @apiVersion 1.0.0
  * @apiGroup Auth
@@ -35,7 +40,8 @@ type authCode struct {
  *
  * @apiParam {string} [code]  OAuth code callback, DO NOT call it by yourself
  * @apiSuccess (No param - Redirect 301) {Redirect} url Redirect to OAuth url
- * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-auth_Auth_Auth)
+ * @apiSuccess (With param - Success 200) {--} Response see [Auth service](#api-Service-Auth_Auth)
+ * @apiUse InvalidParam
  * @apiError (Error 500) AuthServiceDown Auth service down
  */
 func getAuth(c *gin.Context) {
@@ -63,7 +69,7 @@ func getAuth(c *gin.Context) {
 			rsp, err := srv.Auth(context.TODO(), &auth.AuthRequest{
 				Code: code.Code,
 			})
-			if utils.LogContinue(err, utils.Warning, "Auth service error: %v", err) {
+			if utils.LogContinue(err, utils.Error) {
 				c.JSON(500, err)
 				return
 			}
@@ -72,34 +78,30 @@ func getAuth(c *gin.Context) {
 				srv2 := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewUserService(name, c) },
 					func() interface{} { return mockuser.NewUserService() }).(user.UserService)
 				rsp2, err := srv2.Create(context.TODO(), &user.UserCreateRequest{
-					StudentId:   rsp.StudentId,
+					StudentID:   rsp.StudentID,
 					StudentName: rsp.StudentName,
 				})
-				if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
-					c.JSON(500, err)
-					return
-				}
-
-				srv3 := utils.CallMicroService("user", func(name string, c client.Client) interface{} { return user.NewAdminUserService(name, c) },
-					func() interface{} { return mockuser.NewAdminUserService() }).(user.AdminUserService)
-				rsp3, err := srv3.Find(context.TODO(), &user.AdminUserRequest{
-					StudentId: rsp.StudentId,
-				})
-				if utils.LogContinue(err, utils.Warning, "User service error: %v", err) {
+				if utils.LogContinue(err, utils.Error) {
 					c.JSON(500, err)
 					return
 				}
 
 				// sign token
-				if rsp3.Status == user.AdminUserResponse_NOT_FOUND {
-					c.JSON(200, gin.H{
-						"status": 1,
-						"token":  utils.JWTSign(rsp2.UserId, 1),
-					})
+				if rsp2.User.Status == user.UserInfo_NORMAL {
+					if rsp2.User.Role == user.UserInfo_USER {
+						c.JSON(200, gin.H{
+							"status": auth.AuthResponse_SUCCESS,
+							"token":  utils.JWTSign(rsp2.User.UserID, user.UserInfo_USER),
+						})
+					} else {
+						c.JSON(200, gin.H{
+							"status": auth.AuthResponse_SUCCESS,
+							"token":  utils.JWTSign(rsp2.User.UserID, user.UserInfo_ADMIN),
+						})
+					}
 				} else {
 					c.JSON(200, gin.H{
-						"status": 1,
-						"token":  utils.JWTSign(rsp2.UserId, 2),
+						"status": auth.AuthResponse_FROZEN_USER,
 					})
 				}
 			} else {

@@ -27,10 +27,12 @@ import { DelonAuthModule, JWTInterceptor, DA_STORE_TOKEN, MemoryStore } from '@d
 
 
 import { DashboardOutline, UserOutline, LeftCircleOutline ,SaveOutline,  ProfileOutline, TransactionOutline, ContactsOutline,
-BulbOutline, LoginOutline, KeyOutline, DeleteOutline, SearchOutline, ControlOutline, LockOutline, LogoutOutline } from '@ant-design/icons-angular/icons';
-import { CallbackComponent } from './callback/callback.component'
+BulbOutline, LoginOutline, KeyOutline, DeleteOutline, SearchOutline, ControlOutline, LockOutline, LogoutOutline, CopyrightOutline } from '@ant-design/icons-angular/icons';
+import { CallbackComponent } from './callback/callback.component';
+import { SellInfoComponent } from './info/sell-info/sell-info.component';
+import { BuyInfoComponent } from './info/buy-info/buy-info.component'
 const icons: IconDefinition[] = [ControlOutline,LeftCircleOutline ,SaveOutline, DashboardOutline, UserOutline, ProfileOutline, TransactionOutline, ContactsOutline,
-  BulbOutline, LoginOutline, LockOutline, KeyOutline, DeleteOutline, SearchOutline ,LogoutOutline];
+  BulbOutline, LoginOutline, LockOutline, KeyOutline, DeleteOutline, SearchOutline ,LogoutOutline, CopyrightOutline];
 registerLocaleData(zh);
 
 export class DelonModule {
@@ -57,23 +59,25 @@ export class DelonModule {
     ActivityComponent,
     InfoStatisticComponent,
     ActivitydetailComponent,
-    CallbackComponent
+    CallbackComponent,
+    SellInfoComponent,
+    BuyInfoComponent
   ],
   imports: [   
     DelonAuthModule,
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,    
-    NgZorroAntdModule,
+    NgZorroAntdModule.forRoot(),
     FormsModule,
     NgxEchartsModule,
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(
-       InMemoryDataService, { dataEncapsulation: false }),
+    InMemoryDataService, { dataEncapsulation: false,passThruUnknownUrl: true }),
     BrowserAnimationsModule
   ],
   providers: [    
-    { provide: NZ_I18N, useValue: zh_CN } , { provide: NZ_ICONS, useValue: icons }],
+    { provide: NZ_I18N, useValue: zh_CN } , { provide: NZ_ICONS, useValue: icons },{ provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

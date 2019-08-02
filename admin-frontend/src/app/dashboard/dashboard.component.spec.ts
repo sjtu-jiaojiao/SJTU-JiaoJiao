@@ -21,6 +21,9 @@ import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard.component';
 import { CallbackComponent } from '../callback/callback.component';
+import { AuthService } from '../auth.service';
+import { SellInfoComponent } from '../info/sell-info/sell-info.component';
+import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -40,7 +43,9 @@ describe('DashboardComponent', () => {
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
-        ActivitydetailComponent
+        ActivitydetailComponent,
+        SellInfoComponent,
+        BuyInfoComponent
       ],
       imports: [
         //    DelonAuthModule,
@@ -66,6 +71,14 @@ describe('DashboardComponent', () => {
   });
 
   it('should create', () => {
+    const service: AuthService = TestBed.get(AuthService);
+    service.login({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMzMzk3MDYsImlkIjozLCJyb2xlIjoyfQ.woB67gYA8hTMljeg6lqwG_3fSJm4Q7SD6Ln8w2Ol4xk' });
+    expect(component.getColor({type:-1})).toEqual('red');
+    expect(component.getColor({type: 0})).toEqual('blue');
+    expect(component.getColor({type: 1})).toEqual('green');
+    component.hst= [ {description: '1'},{description: ''}];
+    component.save();
+    component.add();
     expect(component).toBeTruthy();
   });
 });

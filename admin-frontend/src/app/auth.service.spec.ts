@@ -21,7 +21,7 @@ describe('AuthService', () => {
 
   it('should work normal', () => {
     const service: AuthService = TestBed.get(AuthService);
-    service.login({ token: '123' });
+    service.login({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMzMzk3MDYsImlkIjozLCJyb2xlIjoyfQ.woB67gYA8hTMljeg6lqwG_3fSJm4Q7SD6Ln8w2Ol4xk' });
     service.logout();
   });
 

@@ -6,7 +6,7 @@
   [nzStep]="0.1"
   [nzPlaceHolder]="'阈值'"
 ></nz-input-number>
-<button nz-button (click)="forbid()" [nzType]="'primary'">封禁所有信用评价低于{{threshold}}的人</button>
+<button nz-button  [nzType]="'primary'">封禁所有信用评价低于{{threshold}}的用户</button>
 
 <nz-input-group id='searchname' nzSearch [nzAddOnAfter]="suffixIconButton">
   <input type="text" [(ngModel)]="searchName" nz-input placeholder="输入用户名" />
@@ -15,34 +15,41 @@
   <button nz-button (click)='searchByName()' nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
 </ng-template>
 
-<nz-list [nzDataSource]="curusers" [nzRenderItem]="user" [nzGrid]="{gutter: 16, span: 6}">
+<nz-list *ngIf="users" [nzDataSource]="users" [nzRenderItem]="user" [nzGrid]="{gutter: 16, span: 6}">
     <ng-template #user let-user>
       <nz-list-item [nzContent]="nzContent">
         <ng-template #nzContent>
-          <nz-card [nzTitle]="user.name">
+          <nz-card>
+          <nz-card-meta [nzTitle]="user.userName"
+          [nzAvatar]="avatarTemplate"></nz-card-meta>
       <div>
+        <ng-template #avatarTemplate>
+          <nz-avatar [nzSize]="'small'" nzSrc="/api/file/{{user.avatarID}}"></nz-avatar>
+        </ng-template>
         <div class='useritem'>
-              <span class="badge">用户ID</span>{{user.id}}
+              <span class="badge">用户ID</span>{{user.userID}}
         </div>
         <div class='useritem'>
-          <span class="badge">用户名</span>{{user.name}}
+          <span class="badge">用户名</span>{{user.userName.length>10?user.userName.substr(0,10)+'...':user.userName}}
       </div>
       <div class='useritem'>
-          <span class="badge">封禁</span>{{user.forbid?'是':'否'}}
+          <span class="badge">封禁</span>{{user.status==2?'是':'否'}}
       </div>
       <div class='useritem'>
-          <span class="badge">信用评价</span>{{user.score}}
+          <span class="badge">电话号码</span>{{user.telephone}}
       </div>
-      <div class='useritem'>
-          <span class="badge">活跃度</span>{{user.active}}
+      <div class= 'useritem'>
+        <span class="badge">权限</span>{{user.role==10?'管理':'用户'}}
       </div>
+          <div class='useritem'>
+                <span class="badge">信用评价</span>
+                <nz-rate [ngModel]="2" nzDisabled></nz-rate>
+          </div>
       </div>
-              <a routerLink="/user/{{user.id}}">
+              <a routerLink="/user/{{user.userID}}">
               用户详情
               <i nz-icon type="search"></i>
                </a>
-          <button class="delete" title="delete book" nz-button nzType="danger" nzShape="circle"  nzSize="small"
-          (click)="delete(user)"><i nz-icon type="delete" theme="outline"></i></button>
           </nz-card>
         </ng-template>
       </nz-list-item>
@@ -50,12 +57,13 @@
   </nz-list>
 
   
+
   <nz-pagination
   [(nzPageIndex)]="current"
   [(nzPageSize)]="size"
-  [nzPageSizeOptions]="[4,8,12,16,20,24,28,32]"	
   [nzTotal]="count"
-  (nzPageIndexChange)	="pageChange($event)"
-  (nzPageSizeChange)= "sizeChange($event)"
-  nzShowSizeChanger
+  [nzPageSizeOptions]="[2,4,8,12,16,20,24,28,32]"	
+  (nzPageIndexChange)	="onChange()"
+  (nzPageSizeChange)= "onChange()"
+  nzShowSizeChanger      
 ></nz-pagination>

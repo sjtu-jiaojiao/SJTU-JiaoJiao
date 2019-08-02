@@ -1,4 +1,5 @@
-<h2>交易信息管理</h2>      
+<h2>交易信息管理</h2> 
+<!--
 <nz-input-number
   [(ngModel)]="Tthreshold"
   [nzMin]="1"
@@ -11,81 +12,73 @@
   [nzStep]="1"
   [nzPlaceHolder]="'预约阈值'"
 ></nz-input-number>
-<button nz-button (click)='end()' [nzType]="'primary'">结束所有等待时间超过{{Tthreshold}}天且预约数小于{{Ythreshold}}的交易信息</button>
+<button nz-button [nzType]="'primary'">结束所有等待时间超过{{Tthreshold}}天且预约数小于{{Ythreshold}}的交易信息</button>
 
-
-<nz-select 
-id='type'
-[(ngModel)]="selectedType"
-(ngModelChange)	="selectType($event)"
-nzPlaceHolder="Choose">
-  <nz-option [nzValue]="0" nzLabel="出售"></nz-option>
-  <nz-option [nzValue]="1" nzLabel="求购"></nz-option>
-  <nz-option [nzValue]="-1" nzLabel="All"></nz-option>
-</nz-select>
-
-
-<nz-select
-id = 'tag'
-nzMode="tags"
-[nzShowArrow]="false"
-[nzOpen]="false"	
-(ngModelChange)	="selectTag($event)"
-[nzTokenSeparators]="[',']"
-[(ngModel)]="searchTag"
-nzPlaceHolder="TagFilter">
-<nz-option *ngFor="let option of searchTag" [nzLabel]="option" [nzValue]="option"> </nz-option>
-</nz-select>
-
-
-<nz-list [nzDataSource]="curinfos" [nzRenderItem]="info" [nzGrid]="{gutter: 16, span: 6}">
-    <ng-template #info let-info>
-      <nz-list-item [nzContent]="nzContent">
-        <ng-template #nzContent>
-          <nz-card [nzTitle]="info.intro">
-      <div>
-        <div class='infoitem'>
-              <span class="badge">交易ID</span>{{info.id}}
-        </div>
-        <div class='infoitem'>
-              <span class="badge">交易类型</span>{{info.type? '求购':'出售'}}
-        </div>
-        <div class='infoitem'>
-          <span class="badge">交易发起人</span>{{info.source}}
-      </div>
-      <div class='infoitem'>
-          <span class="badge">发起时间</span>{{info.time}}
-      </div>
-      <div class='infoitem'>
-          <span class="badge">状态</span>{{getstate(info.state)}}
-      </div>
-      <div class='infoitem'>
-          <span class="badge">当前预约数</span>{{info.count}}
-      </div>
-      <nz-tag
-        *ngFor="let tag of info.tags"
-      >
-        {{ tag }}
-      </nz-tag>
-      </div>
-              <a routerLink="/info/{{info.id}}">
-              交易详情
-              <i nz-icon type="search"></i>
-               </a>
-               <button class="delete" title="delete info" nz-button nzType="danger" nzShape="circle"  nzSize="small"
-               (click)="delete(info)"><i nz-icon type="delete" theme="outline"></i></button>
-          </nz-card>
-        </ng-template>
-      </nz-list-item>
-    </ng-template>
-  </nz-list>
+-->
   
-  <nz-pagination
-  [(nzPageIndex)]="current"
-  [(nzPageSize)]="size"
-  [nzPageSizeOptions]="[4,8,12,16,20,24,28,32]"	
-  [nzTotal]="count"
-  (nzPageIndexChange)	="pageChange($event)"
-  (nzPageSizeChange)= "sizeChange($event)"
-  nzShowSizeChanger
-></nz-pagination>
+  <div nz-row [nzGutter]="8">
+    <div nz-col [nzSpan]="6">
+      <nz-select 
+      id='type'
+      [(ngModel)]="searchType"      
+      (ngModelChange)	="selectType($event)"
+      nzPlaceHolder="Choose">
+        <nz-option [nzValue]="0" nzLabel="出售"></nz-option>
+        <nz-option [nzValue]="1" nzLabel="求购"></nz-option>
+        <nz-option [nzValue]="-1" nzLabel="All"></nz-option>
+      </nz-select>
+      <nz-select 
+      id='type'
+      [(ngModel)]="searchStatus"   
+      (ngModelChange)	="search()"   
+      nzPlaceHolder="Choose">
+        <nz-option [nzValue]="1" nzLabel="待预约"></nz-option>
+        <nz-option [nzValue]="2" nzLabel="预约"></nz-option>
+        <nz-option [nzValue]="3" nzLabel="完成"></nz-option>
+        <nz-option [nzValue]="4" nzLabel="失效"></nz-option>
+        <nz-option [nzValue]="null" nzLabel="All"></nz-option>
+      </nz-select>      
+    </div>
+    <div nz-col [nzSpan]="12">
+      <nz-input-group id='searchid' nzSearch [nzAddOnAfter]="suffixIconButton">
+        <input type="text" [(ngModel)]="searchUserID" nz-input placeholder="输入用户ID" />
+      </nz-input-group>
+      <nz-input-group id='searchname' nzSearch>
+          <input type="text" [(ngModel)]="searchGoodName" nz-input placeholder="输入交易商品名" />
+        </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button (click)='search()' nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+      </ng-template>
+      
+    </div>
+    <div nz-col [nzSpan]="6">
+      <nz-select
+      id = 'tag'
+      nzMode="tags"
+      [nzShowArrow]="false"
+      [nzOpen]="false"	
+      (ngModelChange)	="selectTag($event)"
+      [nzTokenSeparators]="[',']"
+      [(ngModel)]="searchTag"
+      nzPlaceHolder="TagFilter">
+      <nz-option *ngFor="let option of searchTag" [nzLabel]="option" [nzValue]="option"> </nz-option>
+      </nz-select>
+    </div>
+  </div>
+
+  <div *ngIf="searchType==0">
+    <app-sell-info></app-sell-info>
+  </div>
+  <div *ngIf="searchType==1">
+    <app-buy-info ></app-buy-info>
+  </div>
+  <div *ngIf="searchType==-1">
+    <div nz-row [nzGutter]="8">
+      <div nz-col [nzSpan]="12">
+        <app-sell-info></app-sell-info>
+      </div>
+      <div nz-col [nzSpan]="12">
+        <app-buy-info ></app-buy-info>
+      </div>
+    </div>
+  </div>

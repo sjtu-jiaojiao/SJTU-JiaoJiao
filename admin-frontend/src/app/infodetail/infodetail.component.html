@@ -2,33 +2,35 @@
 <nz-card  *ngIf='info' nzTitle="交易信息管理">
     <div nz-row [nzGutter]="8">
       <div nz-col [nzSpan]="8">
-        <nz-card nzTitle="交易状态">
-        <nz-timeline nzMode="alternate">
-                <nz-timeline-item>创建交易 2019-07-01</nz-timeline-item>
-                <nz-timeline-item nzColor="green">预约 2019-07-02</nz-timeline-item>
-                <nz-timeline-item [nzDot]="dotTemplate"
-                  >取消预约 2019-07-03</nz-timeline-item
-                >
-                <nz-timeline-item nzColor="green">预约 2019-07-04</nz-timeline-item>
-                <nz-timeline-item nzColor="green">完成交易 2019-07-05</nz-timeline-item>
-                <nz-timeline-item nzColor="green">完成评价 2019-07-11</nz-timeline-item>
-              </nz-timeline>
-              <ng-template #dotTemplate>
-                <i nz-icon nzType="clock-circle-o" style="font-size: 16px;"></i>
-        </ng-template>
-        </nz-card>
-        <nz-card nzType="inner" nzTitle="交易简介">
+        <nz-card nzType="inner" nzTitle="交易详情">
           <div class='infoitem'>
-                <span class="badge">交易ID</span>{{info.id}}
+              <span class="badge">交易名</span>
+              <input [(ngModel)]="info.goodName" placeholder="name"/>
           </div>
           <div class='infoitem'>
-                <span class="badge">交易类型</span>{{info.type? '买':'卖'}}
+                <span class="badge">交易ID</span>{{type=='sellInfo'?info.sellInfoID:info.buyInfoID}}
           </div>
           <div class='infoitem'>
-            <span class="badge">交易发起人</span>{{info.source}}
-        </div>
+                <span class="badge">交易类型</span>{{type=='sellInfo'?'出售':'求购'}}
+          </div>    
         <div class='infoitem'>
-            <span class="badge">发起时间</span>{{info.time}}
+          <span class="badge">发起用户</span>
+          <a routerLink="/user/{{info.userID}}">{{info.userID}}
+           </a>
+      </div>
+      <div class='infoitem'>
+          <span class="badge">发布日期</span>{{stringToDate(info.releaseTime)}}
+      </div>
+        <div class='infoitem'>
+            <span class="badge">截止日期</span>
+            <nz-date-picker
+              nzShowTime
+              nzFormat="yyyy-MM-dd HH:mm:ss"
+              nzPlaceHolder="Select Time"
+              [(ngModel)]="deadLine"
+              (ngModelChange)="onChange($event)"
+              (nzOnOk)="onOk($event)"
+            ></nz-date-picker>
         </div>
         <div class='infoitem'>
             <span class="badge">状态</span>
@@ -36,13 +38,13 @@
             id='state'
               nzShowSearch 
               nzPlaceHolder="Select a state"
-              [(ngModel)]="info.state"
+              [(ngModel)]="info.status"
             >
-              <nz-option nzLabel="可预约" [nzValue]="0" ></nz-option>
-              <nz-option nzLabel="预约中" [nzValue]="1"></nz-option>
-              <nz-option nzLabel="已完成" [nzValue]="2"></nz-option>
-              <nz-option nzLabel="待评价" [nzValue]="3"></nz-option>
-              <nz-option nzLabel="强制结束" [nzValue]="4"></nz-option>
+              <nz-option nzLabel="待预约" [nzValue]="1" ></nz-option>
+              <nz-option nzLabel="预约" [nzValue]="2"></nz-option>
+              <nz-option nzLabel="完成" [nzValue]="3"></nz-option>
+              <nz-option nzLabel="失效" [nzValue]="4"></nz-option>
+              <nz-option nzLabel="关闭" [nzValue]="5"></nz-option>
             </nz-select>
         </div>
         <div class='infoitem'>
@@ -54,26 +56,53 @@
                 [nzPlaceHolder]="'价格'"
               ></nz-input-number>
         </div>
-        <div class='infoitem'>
-            <span class="badge">当前预约数</span>{{info.count}}
-        </div></nz-card>
+      </nz-card>
         <nz-card nzType="inner" nzTitle="交易简介">    
-                <nz-select
+                <nz-select id='tag'
                   nzMode="tags"
                   [nzTokenSeparators]="[',']"
                   [(ngModel)]="info.tags"
                   nzPlaceHolder="Tags">
                   <nz-option *ngFor="let option of info.tags" [nzLabel]="option" [nzValue]="option"> </nz-option>
                 </nz-select>
-          <textarea nz-input placeholder="intro" [(ngModel)]="info.intro" nzAutosize></textarea>
+          <textarea nz-input placeholder="description" [(ngModel)]="info.description" nzAutosize></textarea>
         </nz-card>
           <button (click)="goBack()" nz-button nzType="dashed"><i nz-icon type="left-circle" theme="outline"></i>返回</button>
           <button (click)="save()" nz-button nzType="primary"><i nz-icon type="save" theme="outline"></i>保存</button>
       </div>
       <div nz-col [nzSpan]="16">
-        <nz-card nzType="inner" nzTitle="交易价格曲线">            
-          <div echarts theme="dark" [loading]="true"  [options]="option"></div>
-        </nz-card>
+          <nz-card nzType="inner">
+              <nz-carousel>
+                  <div nz-carousel-content *ngFor="let content of contents">
+                      <video id='content'*ngIf="content.type==2"
+                      src="/api/file/{{content.fileID}}" controls></video> 
+                      <img  id='content'*ngIf="content.type==1"
+                      src="/api/file/{{content.fileID}}" />   
+                  </div>
+                </nz-carousel>
+                  </nz-card>
+      </div>
+      <div nz-col [nzSpan]="8">
+          <nz-card nzTitle="交易状态">
+              <nz-timeline nzMode="alternate">
+                      <nz-timeline-item>创建交易 2019-07-01</nz-timeline-item>
+                      <nz-timeline-item nzColor="green">预约 2019-07-02</nz-timeline-item>
+                      <nz-timeline-item [nzDot]="dotTemplate"
+                        >取消预约 2019-07-03</nz-timeline-item
+                      >
+                      <nz-timeline-item nzColor="green">预约 2019-07-04</nz-timeline-item>
+                      <nz-timeline-item nzColor="green">完成交易 2019-07-05</nz-timeline-item>
+                      <nz-timeline-item nzColor="green">完成评价 2019-07-11</nz-timeline-item>
+                    </nz-timeline>
+                    <ng-template #dotTemplate>
+                      <i nz-icon nzType="clock-circle-o" style="font-size: 16px;"></i>
+              </ng-template>
+              </nz-card>
+
+      </div>
+
+
+      <div nz-col [nzSpan]="8">
         <nz-card nzType="inner" nzTitle="流量转化">            
           <div echarts theme="dark" [loading]="true"  [options]="fnoption"></div>
         </nz-card>

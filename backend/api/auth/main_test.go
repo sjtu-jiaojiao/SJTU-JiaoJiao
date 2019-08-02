@@ -1,7 +1,8 @@
 package main
 
 import (
-	"encoding/json"
+	auth "jiaojiao/srv/auth/proto"
+	user "jiaojiao/srv/user/proto"
 	"jiaojiao/utils"
 	"os"
 	"testing"
@@ -10,42 +11,34 @@ import (
 )
 
 func Test_getAuth(t *testing.T) {
-	tf := func(code int, path string) map[string]interface{} {
-		var data map[string]interface{}
-		r := utils.StartTestServer(setupRouter, "GET", path, nil, nil)
-		So(r.Code, ShouldEqual, code)
-		if r.Body.String() != "{}" {
-			So(json.Unmarshal(r.Body.Bytes(), &data), ShouldBeNil)
+	tf := func(code int, param string, status auth.AuthResponse_Status, id int, role user.UserInfo_Role) {
+		c, d := utils.GetTestData(setupRouter, "GET", "/auth?code="+param, nil, "")
+
+		So(c, ShouldEqual, code)
+		if d != nil {
+			So(d["status"], ShouldEqual, status)
+			if status == auth.AuthResponse_SUCCESS {
+				t, err := utils.JWTVerify(d["token"].(string), os.Getenv("JJ_JWTSECRET"))
+				So(err, ShouldBeNil)
+				So(utils.JWTParse(t, "id"), ShouldEqual, id)
+				So(utils.JWTParse(t, "role"), ShouldEqual, role)
+			}
 		}
-		return data
 	}
 	Convey("Auth router test", t, func() {
 		r := utils.StartTestServer(setupRouter, "GET", "/auth", nil, nil)
 		So(r.Code, ShouldEqual, 301)
 
-		data := tf(200, "/auth?code=invalid")
-		So(data["status"], ShouldEqual, 2)
-
-		data = tf(200, "/auth?code=valid_user")
-		So(data["status"], ShouldEqual, 1)
-		t, err := utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
-		So(err, ShouldBeNil)
-		So(utils.JWTParse(t, "id"), ShouldEqual, 1)
-		So(utils.JWTParse(t, "role"), ShouldEqual, 1)
-
-		data = tf(200, "/auth?code=valid_admin")
-		So(data["status"], ShouldEqual, 1)
-		t, err = utils.JWTVerify(data["token"].(string), os.Getenv("JJ_JWTSECRET"))
-		So(err, ShouldBeNil)
-		So(utils.JWTParse(t, "id"), ShouldEqual, 1)
-		So(utils.JWTParse(t, "role"), ShouldEqual, 2)
-
-		tf(500, "/auth?code=down")
-		tf(500, "/auth?code=userdown")
-		tf(500, "/auth?code=admindown")
+		tf(200, "invalid", auth.AuthResponse_INVALID_CODE, 0, 0)
+		tf(200, "valid_user", auth.AuthResponse_SUCCESS, 1000, user.UserInfo_USER)
+		tf(200, "valid_admin", auth.AuthResponse_SUCCESS, 1001, user.UserInfo_ADMIN)
+		tf(200, "frozen_user", auth.AuthResponse_FROZEN_USER, 0, 0)
+		tf(500, "error", 0, 0, 0)
+		tf(500, "user_error", 0, 0, 0)
 	})
 }
 
-func Test_main(t *testing.T) {
+func TestMain(m *testing.M) {
 	main()
+	m.Run()
 }

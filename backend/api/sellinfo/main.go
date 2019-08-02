@@ -13,16 +13,10 @@ import (
 
 func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
-	rg.GET("/sellInfo/:sellInfoId", getSellInfo)
+	rg.GET("/sellInfo/:sellInfoID", getSellInfo)
 	rg.GET("/sellInfo", findSellInfo)
-	rg.PUT("/sellInfo", addSellInfo)
-	rg.PUT("/content", addContent)
-	rg.DELETE("/content", deleteContent)
+	rg.POST("/sellInfo", addSellInfo)
 	return router
-}
-
-type getSellInfoQuery struct {
-	SellInfoId int32 `uri:"sellInfoId" binding:"required,min=1"`
 }
 
 /**
@@ -31,26 +25,30 @@ type getSellInfoQuery struct {
  */
 
 /**
- * @api {get} /sellInfo/:sellInfoId GetSellInfo
+ * @api {get} /sellInfo/:sellInfoID GetSellInfo
  * @apiVersion 1.0.0
  * @apiGroup SellInfo
  * @apiPermission none
  * @apiName GetSellInfo
  * @apiDescription Get sell info
  *
- * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
- * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
+ * @apiParam {--} Param see [SellInfo Service](#api-Service-SellInfo_Query)
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-SellInfo_Query)
+ * @apiUse InvalidParam
  * @apiUse SellInfoServiceDown
  */
 func getSellInfo(c *gin.Context) {
-	var info getSellInfoQuery
-	if !utils.LogContinue(c.ShouldBindUri(&info), utils.Warning) {
+	type param struct {
+		SellInfoID int32 `uri:"sellInfoID" binding:"required,min=1"`
+	}
+	var p param
+	if !utils.LogContinue(c.ShouldBindUri(&p), utils.Warning) {
 		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
 			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
 		rsp, err := srv.Query(context.TODO(), &sellinfo.SellInfoQueryRequest{
-			SellInfoId: info.SellInfoId,
+			SellInfoID: p.SellInfoID,
 		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -60,131 +58,56 @@ func getSellInfo(c *gin.Context) {
 	}
 }
 
-type addContentQuery struct {
-	ContentId    string `form:"contentId"`
-	ContentToken string `form:"contentToken"`
-	Content      []byte `form:"content"`
-	Type         int32  `form:"type"`
-}
-
 /**
- * @api {put} /content AddContent
- * @apiVersion 1.0.0
- * @apiGroup SellInfo
- * @apiPermission user/admin
- * @apiName AddContent
- * @apiDescription Add sell info content
- *
- * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_Content_Create)
- * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_Content_Create)
- * @apiUse SellInfoServiceDown
- */
-func addContent(c *gin.Context) {
-	var cont addContentQuery
-	if !utils.LogContinue(c.ShouldBindQuery(&cont), utils.Warning) {
-		if !utils.CheckUser(c) && !utils.CheckAdmin(c) {
-			c.AbortWithStatus(403)
-			return
-		}
-		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewContentService(name, c) },
-			func() interface{} { return mock.NewContentService() }).(sellinfo.ContentService)
-		rsp, err := srv.Create(context.TODO(), &sellinfo.ContentCreateRequest{
-			ContentId:    cont.ContentId,
-			ContentToken: cont.ContentToken,
-			Content:      cont.Content,
-			Type:         sellinfo.ContentCreateRequest_Type(cont.Type),
-		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
-			c.JSON(500, err)
-			return
-		}
-		c.JSON(200, rsp)
-	} else {
-		c.AbortWithStatus(400)
-	}
-}
-
-type deleteContentQuery struct {
-	ContentId    string `form:"contentId"`
-	ContentToken string `form:"contentToken"`
-}
-
-/**
- * @api {delete} /content DeleteContent
- * @apiVersion 1.0.0
- * @apiGroup SellInfo
- * @apiPermission user/admin
- * @apiName DeleteContent
- * @apiDescription Delete sell info content
- *
- * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_Content_Delete)
- * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_Content_Delete)
- * @apiUse SellInfoServiceDown
- */
-func deleteContent(c *gin.Context) {
-	var q deleteContentQuery
-	if !utils.LogContinue(c.ShouldBindQuery(&q), utils.Warning) {
-		if !utils.CheckUser(c) && !utils.CheckAdmin(c) {
-			c.AbortWithStatus(403)
-			return
-		}
-		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewContentService(name, c) },
-			func() interface{} { return mock.NewContentService() }).(sellinfo.ContentService)
-		rsp, err := srv.Delete(context.TODO(), &sellinfo.ContentDeleteRequest{
-			ContentId:    q.ContentId,
-			ContentToken: q.ContentToken,
-		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
-			c.JSON(500, err)
-			return
-		}
-		c.JSON(200, rsp)
-	} else {
-		c.AbortWithStatus(400)
-	}
-}
-
-type createSellInfoQuery struct {
-	ValidTime    int64   `form:"validTime"`
-	GoodName     string  `form:"goodName"`
-	Price        float64 `form:"price"`
-	Description  string  `form:"description"`
-	ContentId    string  `form:"contentId"`
-	ContentToken string  `form:"contentToken"`
-	UserId       int32   `form:"userId"`
-}
-
-/**
- * @api {put} /sellInfo AddSellInfo
+ * @api {post} /sellInfo AddSellInfo
  * @apiVersion 1.0.0
  * @apiGroup SellInfo
  * @apiPermission self/admin
  * @apiName AddSellInfo
  * @apiDescription Add sell info
  *
- * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_SellInfo_Create)
- * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Create)
+ * @apiParam {--} Param see [SellInfo Service](#api-Service-SellInfo_Create)
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-SellInfo_Create)
+ * @apiUse InvalidParam
  * @apiUse SellInfoServiceDown
  */
 func addSellInfo(c *gin.Context) {
-	var info createSellInfoQuery
-	if !utils.LogContinue(c.ShouldBindQuery(&info), utils.Warning) {
-		if !utils.CheckUserId(c, info.UserId) && !utils.CheckAdmin(c) {
+	type param struct {
+		ValidTime    int64    `form:"validTime" binding:"required"`
+		GoodName     string   `form:"goodName" binding:"required"`
+		Price        float64  `form:"price"`
+		Description  string   `form:"description"`
+		ContentID    string   `form:"contentID"`
+		ContentToken string   `form:"contentToken"`
+		UserID       int32    `form:"userID" binding:"required"`
+		Tags         []string `form:"tags"`
+	}
+	var p param
+	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+		if (p.ContentID == "" && p.ContentToken != "") || (p.ContentID != "" && p.ContentToken == "") {
+			c.AbortWithStatus(400)
+			return
+		}
+
+		role := utils.GetRoleID(c, p.UserID)
+
+		if !role.Self && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}
 		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
 			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
 		rsp, err := srv.Create(context.TODO(), &sellinfo.SellInfoCreateRequest{
-			ValidTime:    info.ValidTime,
-			GoodName:     info.GoodName,
-			Price:        info.Price,
-			Description:  info.Description,
-			ContentId:    info.ContentId,
-			ContentToken: info.ContentToken,
-			UserId:       info.UserId,
+			ValidTime:    p.ValidTime,
+			GoodName:     p.GoodName,
+			Price:        p.Price,
+			Description:  p.Description,
+			ContentID:    p.ContentID,
+			ContentToken: p.ContentToken,
+			UserID:       p.UserID,
+			Tags:         p.Tags,
 		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}
@@ -192,12 +115,6 @@ func addSellInfo(c *gin.Context) {
 	} else {
 		c.AbortWithStatus(400)
 	}
-}
-
-type findCond struct {
-	UserId int32  `form:"userId"`
-	Limit  uint32 `form:"limit"`
-	Offset uint32 `form:"offset"`
 }
 
 /**
@@ -208,22 +125,36 @@ type findCond struct {
  * @apiName FindSellInfo
  * @apiDescription Find sell info
  *
- * @apiParam {--} Param see [SellInfo Service](#api-Service-sellinfo_SellInfo_Find)
- * @apiSuccess {Response} response see [SellInfo Service](#api-Service-sellinfo_SellInfo_Find)
+ * @apiParam {--} Param see [SellInfo Service](#api-Service-SellInfo_Find)
+ * @apiSuccess {Response} response see [SellInfo Service](#api-Service-SellInfo_Find)
+ * @apiUse InvalidParam
  * @apiUse SellInfoServiceDown
  */
 func findSellInfo(c *gin.Context) {
-	var cond findCond
+	type param struct {
+		UserID    int32   `form:"userID"`
+		Status    int32   `form:"status"`
+		GoodName  string  `form:"goodName"`
+		LowPrice  float64 `form:"lowPrice"`
+		HighPrice float64 `form:"highPrice"`
+		Limit     uint32  `form:"limit"`
+		Offset    uint32  `form:"offset"`
+	}
+	var p param
 
-	if !utils.LogContinue(c.ShouldBindQuery(&cond), utils.Warning) {
+	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
 		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
 			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
 		rsp, err := srv.Find(context.TODO(), &sellinfo.SellInfoFindRequest{
-			UserId: cond.UserId,
-			Limit:  cond.Limit,
-			Offset: cond.Offset,
+			UserID:    p.UserID,
+			Status:    sellinfo.SellStatus(utils.EnumConvert(p.Status, sellinfo.SellStatus_name)),
+			GoodName:  p.GoodName,
+			LowPrice:  p.LowPrice,
+			HighPrice: p.HighPrice,
+			Limit:     p.Limit,
+			Offset:    p.Offset,
 		})
-		if utils.LogContinue(err, utils.Warning, "SellInfo service error: %v", err) {
+		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
 			return
 		}

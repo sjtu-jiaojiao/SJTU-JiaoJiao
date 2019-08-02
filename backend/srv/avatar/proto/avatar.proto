@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+service Avatar {
+    rpc Create (AvatarCreateRequest) returns (AvatarCreateResponse);
+}
+
+message AvatarCreateRequest {
+    int32 userID = 1;
+    bytes file = 2;
+}
+
+message AvatarCreateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        INVALID_TYPE = 2;
+    }
+    Status status = 1;
+    string avatarID = 2;
+}

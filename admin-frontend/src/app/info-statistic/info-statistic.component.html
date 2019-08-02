@@ -1,6 +1,6 @@
 
         <div class='outer-div' id='fdg'>
-          <div echarts theme="dark"  class= 'tpc'[loading]="true" [options]="fdgoption"></div>
+          <div echarts (chartDblClick)="clickForce($event)"	theme="dark"  class= 'tpc'[loading]="true" [options]="fdgoption"></div>
       </div>
       <div class='outer-div' id='good'>
         <div echarts theme="dark"  class= 'tpc'[loading]="true" [options]="goodoption"></div>
@@ -16,7 +16,12 @@
           </div>
 
         
-        <div class='outer-div' id='lq'>
-          <div echarts theme="dark" class='btc' [loading]="true" [options]="lqoption"></div>
+        <div class='outer-div' id='lq'>    
+          <div echarts theme="dark" class='btc' [loading]="true" [options]="lqoption">
+            </div>
+            <button id='pause' [nzSize]="'small'" nz-button nzType="default" (click) ="pauseLine()">
+              <i nz-icon *ngIf='!pl' nzType="pause"></i>
+              <i nz-icon *ngIf='pl' nzType="caret-right"></i>
+            </button>
         </div>
         

@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+service File {
+    rpc Query (FileRequest) returns (FileQueryResponse);
+    rpc Create (FileCreateRequest) returns (FileCreateResponse);
+    rpc Delete (FileRequest) returns (FileDeleteResponse);
+}
+
+message FileRequest {
+    string fileID = 1;
+}
+
+message FileDeleteResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
+}
+
+message FileQueryResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
+    bytes file = 2;
+    int64 size = 3;
+}
+
+message FileCreateRequest {
+    bytes file = 1;
+}
+
+message FileCreateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+    }
+    Status status = 1;
+    string fileID = 2;
+}

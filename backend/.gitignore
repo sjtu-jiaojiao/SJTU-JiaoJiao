@@ -3,3 +3,4 @@ go.sum
 .idea/
 build/
 *.coverprofile
+__pycache__/

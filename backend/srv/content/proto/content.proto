@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+service Content {
+    rpc Create (ContentCreateRequest) returns (ContentCreateResponse);
+    rpc CreateTag (ContentCreateTagRequest) returns (ContentCreateTagResponse);
+    rpc Update (ContentUpdateRequest) returns (ContentUpdateResponse);
+    rpc Delete (ContentDeleteRequest) returns (ContentDeleteResponse);
+    rpc Query (ContentQueryRequest) returns (ContentQueryResponse);
+    rpc Check (ContentCheckRequest) returns (ContentCheckResponse);
+}
+
+enum Type {
+    UNKNOWN = 0;
+    PICTURE = 1;
+    VIDEO = 2;
+}
+
+message ContentCreateRequest {
+    string contentID = 1;
+    string contentToken = 2;
+    bytes content = 3;
+    Type type = 4;
+}
+
+message ContentCreateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        INVALID_TOKEN = 2;
+        INVALID_TYPE = 3;
+    }
+    Status status = 1;
+    string contentID = 2;
+    string contentToken = 3;
+    string fileID = 4;
+}
+
+message ContentCreateTagRequest {
+    string contentID = 1;
+    string contentToken = 2;
+    repeated string tags = 4;
+}
+
+message ContentCreateTagResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        INVALID_TOKEN = 2;
+        INVALID_TYPE = 3;
+    }
+    Status status = 1;
+    string contentID = 2;
+    string contentToken = 3;
+}
+
+message ContentUpdateRequest {
+    string contentID = 1;
+    string contentToken = 2;
+    string fileID = 3;
+    bytes content = 4;
+    Type type = 5;
+    repeated string tags = 6;
+}
+
+message ContentUpdateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        INVALID_TOKEN = 2;
+        NOT_FOUND = 3;
+        INVALID_TYPE = 4;
+    }
+    Status status = 1;
+    string fileID = 2;
+}
+
+message ContentDeleteRequest {
+    string contentID = 1;
+    string contentToken = 2;
+    string fileID = 3;
+}
+
+message ContentDeleteResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        INVALID_TOKEN = 2;
+        NOT_FOUND = 3;
+    }
+    Status status = 1;
+}
+
+message FileMsg {
+    string fileID = 1;
+    Type type = 2;
+}
+
+message ContentQueryRequest {
+    string contentID = 1;
+}
+
+message ContentQueryResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
+    string contentToken = 2;
+    repeated FileMsg files = 3;
+    repeated string tags = 4;
+}
+
+message ContentCheckRequest {
+    string contentID = 1;
+    string contentToken = 2;
+}
+
+message ContentCheckResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        VALID = 1;
+        INVALID = 2;
+    }
+    Status status = 1;
+}

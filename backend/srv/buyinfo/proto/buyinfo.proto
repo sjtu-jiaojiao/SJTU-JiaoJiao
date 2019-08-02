@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+service BuyInfo {
+    rpc Query (BuyInfoQueryRequest) returns (BuyInfoMsg);
+    rpc Create (BuyInfoCreateRequest) returns (BuyInfoCreateResponse);
+    rpc Find (BuyInfoFindRequest) returns (BuyInfoFindResponse);
+}
+
+enum BuyStatus {
+    UNKNOWN = 0;
+    SELLING = 1;
+    RESERVED = 2;
+    DONE = 3;
+    EXPIRED = 4;
+    CLOSED = 5;
+}
+
+message BuyInfoMsg {
+    int32 buyInfoID = 1;
+    BuyStatus status = 2;
+    int64 releaseTime = 3;
+    int64 validTime = 4;
+    string goodName = 5;
+    double price = 6;
+    string description = 7;
+    string contentID = 8;
+    int32 userID = 9;
+
+    bool clearEmpty = 99;
+}
+
+message BuyInfoQueryRequest {
+    int32 buyInfoID = 1;
+}
+
+message BuyInfoCreateRequest {
+    int64 validTime = 1;
+    string goodName = 2;
+    double price = 3;
+    string description = 4;
+    string contentID = 5;
+    string contentToken = 6;
+    int32 userID = 7;
+    repeated string tags = 8;
+}
+
+message BuyInfoCreateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        INVALID_TOKEN = 2;
+    }
+    Status status = 1;
+    int32 buyInfoID = 2;
+}
+
+message BuyInfoFindRequest {
+    int32 userID = 1;
+    BuyStatus status = 2;
+    string goodName = 3;
+    double lowPrice = 4;
+    double highPrice = 5;
+    uint32 limit = 6;
+    uint32 offset = 7;
+}
+
+message BuyInfoFindResponse {
+    repeated BuyInfoMsg buyInfo = 1;
+}

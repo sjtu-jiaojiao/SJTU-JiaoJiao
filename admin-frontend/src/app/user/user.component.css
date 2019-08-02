@@ -18,9 +18,6 @@
     border-radius: 4px 0 0 4px;
   }
   
-  .delete {
-    float: right;
-  }
   
  h2{
   color: white;
@@ -45,4 +42,3 @@
     background-color: rgba(221, 221, 221, 0.548);
     left: .1em;
   }
-  

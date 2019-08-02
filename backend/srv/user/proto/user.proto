@@ -7,13 +7,8 @@ service User {
     rpc Update (UserInfo) returns (UserUpdateResponse);
 }
 
-service AdminUser {
-    rpc Create (AdminUserRequest) returns (AdminUserResponse);
-    rpc Find (AdminUserRequest) returns (AdminUserResponse);
-}
-
 message UserCreateRequest {
-    string studentId = 1;
+    string studentID = 1;
     string studentName = 2;
 }
 
@@ -25,21 +20,32 @@ message UserCreateResponse {
         USER_EXIST = 2;
     }
     Status status = 1;
-    int32 userId = 2;
+    UserInfo user = 2;
 }
 
 message UserQueryRequest {
-    int32 userId = 1;
+    int32 userID = 1;
 }
 
 message UserInfo {
-    int32 userId = 1;
+    enum Status {
+        UNKNOWN = 0;
+        NORMAL = 1;
+        FROZEN = 2;
+    }
+    enum Role {
+        GUEST = 0;
+        USER = 1;
+        ADMIN = 10;
+    }
+    int32 userID = 1;
     string userName = 2;
-    string avatarId = 3;
+    string avatarID = 3;
     string telephone = 4;
-    string studentId = 5;
+    string studentID = 5;
     string studentName = 6;
-    int32 status = 7;
+    Status status = 7;
+    Role role = 8;
     bool clearEmpty = 99;
 }
 
@@ -61,21 +67,4 @@ message UserUpdateResponse {
         NOT_FOUND = 2;
     }
     Status status = 1;
-}
-
-message AdminUserRequest {
-    string studentId = 1;
-}
-
-message AdminUserResponse {
-    enum Status {
-        option allow_alias = true;
-        UNKNOWN = 0;
-        INVALID_PARAM = -1;
-        SUCCESS = 1;
-        USER_EXIST = 2;
-        NOT_FOUND = 2;
-    }
-    Status status = 1;
-    int32 adminId = 2;
 }

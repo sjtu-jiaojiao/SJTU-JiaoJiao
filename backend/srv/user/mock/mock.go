@@ -4,76 +4,96 @@ import (
 	"context"
 	"errors"
 	user "jiaojiao/srv/user/proto"
+	"jiaojiao/utils"
 
 	"github.com/micro/go-micro/client"
 )
 
 type mockUserSrv struct{}
-type mockAdminSrv struct{}
 
+// Create is user create mock
 func (a *mockUserSrv) Create(ctx context.Context, req *user.UserCreateRequest, opts ...client.CallOption) (*user.UserCreateResponse, error) {
 	var rsp user.UserCreateResponse
-	if req.StudentId == "" || req.StudentName == "" {
+	if !utils.RequireParam(req.StudentID, req.StudentName) {
 		rsp.Status = user.UserCreateResponse_INVALID_PARAM
+		return &rsp, nil
+	}
+
+	if req.StudentID == "10000" {
+		rsp.Status = user.UserCreateResponse_SUCCESS
+		rsp.User = new(user.UserInfo)
+		rsp.User.UserID = 1000
+		rsp.User.Status = user.UserInfo_NORMAL
+		rsp.User.Role = user.UserInfo_USER
+	} else if req.StudentID == "10001" {
+		rsp.Status = user.UserCreateResponse_SUCCESS
+		rsp.User = new(user.UserInfo)
+		rsp.User.UserID = 1001
+		rsp.User.Status = user.UserInfo_NORMAL
+		rsp.User.Role = user.UserInfo_ADMIN
+	} else if req.StudentID == "20000" {
+		rsp.Status = user.UserCreateResponse_SUCCESS
+		rsp.User = new(user.UserInfo)
+		rsp.User.UserID = 2000
+		rsp.User.Status = user.UserInfo_FROZEN
+		rsp.User.Role = user.UserInfo_USER
+	} else if req.StudentID == "30000" {
+		return nil, errors.New("")
 	} else {
-		if req.StudentId == "1000" {
-			rsp.Status = user.UserCreateResponse_SUCCESS
-			rsp.UserId = 1
-		} else if req.StudentId == "2000" {
-			return &rsp, errors.New("")
-		} else {
-			rsp.Status = user.UserCreateResponse_USER_EXIST
-			rsp.UserId = 1
-		}
+		rsp.Status = user.UserCreateResponse_USER_EXIST
+		rsp.User = new(user.UserInfo)
+		rsp.User.UserID = 1000
 	}
 	return &rsp, nil
 }
 
+// Query is user query mock
 func (a *mockUserSrv) Query(ctx context.Context, req *user.UserQueryRequest, opts ...client.CallOption) (*user.UserInfo, error) {
 	var rsp user.UserInfo
-	if req.UserId != 0 {
-		if req.UserId == 1000 {
-			rsp.UserId = 1000
+	if utils.RequireParam(req.UserID) {
+		if req.UserID == 1000 {
+			rsp.UserID = 1000
 			rsp.UserName = "test"
-			rsp.AvatarId = "5d23ea2c32311335f935cd14"
+			rsp.AvatarID = "012345678901234567890123"
 			rsp.Telephone = "12345678901"
-			rsp.StudentId = "1000"
+			rsp.StudentID = "10000"
 			rsp.StudentName = "jiang"
-			rsp.Status = 1
-		} else if req.UserId == 2000 {
+			rsp.Status = user.UserInfo_NORMAL
+		} else if req.UserID == 3000 {
 			return nil, errors.New("")
 		}
 	}
 	return &rsp, nil
 }
 
+// Find is user find mock
 func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts ...client.CallOption) (*user.UserFindResponse, error) {
 	user1 := user.UserInfo{
-		UserId:      1000,
+		UserID:      1000,
 		UserName:    "test1",
-		AvatarId:    "5d23ea2c32311335f935cd14",
-		Telephone:   "12345224232",
-		StudentId:   "517397299873",
-		StudentName: "Xiao Ming",
-		Status:      1,
+		AvatarID:    "012345678901234567890123",
+		Telephone:   "12345678901",
+		StudentID:   "10000",
+		StudentName: "user1",
+		Status:      user.UserInfo_NORMAL,
 	}
 	user2 := user.UserInfo{
-		UserId:      1001,
+		UserID:      1001,
 		UserName:    "test2",
-		AvatarId:    "jksfa0980923jkjoifu92323",
-		Telephone:   "67307269876",
-		StudentId:   "517234731342",
-		StudentName: "Xiao Huang",
-		Status:      1,
+		AvatarID:    "012345678901234567890123",
+		Telephone:   "12345678901",
+		StudentID:   "10001",
+		StudentName: "user2",
+		Status:      user.UserInfo_NORMAL,
 	}
 	user3 := user.UserInfo{
-		UserId:      1002,
-		UserName:    "test2",
-		AvatarId:    "yuwry981hkjbgmxnlaud9u34352",
-		Telephone:   "16539896792",
-		StudentId:   "517357253234",
-		StudentName: "Xiao Bai",
-		Status:      1,
+		UserID:      1002,
+		UserName:    "test3",
+		AvatarID:    "012345678901234567890123",
+		Telephone:   "12345678901",
+		StudentID:   "10002",
+		StudentName: "user3",
+		Status:      user.UserInfo_NORMAL,
 	}
 
 	var rsp user.UserFindResponse
@@ -98,67 +118,31 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 				rsp.User = append(rsp.User, &user3)
 			}
 		}
-	} else if req.UserName == "down" {
+	} else if req.UserName == "error" {
 		return nil, errors.New("")
 	}
 	return &rsp, nil
 }
 
+// Update is user update mock
 func (a *mockUserSrv) Update(ctx context.Context, req *user.UserInfo, opts ...client.CallOption) (*user.UserUpdateResponse, error) {
 	var rsp user.UserUpdateResponse
-	if req.UserId == 0 {
+	if !utils.RequireParam(req.UserID) {
 		rsp.Status = user.UserUpdateResponse_INVALID_PARAM
+		return &rsp, nil
+	}
+
+	if req.UserID == 1000 {
+		rsp.Status = user.UserUpdateResponse_SUCCESS
+	} else if req.UserID == 3000 {
+		return &rsp, errors.New("")
 	} else {
-		if req.UserId == 1001 {
-			rsp.Status = user.UserUpdateResponse_SUCCESS
-		} else if req.UserId == 2001 {
-			return &rsp, errors.New("")
-		} else {
-			rsp.Status = user.UserUpdateResponse_NOT_FOUND
-		}
+		rsp.Status = user.UserUpdateResponse_NOT_FOUND
 	}
 	return &rsp, nil
 }
 
-func (a *mockAdminSrv) Create(ctx context.Context, req *user.AdminUserRequest, opts ...client.CallOption) (*user.AdminUserResponse, error) {
-	var rsp user.AdminUserResponse
-	if req.StudentId == "" {
-		rsp.Status = user.AdminUserResponse_INVALID_PARAM
-	} else {
-		if req.StudentId == "1001" {
-			rsp.Status = user.AdminUserResponse_SUCCESS
-			rsp.AdminId = 1
-		} else if req.StudentId == "2001" {
-			return &rsp, errors.New("")
-		} else {
-			rsp.Status = user.AdminUserResponse_USER_EXIST
-			rsp.AdminId = 1
-		}
-	}
-	return &rsp, nil
-}
-
-func (a *mockAdminSrv) Find(ctx context.Context, req *user.AdminUserRequest, opts ...client.CallOption) (*user.AdminUserResponse, error) {
-	var rsp user.AdminUserResponse
-	if req.StudentId == "" {
-		rsp.Status = user.AdminUserResponse_INVALID_PARAM
-	} else {
-		if req.StudentId == "1001" {
-			rsp.Status = user.AdminUserResponse_SUCCESS
-			rsp.AdminId = 1
-		} else if req.StudentId == "2001" {
-			return &rsp, errors.New("")
-		} else {
-			rsp.Status = user.AdminUserResponse_NOT_FOUND
-		}
-	}
-	return &rsp, nil
-}
-
-func NewAdminUserService() user.AdminUserService {
-	return new(mockAdminSrv)
-}
-
+// NewUserService is user service mock
 func NewUserService() user.UserService {
 	return new(mockUserSrv)
 }

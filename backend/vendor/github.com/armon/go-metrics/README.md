@@ -64,7 +64,7 @@ Here is an example of setting up a signal handler:
 
 ```go
 // Setup the inmem sink and signal handler
-inm := metrics.NewInmemSink(10*time.Second, time.Minute)
+inm := metrics.NewInmemSink(30*time.Second, time.Minute)
 sig := metrics.DefaultInmemSignal(inm)
 metrics.NewGlobal(metrics.DefaultConfig("service-name"), inm)
 

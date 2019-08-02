@@ -1,35 +1,74 @@
-
 <nz-card *ngIf='user'  nzTitle="用户管理">
     <div nz-row [nzGutter]="8">
       <div nz-col [nzSpan]="8">
-        <nz-card nzTitle="用户状态">
+    
+        <nz-card>
+          <nz-card-meta
+            [nzTitle]="user.userID"
+            [nzDescription]="user.telephone"
+            [nzAvatar]="avatarTemplate"
+          ></nz-card-meta>
             <div class='useritem'>
-                  <span class="badge">用户ID</span>{{user.id}}
-            </div>
-            <div class='useritem'>
-              <span class="badge">用户名</span><input [(ngModel)]="user.name" placeholder="name"/>
+              <span class="badge">用户名</span><input [(ngModel)]="userName" placeholder="name"/>
           </div>
           <div class='useritem'>
-              <span class="badge">封禁</span><label nz-checkbox [(ngModel)]="user.forbid"></label>
-
+              <span class="badge">封禁</span><label nz-checkbox [(ngModel)]="forbid"></label>
           </div>
           <div class='useritem'>
-              <span class="badge">信用评价</span>{{user.score}}
+              <span class="badge">权限</span>
+              <nz-select
+              id='role'
+                nzShowSearch 
+                nzPlaceHolder="Select a state"
+                [(ngModel)]="user.role"
+              >
+                <nz-option nzLabel="用户" [nzValue]="1" ></nz-option>
+                <nz-option nzLabel="管理" [nzValue]="10"></nz-option>
+              </nz-select>
           </div>
           <div class='useritem'>
-              <span class="badge">活跃度</span>{{user.active}}
+                <span class="badge">信用评价</span>
+                <nz-rate [ngModel]="2" nzDisabled></nz-rate>
           </div>
         </nz-card>
-        <nz-card nzType="inner" nzTitle="用户简介">     
-           <textarea nz-input placeholder="intro" [(ngModel)]="user.intro" nzAutosize></textarea>
-          </nz-card>
+
+        <ng-template #avatarTemplate>
+          <nz-avatar nzShape='square' [nzSize]="64" nzSrc="/api/file/{{user.avatarID}}"></nz-avatar>
+        </ng-template>
+
+
   <button (click)="goBack()" nz-button nzType="dashed"><i nz-icon type="left-circle" theme="outline"></i>返回</button>
   <button (click)="save()" nz-button nzType="primary"><i nz-icon type="save" theme="outline"></i>保存</button>
+
       </div>
       <div nz-col [nzSpan]="16">
-        <nz-card nzType="inner" nzTitle="用户活跃度">            
+        <nz-card nzType="inner" nzTitle="交易历史">    
+          <nz-table #headerTable [nzData]="infos" [nzPageSize]="10" [nzScroll]="{ y: '250px' }">
+            <thead>
+              <tr>
+                <th nzWidth="200px">交易名称</th>
+                <th nzWidth="200px">发起时间</th>
+                <th nzWidth="200px">状态</th>
+                <th>交易类型</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of headerTable.data">
+                <td>
+                   <a routerLink="/info/{{typeof(data)}}/{{data['sellInfoID']?data.sellInfoID:
+                   data['buyInfoID']?data.buyInfoID:''}}">
+                    {{ data.goodName }}
+                    </a>
+                  </td>
+                <td>{{ stringToDate(data.releaseTime) }}</td>
+                <td>{{ getstate(data.status) }}</td>
+                <td>{{ typeof(data)=='sellInfo'?'出售':'求购'}}</td>
+              </tr>
+            </tbody>
+          </nz-table>        
           <div echarts theme="dark" [loading]="true"  [options]="option"></div>
         </nz-card>
       </div>
     </div>
+    
 </nz-card>

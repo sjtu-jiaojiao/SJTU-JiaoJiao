@@ -20,14 +20,14 @@ type idToken struct {
 }
 
 /**
- * @api {rpc} /rpc auth.Auth.Auth
+ * @api {rpc} /rpc Auth.Auth
  * @apiVersion 1.0.0
  * @apiGroup Service
- * @apiName auth.Auth.Auth
+ * @apiName Auth.Auth
  * @apiDescription Check OAuth code.
  *
  * @apiParam {string} code OAuth code.
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid code
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid code <br> 3 for frozen user
  * @apiSuccess {string} token verified token when status=1
  * @apiError (Error 500) OAuthServerDown can't connect to OAuth server
  */
@@ -43,23 +43,23 @@ func (a *srv) Auth(ctx context.Context, req *auth.AuthRequest, rsp *auth.AuthRes
 		params.Add("client_secret", os.Getenv("JJ_CLIENTSECRET"))
 
 		tr := &http.Transport{
-			TLSClientConfig:    &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
 		client := &http.Client{Transport: tr}
 		resp, err := client.PostForm(utils.GetStringConfig("sys_config", "token_url"), params)
-		if utils.LogContinue(err, utils.Warning) {
+		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
 		defer resp.Body.Close()
 
 		body, err := ioutil.ReadAll(resp.Body)
-		if utils.LogContinue(err, utils.Warning) {
+		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
 
 		id := idToken{}
 		err = json.Unmarshal(body, &id)
-		if utils.LogContinue(err, utils.Warning) {
+		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
 
@@ -72,7 +72,7 @@ func (a *srv) Auth(ctx context.Context, req *auth.AuthRequest, rsp *auth.AuthRes
 			} else {
 				rsp.Status = auth.AuthResponse_SUCCESS
 				rsp.Token = id.IDToken
-				rsp.StudentId = utils.JWTParse(t, "code").(string)
+				rsp.StudentID = utils.JWTParse(t, "code").(string)
 				rsp.StudentName = utils.JWTParse(t, "name").(string)
 			}
 		}

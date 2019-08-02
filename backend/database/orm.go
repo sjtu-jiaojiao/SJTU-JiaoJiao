@@ -1,28 +1,37 @@
 package db
 
 import (
+	"fmt"
 	"jiaojiao/utils"
 	"os"
 	"time"
 
-	"github.com/astaxie/beego/orm"
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql" // mysql orm
 )
 
-var Ormer orm.Ormer
+// Ormer is opened orm object
+var Ormer *gorm.DB
 
-// LoadORM load orm map
-func LoadORM() {
-	utils.LogPanic(orm.RegisterDriver("mysql", orm.DRMySQL), utils.Error)
-	orm.DefaultTimeLoc = time.UTC
+// InitORM init the orm object
+func InitORM(dbName string, m ...interface{}) {
+	conn := fmt.Sprintf("%s:%s@%s%s", os.Getenv("JJ_MARIADBUSER"), os.Getenv("JJ_MARIADBPWD"),
+		utils.GetStringConfig("srv_config", dbName, utils.LocalConf.Deploy),
+		utils.GetStringConfig("srv_config", dbName, "suffix"))
+	var err error
+	Ormer, err = gorm.Open("mysql", conn)
+	utils.LogPanic(err)
+
+	Ormer.AutoMigrate(m...)
+
+	Ormer.DB().SetMaxIdleConns(0)
+	Ormer.DB().SetMaxOpenConns(256)
+	Ormer.DB().SetConnMaxLifetime(time.Second * 16)
 }
 
-func InitORM(dbName string, m ...interface{}) {
-	utils.LogPanic(orm.RegisterDataBase("default", "mysql",
-		os.Getenv("JJ_MARIADBUSER")+":"+os.Getenv("JJ_MARIADBPWD")+"@"+
-			utils.GetStringConfig("srv_config", dbName, utils.LocalConf.Deploy)+
-			utils.GetStringConfig("srv_config", dbName, "suffix")))
-	orm.RegisterModel(m...)
-	utils.LogPanic(orm.RunSyncdb("default", utils.LocalConf.Deploy == "develop", false))
-	Ormer = orm.NewOrm()
+// CloseORM close orm object
+func CloseORM() {
+	if utils.LocalConf.Deploy != "develop" {
+		utils.LogPanic(Ormer.Close())
+	}
 }

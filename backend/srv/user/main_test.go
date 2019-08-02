@@ -10,211 +10,169 @@ import (
 )
 
 func TestUserCreate(t *testing.T) {
-	var s srvUser
+	var s srv
 	var req user.UserCreateRequest
 
 	tf := func(status user.UserCreateResponse_Status) int32 {
 		var rsp user.UserCreateResponse
 		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
 		So(rsp.Status, ShouldEqual, status)
-		return rsp.UserId
+		if rsp.Status == user.UserCreateResponse_SUCCESS || rsp.Status == user.UserCreateResponse_USER_EXIST {
+			return rsp.User.UserID
+		}
+		return 0
 	}
 	Convey("Test User Create", t, func() {
 		tf(user.UserCreateResponse_INVALID_PARAM)
 
-		req.StudentId = "1234"
+		req.StudentID = "1234"
 		tf(user.UserCreateResponse_INVALID_PARAM)
 
-		req.StudentId = ""
+		req.StudentID = ""
 		req.StudentName = "jiang"
 		tf(user.UserCreateResponse_INVALID_PARAM)
 
-		req.StudentId = "1234"
+		req.StudentID = "1234"
 		id := tf(user.UserCreateResponse_SUCCESS)
 		So(id, ShouldBeGreaterThan, 0)
+		defer func() { So(db.Ormer.Delete(&db.User{ID: id}).Error, ShouldBeNil) }()
 
 		id2 := tf(user.UserCreateResponse_USER_EXIST)
 		So(id, ShouldEqual, id2)
-
-		_, err := db.Ormer.Delete(&db.User{
-			Id: id,
-		})
-		So(err, ShouldBeNil)
 	})
 }
 
 func TestUserQuery(t *testing.T) {
-	var s srvUser
+	var s srv
 	var req user.UserQueryRequest
 
-	tf := func(uid int, uname string, avatar string,
-		telephone string, sid string, sname string, status int) {
+	tf := func(uid int, sid string) {
 		var rsp user.UserInfo
 		So(s.Query(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.UserId, ShouldEqual, uid)
-		So(rsp.UserName, ShouldEqual, uname)
-		So(rsp.AvatarId, ShouldEqual, avatar)
-		So(rsp.Telephone, ShouldEqual, telephone)
-		So(rsp.StudentId, ShouldEqual, sid)
-		So(rsp.StudentName, ShouldEqual, sname)
-		So(rsp.Status, ShouldEqual, status)
+		So(rsp.UserID, ShouldEqual, uid)
+		So(rsp.StudentID, ShouldEqual, sid)
 	}
 	Convey("Test User Query", t, func() {
-		tf(0, "", "", "", "", "", 0)
-		_, err := db.Ormer.Insert(&db.User{
-			Id:          1000,
-			UserName:    "jiang",
-			AvatarId:    "5d23ea2c32311335f935cd14",
+		tf(0, "")
+		err := db.Ormer.Create(&db.User{
+			ID:          1000,
+			UserName:    "test",
+			AvatarID:    "012345678901234567890123",
 			Telephone:   "12345678901",
-			StudentId:   "1234",
+			StudentID:   "10000",
 			StudentName: "jiang",
-			Status:      1,
-		})
+		}).Error
 
 		So(err, ShouldBeNil)
-		req.UserId = 1000
-		tf(1000, "jiang", "5d23ea2c32311335f935cd14",
-			"12345678901", "1234", "jiang", 1)
+		req.UserID = 1000
+		tf(1000, "10000")
+		defer func() { So(db.Ormer.Delete(&db.User{ID: 1000}).Error, ShouldBeNil) }()
 
-		req.UserId = 1001
-		tf(0, "", "", "", "", "", 0)
+		req.UserID = 1001
+		tf(0, "")
+	})
+}
 
-		_, err = db.Ormer.Delete(&db.User{
-			Id: 1000,
-		})
+func TestUserUpdate(t *testing.T) {
+	var req user.UserInfo
+
+	tf := func(status user.UserUpdateResponse_Status, name string, telephone string) {
+		var s srv
+		var rsp user.UserUpdateResponse
+		So(s.Update(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, status)
+
+		info := db.User{
+			ID: 1100,
+		}
+		err := db.Ormer.First(&info).Error
 		So(err, ShouldBeNil)
+		So(info.UserName, ShouldEqual, name)
+		So(info.Telephone, ShouldEqual, telephone)
+	}
+	Convey("Test User Update", t, func() {
+		err := db.Ormer.Create(&db.User{
+			ID:          1100,
+			UserName:    "test",
+			AvatarID:    "012345678901234567890123",
+			Telephone:   "12345678901",
+			StudentID:   "11000",
+			StudentName: "jiang",
+			Status:      int32(user.UserInfo_NORMAL),
+			Role:        int32(user.UserInfo_USER),
+		}).Error
+		So(err, ShouldBeNil)
+		defer func() { So(db.Ormer.Delete(&db.User{ID: 1100}).Error, ShouldBeNil) }()
+
+		tf(user.UserUpdateResponse_INVALID_PARAM, "test", "12345678901")
+
+		req.UserID = 1101
+		tf(user.UserUpdateResponse_NOT_FOUND, "test", "12345678901")
+
+		req.UserID = 1100
+		tf(user.UserUpdateResponse_SUCCESS, "test", "12345678901")
+
+		req.UserName = "test1"
+		tf(user.UserUpdateResponse_SUCCESS, "test1", "12345678901")
+
+		req.Telephone = "56781234678"
+		tf(user.UserUpdateResponse_SUCCESS, "test1", "56781234678")
+
+		req.ClearEmpty = true
+		req.Telephone = ""
+		tf(user.UserUpdateResponse_SUCCESS, "test1", "")
 	})
 }
 
 func TestUserFind(t *testing.T) {
-	var s srvUser
 	var req user.UserFindRequest
-	var rsp user.UserFindResponse
-	tf := func(index int, uid int, uname string, avatar string,
-		telephone string, sid string, sname string, status int) {
-		So(rsp.User[index].UserId, ShouldEqual, uid)
-		So(rsp.User[index].UserName, ShouldEqual, uname)
-		So(rsp.User[index].AvatarId, ShouldEqual, avatar)
-		So(rsp.User[index].Telephone, ShouldEqual, telephone)
-		So(rsp.User[index].StudentId, ShouldEqual, sid)
-		So(rsp.User[index].StudentName, ShouldEqual, sname)
-		So(rsp.User[index].Status, ShouldEqual, status)
+	tf := func(cnt int, index int, uid int, sid string) {
+		var s srv
+		var rsp user.UserFindResponse
+		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
+		So(len(rsp.User), ShouldEqual, cnt)
+		So(rsp.User[index].UserID, ShouldEqual, uid)
+		So(rsp.User[index].StudentID, ShouldEqual, sid)
 	}
 	Convey("Test User Find", t, func() {
-		req.UserName = "test"
-		_, err := db.Ormer.Insert(&db.User{
-			Id:          2000,
+		err := db.Ormer.Create(&db.User{
+			ID:          1200,
 			UserName:    "test1",
-			AvatarId:    "5d23ea2c32311335f935cd14",
+			AvatarID:    "012345678901234567890123",
 			Telephone:   "12345678901",
-			StudentId:   "1234",
+			StudentID:   "12000",
 			StudentName: "jiang",
 			Status:      1,
-		})
+		}).Error
 		So(err, ShouldBeNil)
+		defer func() {
+			So(db.Ormer.Delete(&db.User{ID: 1200}).Error, ShouldBeNil)
+		}()
 
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(len(rsp.User), ShouldEqual, 1)
-		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
-			"1234", "jiang", 1)
-		rsp.User = nil
+		tf(1, 0, 1200, "12000")
 
-		_, err = db.Ormer.Insert(&db.User{
-			Id:          2001,
+		err = db.Ormer.Create(&db.User{
+			ID:          1201,
 			UserName:    "test2",
-			AvatarId:    "5d23ea2c32311335f935cd15",
+			AvatarID:    "012345678901234567890123",
 			Telephone:   "12345678902",
-			StudentId:   "12345",
+			StudentID:   "12010",
 			StudentName: "jiangzm",
 			Status:      1,
-		})
+		}).Error
 		So(err, ShouldBeNil)
+		defer func() {
+			So(db.Ormer.Delete(&db.User{ID: 1201}).Error, ShouldBeNil)
+		}()
 
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(len(rsp.User), ShouldEqual, 2)
-		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
-			"1234", "jiang", 1)
-		tf(1, 2001, "test2", "5d23ea2c32311335f935cd15", "12345678902",
-			"12345", "jiangzm", 1)
-		rsp.User = nil
+		req.Limit = 200
+		tf(2, 1, 1201, "12010")
 
 		req.Limit = 1
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(len(rsp.User), ShouldEqual, 1)
-		tf(0, 2000, "test1", "5d23ea2c32311335f935cd14", "12345678901",
-			"1234", "jiang", 1)
-		rsp.User = nil
+		tf(1, 0, 1200, "12000")
 
 		req.Offset = 1
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(len(rsp.User), ShouldEqual, 1)
-		tf(0, 2001, "test2", "5d23ea2c32311335f935cd15", "12345678902",
-			"12345", "jiangzm", 1)
-
-		_, err = db.Ormer.Delete(&db.User{
-			Id: 2000,
-		})
-		So(err, ShouldBeNil)
-		_, err = db.Ormer.Delete(&db.User{
-			Id: 2001,
-		})
-		So(err, ShouldBeNil)
-	})
-}
-
-func TestAdminUserCreate(t *testing.T) {
-	var s srvAdmin
-	var req user.AdminUserRequest
-
-	tf := func(status user.AdminUserResponse_Status) int32 {
-		var rsp user.AdminUserResponse
-		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, status)
-		return rsp.AdminId
-	}
-	Convey("Test Admin User Create", t, func() {
-		tf(user.AdminUserResponse_INVALID_PARAM)
-
-		req.StudentId = "1000"
-		id := tf(user.AdminUserResponse_SUCCESS)
-		So(id, ShouldBeGreaterThan, 0)
-
-		id2 := tf(user.AdminUserResponse_USER_EXIST)
-		So(id, ShouldEqual, id2)
-
-		_, err := db.Ormer.Delete(&db.AdminUser{
-			Id: id,
-		})
-		So(err, ShouldBeNil)
-	})
-}
-
-func TestAdminUserFind(t *testing.T) {
-	var s srvAdmin
-	var req user.AdminUserRequest
-	tf := func(status user.AdminUserResponse_Status, id int) {
-		var rsp user.AdminUserResponse
-		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-		So(rsp.Status, ShouldEqual, status)
-		So(rsp.AdminId, ShouldEqual, id)
-	}
-	Convey("Test Admin User Find", t, func() {
-		tf(user.AdminUserResponse_INVALID_PARAM, 0)
-
-		req.StudentId = "2000"
-		tf(user.AdminUserResponse_NOT_FOUND, 0)
-
-		_, err := db.Ormer.Insert(&db.AdminUser{
-			Id:        1000,
-			StudentId: "2000",
-		})
-		So(err, ShouldBeNil)
-
-		tf(user.AdminUserResponse_SUCCESS, 1000)
-		_, err = db.Ormer.Delete(&db.AdminUser{
-			Id: 1000,
-		})
-		So(err, ShouldBeNil)
+		tf(1, 0, 1201, "12010")
 	})
 }
 

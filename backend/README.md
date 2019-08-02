@@ -3,23 +3,37 @@
 - golang
 - consul
 - nodejs/npm
-- 建议系统环境为Linux系统，windows下可能出现各种问题
+- **建议系统环境为Linux系统，windows下make命令可能无法正常工作**
 
-## 其他依赖
+依赖安装：
 
-    go get github.com/micro/micro
-    go get github.com/smartystreets/goconvey
-    go get github.com/oxequa/realize
-    go get github.com/micro/protoc-gen-micro
-    go get github.com/golang/protobuf/protoc-gen-go
-    npm install apidoc -g
+    make deps
     
-## 本地启动
+## 本地开发
+### Makefile一键命令
+- 查看帮助：`make` 或 `make help`
+- 依赖安装：`make deps`
+- 构建二进制文件：`make build`
+- 构建docker：`make docker`
+- 单元测试：`make test`
+- 清理目录：`make clean`
+- 生成文档：`make doc`
+- 生成proto：`make proto`
+- 添加新服务：`make add`
+- 部署服务：`make deploy` （**警告：本地开发禁用**）
+
+### 服务管理程序
 一键启动：
 
-    go run run.go run_*.go
+linux:
 
-## 本地默认地址
+    go run run.go run_linux.go
+
+windows:
+
+    go run run.go run_windows.go
+
+## 本地服务默认地址
 - consul服务：`localhost:8500`
 - micro web：`localhost:8082`
 - APIGateway：`localhost:8080`
@@ -44,21 +58,6 @@
 - `config_ttl`：远程配置超时时间（秒）
 - `test`：测试配置，请勿修改
 
-`consul.json` 配置：
-
-- `test`：测试配置，请勿修改
-- `srv_config`：微服务配置
-  - `namespace`：Service的namespace
-
-- `api_config`：API配置
-  - `version`：API版本
-  - `namespace`：APIGateway的namespace
-
-- `sys_config`：系统配置
-  - `auth_url`：OAuth auth url
-  - `token_url`：OAuth token url
-  - `logout_url`：OAuth logout url
-
 ### 环境变量
 **环境变量设置敏感信息，相关内容禁止提交到仓库**
 
@@ -79,6 +78,7 @@
     database        数据库模块
     utils           通用模块
     vendor          go库缓存
+    template        模板目录，用于自动生成
 
 ## JWT Token
 token存在三个字段：
@@ -86,5 +86,5 @@ token存在三个字段：
 - `id`：唯一id
 - `role`：用户身份
   - 1：用户
-  - 2：系统管理员
+  - 10：系统管理员
 - `exp`：过期时间，默认30分钟
