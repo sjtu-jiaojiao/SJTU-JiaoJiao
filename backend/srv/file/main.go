@@ -39,7 +39,8 @@ func (a *srv) Query(ctx context.Context, req *file.FileRequest, rsp *file.FileQu
 
 	fid, err := primitive.ObjectIDFromHex(req.FileID)
 	if utils.LogContinue(err, utils.Error) {
-		return err
+		rsp.Status = file.FileQueryResponse_INVALID_PARAM
+		return nil
 	}
 
 	var buf bytes.Buffer

@@ -53,7 +53,47 @@ func TestSrvInfoQuery(t *testing.T) {
 }
 
 func TestSrvInfoCreate(t *testing.T) {
-	// TODO
+	tf := func(userID int32, validTime int64, goodName string, contentID string, contentToken string, tags []string, status buyinfo.BuyInfoCreateResponse_Status) {
+		var s srv
+		var rsp buyinfo.BuyInfoCreateResponse
+		So(s.Create(context.TODO(), &buyinfo.BuyInfoCreateRequest{
+			ValidTime:    validTime,
+			GoodName:     "123459",
+			Price:        0,
+			Description:  "",
+			ContentID:    contentID,
+			ContentToken: contentToken,
+			UserID:       userID,
+			Tags:         tags,
+		}, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, status)
+
+		if rsp.Status == buyinfo.BuyInfoCreateResponse_SUCCESS {
+			info := db.BuyInfo{ID: rsp.BuyInfoID}
+			So(db.Ormer.Find(&info).Error, ShouldBeNil)
+			So(info.UserID, ShouldEqual, userID)
+			So(info.ValidTime.Unix(), ShouldEqual, validTime)
+			So(info.GoodID, ShouldNotBeNil)
+
+			good := db.Good{ID: info.GoodID}
+			So(db.Ormer.Find(&good).Error, ShouldBeNil)
+			if len(tags) == 0 {
+				So(good.ContentID, ShouldEqual, contentID)
+			} else {
+				So(len(good.ContentID), ShouldEqual, 24)
+			}
+
+			So(db.Ormer.Delete(&good).RowsAffected, ShouldEqual, 1)
+			So(db.Ormer.Delete(&info).RowsAffected, ShouldEqual, 1)
+		}
+	}
+
+	Convey("Test BuyInfo Create", t, func() {
+		tf(1001, 0, "", "1234567890abcdef12345678", "abc", []string{"tag1", "tag2", "tag3"}, buyinfo.BuyInfoCreateResponse_INVALID_PARAM)
+		tf(1001, 100000000, "test good", "012345678901234567890123", "invalid_token", []string{"tag1", "tag2", "tag3"}, buyinfo.BuyInfoCreateResponse_INVALID_TOKEN)
+		tf(1001, 100000000, "test good", "", "", []string{"tag1", "tag2", "tag3"}, buyinfo.BuyInfoCreateResponse_INVALID_TOKEN)
+		tf(1001, 100000000, "test good", "012345678901234567890123", "valid_token", []string{"tag1", "tag2", "tag3"}, buyinfo.BuyInfoCreateResponse_SUCCESS)
+	})
 }
 
 func TestSrvInfoFind(t *testing.T) {

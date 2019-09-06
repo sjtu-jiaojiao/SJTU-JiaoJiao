@@ -76,7 +76,26 @@ func Test_addSellInfo(t *testing.T) {
 }
 
 func Test_findSellInfo(t *testing.T) {
-	// TODO
+	tf := func(code int, value url.Values, length int) {
+		c, d := utils.GetTestData(setupRouter, "GET", "/sellInfo?"+value.Encode(), nil, "")
+
+		So(c, ShouldEqual, code)
+		if d != nil {
+			So(len(d["sellInfo"].([]interface{})), ShouldEqual, length)
+		}
+	}
+	Convey("GetSellInfo router test", t, func() {
+		So(utils.RoleTest(setupRouter, utils.Role{
+			Guest: true,
+			User:  true,
+			Self:  true,
+			Admin: true,
+		}, "GET", "/sellinfo", url.Values{"userID": {"1001"}}), ShouldBeZeroValue)
+
+		tf(200, url.Values{"userID": {"1000"}}, 2)
+		tf(200, url.Values{"userID": {"1000"}, "status": {"1"}}, 1)
+		tf(500, url.Values{"userID": {"1001"}}, 0)
+	})
 }
 
 func TestMain(m *testing.M) {
