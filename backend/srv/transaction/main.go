@@ -45,8 +45,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 			SellInfoID: req.InfoID,
 		})
 		if utils.LogContinue(err, utils.Error) {
-			rsp.Status = transaction.TransactionCreateResponse_NOT_FOUND
-			return nil
+			return err
 		}
 		if srvRsp.UserID == 0 {
 			rsp.Status = transaction.TransactionCreateResponse_NOT_FOUND
@@ -60,8 +59,7 @@ func (a *srv) Create(ctx context.Context, req *transaction.TransactionCreateRequ
 			BuyInfoID: req.InfoID,
 		})
 		if utils.LogContinue(err, utils.Error) {
-			rsp.Status = transaction.TransactionCreateResponse_NOT_FOUND
-			return nil
+			return err
 		}
 		if srvRsp.UserID == 0 {
 			rsp.Status = transaction.TransactionCreateResponse_NOT_FOUND
@@ -183,7 +181,7 @@ func (a *srv) Find(ctx context.Context, req *transaction.TransactionFindRequest,
 		tx = tx.Where("status = ?", int32(req.Status))
 	}
 	ans := tx.Limit(req.Limit).Offset(req.Offset).Find(&res)
-	if utils.LogContinue(ans.Error, utils.Warning) {
+	if utils.LogContinue(ans.Error, utils.Error) {
 		return ans.Error
 	}
 	if ans.RowsAffected == 0 {
