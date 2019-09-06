@@ -81,7 +81,7 @@ func GetTestData(f func() *gin.Engine, method string, path string, p url.Values,
 			r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 			r.Header.Set("Authorization", role)
 		})
-	if r.Code == 200 && r.Body.String() != "{}" {
+	if r.Code == 200 && r.Body.String() != "{}" && r.Body.String()[0] == '{' {
 		LogPanic(json.Unmarshal(r.Body.Bytes(), &data))
 	} else {
 		return r.Code, nil

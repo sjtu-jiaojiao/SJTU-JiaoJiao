@@ -32,7 +32,7 @@ var arg = [srvCount][]string{
 	{"micro", "--registry=consul", "api", "--handler=http"},
 	{"micro", "--registry=consul", "web"},
 	{"go", "run", "./doc/main.go", "--registry=consul"},
-	{"goconvey", "-port", "8400", "-launchBrowser=false", "-poll=60s"},
+	{"goconvey", "-port", "8400", "-launchBrowser=false", "-poll=5s"},
 	{"realize", "start"},
 }
 

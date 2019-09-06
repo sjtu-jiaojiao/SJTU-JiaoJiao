@@ -31,7 +31,26 @@ func (a *mockFileSrv) Create(ctx context.Context, req *file.FileCreateRequest, o
 // Query is file query mock
 func (a *mockFileSrv) Query(ctx context.Context, req *file.FileRequest, opts ...client.CallOption) (*file.FileQueryResponse, error) {
 	var rsp file.FileQueryResponse
-	// TODO
+	if !utils.RequireParam(req.FileID) {
+		rsp.Status = file.FileQueryResponse_INVALID_PARAM
+		return &rsp, nil
+	}
+
+	switch req.FileID {
+	case "valid":
+		rsp.Status = file.FileQueryResponse_SUCCESS
+		rsp.Size = 5
+		rsp.File = []byte("valid_file")
+	case "invalid":
+		rsp.Status = file.FileQueryResponse_NOT_FOUND
+	case "invalid_type":
+		rsp.Status = file.FileQueryResponse_SUCCESS
+		rsp.Size = 5
+		rsp.File = []byte("invalid_file")
+	case "error":
+		return nil, errors.New("")
+	}
+
 	return &rsp, nil
 }
 

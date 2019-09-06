@@ -113,7 +113,7 @@ export default class MyHistoryInfoScreen extends Component {
     fetchData() {
         //console.warn(Config.userInfo);
         //let obj = { userID: Config.userInfo.userID };
-        let obj = { userID: 3 };
+        let obj = { userID: Config.userInfo.userID };
         //console.warn(obj);
         Http.get('/HistoryInfo', obj)
             .then((response) => {

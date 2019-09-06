@@ -14,6 +14,7 @@ export default class UserScreen extends Component {
             studentID: Config.userInfo.studentID,
             studentName: Config.userInfo.studentName,
             telephone: Config.userInfo.telephone,
+            avatarID: Config.userInfo.avatarID,
         };
     }
 
@@ -37,7 +38,7 @@ export default class UserScreen extends Component {
                             source={require('../../assets/icons/right.png')}
                             overlayContainerStyle={{backgroundColor: 'white'}}
                         />}
-                        leftAvatar={<Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')} />}
+                        leftAvatar={<Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')}/>}
                         title={'请登录'}
                         titleStyle={{ color: 'black', fontSize: 22 }}
                         onPress={() => {this.props.navigation.navigate('Login')}}
@@ -115,17 +116,27 @@ export default class UserScreen extends Component {
                         }}
                 ],
                 {cancelable: false},
-            )
+            );
             return null;
         }
         else {
             return (
                 <View style={{backgroundColor: '#EFEFF5'}}>
-                    <View style={{height: 20, backgroundColor: '#EFEFF5'}} />
+                    <View style={{height: 20, backgroundColor: '#EFEFF5'}}/>
                     <ListItem
                         topDivider
                         bottomDivider
-                        leftAvatar={<Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')} />}
+                        leftAvatar={() => {
+                            if(Config.userInfo.avatarID === 'to_be_changed') {
+                                return (
+                                    <Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')}/>
+                                )
+                            } else {
+                                return (
+                                    <Avatar rounded size='large' source={{uri: (Config.fetchPrefix + 'file/' + this.state.avatarID)}}/>
+                                )
+                            }
+                        }}
                         rightIcon={<Avatar
                             rounded size='small'
                             source={require('../../assets/icons/right.png')}

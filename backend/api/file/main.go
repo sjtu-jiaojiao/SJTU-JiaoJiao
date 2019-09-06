@@ -56,7 +56,7 @@ func getFile(c *gin.Context) {
 		}
 
 		if rsp.Status == file.FileQueryResponse_SUCCESS {
-			if filetype.IsImage(rsp.File) || filetype.IsAudio(rsp.File) || filetype.IsVideo(rsp.File) {
+			if utils.CheckFile(rsp.File, filetype.IsImage, filetype.IsAudio, filetype.IsVideo) {
 				t, err := filetype.Match(rsp.File)
 				if utils.LogContinue(err, utils.Error) {
 					c.JSON(500, err)
