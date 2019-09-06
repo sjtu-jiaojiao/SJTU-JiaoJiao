@@ -165,6 +165,7 @@ func TestUserFind(t *testing.T) {
 			So(db.Ormer.Delete(&db.User{ID: 1201}).Error, ShouldBeNil)
 		}()
 
+		req.Limit = 200
 		tf(2, 1, 1201, "12010")
 
 		req.Limit = 1

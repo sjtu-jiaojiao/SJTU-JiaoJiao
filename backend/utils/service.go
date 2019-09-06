@@ -56,7 +56,7 @@ func InitMicroService(name string) micro.Service {
 // RunMicroService run a micro service
 func RunMicroService(service micro.Service) {
 	if !CheckInTest() {
-		Info("Running micro service \"%s\"", service.String())
+		Info("Running micro service \"%s\"", service.Options().Server.Options().Name)
 		LogPanic(service.Run())
 	}
 }
@@ -74,7 +74,7 @@ func CallMicroService(name string, f func(name string, c client.Client) interfac
 	}
 	Info("Calling micro service \"%s\"", name)
 	c := client.NewClient(
-		client.RequestTimeout(time.Second*10),
+		client.RequestTimeout(time.Second*30),
 		client.Selector(selector.DefaultSelector),
 	)
 	return f(GetServiceName(name), c)

@@ -1,6 +1,6 @@
 
         <div class='outer-div' id='fdg'>
-          <div echarts theme="dark"  class= 'tpc'[loading]="true" [options]="fdgoption"></div>
+          <div echarts (chartDblClick)="clickForce($event)"	theme="dark"  class= 'tpc'[loading]="true" [options]="fdgoption"></div>
       </div>
       <div class='outer-div' id='good'>
         <div echarts theme="dark"  class= 'tpc'[loading]="true" [options]="goodoption"></div>

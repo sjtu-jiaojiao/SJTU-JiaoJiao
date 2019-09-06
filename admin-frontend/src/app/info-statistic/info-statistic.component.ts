@@ -7,9 +7,17 @@ import {prepareBoxplotData} from 'echarts/extension/dataTool';
 import { Transaction } from '../entity/transaction';
 import { TransactionService } from '../transaction.service';
 import { Format } from '../Formatter/format';
+import { Router } from '@angular/router';
 const name = ['LJH', 'WXZ', 'ZWJ', 'KHQ', 'MZD', 'ZEL', 'JZM', 'HJT', 'TRUMP',
 'LJH2', 'WXZ2', 'ZWJ2', 'KHQ2', 'MZD2', 'ZEL2', 'JZM2', 'HJT2', 'TRUMP2',
 'LJH3', 'WXZ3', 'ZWJ3', 'KHQ3', 'MZD3', 'ZEL3', 'JZM3', 'HJT3', 'TRUMP3'];
+export function fdgFormatter 
+    (p) {
+        if(p.dataType=='node')
+        return p.data.name + ' has completed '+ p.data.value + ' transaction';
+        if(p.dataType=='edge')
+        return p.data.source + ' has selled '+ p.data.value + ' goods to '+ p.data.target;
+    }
 @Component({
   selector: 'app-info-statistic',
   templateUrl: './info-statistic.component.html',
@@ -25,48 +33,39 @@ export class InfoStatisticComponent implements OnInit {
   si: sellInfo[]=[];
   tr: Transaction[]=[];
   pl: boolean = false;
-  constructor(private trs: TransactionService, private is: InfoService) { }
+  constructor(private router: Router, private trs: TransactionService, private is: InfoService) { }
   ngOnInit() {
-    this.is.getBuyInfos().subscribe(
-        e => {this.bi = e.buyInfo;
-            this.is.getSellInfos().subscribe(
-                e => {
-                    this.si = e.sellInfo;
-                    this.cloudGrpah();
-                    this.forceGraph();
-                    this.calenderGraph();
-                    this.lineGraph();
-                    this.boxGraph();    
-                    const now = new Date().getFullYear()
-                    this.tr = this.trs.getAllTR(6,new Date(now,1,1).getTime()/1000, new Date(now+1,1,1).getTime()/1000);      
-                    this.bi = this.is.getAllBuyInfo();          
-                    this.si = this.is.getAllSellInfo();
-                    this.getAllInfo();
-                    this.getAllTR(new Date(now,1,1).getTime()/1000, new Date(now+1,1,1).getTime()/1000);
-                }
-  );})
+    const now = new Date().getFullYear();
+    this.getAllInfo();
+    this.getAllTR(new Date(now,1,1).getTime()/1000, new Date(now+1,1,1).getTime()/1000);
+    this.cloudGrpah();
+    this.forceGraph();
+    this.calenderGraph();
+    this.lineGraph();
+    this.boxGraph();    
+                
   }
   pauseLine(){
       this.pl=!this.pl;
   }
 
   getAllTR(beg, end){
+    this.tr = this.trs.getAllTR(6,beg,end);
+    if(!this.pl){
+        this.calenderGraph();
+       this.forceGraph();
+    }
     setTimeout(() => {
-        this.tr = this.trs.getAllTR(6,beg,end);
-        if(!this.pl){
-            this.calenderGraph();
-           this.forceGraph();
-        }
         this.getAllTR(beg,end);
     }, 10000);
   }
   getAllInfo(){
+    this.bi = this.is.getAllBuyInfo();
+    this.bi = this.bi.sort( (a,b) => a.releaseTime - b.releaseTime);
+    this.si = this.is.getAllSellInfo();
+    this.si = this.si.sort( (a,b) => a.releaseTime - b.releaseTime);
+    if(!this.pl)this.lineGraph();
       setTimeout(() => {
-          this.bi = this.is.getAllBuyInfo();
-          this.bi = this.bi.sort( (a,b) => a.releaseTime - b.releaseTime);
-          this.si = this.is.getAllSellInfo();
-          this.si = this.si.sort( (a,b) => a.releaseTime - b.releaseTime);
-          if(!this.pl)this.lineGraph();
           this.getAllInfo();
       }, 10000);
   }
@@ -83,7 +82,7 @@ this.goodoption = {
     backgroundColor: '#01193d',
     title: [
         {
-            text: 'Price Trend',
+            text: '交易价格分布',
             left: 'center',
         }
     ],
@@ -162,7 +161,7 @@ this.goodoption = {
     this.cldoption = {
     backgroundColor: '#01193d',
       title: {
-      text: 'Label WordCloud',
+      text: '标签热度',
       left: 'center',
   },
   tooltip: {},
@@ -223,7 +222,7 @@ this.goodoption = {
     this.tsoption = {
       backgroundColor: '#01193d',
       title: {
-          text: 'Transaction Calendar',
+          text: '活跃度日历',
           left: 'center'
       },
       tooltip : {
@@ -295,93 +294,113 @@ this.goodoption = {
   }
   forceGraph() {
     let td =new Map();
+    let join = [];
     this.tr.forEach( e => {
         if(!e)return;
-        if(e.category==2)
-        this.is.getBuyInfo(e.infoID).subscribe(info => {
-            const other = info.userID;
-            if(e.userID in td)
-                if(other in td[e.userID])
-                    td[e.userID][td] +=1;
-                else td[e.userID][td] =1;
+        if(e&&e.category==2){
+            const other = e.toUserID;
+            if(e.fromUserID in td)
+                if(other in td[e.fromUserID])
+                    td[e.fromUserID][other] +=1;
+                else td[e.fromUserID][other] =1;
             else {
-                td[e.userID] = new Map();
-                td[e.userID][td] = 1;
+                td[e.fromUserID] = new Map();
+                td[e.fromUserID][other] = 1;
             }
-        });
-        if(e.category==1)
-        this.is.getSellInfo(e.infoID).subscribe(info => {
-            const other = info.userID;
-            if(other in td)
-                if(e.userID in td[other])
-                    td[other][e.userID] +=1;
-                else td[other][e.userID] =1;
-            else {
-                td[other] = new Map();
-                td[other][e.userID] = 1;
-            }
-        });
-    });
-    setTimeout(( )=> {
-        const E = [];
-        const V = [];
-        for( let i in td){
-            let sum = 0;
-            for( let j in td[i]){
-                E.push( 
-                    {source: i, target: j
-                    , value: td[i][j], lineStyle: {
-                      width: td[i][j]
-                    }});
-                sum += td[i][j];
-            }
-            V.push({name: i, itemStyle: {
-                color: '#60acfc'
-            }, value : sum, symbolSize: sum*5,
-          draggable: true})
         }
-        this.fdgoption = {
-        backgroundColor: '#01193d',
-          title: {
-              text: 'Transaction Network',
-              left: 'center',
-          },
-          tooltip: {},
-          animationDurationUpdate: 1500,
-          animationEasingUpdate: 'quinticInOut',
-          series : [
-              {
-                  type: 'graph',
-                  layout: 'force',
-                  data: V, edges: E,
-            label: {
-              emphasis: {
-                  position: 'right',
-                  show: true
-              }
-          },
-          force: {
-            repulsion : 100
-          },
-          roam: true,
-          focusNodeAdjacency: true,
-          lineStyle: {
-              normal: {
-                  color :'source',
-                  type : 'solid',
-                  width: 0.5,
-                  curveness: 0.2,
-                  opacity: 0.7
-              }
-          }
+        else if(e&& e.category==1){
+        const other = e.toUserID;
+        if(other in td)
+            if(e.fromUserID in td[other])
+                td[other][e.fromUserID] +=1;
+            else td[other][e.fromUserID] =1;
+        else {
+            td[other] = new Map();
+            td[other][e.fromUserID] = 1;
+        }
+    }
+});
+const VMAP= {};
+const E = [];
+const V = [];
+for( let i in td){
+    let sum = 0;
+    for( let j in td[i]){
+        E.push( 
+            {source: i, target: j
+            , value: td[i][j], lineStyle: {
+              width: td[i][j]
+            }});
+        sum += td[i][j];
+        if(j in VMAP)
+        VMAP[j]+=td[i][j];
+        else 
+        VMAP[j]= td[i][j];
+    }
+    if(i in VMAP)
+    VMAP[i]+=sum;
+    else 
+    VMAP[i]=sum;
+}
+for( let i in VMAP){
+    V.push({name: i,  value : VMAP[i], symbolSize: VMAP[i]*5,
+  draggable: true})
+}
+this.fdgoption = {
+backgroundColor: '#01193d',
+  title: {
+      text: '交易网络',
+      left: 'center',
+  },
+  tooltip: {
+      formatter: fdgFormatter
+  },
+  visualMap: {
+      type: 'continuous',
+      min: 1,
+      max: 10,
+      text:['Active','Lazy'],
+      realtime: false,
+      calculable : true,
+      color: ['orangered','yellow','lightskyblue']
+  },
+  animationDurationUpdate: 1500,
+  animationEasingUpdate: 'quinticInOut',
+  series : [
+      {
+          type: 'graph',
+          layout: 'force',
+          data: V, edges: E,
+    label: {
+      emphasis: {
+          position: 'right',
+          show: true
       }
-              ]
-          };
-
-    },1000)
+  },
+  force: {
+    repulsion : 100
+  },
+  roam: true,
+  focusNodeAdjacency: true,
+  lineStyle: {
+      normal: {
+          color :'source',
+          type : 'solid',
+          width: 0.5,
+          curveness: 0.2,
+          opacity: 0.7
+      }
+  }
+}
+      ]
+  };
   }
   fmt(t: Date) {
     return [t.getFullYear(), t.getMonth() + 1, t.getDate()].join('/');
+  }
+  clickForce(param){
+      if(param.dataType=='node')
+      this.router.navigateByUrl('/user/'+param.data.name);
   }
   lineGraph() {
     let bd =new Map();
@@ -414,7 +433,7 @@ this.goodoption = {
     this.lqoption = {
     backgroundColor: '#01193d',
     title : {
-        text: 'Transaction Trend',
+        text: '新增交易趋势',
         x: 'center',
         align: 'right'
     },

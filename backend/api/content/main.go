@@ -101,6 +101,7 @@ func deleteContent(c *gin.Context) {
 	type param struct {
 		ContentID    string `form:"contentID" binding:"required"`
 		ContentToken string `form:"contentToken" binding:"required"`
+		FileID       string `form:"fileID"`
 	}
 	var p param
 	role := utils.GetRole(c)
@@ -115,6 +116,7 @@ func deleteContent(c *gin.Context) {
 		rsp, err := srv.Delete(context.TODO(), &content.ContentDeleteRequest{
 			ContentID:    p.ContentID,
 			ContentToken: p.ContentToken,
+			FileID:       p.FileID,
 		})
 		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)

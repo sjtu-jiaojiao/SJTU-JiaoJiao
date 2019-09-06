@@ -12,7 +12,7 @@ import (
 func TestLoadMongoDB(t *testing.T) {
 	InitMongoDB("testmongo")
 	collection := MongoDatabase.Collection("test")
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	Convey("Insert mongodb test", t, func() {
 		_, err := collection.InsertOne(ctx, bson.M{"name": "pi", "value": 3.14159})

@@ -44,7 +44,6 @@ stringToDate(params) {
     getContent(): void {
     this.fileService.getContent(this.info.contentID).subscribe(
         e => {
-            console.log(e);
             if(e)
             this.contents = e.files;
         }

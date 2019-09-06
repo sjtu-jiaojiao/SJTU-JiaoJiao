@@ -2,11 +2,12 @@ package main
 
 import (
 	"bufio"
+	"crypto/tls"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
-	"net/url"
 	"os"
 	"time"
 
@@ -15,22 +16,21 @@ import (
 
 var names []string
 var rnd *rand.Rand
+var t *http.Transport
+var c *http.Client
 
 func goodSearch() {
-	httpClient := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-
 	start := time.Now()
-	res, err := httpClient.Get("http://202.120.40.8:30711/v1/sellInfo?" + url.Values{
-		"limit":    {"20"},
-		"goodName": {names[rnd.Intn(len(names))]},
-	}.Encode())
+	//res, err := httpClient.Get("http://202.120.40.8:30711/v1/sellInfo?" + url.Values{
+	//	"limit":    {"20"},
+	//	"goodName": {names[rnd.Intn(len(names))]},
+	//}.Encode())
+	res, err := c.Get("http://202.120.40.8:30711/v1/user/" + fmt.Sprintf("%v", rnd.Intn(9999)+1))
 	if err != nil {
 		boomer.RecordFailure("http", "goodSearch", time.Since(start).Nanoseconds()/int64(time.Millisecond), err.Error())
 		return
 	}
-	body, err := ioutil.ReadAll(res.Body)
+	length, err := io.Copy(ioutil.Discard, res.Body)
 	elapsed := time.Since(start)
 
 	if err != nil {
@@ -43,7 +43,7 @@ func goodSearch() {
 		boomer.RecordFailure("http", "goodSearch", elapsed.Nanoseconds()/int64(time.Millisecond), res.Status)
 		return
 	}
-	boomer.RecordSuccess("http", "goodSearch", elapsed.Nanoseconds()/int64(time.Millisecond), int64(len(body)))
+	boomer.RecordSuccess("http", "goodSearch", elapsed.Nanoseconds()/int64(time.Millisecond), length)
 }
 
 func main() {
@@ -66,6 +66,19 @@ func main() {
 		} else {
 			names = append(names, string(line))
 		}
+	}
+
+	t = &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+		MaxIdleConns:        10240,
+		MaxIdleConnsPerHost: 10240,
+		DisableKeepAlives:   true,
+	}
+	c = &http.Client{
+		Timeout:   40 * time.Second,
+		Transport: t,
 	}
 
 	task1 := &boomer.Task{

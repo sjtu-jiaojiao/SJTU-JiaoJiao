@@ -24,9 +24,9 @@ func InitORM(dbName string, m ...interface{}) {
 
 	Ormer.AutoMigrate(m...)
 
-	Ormer.DB().SetMaxIdleConns(10)
+	Ormer.DB().SetMaxIdleConns(0)
 	Ormer.DB().SetMaxOpenConns(256)
-	Ormer.DB().SetConnMaxLifetime(time.Hour)
+	Ormer.DB().SetConnMaxLifetime(time.Second * 16)
 }
 
 // CloseORM close orm object

@@ -39,6 +39,8 @@ export class SellInfoComponent implements OnInit {
           return '完成';
         case 4: 
           return '失效';
+        case 5:
+          return '关闭';
       }
   }
   getinfos(): void {    

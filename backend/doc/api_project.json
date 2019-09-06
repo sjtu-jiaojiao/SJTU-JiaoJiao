@@ -13,6 +13,7 @@
     "Avatar",
     "File",
     "Transaction",
+    "Message",
     "Service"
   ],
   "sampleUrl": false,
@@ -20,7 +21,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-08-01T17:19:15.505Z",
+    "time": "2019-08-02T00:57:57.870Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

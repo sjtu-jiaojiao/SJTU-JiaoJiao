@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-import {Text, View, TextInput, Alert} from 'react-native';
+import {Text, View, TextInput, Alert, TouchableOpacity, NativeModules, Dimensions } from 'react-native';
 import {ListItem, Avatar, Button, Icon, Overlay} from "react-native-elements";
 import Config from "../../Config";
 import {NavigationActions, HeaderBackButton } from "react-navigation";
+import HTTP from '../../Network/Network';
+import MyAvatar from '../../Components/MyAvatar';
+import { isUserNameValid, isTelephoneValid } from "../../Utils/CheckValidity";
+
+let ImagePicker = NativeModules.ImageCropPicker;
+
+const {width, height, scale} = Dimensions.get('window');
 
 export default class UserInfoScreen extends Component {
     constructor(props) {
@@ -14,6 +21,7 @@ export default class UserInfoScreen extends Component {
             studentID: Config.userInfo.studentID,
             studentName: Config.userInfo.studentName,
             telephone: Config.userInfo.telephone,
+            avatarID: Config.userInfo.avatarID,
             isChangeTelephoneVisible: false,
             isChangeUserNameVisible: false,
         };
@@ -28,14 +36,37 @@ export default class UserInfoScreen extends Component {
         }
     };
 
-    isTelephoneValid() {
-        let length = this.changeTelephone.length;
-        return length === 11 && /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1})|)+\d{8})$/.test(this.changeTelephone);
-    }
-
-    isUserNameValid() {
-        return /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){0,31}$/.test(this.changeUserName);
-    }
+    pickSingle(cropit, circular=false, mediaType) {
+        ImagePicker.openPicker({
+            width: 500,
+            height: 500,
+            cropping: cropit,
+            cropperCircleOverlay: circular,
+            compressImageMaxWidth: 1000,
+            compressImageMaxHeight: 1000,
+            compressImageQuality: 1,
+            compressVideoPreset: 'MediumQuality',
+            includeExif: true,
+            includeBase64: true,
+        }).then(image => {
+            //console.warn('received base64 image');
+            let params = {
+                userID: Config.userInfo.userID,
+                path: image.path,
+            };
+            HTTP.addAvatar('/avatar', params)
+                .then((response) => {
+                    //console.warn('成功!');
+                    //console.warn(response);
+                    Config.userInfo.avatarID = response.avatarID;
+                    this.setState({
+                        avatarID: response.avatarID,
+                    });
+                }).catch((err) => {
+                //console.warn('失败!');
+                //console.warn(err);
+            });
+        })};
 
     render() {
         return (
@@ -87,7 +118,7 @@ export default class UserInfoScreen extends Component {
                                             {cancelable: false},
                                         )
                                     }
-                                    else if(this.isTelephoneValid() === false) {
+                                    else if(isTelephoneValid(this.changeTelephone) === false) {
                                         Alert.alert(
                                             '不正确的电话号码格式',
                                             this.changeTelephone + '不是正确的电话号码格式，请重新输入',
@@ -107,7 +138,7 @@ export default class UserInfoScreen extends Component {
                                                 'Content-Type': 'application/x-www-form-urlencoded',
                                                 Authorization: ('Bearer ' + Config.JaccountToken.token),
                                             },
-                                            body: ('userID=3&telephone=' + this.changeTelephone),
+                                            body: ('userID=' + Config.userInfo.userID + '&telephone=' + this.changeTelephone),
                                         })
                                             .then((response) => {
                                                 if(response.ok) {
@@ -120,7 +151,7 @@ export default class UserInfoScreen extends Component {
                                                                 }}
                                                         ],
                                                         {cancelable: false},
-                                                    )
+                                                    );
                                                     this.setState({
                                                         telephone: this.changeTelephone,
                                                         isChangeTelephoneVisible: false
@@ -163,7 +194,7 @@ export default class UserInfoScreen extends Component {
                 >
                     <View style={{width: 300,}}>
                         <Text style={{fontSize: 17}}>请输入新的用户名</Text>
-                        <Text style={{fontSize: 13}}>不超过32位，且以字母开头、可带数字、“_”、“.”</Text>
+                        <Text style={{fontSize: 13}}>要求用户名不超过32位，且只能包含汉字、字母、数字和特殊符号“_”、“.”</Text>
                         <TextInput
                             autoFocus={true}
                             style={{borderWidth: 1, borderColor: 'black', textAlign: 'center'}}
@@ -210,10 +241,10 @@ export default class UserInfoScreen extends Component {
                                             {cancelable: false},
                                         )
                                     }
-                                    else if(this.isUserNameValid() === false) {
+                                    else if(isUserNameValid(this.changeUserName) === false) {
                                         Alert.alert(
                                             '用户名不合法',
-                                            '要求用户名不超过32位，且以字母开头、可带数字、“_”、“.”',
+                                            '要求用户名不超过32位，且只能包含汉字、字母、数字和特殊符号“_”、“.”',
                                             [
                                                 {text: '好', onPress: () => {
                                                         this.setState({isChangeUserNameVisible: true})
@@ -230,7 +261,7 @@ export default class UserInfoScreen extends Component {
                                                 'Content-Type': 'application/x-www-form-urlencoded',
                                                 Authorization: ('Bearer ' + Config.JaccountToken.token),
                                             },
-                                            body: ('userID=3&userName=' + this.changeUserName),
+                                            body: ('userID=' + Config.userInfo.userID + '&userName=' + this.changeUserName),
                                         })
                                             .then((response) => {
                                                 if(response.ok) {
@@ -252,6 +283,7 @@ export default class UserInfoScreen extends Component {
                                                     this.changeUserName='';
                                                 } else {
                                                     this.changeUserName='';
+                                                    console.warn(response);
                                                     Alert.alert(
                                                         '出错啦',
                                                         '网络可能出了问题，请再试一次吧',
@@ -276,8 +308,10 @@ export default class UserInfoScreen extends Component {
                 <View style={{height: 200}}>
                     <View style={{alignItems: 'center', justifyContent: 'center'}}>
                         <View style={{height: 55}}/>
-                        <Avatar rounded size='large' source={require('../../assets/images/NotLogin.jpg')} />
-                        <Text style={{fontSize: 15}}>点击修改头像</Text>
+                        <MyAvatar avatarID={this.state.avatarID}/>
+                        <TouchableOpacity onPress={() => this.pickSingle(true)} style={{marginTop: 5}}>
+                            <Text style={{color: 'black', fontSize: 17, textAlign: 'center'}}>点击修改头像</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <ListItem
@@ -312,7 +346,7 @@ export default class UserInfoScreen extends Component {
                     title='退出登录'
                     titleStyle={{color: 'white', fontSize: 17}}
                     buttonStyle={{backgroundColor: 'red'}}
-                    containerStyle={{width: 160, marginLeft: 120}}
+                    containerStyle={{width: 160, marginLeft: (width / 2 - 80)}}
                     raised={true}
                     onPress={() => Alert.alert(
                         '退出登录',
@@ -334,6 +368,8 @@ export default class UserInfoScreen extends Component {
                                         studentID: '',
                                         studentName: '',
                                     };
+                                    Config.isContactRender = false;
+                                    Config.isReleaseRender = false;
                                     this.props.navigation.reset([NavigationActions.navigate({ routeName: 'User' })], 0);
                                 }
                             },

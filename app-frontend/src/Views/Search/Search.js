@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import {Text, View, FlatList, Alert, TextInput, StyleSheet} from 'react-native';
+import {Text, View, FlatList, Alert, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import {SearchBar, Button, ListItem, ButtonGroup, Avatar} from "react-native-elements";
 import Config from '../../Config';
+import {isUserNameValid} from '../../Utils/CheckValidity';
 
 let dev = "http://202.120.40.8:30711/v1";
 
@@ -67,32 +68,62 @@ export default class SearchScreen extends Component {
 
     keyExtractor = (item, index) => index.toString();
 
-    parseTitle(item) {
+    renderItem = ({ item }) => {
+        let renderContent, routeDest, params;
+        let userName, userID, sellInfoID, buyInfoID, header, infoType;
         switch (this.state.selectedIndex) {
             case 0:
-                return item.userName;
+                renderContent = item.userName;
+                routeDest = 'UserInfoForOthers';
+                userName = item.userName;
+                userID = item.userID;
+                params = { userName, userID };
+                break;
             case 1:
-                return item.goodName;
+                renderContent = item.goodName;
+                routeDest = 'GoodInfo';
+                infoType = 'sellInfo';
+                sellInfoID = item.sellInfoID;
+                header = ('出售：' + item.goodName);
+                params = { infoType, sellInfoID, header };
+                break;
             case 2:
-                return item.goodName;
+                renderContent = item.goodName;
+                routeDest = 'GoodInfo';
+                infoType = 'buyInfo';
+                buyInfoID = item.buyInfoID;
+                header = ('求购：' + item.goodName);
+                params = { infoType, buyInfoID, header };
+                break;
         }
-    }
-
-    renderItem = ({ item }) => {
-        //alert(item.userName);
         return (
-            <ListItem
-                bottomDivider
-                containerStyle={{height: 50}}
-                title={
-                    <Text numberOfLines={1} style={{color: 'black', fontSize: 20}}>{this.parseTitle(item)}</Text>
-                }
-            />
+            <TouchableOpacity onPress={() => this.props.navigation.push(routeDest, params)}>
+                <ListItem
+                    bottomDivider
+                    containerStyle={{height: 50}}
+                    rightIcon={<Avatar
+                        rounded size='small'
+                        source={require('../../assets/icons/right.png')}
+                        overlayContainerStyle={{backgroundColor: 'white'}}
+                    />}
+                    title={
+                        <Text numberOfLines={1} style={{color: 'black', fontSize: 20}}>{renderContent}</Text>
+                    }
+                />
+            </TouchableOpacity>
         );
     };
 
     updateSearch = (searchText) => {
-        this.setState({ searchText: searchText });
+        if (this.state.loaded === true && this.state.DataList === undefined) {
+            this.setState({
+                searchText: searchText,
+                loaded: false,
+                DataList: null,
+            });
+        } else {
+            this.setState({searchText: searchText});
+        }
     };
 
     cancelSearch = (searchText) => {
@@ -143,10 +174,6 @@ export default class SearchScreen extends Component {
                 .catch((error) => console.error(error));
         }
     };
-
-    isUserNameValid() {
-        return /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){0,31}$/.test(this.state.searchText);
-    }
 
     render() {
         const buttons = ['用户', '出售信息', '求购信息'];
@@ -210,10 +237,10 @@ export default class SearchScreen extends Component {
                                         {cancelable: false},
                                     )
                                 }
-                                else if(this.state.selectedIndex === 0 && !this.isUserNameValid(this.state.searchText)) {
+                                else if(this.state.selectedIndex === 0 && !isUserNameValid(this.state.searchText)) {
                                     Alert.alert(
                                         '用户名不合法',
-                                        '要求用户名不超过32位，且以字母开头、可带数字、“_”、“.”',
+                                        '要求用户名不超过32位，且只能包含汉字、字母、数字和特殊符号“_”、“.”',
                                         [
                                             {text: '好', onPress: () => {
                                                 this.setState({
@@ -293,10 +320,10 @@ export default class SearchScreen extends Component {
                                         {cancelable: false},
                                     )
                                 }
-                                else if(this.state.selectedIndex === 0 && !this.isUserNameValid(this.state.searchText)) {
+                                else if(this.state.selectedIndex === 0 && !isUserNameValid(this.state.searchText)) {
                                     Alert.alert(
                                         '用户名不合法',
-                                        '要求用户名不超过32位，且以字母开头、可带数字、“_”、“.”',
+                                        '要求用户名不超过32位，且只能包含汉字、字母、数字和特殊符号“_”、“.”',
                                         [
                                             {text: '好', onPress: () => {
                                                 this.setState({
@@ -316,8 +343,9 @@ export default class SearchScreen extends Component {
                     </View>
                     <View style={{height: 10}} />
                     <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                        <Text style={{fontSize: 17}}>{() => {return ('没有匹配的' + buttons[this.state.selectedIndex] + '，换个关键词试试？')}}</Text>
+                        <Text style={{fontSize: 17}}>没有匹配的{buttons[this.state.selectedIndex]}，换个关键词试试？</Text>
                     </View>
+                    <View style={{height: 10}} />
                 </View>
             )
         }
@@ -381,10 +409,10 @@ export default class SearchScreen extends Component {
                                         {cancelable: false},
                                     )
                                 }
-                                else if(this.state.selectedIndex === 0 && !this.isUserNameValid(this.state.searchText)) {
+                                else if(this.state.selectedIndex === 0 && !isUserNameValid(this.state.searchText)) {
                                     Alert.alert(
                                         '用户名不合法',
-                                        '要求用户名不超过32位，且以字母开头、可带数字、“_”、“.”',
+                                        '要求用户名不超过32位，且只能包含汉字、字母、数字和特殊符号“_”、“.”',
                                         [
                                             {text: '好', onPress: () => {
                                                 this.setState({
