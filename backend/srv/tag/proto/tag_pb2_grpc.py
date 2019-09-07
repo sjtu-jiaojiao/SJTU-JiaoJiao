@@ -3,6 +3,7 @@ import grpc
 
 from proto import tag_pb2 as tag__pb2
 
+
 class TagStub(object):
   # missing associated documentation comment in .proto file
   pass
@@ -13,8 +14,8 @@ class TagStub(object):
     Args:
       channel: A grpc.Channel.
     """
-    self.Get = channel.unary_unary(
-        '/tag.Tag/Get',
+    self.GetTags = channel.unary_unary(
+        '/tag.Tag/GetTags',
         request_serializer=tag__pb2.TagRequest.SerializeToString,
         response_deserializer=tag__pb2.TagResponse.FromString,
         )
@@ -24,7 +25,7 @@ class TagServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
-  def Get(self, request, context):
+  def GetTags(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -34,8 +35,8 @@ class TagServicer(object):
 
 def add_TagServicer_to_server(servicer, server):
   rpc_method_handlers = {
-      'Get': grpc.unary_unary_rpc_method_handler(
-          servicer.Get,
+      'GetTags': grpc.unary_unary_rpc_method_handler(
+          servicer.GetTags,
           request_deserializer=tag__pb2.TagRequest.FromString,
           response_serializer=tag__pb2.TagResponse.SerializeToString,
       ),

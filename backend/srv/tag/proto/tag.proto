@@ -3,7 +3,7 @@ syntax = "proto3";
 package tag;
 
 service Tag {
-    rpc Get (TagRequest) returns (TagResponse);
+    rpc GetTags (TagRequest) returns (TagResponse){}
 }
 
 message TagRequest {

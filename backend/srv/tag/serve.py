@@ -17,35 +17,30 @@ registry_address = "127.0.0.1"
 register_ttl = 20
 register_interval = 60
 
-
-class TagHandler(tag_pb2_grpc.TagServicer):
-    def get_tags(self, request, context):
+class TagServer(tag_pb2_grpc.TagServicer):
+    def GetTags(self, request, context):
         hyper_parameters = load_json(path_hyper_parameters)
         pt = PreprocessTextMulti()
-        # 模式初始化和加载
         graph = Graph(hyper_parameters)
         graph.load_model()
         ra_ed = graph.word_embedding
 
-        # str to token
-        ques_embed = ra_ed.sentence2idx(request["description"])
+        ques_embed = ra_ed.sentence2idx(request.description)
         if hyper_parameters['embedding_type'] == 'bert':
             x_val_1 = np.array([ques_embed[0]])
             x_val_2 = np.array([ques_embed[1]])
             x_val = [x_val_1, x_val_2]
         else:
             x_val = ques_embed
-        pred = graph.predict(x_val)
 
+        pred = graph.predict(x_val)
         pre = pt.prereocess_idx(pred[0])
         ls_nulti = []
         for ls in pre[0]:
             if ls[1] >= 0.5:
-                ls_nulti.append(ls)
+                ls_nulti.append(ls[0])
 
-        json_response = tag_pb2.TagResponse()
-        json_response.rst_string = json.dumps(ls_nulti)
-        return json_response
+        return tag_pb2.TagResponse(tags=ls_nulti)
 
 
 def register(server_name, ip, port):
@@ -65,7 +60,7 @@ def unregister(server_name, ip, port):
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    tag_pb2_grpc.add_TagServicer_to_server(TagHandler(), server)
+    tag_pb2_grpc.add_TagServicer_to_server(TagServer(), server)
     server.add_insecure_port('[::]:{}'.format(8500))
     register("tag_server", registry_address, 8500)
     server.start()
@@ -77,20 +72,21 @@ def serve():
         server.stop(0)
 
 
-try:
-    opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "registry_address=", "register_ttl=",
-                                                   "register_interval="])  # sys.argv[1:] 过滤掉第一个参数(它是脚本名称，不是参数的一部分)
-    for cmd, arg in opts:  # 使用一个循环，每次从opts中取出一个两元组，赋给两个变量。cmd保存选项参数，arg为附加参数。接着对取出的选项参数进行处理。
-        if cmd in ("-h", "--help"):
-            print("help info")
-            sys.exit()
-        elif cmd == "--registry_address":
-            registry_address = arg
-        elif cmd == "--register_ttl":
-            register_ttl = arg
-        elif cmd == "--register_interval":
-            register_interval = arg
-    serve()
+if __name__ == "__main__":
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "registry_address=", "register_ttl=",
+                                                       "register_interval="])  # sys.argv[1:] 过滤掉第一个参数(它是脚本名称，不是参数的一部分)
+        for cmd, arg in opts:  # 使用一个循环，每次从opts中取出一个两元组，赋给两个变量。cmd保存选项参数，arg为附加参数。接着对取出的选项参数进行处理。
+            if cmd in ("-h", "--help"):
+                print("help info")
+                sys.exit()
+            elif cmd == "--registry_address":
+                registry_address = arg
+            elif cmd == "--register_ttl":
+                register_ttl = arg
+            elif cmd == "--register_interval":
+                register_interval = arg
+        serve()
 
-except getopt.GetoptError:
-    print("argv error,please input")
+    except getopt.GetoptError:
+        print("argv error,please input")
