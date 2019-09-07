@@ -17,24 +17,28 @@ registry_address = "127.0.0.1"
 register_ttl = 20
 register_interval = 60
 
+
 class TagServer(tag_pb2_grpc.TagServicer):
-    def GetTags(self, request, context):
+    def __init__(self):
         hyper_parameters = load_json(path_hyper_parameters)
-        pt = PreprocessTextMulti()
-        graph = Graph(hyper_parameters)
-        graph.load_model()
-        ra_ed = graph.word_embedding
+        self.pt = PreprocessTextMulti()
+        self.graph = Graph(hyper_parameters)
+        self.graph.load_model()
+        self.ra_ed = self.graph.word_embedding
+        ques_embed = self.ra_ed.sentence2idx("sjtujj")
+        x_val_1 = np.array([ques_embed[0]])
+        x_val_2 = np.array([ques_embed[1]])
+        x_val = [x_val_1, x_val_2]
+        pred = self.graph.predict(x_val)
 
-        ques_embed = ra_ed.sentence2idx(request.description)
-        if hyper_parameters['embedding_type'] == 'bert':
-            x_val_1 = np.array([ques_embed[0]])
-            x_val_2 = np.array([ques_embed[1]])
-            x_val = [x_val_1, x_val_2]
-        else:
-            x_val = ques_embed
+    def GetTags(self, request, context):
+        ques_embed = self.ra_ed.sentence2idx(request.description)
+        x_val_1 = np.array([ques_embed[0]])
+        x_val_2 = np.array([ques_embed[1]])
+        x_val = [x_val_1, x_val_2]
 
-        pred = graph.predict(x_val)
-        pre = pt.prereocess_idx(pred[0])
+        pred = self.graph.predict(x_val)
+        pre = self.pt.prereocess_idx(pred[0])
         ls_nulti = []
         for ls in pre[0]:
             if ls[1] >= 0.5:
