@@ -92,6 +92,9 @@ func TestSrvInfoCreate(t *testing.T) {
 		tf(1001, 0, "", "1234567890abcdef12345678", "abc", []string{"tag1", "tag2", "tag3"}, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
 		tf(1001, 100000000, "test good", "012345678901234567890123", "invalid_token", []string{"tag1", "tag2", "tag3"}, sellinfo.SellInfoCreateResponse_INVALID_TOKEN)
 		tf(1001, 100000000, "test good", "", "", []string{"tag1", "tag2", "tag3"}, sellinfo.SellInfoCreateResponse_INVALID_TOKEN)
+		tf(1001, 100000000, "test good", "", "", []string{}, sellinfo.SellInfoCreateResponse_SUCCESS)
+		tf(1001, 100000000, "test good", "", "valid_token", []string{"tag1", "tag2", "tag3"}, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
+		tf(1001, 100000000, "test good", "012345678901234567890123", "", []string{}, sellinfo.SellInfoCreateResponse_INVALID_PARAM)
 		tf(1001, 100000000, "test good", "012345678901234567890123", "valid_token", []string{"tag1", "tag2", "tag3"}, sellinfo.SellInfoCreateResponse_SUCCESS)
 	})
 }
@@ -141,6 +144,7 @@ func TestSrvInfoFind(t *testing.T) {
 		GoodName:    "good",
 		Description: "Very good!",
 		ContentID:   "012345678901234567890123",
+		Price:       100,
 	}
 
 	prepare := func() {
@@ -173,10 +177,21 @@ func TestSrvInfoFind(t *testing.T) {
 		prepare()
 		defer end()
 
+		req.LowPrice = -1
+		req.HighPrice = -1
 		testLen(3)
 
 		req.UserID = 1001
+		req.Limit = 101
+		req.Status = 3
+		req.GoodName = "good"
+		req.LowPrice = 99
+		req.HighPrice = 101
 		testLen(1)
+		req.GoodName = ""
+		req.LowPrice = 0
+		req.HighPrice = 0
+		req.Status = 0
 
 		req.UserID = 1000
 		testLen(2)

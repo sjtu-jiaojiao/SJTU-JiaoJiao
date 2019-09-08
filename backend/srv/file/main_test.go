@@ -33,6 +33,7 @@ func TestQuery(t *testing.T) {
 		defer func() { So(bucket.Delete(objID), ShouldBeNil) }()
 
 		tf("", "", file.FileQueryResponse_INVALID_PARAM)
+		tf("invalid", "", file.FileQueryResponse_INVALID_PARAM)
 		tf("012345678901234567890123", "", file.FileQueryResponse_NOT_FOUND)
 		tf(objID.Hex(), "valid", file.FileQueryResponse_SUCCESS)
 	})

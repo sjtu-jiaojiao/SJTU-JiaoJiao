@@ -42,6 +42,7 @@ func Test_addMessage(t *testing.T) {
 		tf(400, "1000", "2000", "1", "", 0)
 		tf(400, "1000", "2000", "2", "", 0)
 		tf(400, "1000", "2000", "3", "", 0)
+		tf(400, "1000", "2000", "2", "", 0)
 		tf(200, "1000", "2000", "1", "text msg", message.MessageCreateResponse_SUCCESS)
 		tf(200, "1000", "2000", "2", "valid_file", message.MessageCreateResponse_SUCCESS)
 		tf(200, "1000", "2000", "2", "valid", message.MessageCreateResponse_INVALID_TYPE)
