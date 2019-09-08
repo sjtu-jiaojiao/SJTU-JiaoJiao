@@ -8,6 +8,7 @@ import { Transaction } from '../entity/transaction';
 import { TransactionService } from '../transaction.service';
 import { Format } from '../Formatter/format';
 import { Router } from '@angular/router';
+import { FileService } from '../file.service';
 const name = ['LJH', 'WXZ', 'ZWJ', 'KHQ', 'MZD', 'ZEL', 'JZM', 'HJT', 'TRUMP',
 'LJH2', 'WXZ2', 'ZWJ2', 'KHQ2', 'MZD2', 'ZEL2', 'JZM2', 'HJT2', 'TRUMP2',
 'LJH3', 'WXZ3', 'ZWJ3', 'KHQ3', 'MZD3', 'ZEL3', 'JZM3', 'HJT3', 'TRUMP3'];
@@ -29,11 +30,13 @@ export class InfoStatisticComponent implements OnInit {
   tsoption: any;
   lqoption: any;
   goodoption: any;
+  prcdata: any[];
+  selectedInfo: buyInfo[];
   bi: buyInfo[]=[];
   si: sellInfo[]=[];
   tr: Transaction[]=[];
   pl: boolean = false;
-  constructor(private router: Router, private trs: TransactionService, private is: InfoService) { }
+  constructor(private router: Router, private trs: TransactionService, private is: InfoService, private fileService: FileService) { }
   ngOnInit() {
     const now = new Date().getFullYear();
     this.getAllInfo();
@@ -42,13 +45,29 @@ export class InfoStatisticComponent implements OnInit {
     this.forceGraph();
     this.calenderGraph();
     this.lineGraph();
-    this.boxGraph();    
+    this.prcGraph();    
                 
   }
   pauseLine(){
       this.pl=!this.pl;
   }
-
+  getComment(){
+    if(!this.pl){
+    this.prcGraph();
+    this.cloudGrpah();
+    }
+    this.bi.forEach(
+      info => {
+        this.fileService.getContent(info.contentID).subscribe(
+          e => {
+              if(e){
+              info.tags = e.tags;
+              }
+          }
+      )
+      }
+    );
+  }
   getAllTR(beg, end){
     this.tr = this.trs.getAllTR(6,beg,end);
     if(!this.pl){
@@ -64,20 +83,32 @@ export class InfoStatisticComponent implements OnInit {
     this.bi = this.bi.sort( (a,b) => a.releaseTime - b.releaseTime);
     this.si = this.is.getAllSellInfo();
     this.si = this.si.sort( (a,b) => a.releaseTime - b.releaseTime);
+    this.getComment();
     if(!this.pl)this.lineGraph();
       setTimeout(() => {
           this.getAllInfo();
       }, 10000);
   }
 
-  boxGraph() {
-    var data = prepareBoxplotData([
-    [850, 740, 900, 1070, 930, 850, 950, 980, 980, 880, 1000, 980, 930, 650, 760, 810, 1000, 1000, 960, 960],
-    [960, 940, 960, 940, 880, 800, 850, 880, 900, 840, 830, 790, 810, 880, 880, 830, 800, 790, 760, 800],
-    [880, 880, 880, 860, 720, 720, 620, 860, 970, 950, 880, 910, 850, 870, 840, 840, 850, 840, 840, 840],
-    [890, 810, 810, 820, 800, 770, 760, 740, 750, 760, 910, 920, 890, 860, 880, 720, 840, 850, 850, 780],
-    [890, 840, 780, 810, 760, 810, 790, 810, 820, 850, 870, 870, 810, 740, 810, 940, 950, 800, 810, 870]
-]);
+    onBrushSelected(param){
+    this.selectedInfo = param.batch[0].selected[0].dataIndex.map(
+        i => this.prcdata[i]
+    );
+}
+
+
+  prcGraph() {
+      this.prcdata=[];
+    this.bi.forEach( e => 
+        {
+            if(e.tags && e.price)
+        e.tags.forEach(
+            t => {
+                this.prcdata.push([t, e.price, e.buyInfoID]);
+            }
+        )
+        }
+    );
 this.goodoption = {
     backgroundColor: '#01193d',
     title: [
@@ -86,6 +117,36 @@ this.goodoption = {
             left: 'center',
         }
     ],
+    toolbox: {
+			brush: {
+				outOfBrush: {
+					color: '#abc'
+				},
+				brushStyle: {
+					borderWidth: 2,
+					color: 'rgba(0,0,0,0.2)',
+					borderColor: 'rgba(0,0,0,0.5)',
+				},
+				seriesIndex: [0, 1],
+				throttleType: 'debounce',
+				throttleDelay: 300,
+				geoIndex: 0
+			},
+    },
+	brush: {
+	outOfBrush: {
+		color: '#abc'
+	},
+	brushStyle: {
+		borderWidth: 2,
+		color: 'rgba(0,0,0,0.2)',
+		borderColor: 'rgba(0,0,0,0.5)',
+	},
+	seriesIndex: [0, 1],
+	throttleType: 'debounce',
+	throttleDelay: 300,
+	geoIndex: 'all'
+	},
     tooltip: {
         trigger: 'item',
         axisPointer: {
@@ -105,7 +166,11 @@ this.goodoption = {
             start: 0,
             end: 40
         }
-    ],
+    ],    
+    dataset: {
+        dimensions: ['tag','price','buyInfoID'],
+        source: this.prcdata
+    },
     grid: {
         left: '10%',
         right: '10%',
@@ -113,19 +178,8 @@ this.goodoption = {
     },
     xAxis: {
         type: 'category',
-        data: data.axisData,
         boundaryGap: true,
-        nameGap: 30,
-        axisLine: {onZero: false},
-        splitArea: {
-            show: false
-        },
-        axisLabel: {
-            formatter: 'tag {value}'
-        },
-        splitLine: {
-            show: false
-        },
+        nameGap: 30
     },
     yAxis: {
         type: 'value',
@@ -133,31 +187,39 @@ this.goodoption = {
     },
     series: [
         {
-            name: 'boxplot',
-            type: 'boxplot',
-            data: data.boxData,
-            tooltip: {
-                formatter: function (param) {
-                    return [
-                        'tag ' + param.name + ': ',
-                        'upper: ' + param.data[5],
-                        'Q3: ' + param.data[4],
-                        'median: ' + param.data[3],
-                        'Q1: ' + param.data[2],
-                        'lower: ' + param.data[1]
-                    ].join('<br/>');
-                }
-            }
-        },
-        {
-            name: 'outlier',
+            name: 'tag price',
             type: 'scatter',
-            data: data.outliers
+            encode: {
+                x: 'tag',
+                y: 'price'
+            }
         }
     ]
 };
   }
   cloudGrpah() {
+    const fre = new Map();
+    this.bi.forEach( e => 
+        {
+            if(e.tags)
+        e.tags.forEach(
+            t => {
+                if(t in fre)fre[t] +=1;
+                else fre[t]=1;
+            }
+        )
+        }
+    )
+    const clddata = [];
+    for( const k in fre) 
+    clddata.push({ name: k,
+      value: fre[k],
+      textStyle: {
+          normal: {},
+          emphasis: {}
+      }
+  });
+
     this.cldoption = {
     backgroundColor: '#01193d',
       title: {
@@ -180,30 +242,24 @@ this.goodoption = {
           normal: {
               fontFamily: 'sans-serif',
               fontWeight: 'bold',
-              color: () => {
-                  // Random color
-                  return 'rgb(' + [
-                      Math.round(Math.random() * 250),
-                      Math.round(Math.random() * 250),
-                      Math.round(Math.random() * 250)
-                  ].join(',') + ')';
-              }
+              color: this.randamColor
           },
           emphasis: {
               shadowBlur: 10,
               shadowColor: '#333'
           }
       },
-      data: name.map( node => {return { name: node,
-      value: Math.round(Math.random() * 1000),
-      textStyle: {
-          normal: {},
-          emphasis: {}
-      }
-  }; }
-  )
-  }]
+      data: clddata 
+  }
+  ]
 };
+  }
+  randamColor(){return 'rgb(' + [
+                      Math.round(Math.random() * 250),
+                      Math.round(Math.random() * 250),
+                      Math.round(Math.random() * 250)
+                  ].join(',') + ')';
+
   }
   calenderGraph() {
     let td =new Map();
@@ -271,17 +327,14 @@ this.goodoption = {
           series: [{
             type: 'effectScatter',
             coordinateSystem: 'calendar',
-            symbolSize: (val) => {
-                return val[1];
-            },
+            symbolSize: this.cldsz,
             showEffectOn: 'render',
             rippleEffect: {
                 brushType: 'stroke'
             },
             hoverAnimation: true,
             tooltip: {
-                formatter:(param)=>
-                param.data[1] + ' completed transactions created in ' +param.data[0]
+                formatter: this.cldfm,
             },
             itemStyle: {
                     color: '#f4e925',
@@ -292,6 +345,12 @@ this.goodoption = {
           }]
         };
   }
+  cldsz(val){
+                return val[1];
+}
+  cldfm(param) {
+      return param.data[1] + ' completed transactions created in ' +param.data[0]
+}
   forceGraph() {
     let td =new Map();
     let join = [];

@@ -16,7 +16,7 @@ var MongoDatabase *mongo.Database
 
 // InitMongoDB init mongodb
 func InitMongoDB(dbName string) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://"+os.Getenv("JJ_MONGODBUSER")+":"+os.Getenv("JJ_MONGODBPWD")+
 		"@"+utils.GetStringConfig("srv_config", dbName, utils.LocalConf.Deploy)+"/"))

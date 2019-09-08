@@ -64,6 +64,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 		return nil
 	}
 
+	msg := req.Msg
 	// upload file
 	if req.Type == message.Type_PICTURE || req.Type == message.Type_VIDEO {
 		srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
@@ -80,11 +81,11 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 			return errors.New(s)
 		}
 
-		req.Msg = []byte(microRsp.FileID)
+		msg = []byte(microRsp.FileID)
 	}
 
 	// find existence
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("message")
 	var res1, res2 chatLog
@@ -112,7 +113,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 				"time":    time.Now(),
 				"forward": true,
 				"type":    req.Type,
-				"msg":     string(req.Msg),
+				"msg":     string(msg),
 				"unread":  true,
 			}},
 		})
@@ -127,42 +128,40 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 	from := req.FromUser
 	to := req.ToUser
 	forward := true
+	res := res1
 	if err1 != nil && err2 == nil {
 		from = req.ToUser
 		to = req.FromUser
 		forward = false
+		res = res2
 	}
 
 	_, err := collection.UpdateOne(ctx, bson.M{
 		"fromUser": from,
 		"toUser":   to,
-	}, bson.M{"$push": bson.M{
-		"infos": bson.M{
-			"$each": bson.A{
-				bson.M{
-					"time":    time.Now(),
-					"forward": forward,
-					"type":    req.Type,
-					"msg":     string(req.Msg),
-					"unread":  true,
+	}, bson.M{
+		"$push": bson.M{
+			"infos": bson.M{
+				"$each": bson.A{
+					bson.M{
+						"time":    time.Now(),
+						"forward": forward,
+						"type":    req.Type,
+						"msg":     string(msg),
+						"unread":  true,
+					},
 				},
+				"$position": 0,
 			},
-			"$position": 0,
 		},
-	}})
+		"$set": bson.M{
+			"badge": res.Badge + 1,
+		},
+	})
 	if utils.LogContinue(err, utils.Error) {
 		return err
 	}
 
-	_, err = collection.UpdateOne(ctx, bson.M{
-		"fromUser": from,
-		"toUser":   to,
-	}, bson.M{"$set": bson.M{
-		"badge": res1.Badge + 1,
-	}})
-	if utils.LogContinue(err, utils.Error) {
-		return err
-	}
 	rsp.Status = message.MessageCreateResponse_SUCCESS
 	return nil
 }
@@ -174,8 +173,8 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
  * @apiName Message.Find
  * @apiDescription Find Message
  *
- * @apiParam {int32} fromUser user who launch the chat at first time
- * @apiParam {int32} toUser user who accept the chat at first time
+ * @apiParam {int32} fromUser user who want to find
+ * @apiParam {int32} toUser user who chat with from user
  * @apiParam {int32} way 1 for read message <br> 2 for query history message <br> Note: only 1 will set unread to false
  * @apiParam {uint32{0-20}} limit=20 limit of return message infos, only for history query
  * @apiParam {uint32} offset=0 offset from the latest message info, only for history query
@@ -192,7 +191,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
  * @apiUse DBServerDown
  */
 func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *message.MessageFindResponse) error {
-	if !utils.RequireParam(req.FromUser, req.ToUser, req.Way) {
+	if !utils.RequireParam(req.FromUser, req.ToUser, req.Way) || req.FromUser == req.ToUser {
 		rsp.Status = message.MessageFindResponse_INVALID_PARAM
 		return nil
 	}
@@ -218,7 +217,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 		}
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("message")
 	var res1, res2 chatLog
@@ -241,8 +240,8 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 		rsp.Status = message.MessageFindResponse_SUCCESS
 		return nil
 	} else if err1 == nil && err2 == nil {
-		rsp.Status = message.MessageFindResponse_INVALID_PARAM
-		return nil
+		utils.Error("chat structure violated")
+		return errors.New("chat structure violated")
 	}
 
 	if req.Way == message.MessageFindRequest_READ_MESSAGE {
@@ -265,7 +264,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 							"as":    "item",
 							"cond": bson.M{
 								"$and": bson.A{
-									bson.M{"$eq": bson.A{"$$item.forward", req.FromUser == rsp.FromUser}},
+									bson.M{"$eq": bson.A{"$$item.forward", req.FromUser != rsp.FromUser}},
 									bson.M{"$eq": bson.A{"$$item.unread", true}},
 								},
 							},
@@ -288,7 +287,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 		_, err = collection.UpdateMany(ctx, bson.M{
 			"fromUser":      rsp.FromUser,
 			"toUser":        rsp.ToUser,
-			"infos.forward": req.FromUser == rsp.FromUser,
+			"infos.forward": req.FromUser != rsp.FromUser,
 			"infos.unread":  true,
 		}, bson.M{
 			"$set": bson.M{
@@ -336,7 +335,8 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
  * @apiDescription Query New Message, do NOT set read
  *
  * @apiParam {int32} userID user who wants to pull new message
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for not found
+ * @apiParam {bool} oldMsg=0 true to get all message, not only the new
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success
  * @apiSuccess {list} news see below NewMessage
  * @apiSuccess (NewMessage) {int32} fromUser user who launch the chat at first time
  * @apiSuccess (NewMessage) {int32} toUser user who accept the chat at first time
@@ -368,12 +368,22 @@ func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *
 		}
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("message")
 
-	cur, err := collection.Find(ctx, bson.M{
-		"$or": bson.A{
+	var cond bson.A
+	if req.OldMsg {
+		cond = bson.A{
+			bson.M{
+				"fromUser": req.UserID,
+			},
+			bson.M{
+				"toUser": req.UserID,
+			},
+		}
+	} else {
+		cond = bson.A{
 			bson.M{
 				"fromUser": req.UserID,
 				"badge":    bson.M{"$gt": 0},
@@ -394,7 +404,11 @@ func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *
 					},
 				},
 			},
-		},
+		}
+	}
+
+	cur, err := collection.Find(ctx, bson.M{
+		"$or": cond,
 	}, &options.FindOptions{Projection: bson.M{
 		"infos": bson.M{
 			"$slice": 1,

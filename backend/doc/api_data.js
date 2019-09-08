@@ -319,6 +319,68 @@ define({ "api": [
     }
   },
   {
+    "type": "put",
+    "url": "/buyInfo/:buyInfoID",
+    "title": "UpdateBuyInfo",
+    "version": "1.0.0",
+    "group": "BuyInfo",
+    "permission": [
+      {
+        "name": "self/admin"
+      }
+    ],
+    "name": "UpdateBuyInfo",
+    "description": "<p>Update buy info</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>1 for buying <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-BuyInfo_Update\">BuyInfo Service</a></p>"
+          }
+        ]
+      }
+    },
+    "filename": "api/buyinfo/main.go",
+    "groupTitle": "BuyInfo",
+    "error": {
+      "fields": {
+        "Error 400": [
+          {
+            "group": "Error 400",
+            "optional": false,
+            "field": "InvalidParam",
+            "description": "<p>Invalid param</p>"
+          }
+        ],
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "BuyInfoServiceDown",
+            "description": "<p>BuyInfo service down</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "post",
     "url": "/content",
     "title": "AddContent",
@@ -788,16 +850,17 @@ define({ "api": [
       }
     ],
     "name": "GetMessage",
-    "description": "<p>Get all new message about user</p>",
+    "description": "<p>Get all (new) message about user</p>",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "--",
+            "type": "bool",
             "optional": false,
-            "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Message_Query\">Message Service</a></p>"
+            "field": "oldMsg",
+            "defaultValue": "0",
+            "description": "<p>true to get all message, not only the new</p>"
           }
         ]
       }
@@ -997,6 +1060,68 @@ define({ "api": [
             "optional": false,
             "field": "response",
             "description": "<p>see <a href=\"#api-Service-SellInfo_Query\">SellInfo Service</a></p>"
+          }
+        ]
+      }
+    },
+    "filename": "api/sellinfo/main.go",
+    "groupTitle": "SellInfo",
+    "error": {
+      "fields": {
+        "Error 400": [
+          {
+            "group": "Error 400",
+            "optional": false,
+            "field": "InvalidParam",
+            "description": "<p>Invalid param</p>"
+          }
+        ],
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "SellInfoServiceDown",
+            "description": "<p>SellInfo service down</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "put",
+    "url": "/sellInfo/:sellInfoID",
+    "title": "UpdateSellInfo",
+    "version": "1.0.0",
+    "group": "SellInfo",
+    "permission": [
+      {
+        "name": "self/admin"
+      }
+    ],
+    "name": "UpdateSellInfo",
+    "description": "<p>Update sell info</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Response",
+            "optional": false,
+            "field": "response",
+            "description": "<p>see <a href=\"#api-Service-SellInfo_Update\">SellInfo Service</a></p>"
           }
         ]
       }
@@ -1430,6 +1555,62 @@ define({ "api": [
             "optional": false,
             "field": "userID",
             "description": "<p>userID</p>"
+          }
+        ]
+      }
+    },
+    "filename": "srv/buyinfo/main.go",
+    "groupTitle": "Service",
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "DBServerDown",
+            "description": "<p>can't connect to database server</p>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rpc",
+    "url": "/rpc",
+    "title": "BuyInfo.Update",
+    "version": "1.0.0",
+    "group": "Service",
+    "name": "BuyInfo_Update",
+    "description": "<p>Update buy info.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "buyInfoID",
+            "description": "<p>buyInfo id.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "int32",
+            "optional": false,
+            "field": "status",
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for buy info not found</p>"
           }
         ]
       }
@@ -2144,14 +2325,14 @@ define({ "api": [
             "type": "int32",
             "optional": false,
             "field": "fromUser",
-            "description": "<p>user who launch the chat at first time</p>"
+            "description": "<p>user who want to find</p>"
           },
           {
             "group": "Parameter",
             "type": "int32",
             "optional": false,
             "field": "toUser",
-            "description": "<p>user who accept the chat at first time</p>"
+            "description": "<p>user who chat with from user</p>"
           },
           {
             "group": "Parameter",
@@ -2290,6 +2471,14 @@ define({ "api": [
             "optional": false,
             "field": "userID",
             "description": "<p>user who wants to pull new message</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "bool",
+            "optional": false,
+            "field": "oldMsg",
+            "defaultValue": "0",
+            "description": "<p>true to get all message, not only the new</p>"
           }
         ]
       }
@@ -2302,7 +2491,7 @@ define({ "api": [
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success</p>"
           },
           {
             "group": "Success 200",
@@ -2705,11 +2894,11 @@ define({ "api": [
   {
     "type": "rpc",
     "url": "/rpc",
-    "title": "Transaction.Create",
+    "title": "SellInfo.Update",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Transaction_Create",
-    "description": "<p>Create transaction</p>",
+    "name": "SellInfo_Update",
+    "description": "<p>Update sell info.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2717,22 +2906,15 @@ define({ "api": [
             "group": "Parameter",
             "type": "int32",
             "optional": false,
-            "field": "infoID",
-            "description": "<p>sellInfoID or buyInfoID.</p>"
+            "field": "sellInfoID",
+            "description": "<p>sellInfo id.</p>"
           },
           {
             "group": "Parameter",
             "type": "int32",
             "optional": false,
-            "field": "category",
-            "description": "<p>1 for sell <br> 2 for buy</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int32",
-            "optional": false,
-            "field": "fromUserID",
-            "description": "<p>userID whose create the transaction</p>"
+            "field": "status",
+            "description": "<p>1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed</p>"
           }
         ]
       }
@@ -2745,227 +2927,12 @@ define({ "api": [
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for info id not found</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "int32",
-            "optional": false,
-            "field": "transactionID",
-            "description": "<p>transaction id</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for sell info not found</p>"
           }
         ]
       }
     },
-    "filename": "srv/transaction/main.go",
-    "groupTitle": "Service",
-    "error": {
-      "fields": {
-        "Error 500": [
-          {
-            "group": "Error 500",
-            "optional": false,
-            "field": "DBServerDown",
-            "description": "<p>can't connect to database server</p>"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "rpc",
-    "url": "/rpc",
-    "title": "Transaction.Find",
-    "version": "1.0.0",
-    "group": "Service",
-    "name": "Transaction_Find",
-    "description": "<p>Find transactions</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "int32",
-            "optional": true,
-            "field": "infoID",
-            "description": "<p>sellInfoID or buyInfoID.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int32",
-            "optional": true,
-            "field": "category",
-            "description": "<p>1 for sell <br> 2 for buy</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int32",
-            "optional": true,
-            "field": "userID",
-            "description": "<p>userID who create the transaction</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int64",
-            "optional": true,
-            "field": "lowCreateTime",
-            "description": "<p>low boundary of CreateTime</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int64",
-            "optional": true,
-            "field": "highCreateTime",
-            "description": "<p>high boundary of CreateTime</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int32",
-            "optional": true,
-            "field": "status",
-            "description": "<p>1 for asking <br> 2 for accepted <br> 3 for rejected <br> 4 for closed <br> 5 for pending <br> 6 for done</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "uint32",
-            "size": "0-100",
-            "optional": false,
-            "field": "limit",
-            "defaultValue": "100",
-            "description": "<p>row limit</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "uint32",
-            "optional": false,
-            "field": "offset",
-            "defaultValue": "0",
-            "description": "<p>row offset</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int32",
-            "optional": false,
-            "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "array",
-            "optional": false,
-            "field": "transactions",
-            "description": "<p>see below</p>"
-          }
-        ],
-        "Transaction Array": [
-          {
-            "group": "Transaction Array",
-            "type": "int32",
-            "optional": false,
-            "field": "transactionID",
-            "description": "<p>transaction ID</p>"
-          },
-          {
-            "group": "Transaction Array",
-            "type": "int32",
-            "optional": false,
-            "field": "infoID",
-            "description": "<p>sellInfoID or buyInfoID</p>"
-          },
-          {
-            "group": "Transaction Array",
-            "type": "int32",
-            "optional": false,
-            "field": "category",
-            "description": "<p>1 for sell <br> 2 for buy</p>"
-          },
-          {
-            "group": "Transaction Array",
-            "type": "int32",
-            "optional": false,
-            "field": "userID",
-            "description": "<p>userID whose create the transaction</p>"
-          },
-          {
-            "group": "Transaction Array",
-            "type": "int64",
-            "optional": false,
-            "field": "createTime",
-            "description": "<p>create time</p>"
-          },
-          {
-            "group": "Transaction Array",
-            "type": "int32",
-            "optional": false,
-            "field": "status",
-            "description": "<p>1 for order <br> 2 for done</p>"
-          }
-        ]
-      }
-    },
-    "filename": "srv/transaction/main.go",
-    "groupTitle": "Service",
-    "error": {
-      "fields": {
-        "Error 500": [
-          {
-            "group": "Error 500",
-            "optional": false,
-            "field": "DBServerDown",
-            "description": "<p>can't connect to database server</p>"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "rpc",
-    "url": "/rpc",
-    "title": "Transaction.Update",
-    "version": "1.0.0",
-    "group": "Service",
-    "name": "Transaction_Update",
-    "description": "<p>Update transaction status</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "int32",
-            "optional": false,
-            "field": "transactionID",
-            "description": "<p>transaction ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "int32",
-            "optional": false,
-            "field": "status",
-            "description": "<p>1 for asking <br> 2 for accepted <br> 3 for rejected <br> 4 for closed <br> 5 for pending <br> 6 for done</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "int32",
-            "optional": false,
-            "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success</p>"
-          }
-        ]
-      }
-    },
-    "filename": "srv/transaction/main.go",
+    "filename": "srv/sellinfo/main.go",
     "groupTitle": "Service",
     "error": {
       "fields": {
@@ -3366,192 +3333,6 @@ define({ "api": [
     },
     "filename": "api/tag/main.go",
     "groupTitle": "Tag"
-  },
-  {
-    "type": "post",
-    "url": "/transaction",
-    "title": "AddTransaction",
-    "version": "1.0.0",
-    "group": "Transaction",
-    "permission": [
-      {
-        "name": "user/admin"
-      }
-    ],
-    "name": "AddTransaction",
-    "description": "<p>Add transaction</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "--",
-            "optional": false,
-            "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Transaction_Create\">Transaction Service</a></p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Response",
-            "optional": false,
-            "field": "response",
-            "description": "<p>see <a href=\"#api-Service-Transaction_Create\">Transaction Service</a></p>"
-          }
-        ]
-      }
-    },
-    "filename": "api/transaction/main.go",
-    "groupTitle": "Transaction",
-    "error": {
-      "fields": {
-        "Error 400": [
-          {
-            "group": "Error 400",
-            "optional": false,
-            "field": "InvalidParam",
-            "description": "<p>Invalid param</p>"
-          }
-        ],
-        "Error 500": [
-          {
-            "group": "Error 500",
-            "optional": false,
-            "field": "TransactionServiceDown",
-            "description": "<p>Transaction service down</p>"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "get",
-    "url": "/transaction",
-    "title": "FindTransaction",
-    "version": "1.0.0",
-    "group": "Transaction",
-    "permission": [
-      {
-        "name": "self/admin"
-      }
-    ],
-    "name": "FindTransaction",
-    "description": "<p>Find transaction</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "--",
-            "optional": false,
-            "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Transaction_Find\">Transaction Service</a> <br> Self permission MUST have userID field</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Response",
-            "optional": false,
-            "field": "response",
-            "description": "<p>see <a href=\"#api-Service-Transaction_Find\">Transaction Service</a></p>"
-          }
-        ]
-      }
-    },
-    "filename": "api/transaction/main.go",
-    "groupTitle": "Transaction",
-    "error": {
-      "fields": {
-        "Error 400": [
-          {
-            "group": "Error 400",
-            "optional": false,
-            "field": "InvalidParam",
-            "description": "<p>Invalid param</p>"
-          }
-        ],
-        "Error 500": [
-          {
-            "group": "Error 500",
-            "optional": false,
-            "field": "TransactionServiceDown",
-            "description": "<p>Transaction service down</p>"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "put",
-    "url": "/transaction",
-    "title": "UpdateTransaction",
-    "version": "1.0.0",
-    "group": "Transaction",
-    "permission": [
-      {
-        "name": "admin"
-      }
-    ],
-    "name": "UpdateTransaction",
-    "description": "<p>Update transaction</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "--",
-            "optional": false,
-            "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Transaction_Update\">Transaction Service</a></p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Response",
-            "optional": false,
-            "field": "response",
-            "description": "<p>see <a href=\"#api-Service-Transaction_Update\">Transaction Service</a></p>"
-          }
-        ]
-      }
-    },
-    "filename": "api/transaction/main.go",
-    "groupTitle": "Transaction",
-    "error": {
-      "fields": {
-        "Error 400": [
-          {
-            "group": "Error 400",
-            "optional": false,
-            "field": "InvalidParam",
-            "description": "<p>Invalid param</p>"
-          }
-        ],
-        "Error 500": [
-          {
-            "group": "Error 500",
-            "optional": false,
-            "field": "TransactionServiceDown",
-            "description": "<p>Transaction service down</p>"
-          }
-        ]
-      }
-    }
   },
   {
     "type": "post",

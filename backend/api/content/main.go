@@ -47,9 +47,9 @@ func addContent(c *gin.Context) {
 	}
 	var p param
 	role := utils.GetRole(c)
-	data, code, err := utils.GetQueryFile(c, "content", 1024*1024*50) // 50M
+	data, code, _ := utils.GetQueryFile(c, "content", 1024*1024*50) // 50M
 
-	if err == nil && !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
 		// check param&role
 		if code != 200 {
 			c.AbortWithStatus(code)

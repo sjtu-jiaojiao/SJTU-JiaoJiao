@@ -73,6 +73,7 @@ message NewMessage {
 
 message MessageQueryRequest {
     int32 userID = 1;
+    bool oldMsg = 2;
 }
 
 message MessageQueryResponse {

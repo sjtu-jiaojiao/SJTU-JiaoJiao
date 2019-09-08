@@ -48,12 +48,7 @@ func addMessage(c *gin.Context) {
 	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
 		if p.Type == int32(message.Type_PICTURE) || p.Type == int32(message.Type_VIDEO) {
 			var code int
-			var err error
-			msg, code, err = utils.GetQueryFile(c, "msg", int64(utils.If(p.Type == int32(message.Type_PICTURE), 1024*1024*5, 1024*1024*50).(int)))
-			if err != nil {
-				c.AbortWithStatus(400)
-				return
-			}
+			msg, code, _ = utils.GetQueryFile(c, "msg", int64(utils.If(p.Type == int32(message.Type_PICTURE), 1024*1024*5, 1024*1024*50).(int)))
 			if code != 200 {
 				c.AbortWithStatus(code)
 				return
@@ -63,7 +58,8 @@ func addMessage(c *gin.Context) {
 			if s != "" {
 				msg = []byte(s)
 			} else {
-				msg = []byte{0}
+				c.AbortWithStatus(400)
+				return
 			}
 		}
 		role := utils.GetRoleID(c, int32(p.FromUser))
@@ -105,11 +101,11 @@ func addMessage(c *gin.Context) {
  */
 func findMessage(c *gin.Context) {
 	type param struct {
-		FromUser int32 `form:"fromUser" binding:"required"`
-		ToUser   int32 `form:"toUser" binding:"required"`
-		Way      int32 `form:"way" binding:"required"`
-		Limit    int32 `form:"limit"`
-		Offset   int32 `form:"offset"`
+		FromUser int32  `form:"fromUser" binding:"required"`
+		ToUser   int32  `form:"toUser" binding:"required"`
+		Way      int32  `form:"way" binding:"required"`
+		Limit    uint32 `form:"limit"`
+		Offset   uint32 `form:"offset"`
 	}
 	var p param
 
@@ -127,6 +123,8 @@ func findMessage(c *gin.Context) {
 			FromUser: p.FromUser,
 			ToUser:   p.ToUser,
 			Way:      message.MessageFindRequest_Way(utils.EnumConvert(p.Way, message.MessageFindRequest_Way_name)),
+			Limit:    p.Limit,
+			Offset:   p.Offset,
 		})
 		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
@@ -144,9 +142,9 @@ func findMessage(c *gin.Context) {
  * @apiGroup Message
  * @apiPermission self/admin
  * @apiName GetMessage
- * @apiDescription Get all new message about user
+ * @apiDescription Get all (new) message about user
  *
- * @apiParam {--} Param see [Message Service](#api-Service-Message_Query)
+ * @apiParam {bool} oldMsg=0 true to get all message, not only the new
  * @apiSuccess (Success 200) {Response} response see [Message Service](#api-Service-Message_Query)
  * @apiUse InvalidParam
  * @apiUse MessageServiceDown
@@ -168,6 +166,7 @@ func getMessage(c *gin.Context) {
 			func() interface{} { return mock.NewMessageService() }).(message.MessageService)
 		rsp, err := srv.Query(context.TODO(), &message.MessageQueryRequest{
 			UserID: p.UserID,
+			OldMsg: c.DefaultQuery("oldMsg", "0") == "1",
 		})
 		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)

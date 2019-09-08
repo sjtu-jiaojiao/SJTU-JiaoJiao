@@ -26,9 +26,24 @@ func (a *mockSrv) Query(ctx context.Context, in *content.ContentQueryRequest, op
 }
 
 // Check is content check mock
-func (a *mockSrv) Check(ctx context.Context, in *content.ContentCheckRequest, opts ...client.CallOption) (*content.ContentCheckResponse, error) {
+func (a *mockSrv) Check(ctx context.Context, req *content.ContentCheckRequest, opts ...client.CallOption) (*content.ContentCheckResponse, error) {
 	var rsp content.ContentCheckResponse
-	// TODO
+	if !utils.RequireParam(req.ContentID, req.ContentToken) {
+		rsp.Status = content.ContentCheckResponse_INVALID_PARAM
+		return &rsp, nil
+	}
+
+	if req.ContentID == "012345678901234567890123" {
+		if req.ContentToken == "valid_token" {
+			rsp.Status = content.ContentCheckResponse_VALID
+		} else {
+			rsp.Status = content.ContentCheckResponse_INVALID
+		}
+	} else if req.ContentID == "987654321098765432109876" {
+		return nil, errors.New("")
+	} else {
+		rsp.Status = content.ContentCheckResponse_INVALID
+	}
 	return &rsp, nil
 }
 
@@ -82,8 +97,29 @@ func (a *mockSrv) Delete(ctx context.Context, req *content.ContentDeleteRequest,
 
 // CreateTag is tag create mock
 func (a *mockSrv) CreateTag(ctx context.Context, req *content.ContentCreateTagRequest, opts ...client.CallOption) (*content.ContentCreateTagResponse, error) {
-	// TODO
-	return nil, nil
+	var rsp content.ContentCreateTagResponse
+	if !utils.RequireParam(req.Tags) {
+		rsp.Status = content.ContentCreateTagResponse_INVALID_PARAM
+		return &rsp, nil
+	}
+
+	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) { // create new
+		rsp.ContentID = "1234567890abcdef12345678"
+		rsp.ContentToken = "valid_token"
+		rsp.Status = content.ContentCreateTagResponse_SUCCESS
+	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) { // add exist one
+		if req.ContentToken != "valid_token" {
+			rsp.Status = content.ContentCreateTagResponse_INVALID_TOKEN
+			return &rsp, nil
+		}
+
+		rsp.ContentID = "012345678901234567890123"
+		rsp.ContentToken = "valid_token"
+		rsp.Status = content.ContentCreateTagResponse_SUCCESS
+	} else {
+		rsp.Status = content.ContentCreateTagResponse_INVALID_PARAM
+	}
+	return &rsp, nil
 }
 
 // NewContentService is content service mock

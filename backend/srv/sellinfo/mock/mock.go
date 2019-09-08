@@ -59,6 +59,23 @@ func (a *mockSrv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 // Find is sellinfo find mock
 func (a *mockSrv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, opts ...client.CallOption) (*sellinfo.SellInfoFindResponse, error) {
 	var rsp sellinfo.SellInfoFindResponse
+	info := sellinfo.SellInfoMsg{UserID: 1000}
+	if req.UserID == 1000 {
+		if req.Status == 1 {
+			rsp.SellInfo = append(rsp.SellInfo, &info)
+		} else {
+			rsp.SellInfo = append(rsp.SellInfo, &info)
+			rsp.SellInfo = append(rsp.SellInfo, &info)
+		}
+	} else {
+		return nil, errors.New("")
+	}
+	return &rsp, nil
+}
+
+// Update is sellinfo update mock
+func (a *mockSrv) Update(ctx context.Context, req *sellinfo.SellInfoUpdateRequest, opts ...client.CallOption) (*sellinfo.SellInfoUpdateResponse, error) {
+	var rsp sellinfo.SellInfoUpdateResponse
 	return &rsp, nil
 }
 
