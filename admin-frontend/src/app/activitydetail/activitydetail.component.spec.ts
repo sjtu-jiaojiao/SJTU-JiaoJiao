@@ -20,7 +20,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
 import { SellInfoComponent } from '../info/sell-info/sell-info.component';
 import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
@@ -40,7 +39,6 @@ describe('ActivitydetailComponent', () => {
         InfoDetailComponent,
         LoginComponent,
         DashboardComponent,
-        CallbackComponent,
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,
@@ -48,12 +46,12 @@ describe('ActivitydetailComponent', () => {
         SellInfoComponent,
         BuyInfoComponent
       ],
-      imports: [   
-    //import { BuyInfoComponent } from './../info/buy-info/buy-info.component';
-      DelonAuthModule,
+      imports: [
+        //import { BuyInfoComponent } from './../info/buy-info/buy-info.component';
+        DelonAuthModule,
         ReactiveFormsModule,
         BrowserModule,
-        AppRoutingModule,    
+        AppRoutingModule,
         NgZorroAntdModule,
         FormsModule,
         NgxEchartsModule,
@@ -63,7 +61,7 @@ describe('ActivitydetailComponent', () => {
         BrowserAnimationsModule
       ],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

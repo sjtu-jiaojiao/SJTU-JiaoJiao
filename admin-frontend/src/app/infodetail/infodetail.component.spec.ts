@@ -21,7 +21,6 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InfoComponent } from '../info/info.component';
 import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
 import { User } from '../entity/user';
 import { SellInfoComponent } from '../info/sell-info/sell-info.component';
@@ -38,7 +37,6 @@ describe('InfodetailComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
-        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
         LoginComponent,

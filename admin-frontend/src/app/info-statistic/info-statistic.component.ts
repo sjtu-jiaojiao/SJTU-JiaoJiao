@@ -52,10 +52,6 @@ export class InfoStatisticComponent implements OnInit {
       this.pl=!this.pl;
   }
   getComment(){
-    if(!this.pl){
-    this.prcGraph();
-    this.cloudGrpah();
-    }
     this.bi.forEach(
       info => {
         this.fileService.getContent(info.contentID).subscribe(
@@ -67,6 +63,10 @@ export class InfoStatisticComponent implements OnInit {
       )
       }
     );
+    if(!this.pl){
+    this.prcGraph();
+    this.cloudGrpah();
+    }
   }
   getAllTR(beg, end){
     this.tr = this.trs.getAllTR(6,beg,end);
