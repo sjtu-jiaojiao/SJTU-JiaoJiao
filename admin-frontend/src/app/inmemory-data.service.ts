@@ -13,6 +13,23 @@ export class InMemoryDataService implements InMemoryDbService {
     {id: 2, description: '第二次迭代', time: '2019-07-23', type: 1},
     {id: 3, description: '紧急维护', time: '', type: -1}
   ];
-    return { site , history};
+    const activity = [
+      {id: 0, title: '开学季大甩卖', 
+      description: '出售信息满足开学季需求可进行申报,要求多媒体数>=3,获得优先加权推荐', 
+      releaseTime: 1567957148885, validTime: 1567957148885, weight: 2, 
+    pic:3,isNew:false
+      },
+      {id: 1, title: '新人体验',
+      description: '用户首次发布交易信息可进行申报,要求多媒体数>=1,获得特别加权推荐',
+      releaseTime: 1567957148885, validTime: 1567957148885, weight: 3,
+      pic:1,isNew:true
+      },
+      {id:2, title: '互饮家乡水',
+      description: '商品属于土特产类可进行申报,要求多媒体数>=3,获得加权推荐',
+      releaseTime: 1567957148885, validTime: 1567957148885, weight: 1,
+      pic:3,isNew:false
+      }
+    ];
+    return { site , history, activity};
   }
 }

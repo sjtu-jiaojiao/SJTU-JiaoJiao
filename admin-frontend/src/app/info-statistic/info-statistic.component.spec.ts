@@ -21,7 +21,6 @@ import { InfoComponent } from '../info/info.component';
 import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import 'echarts-wordcloud';
-import { CallbackComponent } from '../callback/callback.component';
 import { SellInfoComponent } from '../info/sell-info/sell-info.component';
 import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
 import { buyInfo, sellInfo } from '../entity/info';
@@ -36,7 +35,6 @@ describe('InfoStatisticComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
-        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
         LoginComponent,

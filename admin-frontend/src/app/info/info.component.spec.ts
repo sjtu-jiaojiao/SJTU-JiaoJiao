@@ -21,7 +21,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InfoComponent } from './info.component';
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { InfoService } from '../info.service';
-import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
 import { sellInfo } from '../entity/info';
 import { BuyInfoComponent } from './buy-info/buy-info.component';
@@ -37,7 +36,6 @@ describe('InfoComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
-        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
         LoginComponent,

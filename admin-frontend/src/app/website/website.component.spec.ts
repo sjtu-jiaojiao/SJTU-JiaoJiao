@@ -19,7 +19,6 @@ import { InfoComponent } from '../info/info.component';
 import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WebsiteComponent } from './website.component';
-import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
 import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
 import { SellInfoComponent } from '../info/sell-info/sell-info.component';
@@ -34,7 +33,6 @@ describe('WebsiteComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
-        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
         LoginComponent,
