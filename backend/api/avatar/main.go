@@ -35,8 +35,8 @@ func addAvatar(c *gin.Context) {
 	}
 	var p param
 
-	data, code, err := utils.GetQueryFile(c, "file", 1024*1024*5) // 5M
-	if err == nil && !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+	data, code, _ := utils.GetQueryFile(c, "file", 1024*1024*5) // 5M
+	if !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
 		if code != 200 {
 			c.AbortWithStatus(code)
 			return

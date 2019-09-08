@@ -103,24 +103,21 @@ func (a *mockSrv) CreateTag(ctx context.Context, req *content.ContentCreateTagRe
 		return &rsp, nil
 	}
 
-	if req.ContentID == "" {
-		if req.ContentToken == "" {
-			rsp.ContentID = "1234567890abcdef12345678"
-			rsp.ContentToken = "valid_token"
-			rsp.Status = content.ContentCreateTagResponse_SUCCESS
-		} else {
+	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) { // create new
+		rsp.ContentID = "1234567890abcdef12345678"
+		rsp.ContentToken = "valid_token"
+		rsp.Status = content.ContentCreateTagResponse_SUCCESS
+	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) { // add exist one
+		if req.ContentToken != "valid_token" {
 			rsp.Status = content.ContentCreateTagResponse_INVALID_TOKEN
+			return &rsp, nil
 		}
-	} else if req.ContentID == "012345678901234567890123" {
-		if req.ContentToken == "valid_token" {
-			rsp.ContentID = "012345678901234567890123"
-			rsp.ContentToken = "valid_token"
-			rsp.Status = content.ContentCreateTagResponse_SUCCESS
-		} else {
-			rsp.Status = content.ContentCreateTagResponse_INVALID_TOKEN
-		}
+
+		rsp.ContentID = "012345678901234567890123"
+		rsp.ContentToken = "valid_token"
+		rsp.Status = content.ContentCreateTagResponse_SUCCESS
 	} else {
-		rsp.Status = content.ContentCreateTagResponse_INVALID_TOKEN
+		rsp.Status = content.ContentCreateTagResponse_INVALID_PARAM
 	}
 	return &rsp, nil
 }
