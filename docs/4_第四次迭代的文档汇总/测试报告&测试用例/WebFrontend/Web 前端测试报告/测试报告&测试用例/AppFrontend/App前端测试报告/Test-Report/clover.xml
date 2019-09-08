@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1563170598778" clover="3.2.0">
+  <project timestamp="1563170598779" name="All files">
+    <metrics statements="99" coveredstatements="93" conditionals="12" coveredconditionals="7" methods="39" coveredmethods="34" elements="150" coveredelements="134" complexity="0" loc="99" ncloc="99" packages="12" files="14" classes="14"/>
+    <package name="src">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="Config.js" path="C:\Users\22859\Desktop\test\frontend\src\Config.js">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.Views.BuyInfo">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="BuyInfo.js" path="C:\Users\22859\Desktop\test\frontend\src\Views\BuyInfo\BuyInfo.js">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.Views.Contact">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="Contact.js" path="C:\Users\22859\Desktop\test\frontend\src\Views\Contact\Contact.js">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.Views.Home">
+      <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+      <file name="Home.js" path="C:\Users\22859\Desktop\test\frontend\src\Views\Home\Home.js">
+        <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="87" count="1" type="stmt"/>
+        <line num="238" count="3" type="stmt"/>
+        <line num="239" count="3" type="stmt"/>
+        <line num="327" count="1" type="stmt"/>
+        <line num="368" count="3" type="stmt"/>
+        <line num="381" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.Views.MyBuyInfo">
+      <metrics statements="10" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="5"/>
+      <file name="MyBuyInfo.js" path="C:\Users\22859\Desktop\test\frontend\src\Views\MyBuyInfo\MyBuyInfo.js">
+        <metrics statements="10" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="5"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="125" count="0" type="stmt"/>
+        <line num="138" count="1" type="stmt"/>
+        <line num="142" count="7" type="stmt"/>
+        <line num="144" count="1" type="stmt"/>
+        <line num="145" count="7" type="stmt"/>
+        <line num="179" count="1" type="stmt"/>
+        <line num="192" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.Views.MyHistoryInfo">
+      <metrics statements="16" coveredstatements="13" conditionals="6" coveredconditionals="4" methods="6" coveredmethods="5"/>
+      <file name="MyHistoryInfo.js" path="C:\Users\22859\Desktop\test\frontend\src\Views\MyHistoryInfo\MyHistoryInfo.js">
+        <metrics statements="16" coveredstatements="13" conditionals="6" coveredconditionals="4" methods="6" coveredmethods="5"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="116" count="0" type="stmt"/>
+        <line num="129" count="1" type="stmt"/>
+        <line num="133" count="6" type="stmt"/>
+        <line num="135" count="1" type="stmt"/>
+        <line num="136" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="137" count="4" type="stmt"/>
+        <line num="156" count="2" type="stmt"/>
+        <line num="178" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="179" count="0" type="stmt"/>
+        <line num="185" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="186" count="0" type="stmt"/>
+        <line num="193" count="1" type="stmt"/>
+        <line num="206" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.Views.MySellInfo">
+      <metrics statements="27" coveredstatements="27" conditionals="6" coveredconditionals="3" methods="7" coveredmethods="7"/>
+      <file name="MySellInfo.js" path="C:\Users\22859\Desktop\test\frontend\src\Views\MySellInfo\MySellInfo.js">
+        <metrics statements="27" coveredstatements="27" conditionals="6" coveredconditionals="3" methods="7" coveredmethods="7"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="15" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="23" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="62" count="1" type="stmt"/>
+        <line num="68" count="1" type="stmt"/>
+        <line num="70" count="1" type="stmt"/>
+        <line num="81" count="1" type="stmt"/>
+        <line num="107" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="136" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.Views.Release">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="Release.js" path="C:\Users\22859\Desktop\test\frontend\src\Views\Release\Release.js">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.Views.Search">
+      <metrics statements="10" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="2"/>
+      <file name="Search.js" path="C:\Users\22859\Desktop\test\frontend\src\Views\Search\Search.js">
+        <metrics statements="10" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="2"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="60" count="1" type="stmt"/>
+        <line num="61" count="0" type="stmt"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="125" count="1" type="stmt"/>
+        <line num="150" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.Views.SellInfo">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="SellInfo.js" path="C:\Users\22859\Desktop\test\frontend\src\Views\SellInfo\SellInfo.js">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.Views.UserInfo">
+      <metrics statements="13" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="7"/>
+      <file name="UserInfo.js" path="C:\Users\22859\Desktop\test\frontend\src\Views\UserInfo\UserInfo.js">
+        <metrics statements="13" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="7"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="201" count="1" type="stmt"/>
+        <line num="202" count="1" type="stmt"/>
+        <line num="280" count="0" type="stmt"/>
+        <line num="293" count="1" type="stmt"/>
+        <line num="297" count="7" type="stmt"/>
+        <line num="299" count="1" type="stmt"/>
+        <line num="300" count="7" type="stmt"/>
+        <line num="334" count="1" type="stmt"/>
+        <line num="347" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.assets.images">
+      <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="NotLogin.jpg" path="C:\Users\22859\Desktop\test\frontend\src\assets\images\NotLogin.jpg">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+      <file name="buyIcon.png" path="C:\Users\22859\Desktop\test\frontend\src\assets\images\buyIcon.png">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+      <file name="sellIcon.png" path="C:\Users\22859\Desktop\test\frontend\src\assets\images\sellIcon.png">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
