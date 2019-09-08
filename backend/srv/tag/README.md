@@ -1,9 +1,16 @@
 # TAG service
+## 依赖安装
+
+    pip install --user flask
+    
+其余缺少自行安装
+    
 ## 数据集
-  [chinese_L-12_H-768_A-12.tar.gz](https://jbox.sjtu.edu.cn/l/aoMMkf) 和 [sjtujj.tar.gz](https://jbox.sjtu.edu.cn/l/lu8AJY) 解压到新建的data目录下
+  [chinese_L-12_H-768_A-12.tar.gz](https://jbox.sjtu.edu.cn/l/aoMMkf) 解压到`data`目录下， [sjtujj.tar.gz](https://jbox.sjtu.edu.cn/l/lu8AJY) 解压到`data/model`目录下
 
 ## 使用
-- 启动服务： 运行`python serve.py 端口号`
+- 启动服务： 运行`python serve.py`
+- 使用：`http://localhost:5000/?text=xxx`
 - 训练数据： 训练数据暂未上传
 - 可选模型：
     - train/54.53 & test/55.58_40w_categorical
