@@ -12,17 +12,18 @@ export class ActivityComponent implements OnInit {
   ID: string;
   constructor(private actService: ActivityService) { }
   ngOnInit() {
-    this.actService.getActs().subscribe(e => {
-      this.acts = e;
-      this.acts.forEach(e=> e.validDate=new Date(e.validTime)); 
-      this.acts.forEach(e=> e.releaseDate=new Date(e.releaseTime)); 
-    });
+    this.actService.getActs().subscribe(e =>this.refresh(e));
   }
   delete(item){
     this.actService.deleteAct(item).subscribe(
       e =>
       this.acts = this.acts.filter( e => e.id != item.id)
     )
+  }
+  refresh(e){
+    this.acts = e;
+    this.acts.forEach(e=> e.validDate=new Date(e.validTime)); 
+    this.acts.forEach(e=> e.releaseDate=new Date(e.releaseTime)); 
   }
   add(){
     const item = 
@@ -33,11 +34,7 @@ export class ActivityComponent implements OnInit {
     };
     this.actService.addAct(item).subscribe(
       a =>
-      this.actService.getActs().subscribe(e => {
-        this.acts = e;
-        this.acts.forEach(e=> e.validDate=new Date(e.validTime)); 
-        this.acts.forEach(e=> e.releaseDate=new Date(e.releaseTime)); 
-      })
+      this.actService.getActs().subscribe(e => this.refresh(e))
     )
   }
   save(item){
@@ -45,11 +42,7 @@ export class ActivityComponent implements OnInit {
     item.releaseTime=item.releaseDate.getTime(); 
     this.actService.updateAct(item).subscribe(
       a =>
-      this.actService.getActs().subscribe(e => {
-        this.acts = e;
-        this.acts.forEach(e=> e.validDate=new Date(e.validTime)); 
-        this.acts.forEach(e=> e.releaseDate=new Date(e.releaseTime)); 
-      })
+      this.actService.getActs().subscribe(e => this.refresh(e))
     )
   }
 }

@@ -1,10 +1,10 @@
 # Details
 
-Date : 2019-09-09 00:24:46
+Date : 2019-09-09 04:30:08
 
 Directory d:\SJTU-jiaojiao\admin-frontend\src
 
-Total : 91 files,  4854 codes, 323 comments, 499 blanks, all 5676 lines
+Total : 89 files,  4837 codes, 323 comments, 496 blanks, all 5656 lines
 
 [summary](results.md)
 
@@ -15,26 +15,24 @@ Total : 91 files,  4854 codes, 323 comments, 499 blanks, all 5676 lines
 | [app\activity.service.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activity.service.spec.ts) | TypeScript | 9 | 0 | 4 | 13 |
 | [app\activity.service.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activity.service.ts) | TypeScript | 50 | 10 | 9 | 69 |
 | [app\activity\activity.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activity/activity.component.css) | CSS | 38 | 0 | 5 | 43 |
-| [app\activity\activity.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activity/activity.component.html) | HTML | 68 | 0 | 1 | 69 |
-| [app\activity\activity.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activity/activity.component.spec.ts) | TypeScript | 72 | 1 | 7 | 80 |
+| [app\activity\activity.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activity/activity.component.html) | HTML | 72 | 0 | 2 | 74 |
+| [app\activity\activity.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activity/activity.component.spec.ts) | TypeScript | 70 | 1 | 7 | 78 |
 | [app\activity\activity.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activity/activity.component.ts) | TypeScript | 54 | 0 | 2 | 56 |
-| [app\activitydetail\activitydetail.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activitydetail/activitydetail.component.css) | CSS | 0 | 0 | 1 | 1 |
-| [app\activitydetail\activitydetail.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activitydetail/activitydetail.component.html) | HTML | 25 | 0 | 0 | 25 |
-| [app\activitydetail\activitydetail.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activitydetail/activitydetail.component.spec.ts) | TypeScript | 74 | 1 | 7 | 82 |
-| [app\activitydetail\activitydetail.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activitydetail/activitydetail.component.ts) | TypeScript | 11 | 0 | 4 | 15 |
-| [app\app-routing.module.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/app-routing.module.ts) | TypeScript | 33 | 0 | 3 | 36 |
+| [app\activitydetail\activitydetail.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activitydetail/activitydetail.component.css) | CSS | 38 | 0 | 5 | 43 |
+| [app\activitydetail\activitydetail.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activitydetail/activitydetail.component.html) | HTML | 65 | 0 | 0 | 65 |
+| [app\activitydetail\activitydetail.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activitydetail/activitydetail.component.spec.ts) | TypeScript | 72 | 1 | 7 | 80 |
+| [app\activitydetail\activitydetail.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/activitydetail/activitydetail.component.ts) | TypeScript | 36 | 0 | 5 | 41 |
+| [app\app-routing.module.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/app-routing.module.ts) | TypeScript | 31 | 0 | 3 | 34 |
 | [app\app.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/app.component.css) | CSS | 23 | 0 | 2 | 25 |
 | [app\app.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/app.component.html) | HTML | 36 | 0 | 4 | 40 |
 | [app\app.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/app.component.spec.ts) | TypeScript | 65 | 1 | 4 | 70 |
 | [app\app.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/app.component.ts) | TypeScript | 19 | 1 | 2 | 22 |
-| [app\app.module.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/app.module.ts) | TypeScript | 78 | 0 | 6 | 84 |
+| [app\app.module.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/app.module.ts) | TypeScript | 76 | 0 | 6 | 82 |
 | [app\auth.service.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/auth.service.spec.ts) | TypeScript | 20 | 0 | 9 | 29 |
 | [app\auth.service.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/auth.service.ts) | TypeScript | 23 | 1 | 7 | 31 |
-| [app\callback\callback.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/callback/callback.component.spec.ts) | TypeScript | 77 | 0 | 6 | 83 |
-| [app\callback\callback.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/callback/callback.component.ts) | TypeScript | 25 | 0 | 3 | 28 |
 | [app\dashboard\dashboard.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/dashboard/dashboard.component.css) | CSS | 6 | 0 | 1 | 7 |
 | [app\dashboard\dashboard.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/dashboard/dashboard.component.html) | HTML | 58 | 0 | 6 | 64 |
-| [app\dashboard\dashboard.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/dashboard/dashboard.component.spec.ts) | TypeScript | 78 | 1 | 6 | 85 |
+| [app\dashboard\dashboard.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/dashboard/dashboard.component.spec.ts) | TypeScript | 76 | 1 | 6 | 83 |
 | [app\dashboard\dashboard.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/dashboard/dashboard.component.ts) | TypeScript | 73 | 0 | 5 | 78 |
 | [app\entity\content.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/entity/content.ts) | TypeScript | 10 | 0 | 1 | 11 |
 | [app\entity\info.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/entity/info.ts) | TypeScript | 28 | 0 | 2 | 30 |
@@ -44,13 +42,13 @@ Total : 91 files,  4854 codes, 323 comments, 499 blanks, all 5676 lines
 | [app\file.service.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/file.service.ts) | TypeScript | 27 | 9 | 5 | 41 |
 | [app\info-statistic\info-statistic.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info-statistic/info-statistic.component.css) | CSS | 56 | 0 | 9 | 65 |
 | [app\info-statistic\info-statistic.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info-statistic/info-statistic.component.html) | HTML | 44 | 0 | 6 | 50 |
-| [app\info-statistic\info-statistic.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info-statistic/info-statistic.component.spec.ts) | TypeScript | 100 | 1 | 5 | 106 |
+| [app\info-statistic\info-statistic.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info-statistic/info-statistic.component.spec.ts) | TypeScript | 98 | 1 | 5 | 104 |
 | [app\info-statistic\info-statistic.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info-statistic/info-statistic.component.ts) | TypeScript | 598 | 0 | 10 | 608 |
 | [app\info.service.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info.service.spec.ts) | TypeScript | 17 | 0 | 6 | 23 |
 | [app\info.service.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info.service.ts) | TypeScript | 149 | 14 | 19 | 182 |
 | [app\info\buy-info\buy-info.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/buy-info/buy-info.component.css) | CSS | 31 | 0 | 7 | 38 |
 | [app\info\buy-info\buy-info.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/buy-info/buy-info.component.html) | HTML | 49 | 0 | 2 | 51 |
-| [app\info\buy-info\buy-info.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/buy-info/buy-info.component.spec.ts) | TypeScript | 88 | 1 | 7 | 96 |
+| [app\info\buy-info\buy-info.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/buy-info/buy-info.component.spec.ts) | TypeScript | 86 | 1 | 7 | 94 |
 | [app\info\buy-info\buy-info.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/buy-info/buy-info.component.ts) | TypeScript | 79 | 0 | 8 | 87 |
 | [app\info\info.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/info.component.css) | CSS | 22 | 0 | 2 | 24 |
 | [app\info\info.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/info.component.html) | HTML | 52 | 16 | 3 | 71 |
@@ -60,11 +58,11 @@ Total : 91 files,  4854 codes, 323 comments, 499 blanks, all 5676 lines
 | [app\info\infocom.service.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/infocom.service.ts) | TypeScript | 29 | 0 | 1 | 30 |
 | [app\info\sell-info\sell-info.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/sell-info/sell-info.component.css) | CSS | 31 | 0 | 7 | 38 |
 | [app\info\sell-info\sell-info.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/sell-info/sell-info.component.html) | HTML | 49 | 0 | 2 | 51 |
-| [app\info\sell-info\sell-info.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/sell-info/sell-info.component.spec.ts) | TypeScript | 89 | 1 | 6 | 96 |
+| [app\info\sell-info\sell-info.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/sell-info/sell-info.component.spec.ts) | TypeScript | 87 | 1 | 6 | 94 |
 | [app\info\sell-info\sell-info.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/info/sell-info/sell-info.component.ts) | TypeScript | 79 | 0 | 9 | 88 |
 | [app\infodetail\infodetail.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/infodetail/infodetail.component.css) | CSS | 41 | 0 | 4 | 45 |
 | [app\infodetail\infodetail.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/infodetail/infodetail.component.html) | HTML | 103 | 0 | 4 | 107 |
-| [app\infodetail\infodetail.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/infodetail/infodetail.component.spec.ts) | TypeScript | 88 | 2 | 9 | 99 |
+| [app\infodetail\infodetail.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/infodetail/infodetail.component.spec.ts) | TypeScript | 86 | 2 | 9 | 97 |
 | [app\infodetail\infodetail.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/infodetail/infodetail.component.ts) | TypeScript | 140 | 0 | 7 | 147 |
 | [app\inmemory-data.service.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/inmemory-data.service.spec.ts) | TypeScript | 13 | 0 | 5 | 18 |
 | [app\inmemory-data.service.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/inmemory-data.service.ts) | TypeScript | 34 | 0 | 1 | 35 |
@@ -78,11 +76,11 @@ Total : 91 files,  4854 codes, 323 comments, 499 blanks, all 5676 lines
 | [app\user.service.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/user.service.ts) | TypeScript | 50 | 13 | 11 | 74 |
 | [app\user\user.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/user/user.component.css) | CSS | 41 | 0 | 3 | 44 |
 | [app\user\user.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/user/user.component.html) | HTML | 64 | 0 | 5 | 69 |
-| [app\user\user.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/user/user.component.spec.ts) | TypeScript | 90 | 1 | 6 | 97 |
+| [app\user\user.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/user/user.component.spec.ts) | TypeScript | 88 | 1 | 6 | 95 |
 | [app\user\user.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/user/user.component.ts) | TypeScript | 51 | 7 | 7 | 65 |
 | [app\userdetail\userdetail.component.css](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/userdetail/userdetail.component.css) | CSS | 34 | 0 | 2 | 36 |
 | [app\userdetail\userdetail.component.html](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/userdetail/userdetail.component.html) | HTML | 68 | 0 | 6 | 74 |
-| [app\userdetail\userdetail.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/userdetail/userdetail.component.spec.ts) | TypeScript | 96 | 0 | 9 | 105 |
+| [app\userdetail\userdetail.component.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/userdetail/userdetail.component.spec.ts) | TypeScript | 94 | 0 | 9 | 103 |
 | [app\userdetail\userdetail.component.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/userdetail/userdetail.component.ts) | TypeScript | 143 | 1 | 12 | 156 |
 | [app\website.service.spec.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/website.service.spec.ts) | TypeScript | 16 | 0 | 5 | 21 |
 | [app\website.service.ts](file:///d%3A/SJTU-jiaojiao/admin-frontend/src/app/website.service.ts) | TypeScript | 57 | 11 | 10 | 78 |

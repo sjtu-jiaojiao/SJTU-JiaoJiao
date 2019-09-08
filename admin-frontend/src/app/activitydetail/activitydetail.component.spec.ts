@@ -71,9 +71,15 @@ describe('ActivitydetailComponent', () => {
   });
 
   it('should create', () => {
-    const service: AuthService = TestBed.get(AuthService);
-    service.login({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjMzMzk3MDYsImlkIjozLCJyb2xlIjoyfQ.woB67gYA8hTMljeg6lqwG_3fSJm4Q7SD6Ln8w2Ol4xk' });
 
     expect(component).toBeTruthy();
+    component.act ={id: 1, title: '新人体验',
+    description: '用户首次发布交易信息可进行申报,要求多媒体数>=1,获得特别加权推荐',
+    releaseTime: 1567957148885, validTime: 1567957148885, 
+    releaseDate: new Date(), validDate:new Date(),weight: 3,
+    pic:1,isNew:true
+    };
+    component.save();
+    component.goBack();
   });
 });
