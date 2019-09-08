@@ -1,9 +1,13 @@
 # 后端API更新日志
+## v0.4.0
+## 新增
+1. `GET /tag` 获取AI tag
+
 ## v0.3.3 2019-09-09
 ### 移除
 1. `transaction` 模块被完全移除
 
-###　新增
+### 新增
 1. `PUT "/buyInfo/:buyInfoID"` 修改状态
 2. `PUT "/sellInfo/:sellInfoID"` 修改状态
 

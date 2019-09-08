@@ -1,9 +1,12 @@
 # 后端
 ## 环境依赖
+- python3
 - golang
 - consul
 - nodejs/npm
 - **建议系统环境为Linux系统，windows下make命令可能无法正常工作**
+
+模型配置文档：https://github.com/sjtu-jiaojiao/SJTU-JiaoJiao/tree/master/backend/srv/tag
 
 依赖安装：
 

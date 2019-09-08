@@ -20,7 +20,6 @@ import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { UserDetailComponent, fFormatter } from './userdetail.component';
-import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
 import { User } from '../entity/user';
 import { SellInfoComponent } from '../info/sell-info/sell-info.component';
@@ -42,7 +41,6 @@ describe('UserdetailComponent', () => {
         InfoDetailComponent,
         LoginComponent,
         DashboardComponent,
-        CallbackComponent,
         WebsiteComponent,
         ActivityComponent,
         InfoStatisticComponent,

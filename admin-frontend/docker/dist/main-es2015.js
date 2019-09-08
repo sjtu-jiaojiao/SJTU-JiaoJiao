@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2>活动管理</h2>\n<nz-list [nzDataSource]=\"activitys\" [nzRenderItem]=\"activity\" [nzGrid]=\"{gutter: 16, span: 6}\">\n  <ng-template #activity let-activity>\n    <nz-list-item [nzContent]=\"nzContent\">\n      <ng-template #nzContent>\n        <nz-card [nzTitle]=\"activity.intro\">\n          <div>\n            <div class='activityitem'>\n              <span class=\"badge\">活动ID</span>{{activity.id}}\n            </div>\n            <div class='activityitem'>\n              <span class=\"badge\">活动简介</span>{{activity.intro}}\n            </div>\n            <div class='activityitem'>\n              <span class=\"badge\">活动状态 </span>{{activity.state}}\n            </div>\n          </div>\n          <a routerLink=\"/activity/{{activity.id}}\">\n            活动详情\n            <i nz-icon type=\"search\"></i>\n          </a>\n        </nz-card>\n      </ng-template>\n    </nz-list-item>\n  </ng-template>\n</nz-list>"
+module.exports = "<h2>活动管理</h2>              \r\n<input [(ngModel)]=\"ID\" placeholder=\"id\"/>\r\n<button (click)=\"add()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>创建</button>\r\n\r\n<nz-list [nzDataSource]=\"acts\" [nzRenderItem]=\"act\" [nzGrid]=\"{gutter: 16, span: 8}\">\r\n  <ng-template #act let-act>\r\n    <nz-list-item [nzContent]=\"nzContent\">\r\n      <ng-template #nzContent>\r\n        <nz-card [nzTitle]=\"act.title\">\r\n          <div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动标题</span>              \r\n              <input [(ngModel)]=\"act.title\" placeholder=\"title\"/>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动ID</span>              \r\n              <input [(ngModel)]=\"act.id\" placeholder=\"id\"/>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动简介</span>              \r\n              <input [(ngModel)]=\"act.description\" placeholder=\"description\"/>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动开始时间 </span>\r\n              <nz-date-picker\r\n                nzShowTime\r\n                nzFormat=\"yyyy-MM-dd HH:mm:ss\"\r\n                nzPlaceHolder=\"开始时间\"\r\n                [(ngModel)]=\"act.releaseDate\"\r\n              ></nz-date-picker>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动截止时间 </span>\r\n                  <nz-date-picker\r\n                    nzShowTime\r\n                    nzFormat=\"yyyy-MM-dd HH:mm:ss\"\r\n                    nzPlaceHolder=\"截止时间\"\r\n                    [(ngModel)]=\"act.validDate\"\r\n                  ></nz-date-picker>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">权重 </span>\r\n              <nz-select style=\"width: 120px;\" [(ngModel)]=\"act.weight\">\r\n                <nz-option [nzValue]=\"1\" nzLabel=\"普通\"></nz-option>                \r\n                <nz-option [nzValue]=\"2\" nzLabel=\"优先\"></nz-option>\r\n                <nz-option [nzValue]=\"3\" nzLabel=\"特殊\"></nz-option>\r\n              </nz-select>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">多媒体需求 </span>\r\n              <nz-input-number\r\n                [(ngModel)]=\"act.pic\"\r\n                [nzMin]=\"0\"\r\n                [nzStep]=\"1\"\r\n                [nzPlaceHolder]=\"'数目'\"\r\n              ></nz-input-number>\r\n            </div>             \r\n            <div class='activityitem'>\r\n              <span class=\"badge\">新人专享 </span>\r\n              <label nz-checkbox [(ngModel)]=\"act.isNew\"></label>\r\n            </div>             \r\n             <button (click)=\"delete(act)\" nz-button ><i nz-icon type=\"delete\" theme=\"outline\"></i>删除</button>\r\n            <button (click)=\"save(act)\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>保存</button>\r\n          </div>\r\n        </nz-card>\r\n      </ng-template>\r\n    </nz-list-item>\r\n  </ng-template>\r\n</nz-list>"
 
 /***/ }),
 
@@ -41,7 +41,7 @@ module.exports = "<h2>活动管理</h2>\n<nz-list [nzDataSource]=\"activitys\" [
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<nz-card   nzTitle=\"活动管理\">\n        <div nz-row [nzGutter]=\"8\">\n          <div nz-col [nzSpan]=\"8\">\n            <nz-card nzTitle=\"活动状态\">\n            <nz-timeline nzMode=\"alternate\">\n                    <nz-timeline-item>创建活动 2019-07-01</nz-timeline-item>\n                    <nz-timeline-item nzColor=\"green\">开始活动(可修改) 2019-07-02</nz-timeline-item>\n                    <nz-timeline-item [nzDot]=\"dotTemplate\"\n                      >活动结束(可修改)</nz-timeline-item\n                    >\n                  </nz-timeline>\n                  <ng-template #dotTemplate>\n                    <i nz-icon nzType=\"clock-circle-o\" style=\"font-size: 16px;\"></i>\n            </ng-template>\n            </nz-card>\n            <nz-card nzType=\"inner\" nzTitle=\"活动简介\">\n                <p>此地有图</p>\n                <p>本活动属管理员闲得无聊创建，如有看见请点差评</p>\n              </nz-card>\n          </div>\n          <div nz-col [nzSpan]=\"16\">\n            <nz-card nzType=\"inner\" nzTitle=\"活动热度\">            \n              <div echarts theme=\"dark\" [loading]=\"true\"  [options]=\"tsoption\"></div>\n            </nz-card>\n          </div>\n        </div>\n</nz-card>"
+module.exports = "<nz-card nzTitle=\"活动管理\">\r\n  <div nz-row [nzGutter]=\"8\">\r\n    <div nz-col [nzSpan]=\"8\">\r\n      <nz-card nzTitle=\"活动状态\">\r\n        <nz-timeline nzMode=\"alternate\">\r\n          <nz-timeline-item>创建活动 2019-07-01</nz-timeline-item>\r\n          <nz-timeline-item nzColor=\"green\">开始活动(可修改) 2019-07-02</nz-timeline-item>\r\n          <nz-timeline-item [nzDot]=\"dotTemplate\">活动结束(可修改)</nz-timeline-item>\r\n        </nz-timeline>\r\n        <ng-template #dotTemplate>\r\n          <i nz-icon nzType=\"clock-circle-o\" style=\"font-size: 16px;\"></i>\r\n        </ng-template>\r\n      </nz-card>\r\n      <nz-card nzType=\"inner\" nzTitle=\"活动简介\">\r\n        <p>此地有图</p>\r\n        <p>本活动属管理员闲得无聊创建，如有看见请点差评</p>\r\n      </nz-card>\r\n    </div>\r\n    <div nz-col [nzSpan]=\"16\">\r\n      <nz-card nzType=\"inner\" nzTitle=\"活动热度\">\r\n        <div echarts theme=\"dark\" [loading]=\"true\" [options]=\"tsoption\"></div>\r\n      </nz-card>\r\n    </div>\r\n  </div>\r\n</nz-card>"
 
 /***/ }),
 
@@ -52,7 +52,7 @@ module.exports = "\n<nz-card   nzTitle=\"活动管理\">\n        <div nz-row [n
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nz-layout id='out'>\n  <nz-sider nzCollapsible [(nzCollapsed)]=\"isCollapsed\" nzWidth=\"15%\">\n  <div class='logo'>       </div>\n    <ul  nz-menu [nzTheme]=\"'dark'\" [nzMode]=\"'inline'\"  [nzInlineCollapsed]=\"isCollapsed\"> \n      <li nz-menu-item nzMatchRouter><a routerLink=\"/dashboard\"><i nz-icon type=\"dashboard\" theme=\"outline\"></i>\n        <span class=\"nav-text\">首页</span></a>\n      </li>\n      \n        <li nz-submenu>\n          <span title><i nz-icon type=\"user\"></i><span class=\"nav-text\">管理</span></span>\n        <ul>\n          <li nz-menu-item nzMatchRouter> <a routerLink=\"/user\"><i nz-icon type=\"user\" theme=\"outline\"></i>用户管理</a></li>\n          <li nz-menu-item nzMatchRouter> <a routerLink=\"/info\"><i nz-icon type=\"profile\" theme=\"outline\"></i>交易管理</a></li>\n        </ul>\n      </li>\n      \n      <li nz-menu-item nzMatchRouter> <a routerLink=\"/statistic\"><i nz-icon type=\"transaction\" theme=\"outline\"></i>\n        <span class=\"nav-text\">统计</span>\n      </a></li>\n\n    <li nz-menu-item nzMatchRouter><a routerLink=\"/activity\"><i nz-icon type=\"contacts\" theme=\"outline\"></i>\n      <span class=\"nav-text\">活动</span></a>\n    </li>\n    \n    <li nz-menu-item nzMatchRouter><a routerLink=\"/website\"><i nz-icon type=\"bulb\" theme=\"outline\"></i>\n      <span class=\"nav-text\">站点</span></a>\n    </li>\n      <li nz-submenu>\n        <span title><i nz-icon type=\"control\" theme=\"outline\"></i><span class=\"nav-text\">账号</span></span>\n      <ul>    \n        <li  nz-menu-item nzMatchRouter> <a routerLink=\"/login\"><i nz-icon type=\"login\" theme=\"outline\"></i>登录</a></li>\n        <li  (click)='logout()' nz-menu-item nzMatchRouter> <i nz-icon nzType=\"logout\" nzTheme=\"outline\"></i>注销</li>\n     </ul>\n      </li>\n  </ul>\n  </nz-sider>\n  <nz-content>\n      <router-outlet></router-outlet>\n  </nz-content>\n</nz-layout>"
+module.exports = "<nz-layout id='out'>\r\n  <nz-sider nzCollapsible [(nzCollapsed)]=\"isCollapsed\" nzWidth=\"15%\">\r\n  <div class='logo'>       </div>\r\n    <ul  nz-menu [nzTheme]=\"'dark'\" [nzMode]=\"'inline'\"  [nzInlineCollapsed]=\"isCollapsed\"> \r\n      <li nz-menu-item nzMatchRouter><a routerLink=\"/dashboard\"><i nz-icon type=\"dashboard\" theme=\"outline\"></i>\r\n        <span class=\"nav-text\">首页</span></a>\r\n      </li>\r\n      \r\n        <li nz-submenu>\r\n          <span title><i nz-icon type=\"user\"></i><span class=\"nav-text\">管理</span></span>\r\n        <ul>\r\n          <li nz-menu-item nzMatchRouter> <a routerLink=\"/user\"><i nz-icon type=\"user\" theme=\"outline\"></i>用户管理</a></li>\r\n          <li nz-menu-item nzMatchRouter> <a routerLink=\"/info\"><i nz-icon type=\"profile\" theme=\"outline\"></i>交易管理</a></li>\r\n        </ul>\r\n      </li>\r\n      \r\n      <li nz-menu-item nzMatchRouter> <a routerLink=\"/statistic\"><i nz-icon type=\"transaction\" theme=\"outline\"></i>\r\n        <span class=\"nav-text\">统计</span>\r\n      </a></li>\r\n\r\n    <li nz-menu-item nzMatchRouter><a routerLink=\"/activity\"><i nz-icon type=\"contacts\" theme=\"outline\"></i>\r\n      <span class=\"nav-text\">活动</span></a>\r\n    </li>\r\n    \r\n    <li nz-menu-item nzMatchRouter><a routerLink=\"/website\"><i nz-icon type=\"bulb\" theme=\"outline\"></i>\r\n      <span class=\"nav-text\">站点</span></a>\r\n    </li>\r\n      <li nz-submenu>\r\n        <span title><i nz-icon type=\"control\" theme=\"outline\"></i><span class=\"nav-text\">账号</span></span>\r\n      <ul>    \r\n        <li  nz-menu-item nzMatchRouter> <a routerLink=\"/login\"><i nz-icon type=\"login\" theme=\"outline\"></i>登录</a></li>\r\n        <li  (click)='logout()' nz-menu-item nzMatchRouter> <i nz-icon nzType=\"logout\" nzTheme=\"outline\"></i>注销</li>\r\n     </ul>\r\n      </li>\r\n  </ul>\r\n  </nz-sider>\r\n  <nz-content>\r\n      <router-outlet></router-outlet>\r\n  </nz-content>\r\n</nz-layout>"
 
 /***/ }),
 
@@ -63,7 +63,7 @@ module.exports = "<nz-layout id='out'>\n  <nz-sider nzCollapsible [(nzCollapsed)
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n        <nz-card   nzTitle=\"系统状态\">\r\n                <div nz-row [nzGutter]=\"8\">\r\n                  <div nz-col [nzSpan]=\"8\">\r\n                    <nz-card  nzType=\"inner\" nzTitle=\"总用户数\">\r\n                            <p>12311</p>\r\n                    </nz-card>\r\n                  </div>\r\n                  <div nz-col [nzSpan]=\"8\">\r\n                    <nz-card nzType=\"inner\" nzTitle=\"在线用户数\">\r\n                        <p>11111</p>\r\n                    </nz-card>\r\n                  </div>\r\n                  <div nz-col [nzSpan]=\"8\">\r\n                    <nz-card nzType=\"inner\" nzTitle=\"交易信息数\">\r\n                        <p>12345123</p>\r\n                    </nz-card>\r\n                  </div>\r\n                </div>\r\n        </nz-card>\r\n        <nz-card nzTitle=\"活动日程安排\">\r\n                <nz-timeline nzMode=\"alternate\">\r\n                        <nz-timeline-item>创建网站 2019-07-01</nz-timeline-item>\r\n                        <nz-timeline-item nzColor=\"green\">建立力导向图 2019-07-02</nz-timeline-item>\r\n                        <nz-timeline-item [nzDot]=\"dotTemplate\"\r\n                          >完成所有后台管理系统UI原型</nz-timeline-item\r\n                        >\r\n                        <nz-timeline-item nzColor=\"red\">实现高度自适应 2019-07-03</nz-timeline-item>\r\n                        <nz-timeline-item>构建大屏可视化 2019-07-03</nz-timeline-item>\r\n                        <nz-timeline-item [nzDot]=\"dotTemplate\">完成管理界面详情</nz-timeline-item>\r\n                      </nz-timeline>\r\n                      <ng-template #dotTemplate>\r\n                        <i nz-icon nzType=\"clock-circle-o\" style=\"font-size: 16px;\"></i>\r\n                </ng-template>\r\n        </nz-card>\r\n        \r\n        <nz-card nzTitle=\"站点信息\">\r\n                <div nz-row [nzGutter]=\"8\">\r\n                  <div nz-col [nzSpan]=\"6\">\r\n                    <nz-card  nzType=\"inner\" nzTitle=\"域名\">\r\n                            <p>http://jiaojiao.sjtu.edu.cn</p>\r\n                    </nz-card>\r\n                  </div>\r\n                  <div nz-col [nzSpan]=\"6\">\r\n                        <nz-card  nzType=\"inner\" nzTitle=\"网站名\">\r\n                                <p>交大交交</p>\r\n                        </nz-card>\r\n                  </div>\r\n                  <div nz-col [nzSpan]=\"6\">\r\n                    <nz-card nzType=\"inner\" nzTitle=\"版权信息\">\r\n                        <p>CopyRight@SE 2019</p>\r\n                    </nz-card>\r\n                  </div>\r\n                  <div nz-col [nzSpan]=\"6\">\r\n                    <nz-card nzType=\"inner\" nzTitle=\"网站状态\">\r\n                        <p>不公开外网</p>\r\n                    </nz-card>\r\n                  </div>\r\n                </div>\r\n        </nz-card>\r\n      \r\n      "
+module.exports = "       <nz-card   nzTitle=\"系统状态\">\r\n                <div nz-row [nzGutter]=\"8\">\r\n                  <div nz-col [nzSpan]=\"8\">\r\n                    <nz-card nzType=\"inner\" nzTitle=\"进行交易数\">\r\n                            <p>{{rsInfoNum}}</p>\r\n                    </nz-card>\r\n                  </div>\r\n                  <div nz-col [nzSpan]=\"8\">\r\n                    <nz-card nzType=\"inner\" nzTitle=\"活跃交易数\">\r\n                        <p>{{acInfoNum}}</p>\r\n                    </nz-card>\r\n                  </div>\r\n                  <div nz-col [nzSpan]=\"8\">\r\n                    <nz-card nzType=\"inner\" nzTitle=\"交易信息数\">\r\n                        <p>{{infoNum}}</p>\r\n                    </nz-card>\r\n                  </div>\r\n                </div>\r\n        </nz-card>\r\n\r\n        \r\n        <nz-card *ngIf=\"hst\" nzTitle=\"站点通知\">\r\n                <nz-timeline [nzPending]=\"\" nzMode=\"alternate\">\r\n                   <nz-timeline-item *ngFor=\"let item of hst\" [nzColor]=\"getColor(item)\">\r\n                    <input [(ngModel)]=\"item.description\" placeholder=\"描述(为空删除)\"/>\r\n                    <input [(ngModel)]=\"item.time\" placeholder=\"时间(Optional)\"/>\r\n                    <nz-select\r\n                      nzShowSearch \r\n                      nzPlaceHolder=\"Select a type\"\r\n                      [(ngModel)]=\"item.type\"\r\n                    >\r\n                      <nz-option nzLabel=\"Maintenance\" [nzValue]=\"0\" ></nz-option>\r\n                      <nz-option nzLabel=\"Iteration\" [nzValue]=\"1\"></nz-option>\r\n                      <nz-option nzLabel=\"Bug Fix\" [nzValue]=\"-1\"></nz-option>\r\n                    </nz-select>\r\n                  </nz-timeline-item>        \r\n\r\n                </nz-timeline>\r\n        <button (click)=\"add()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>创建</button>\r\n        <button (click)=\"save()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>保存</button>\r\n        </nz-card>\r\n        \r\n        <nz-card  *ngIf=\"site\" nzTitle=\"站点信息\">\r\n                <div nz-row [nzGutter]=\"8\">\r\n                  <div nz-col [nzSpan]=\"8\">\r\n                        <nz-card  nzType=\"inner\" nzTitle=\"网站名\">\r\n                                <p>{{site.name}}</p>\r\n                        </nz-card>\r\n                  </div>\r\n                  <div nz-col [nzSpan]=\"8\">\r\n                    <nz-card nzType=\"inner\" nzTitle=\"版权信息\">\r\n                        <p> <i nz-icon nzType=\"copyright\" nzTheme=\"outline\"></i>\r\n                          {{site.cp}}</p>\r\n                    </nz-card>\r\n                  </div>\r\n                  <div nz-col [nzSpan]=\"8\">\r\n                    <nz-card nzType=\"inner\" nzTitle=\"网站状态\">\r\n                        <p>{{site.status?'正常':'维护'}}</p>\r\n                    </nz-card>\r\n                  </div>\r\n                </div>\r\n        </nz-card>\r\n      \r\n      "
 
 /***/ }),
 
@@ -74,7 +74,18 @@ module.exports = "\r\n        <nz-card   nzTitle=\"系统状态\">\r\n          
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n        <div class='outer-div' id='fdg'>\n          <div echarts theme=\"dark\"  class= 'tpc'[loading]=\"true\" [options]=\"fdgoption\"></div>\n      </div>\n      <div class='outer-div' id='good'>\n        <div echarts theme=\"dark\"  class= 'tpc'[loading]=\"true\" [options]=\"goodoption\"></div>\n    </div>\n        <div class='outer-div' id='cld'>\n            <div echarts theme=\"dark\" class= 'tpc'[loading]=\"true\" [options]=\"cldoption\">\n            </div>\n        </div>\n\n\n          <div class='outer-div' id='ts'>\n            <div echarts theme=\"dark\" class='btc' [loading]=\"true\"  [options]=\"tsoption\"></div>\n          </div>\n\n        \n        <div class='outer-div' id='lq'>\n          <div echarts theme=\"dark\" class='btc' [loading]=\"true\" [options]=\"lqoption\"></div>\n        </div>\n        "
+module.exports = "\r\n        <div class='outer-div' id='fdg'>\r\n          <div echarts (chartDblClick)=\"clickForce($event)\"\ttheme=\"dark\"  class= 'tpc'[loading]=\"true\" [options]=\"fdgoption\"></div>\r\n      </div>\r\n      <div class='outer-div' id='good'>\r\n        <div echarts theme=\"dark\" \r\n        (chartBrushSelected)=\"onBrushSelected($event)\" class= 'tpc'[loading]=\"true\" [options]=\"goodoption\"></div>\r\n    </div>\r\n        <div class='outer-div' id='cld'>\r\n            <div *ngIf=\"!selectedInfo || selectedInfo.length==0\" echarts theme=\"dark\" class= 'tpc'[loading]=\"true\" [options]=\"cldoption\">\r\n            </div>            \r\n            <div *ngIf=\"selectedInfo && selectedInfo.length!=0\">\r\n          <nz-table #headerTable [nzData]=\"selectedInfo\" [nzPageSize]=\"10\" [nzScroll]=\"{ y: '500px' }\">\r\n            <thead>\r\n              <tr>\r\n                <th nzWidth=\"100px\" >交易ID</th>\r\n                <th nzWidth=\"100px\">标签名称</th>\r\n                <th>价格</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr *ngFor=\"let data of headerTable.data\">\r\n                <td>\r\n                   <a routerLink=\"/info/buyInfo/{{data[2]}}\">\r\n                    {{ data[2] }}\r\n                    </a>\r\n                  </td>\r\n                <td>{{ data[0] }}</td>\r\n                <td>{{ data[1] }}</td>\r\n              </tr>\r\n            </tbody>\r\n          </nz-table>    \r\n            </div>\r\n        </div>\r\n\r\n\r\n          <div class='outer-div' id='ts'>\r\n            <div echarts theme=\"dark\" class='btc' [loading]=\"true\"  [options]=\"tsoption\"></div>\r\n          </div>\r\n\r\n        \r\n        <div class='outer-div' id='lq'>    \r\n          <div echarts theme=\"dark\" class='btc' [loading]=\"true\" [options]=\"lqoption\">\r\n            </div>\r\n            <button id='pause' [nzSize]=\"'small'\" nz-button nzType=\"default\" (click) =\"pauseLine()\">\r\n              <i nz-icon *ngIf='!pl' nzType=\"pause\"></i>\r\n              <i nz-icon *ngIf='pl' nzType=\"caret-right\"></i>\r\n            </button>\r\n        </div>\r\n        "
+
+/***/ }),
+
+/***/ "./node_modules/raw-loader/index.js!./src/app/info/buy-info/buy-info.component.html":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/info/buy-info/buy-info.component.html ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n<nz-list [nzDataSource]=\"buyinfos\" [nzRenderItem]=\"info\" [nzGrid]=\"{gutter: 16, span: gridspan}\">\r\n    <ng-template #info let-info>\r\n      <nz-list-item [nzContent]=\"nzContent\">\r\n        <ng-template #nzContent>\r\n          <nz-card [nzTitle]=\"info.goodName\">\r\n      <div>\r\n        <div class='infoitem'>\r\n            <span class=\"badge\">交易名</span>{{info.goodName.length>10? info.goodName.substr(0,10)+'...':info.goodName}}\r\n        </div>\r\n        <div class='infoitem'>\r\n              <span class=\"badge\">交易ID</span>{{info.buyInfoID}}\r\n        </div>\r\n        <div class='infoitem'>\r\n              <span class=\"badge\">交易类型</span>{{'求购'}}\r\n        </div>\r\n      <div class='infoitem'>\r\n        <span class=\"badge\">发起用户</span>{{info.userID}}\r\n    </div>\r\n    <div class='infoitem'>\r\n        <span class=\"badge\">发布日期</span>{{stringToDate(info.releaseTime)}}\r\n    </div>\r\n      <div class='infoitem'>\r\n          <span class=\"badge\">截止日期</span>{{stringToDate(info.validTime)}}\r\n      </div>\r\n      <div class='infoitem'>\r\n          <span class=\"badge\">状态</span>{{getstate(info.status)}}\r\n      </div>\r\n      <nz-tag *ngFor=\"let tag of info.tags\">\r\n        {{tag}}\r\n      </nz-tag>\r\n      </div>\r\n              <a routerLink=\"/info/buyInfo/{{info.buyInfoID}}\">\r\n              交易详情\r\n              <i nz-icon type=\"search\"></i>\r\n               </a>\r\n          </nz-card>\r\n        </ng-template>\r\n      </nz-list-item>\r\n    </ng-template>\r\n  </nz-list>\r\n  \r\n  <nz-pagination\r\n  [(nzPageIndex)]=\"current\"\r\n  [(nzPageSize)]=\"size\"\r\n  [nzPageSizeOptions]=\"[4,8,12,16,20,24,28,32]\"\t\r\n  [nzTotal]=\"count\"\r\n  (nzPageIndexChange)\t=\"getinfos()\"\r\n  (nzPageSizeChange)= \"getinfos()\"\r\n  nzShowSizeChanger\r\n></nz-pagination>"
 
 /***/ }),
 
@@ -85,7 +96,18 @@ module.exports = "\n        <div class='outer-div' id='fdg'>\n          <div ech
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2>交易信息管理</h2>      \n<nz-input-number\n  [(ngModel)]=\"Tthreshold\"\n  [nzMin]=\"1\"\n  [nzStep]=\"1\"\n  [nzPlaceHolder]=\"'时间阈值'\"\n></nz-input-number>\n<nz-input-number\n  [(ngModel)]=\"Ythreshold\"\n  [nzMin]=\"1\"\n  [nzStep]=\"1\"\n  [nzPlaceHolder]=\"'预约阈值'\"\n></nz-input-number>\n<button nz-button (click)='end()' [nzType]=\"'primary'\">结束所有等待时间超过{{Tthreshold}}天且预约数小于{{Ythreshold}}的交易信息</button>\n\n\n<nz-select \nid='type'\n[(ngModel)]=\"selectedType\"\n(ngModelChange)\t=\"selectType($event)\"\nnzPlaceHolder=\"Choose\">\n  <nz-option [nzValue]=\"0\" nzLabel=\"出售\"></nz-option>\n  <nz-option [nzValue]=\"1\" nzLabel=\"求购\"></nz-option>\n  <nz-option [nzValue]=\"-1\" nzLabel=\"All\"></nz-option>\n</nz-select>\n\n\n<nz-select\nid = 'tag'\nnzMode=\"tags\"\n[nzShowArrow]=\"false\"\n[nzOpen]=\"false\"\t\n(ngModelChange)\t=\"selectTag($event)\"\n[nzTokenSeparators]=\"[',']\"\n[(ngModel)]=\"searchTag\"\nnzPlaceHolder=\"TagFilter\">\n<nz-option *ngFor=\"let option of searchTag\" [nzLabel]=\"option\" [nzValue]=\"option\"> </nz-option>\n</nz-select>\n\n\n<nz-list [nzDataSource]=\"curinfos\" [nzRenderItem]=\"info\" [nzGrid]=\"{gutter: 16, span: 6}\">\n    <ng-template #info let-info>\n      <nz-list-item [nzContent]=\"nzContent\">\n        <ng-template #nzContent>\n          <nz-card [nzTitle]=\"info.intro\">\n      <div>\n        <div class='infoitem'>\n              <span class=\"badge\">交易ID</span>{{info.id}}\n        </div>\n        <div class='infoitem'>\n              <span class=\"badge\">交易类型</span>{{info.type? '求购':'出售'}}\n        </div>\n        <div class='infoitem'>\n          <span class=\"badge\">交易发起人</span>{{info.source}}\n      </div>\n      <div class='infoitem'>\n          <span class=\"badge\">发起时间</span>{{info.time}}\n      </div>\n      <div class='infoitem'>\n          <span class=\"badge\">状态</span>{{getstate(info.state)}}\n      </div>\n      <div class='infoitem'>\n          <span class=\"badge\">当前预约数</span>{{info.count}}\n      </div>\n      <nz-tag\n        *ngFor=\"let tag of info.tags\"\n      >\n        {{ tag }}\n      </nz-tag>\n      </div>\n              <a routerLink=\"/info/{{info.id}}\">\n              交易详情\n              <i nz-icon type=\"search\"></i>\n               </a>\n               <button class=\"delete\" title=\"delete info\" nz-button nzType=\"danger\" nzShape=\"circle\"  nzSize=\"small\"\n               (click)=\"delete(info)\"><i nz-icon type=\"delete\" theme=\"outline\"></i></button>\n          </nz-card>\n        </ng-template>\n      </nz-list-item>\n    </ng-template>\n  </nz-list>\n  \n  <nz-pagination\n  [(nzPageIndex)]=\"current\"\n  [(nzPageSize)]=\"size\"\n  [nzPageSizeOptions]=\"[4,8,12,16,20,24,28,32]\"\t\n  [nzTotal]=\"count\"\n  (nzPageIndexChange)\t=\"pageChange($event)\"\n  (nzPageSizeChange)= \"sizeChange($event)\"\n  nzShowSizeChanger\n></nz-pagination>"
+module.exports = "<h2>交易信息管理</h2> \r\n<!--\r\n<nz-input-number\r\n  [(ngModel)]=\"Tthreshold\"\r\n  [nzMin]=\"1\"\r\n  [nzStep]=\"1\"\r\n  [nzPlaceHolder]=\"'时间阈值'\"\r\n></nz-input-number>\r\n<nz-input-number\r\n  [(ngModel)]=\"Ythreshold\"\r\n  [nzMin]=\"1\"\r\n  [nzStep]=\"1\"\r\n  [nzPlaceHolder]=\"'预约阈值'\"\r\n></nz-input-number>\r\n<button nz-button [nzType]=\"'primary'\">结束所有等待时间超过{{Tthreshold}}天且预约数小于{{Ythreshold}}的交易信息</button>\r\n\r\n-->\r\n  \r\n  <div nz-row [nzGutter]=\"8\">\r\n    <div nz-col [nzSpan]=\"8\">\r\n      <nz-select \r\n      id='type'\r\n      [(ngModel)]=\"searchType\"      \r\n      (ngModelChange)\t=\"selectType($event)\"\r\n      nzPlaceHolder=\"Choose\">\r\n        <nz-option [nzValue]=\"0\" nzLabel=\"出售\"></nz-option>\r\n        <nz-option [nzValue]=\"1\" nzLabel=\"求购\"></nz-option>\r\n        <nz-option [nzValue]=\"-1\" nzLabel=\"All\"></nz-option>\r\n      </nz-select>\r\n      <nz-select \r\n      id='type'\r\n      [(ngModel)]=\"searchStatus\"   \r\n      (ngModelChange)\t=\"search()\"   \r\n      nzPlaceHolder=\"Choose\">\r\n        <nz-option [nzValue]=\"1\" nzLabel=\"待预约\"></nz-option>\r\n        <nz-option [nzValue]=\"2\" nzLabel=\"预约\"></nz-option>\r\n        <nz-option [nzValue]=\"3\" nzLabel=\"完成\"></nz-option>\r\n        <nz-option [nzValue]=\"4\" nzLabel=\"失效\"></nz-option>\r\n        <nz-option [nzValue]=\"null\" nzLabel=\"All\"></nz-option>\r\n      </nz-select>      \r\n    </div>\r\n    <div nz-col [nzSpan]=\"16\">\r\n      <nz-input-group id='searchid' nzSearch [nzAddOnAfter]=\"suffixIconButton\">\r\n        <input type=\"text\" [(ngModel)]=\"searchUserID\" nz-input placeholder=\"输入用户ID\" />\r\n      </nz-input-group>\r\n      <nz-input-group id='searchname' nzSearch>\r\n          <input type=\"text\" [(ngModel)]=\"searchGoodName\" nz-input placeholder=\"输入交易商品名\" />\r\n        </nz-input-group>\r\n      <ng-template #suffixIconButton>\r\n        <button nz-button (click)='search()' nzType=\"primary\" nzSearch><i nz-icon nzType=\"search\"></i></button>\r\n      </ng-template>\r\n      \r\n    </div>\r\n  </div>\r\n\r\n  <div *ngIf=\"searchType==0\">\r\n    <app-sell-info></app-sell-info>\r\n  </div>\r\n  <div *ngIf=\"searchType==1\">\r\n    <app-buy-info ></app-buy-info>\r\n  </div>\r\n  <div *ngIf=\"searchType==-1\">\r\n    <div nz-row [nzGutter]=\"8\">\r\n      <div nz-col [nzSpan]=\"12\">\r\n        <app-sell-info></app-sell-info>\r\n      </div>\r\n      <div nz-col [nzSpan]=\"12\">\r\n        <app-buy-info ></app-buy-info>\r\n      </div>\r\n    </div>\r\n  </div>"
+
+/***/ }),
+
+/***/ "./node_modules/raw-loader/index.js!./src/app/info/sell-info/sell-info.component.html":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/info/sell-info/sell-info.component.html ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n<nz-list [nzDataSource]=\"sellinfos\" [nzRenderItem]=\"info\" [nzGrid]=\"{gutter: 16, span: gridspan}\">\r\n    <ng-template #info let-info>\r\n      <nz-list-item *ngIf=\"info\" [nzContent]=\"nzContent\">\r\n        <ng-template #nzContent>\r\n          <nz-card [nzTitle]=\"info.goodName\">\r\n      <div>\r\n        <div class='infoitem'>\r\n            <span class=\"badge\">交易名</span>{{info.goodName.length>10? info.goodName.substr(0,10)+'...':info.goodName}}\r\n        </div>\r\n        <div class='infoitem'>\r\n              <span class=\"badge\">交易ID</span>{{info.sellInfoID}}\r\n        </div>\r\n        <div class='infoitem'>\r\n              <span class=\"badge\">交易类型</span>{{'出售'}}\r\n        </div>\r\n      <div class='infoitem'>\r\n        <span class=\"badge\">发起用户</span>{{info.userID}}\r\n    </div>\r\n    <div class='infoitem'>\r\n        <span class=\"badge\">发布日期</span>{{stringToDate(info.releaseTime)}}\r\n    </div>\r\n      <div class='infoitem'>\r\n          <span class=\"badge\">截止日期</span>{{stringToDate(info.validTime)}}\r\n      </div>\r\n      <div class='infoitem'>\r\n          <span class=\"badge\">状态</span>{{getstate(info.status)}}\r\n      </div>\r\n      <nz-tag *ngFor=\"let tag of info.tags\">\r\n        {{tag}}\r\n      </nz-tag>\r\n      </div>\r\n              <a routerLink=\"/info/sellInfo/{{info.sellInfoID}}\">\r\n              交易详情\r\n              <i nz-icon type=\"search\"></i>\r\n               </a>\r\n          </nz-card>\r\n        </ng-template>\r\n      </nz-list-item>\r\n    </ng-template>\r\n  </nz-list>\r\n  \r\n  <nz-pagination\r\n  [(nzPageIndex)]=\"current\"\r\n  [(nzPageSize)]=\"size\"\r\n  [nzPageSizeOptions]=\"[4,8,12,16,20,24,28,32]\"\t\r\n  [nzTotal]=\"count\"\r\n  (nzPageIndexChange)\t=\"getinfos()\"\r\n  (nzPageSizeChange)= \"getinfos()\"\r\n  nzShowSizeChanger\r\n></nz-pagination>"
 
 /***/ }),
 
@@ -96,7 +118,7 @@ module.exports = "<h2>交易信息管理</h2>      \n<nz-input-number\n  [(ngMod
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<nz-card  *ngIf='info' nzTitle=\"交易信息管理\">\r\n    <div nz-row [nzGutter]=\"8\">\r\n      <div nz-col [nzSpan]=\"8\">\r\n        <nz-card nzTitle=\"交易状态\">\r\n        <nz-timeline nzMode=\"alternate\">\r\n                <nz-timeline-item>创建交易 2019-07-01</nz-timeline-item>\r\n                <nz-timeline-item nzColor=\"green\">预约 2019-07-02</nz-timeline-item>\r\n                <nz-timeline-item [nzDot]=\"dotTemplate\"\r\n                  >取消预约 2019-07-03</nz-timeline-item\r\n                >\r\n                <nz-timeline-item nzColor=\"green\">预约 2019-07-04</nz-timeline-item>\r\n                <nz-timeline-item nzColor=\"green\">完成交易 2019-07-05</nz-timeline-item>\r\n                <nz-timeline-item nzColor=\"green\">完成评价 2019-07-11</nz-timeline-item>\r\n              </nz-timeline>\r\n              <ng-template #dotTemplate>\r\n                <i nz-icon nzType=\"clock-circle-o\" style=\"font-size: 16px;\"></i>\r\n        </ng-template>\r\n        </nz-card>\r\n        <nz-card nzType=\"inner\" nzTitle=\"交易简介\">\r\n          <div class='infoitem'>\r\n                <span class=\"badge\">交易ID</span>{{info.id}}\r\n          </div>\r\n          <div class='infoitem'>\r\n                <span class=\"badge\">交易类型</span>{{info.type? '买':'卖'}}\r\n          </div>\r\n          <div class='infoitem'>\r\n            <span class=\"badge\">交易发起人</span>{{info.source}}\r\n        </div>\r\n        <div class='infoitem'>\r\n            <span class=\"badge\">发起时间</span>{{info.time}}\r\n        </div>\r\n        <div class='infoitem'>\r\n            <span class=\"badge\">状态</span>\r\n            <nz-select\r\n            id='state'\r\n              nzShowSearch \r\n              nzPlaceHolder=\"Select a state\"\r\n              [(ngModel)]=\"info.state\"\r\n            >\r\n              <nz-option nzLabel=\"可预约\" [nzValue]=\"0\" ></nz-option>\r\n              <nz-option nzLabel=\"预约中\" [nzValue]=\"1\"></nz-option>\r\n              <nz-option nzLabel=\"已完成\" [nzValue]=\"2\"></nz-option>\r\n              <nz-option nzLabel=\"待评价\" [nzValue]=\"3\"></nz-option>\r\n              <nz-option nzLabel=\"强制结束\" [nzValue]=\"4\"></nz-option>\r\n            </nz-select>\r\n        </div>\r\n        <div class='infoitem'>\r\n              <span class=\"badge\">交易价格</span>\r\n              <nz-input-number\r\n                [(ngModel)]=\"info.price\"\r\n                [nzMin]=\"0\"\r\n                [nzStep]=\"0.1\"\r\n                [nzPlaceHolder]=\"'价格'\"\r\n              ></nz-input-number>\r\n        </div>\r\n        <div class='infoitem'>\r\n            <span class=\"badge\">当前预约数</span>{{info.count}}\r\n        </div></nz-card>\r\n        <nz-card nzType=\"inner\" nzTitle=\"交易简介\">    \r\n                <nz-select\r\n                  nzMode=\"tags\"\r\n                  [nzTokenSeparators]=\"[',']\"\r\n                  [(ngModel)]=\"info.tags\"\r\n                  nzPlaceHolder=\"Tags\">\r\n                  <nz-option *ngFor=\"let option of info.tags\" [nzLabel]=\"option\" [nzValue]=\"option\"> </nz-option>\r\n                </nz-select>\r\n          <textarea nz-input placeholder=\"intro\" [(ngModel)]=\"info.intro\" nzAutosize></textarea>\r\n        </nz-card>\r\n          <button (click)=\"goBack()\" nz-button nzType=\"dashed\"><i nz-icon type=\"left-circle\" theme=\"outline\"></i>返回</button>\r\n          <button (click)=\"save()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>保存</button>\r\n      </div>\r\n      <div nz-col [nzSpan]=\"16\">\r\n        <nz-card nzType=\"inner\" nzTitle=\"交易价格曲线\">            \r\n          <div echarts theme=\"dark\" [loading]=\"true\"  [options]=\"option\"></div>\r\n        </nz-card>\r\n        <nz-card nzType=\"inner\" nzTitle=\"流量转化\">            \r\n          <div echarts theme=\"dark\" [loading]=\"true\"  [options]=\"fnoption\"></div>\r\n        </nz-card>\r\n      </div>\r\n    </div>\r\n</nz-card>"
+module.exports = "\r\n<nz-card  *ngIf='info' nzTitle=\"交易信息管理\">\r\n    <div nz-row [nzGutter]=\"8\">\r\n      <div nz-col [nzSpan]=\"8\">\r\n        <nz-card nzType=\"inner\" nzTitle=\"交易详情\">\r\n          <div class='infoitem'>\r\n              <span class=\"badge\">交易名</span>\r\n              <input [(ngModel)]=\"info.goodName\" placeholder=\"name\"/>\r\n          </div>\r\n          <div class='infoitem'>\r\n                <span class=\"badge\">交易ID</span>{{type=='sellInfo'?info.sellInfoID:info.buyInfoID}}\r\n          </div>\r\n          <div class='infoitem'>\r\n                <span class=\"badge\">交易类型</span>{{type=='sellInfo'?'出售':'求购'}}\r\n          </div>    \r\n        <div class='infoitem'>\r\n          <span class=\"badge\">发起用户</span>\r\n          <a routerLink=\"/user/{{info.userID}}\">{{info.userID}}\r\n           </a>\r\n      </div>\r\n      <div class='infoitem'>\r\n          <span class=\"badge\">发布日期</span>{{stringToDate(info.releaseTime)}}\r\n      </div>\r\n        <div class='infoitem'>\r\n            <span class=\"badge\">截止日期</span>\r\n            <nz-date-picker\r\n              nzShowTime\r\n              nzFormat=\"yyyy-MM-dd HH:mm:ss\"\r\n              nzPlaceHolder=\"Select Time\"\r\n              [(ngModel)]=\"deadLine\"\r\n              (ngModelChange)=\"onChange($event)\"\r\n              (nzOnOk)=\"onOk($event)\"\r\n            ></nz-date-picker>\r\n        </div>\r\n        <div class='infoitem'>\r\n            <span class=\"badge\">状态</span>\r\n            <nz-select\r\n            id='state'\r\n              nzShowSearch \r\n              nzPlaceHolder=\"Select a state\"\r\n              [(ngModel)]=\"info.status\"\r\n            >\r\n              <nz-option nzLabel=\"待预约\" [nzValue]=\"1\" ></nz-option>\r\n              <nz-option nzLabel=\"预约\" [nzValue]=\"2\"></nz-option>\r\n              <nz-option nzLabel=\"完成\" [nzValue]=\"3\"></nz-option>\r\n              <nz-option nzLabel=\"失效\" [nzValue]=\"4\"></nz-option>\r\n              <nz-option nzLabel=\"关闭\" [nzValue]=\"5\"></nz-option>\r\n            </nz-select>\r\n        </div>\r\n        <div class='infoitem'>\r\n              <span class=\"badge\">交易价格</span>\r\n              <nz-input-number\r\n                [(ngModel)]=\"info.price\"\r\n                [nzMin]=\"0\"\r\n                [nzStep]=\"0.1\"\r\n                [nzPlaceHolder]=\"'价格'\"\r\n              ></nz-input-number>\r\n        </div>\r\n      </nz-card>\r\n        <nz-card nzType=\"inner\" nzTitle=\"交易简介\">    \r\n          <nz-tag *ngFor=\"let tag of info.tags\">\r\n            {{tag}}\r\n          </nz-tag>\r\n          <textarea nz-input placeholder=\"description\" [(ngModel)]=\"info.description\" nzAutosize></textarea>\r\n        </nz-card>\r\n          <button (click)=\"goBack()\" nz-button nzType=\"dashed\"><i nz-icon type=\"left-circle\" theme=\"outline\"></i>返回</button>\r\n          <button (click)=\"save()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>保存</button>\r\n      </div>\r\n      <div nz-col [nzSpan]=\"16\">\r\n          <nz-card nzType=\"inner\">\r\n              <nz-carousel>\r\n                  <div nz-carousel-content *ngFor=\"let content of contents\">\r\n                      <video id='content'*ngIf=\"content.type==2\"\r\n                      src=\"/api/file/{{content.fileID}}\" controls></video> \r\n                      <img  id='content'*ngIf=\"content.type==1\"\r\n                      src=\"/api/file/{{content.fileID}}\" />   \r\n                  </div>\r\n                </nz-carousel>\r\n                  </nz-card>\r\n      </div>\r\n      <div nz-col [nzSpan]=\"8\">\r\n          <nz-card nzTitle=\"交易状态\">\r\n              <nz-timeline nzMode=\"alternate\">\r\n                      <nz-timeline-item>创建交易 2019-07-01</nz-timeline-item>\r\n                      <nz-timeline-item nzColor=\"green\">预约 2019-07-02</nz-timeline-item>\r\n                      <nz-timeline-item [nzDot]=\"dotTemplate\"\r\n                        >取消预约 2019-07-03</nz-timeline-item\r\n                      >\r\n                      <nz-timeline-item nzColor=\"green\">预约 2019-07-04</nz-timeline-item>\r\n                      <nz-timeline-item nzColor=\"green\">完成交易 2019-07-05</nz-timeline-item>\r\n                      <nz-timeline-item nzColor=\"green\">完成评价 2019-07-11</nz-timeline-item>\r\n                    </nz-timeline>\r\n                    <ng-template #dotTemplate>\r\n                      <i nz-icon nzType=\"clock-circle-o\" style=\"font-size: 16px;\"></i>\r\n              </ng-template>\r\n              </nz-card>\r\n\r\n      </div>\r\n\r\n\r\n      <div nz-col [nzSpan]=\"8\">\r\n        <nz-card nzType=\"inner\" nzTitle=\"流量转化\">            \r\n          <div echarts theme=\"dark\" [loading]=\"true\"  [options]=\"fnoption\"></div>\r\n        </nz-card>\r\n      </div>\r\n    </div>\r\n</nz-card>"
 
 /***/ }),
 
@@ -107,7 +129,7 @@ module.exports = "\r\n<nz-card  *ngIf='info' nzTitle=\"交易信息管理\">\r\n
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- \n<form nz-form [formGroup]=\"validateForm\" class=\"login-form\" (ngSubmit)=\"submitForm()\">\n  <nz-form-item>\n    <nz-form-control nzErrorTip=\"请输入用户名!\">\n      <nz-input-group [nzPrefix]=\"prefixUser\">\n        <input type=\"text\" nz-input formControlName=\"userName\" placeholder=\"Username\">\n      </nz-input-group>\n    </nz-form-control>\n  </nz-form-item>\n  <nz-form-item>\n    <nz-form-control nzErrorTip=\"请输入密码!\">\n      <nz-input-group [nzPrefix]=\"prefixLock\">\n        <input type=\"password\" nz-input formControlName=\"password\" placeholder=\"Password\">\n      </nz-input-group>\n    </nz-form-control>\n  </nz-form-item>\n  <nz-form-item>\n    <nz-form-control> -->\n\n      <nz-input-group id='pretend' nzSearch [nzAddOnAfter]=\"suffixIconButton\">\n        <input type=\"text\" [(ngModel)]=\"t\" nz-input placeholder=\"输入Token\" />\n      </nz-input-group>\n      <div id='log' (click)='login()'> \n        <ng-template #suffixIconButton>\n          <button nz-button (click)='pretend()' nzType=\"primary\" nzSearch><i nz-icon nzType=\"search\"></i></button>\n        </ng-template>\n        \n          <button nz-button class=\"login-form-button\" [nzType]=\"'primary'\">登录\n            <br><br>\n        <img class='img' src=\"../assets//jaccount.png\">\n          </button>\n        </div>\n      <!-- \n    </nz-form-control>\n  </nz-form-item>\n</form>\n<ng-template #prefixUser><i nz-icon type=\"user\"></i></ng-template>\n<ng-template #prefixLock><i nz-icon type=\"lock\"></i></ng-template> -->"
+module.exports = "<!-- \r\n<form nz-form [formGroup]=\"validateForm\" class=\"login-form\" (ngSubmit)=\"submitForm()\">\r\n  <nz-form-item>\r\n    <nz-form-control nzErrorTip=\"请输入用户名!\">\r\n      <nz-input-group [nzPrefix]=\"prefixUser\">\r\n        <input type=\"text\" nz-input formControlName=\"userName\" placeholder=\"Username\">\r\n      </nz-input-group>\r\n    </nz-form-control>\r\n  </nz-form-item>\r\n  <nz-form-item>\r\n    <nz-form-control nzErrorTip=\"请输入密码!\">\r\n      <nz-input-group [nzPrefix]=\"prefixLock\">\r\n        <input type=\"password\" nz-input formControlName=\"password\" placeholder=\"Password\">\r\n      </nz-input-group>\r\n    </nz-form-control>\r\n  </nz-form-item>\r\n  <nz-form-item>\r\n    <nz-form-control> -->\r\n\r\n      <nz-input-group id='pretend' nzSearch [nzAddOnAfter]=\"suffixIconButton\">\r\n        <input type=\"text\" [(ngModel)]=\"t\" nz-input placeholder=\"输入Token\" />\r\n      </nz-input-group>\r\n      <div id='log' (click)='login()'> \r\n        <ng-template #suffixIconButton>\r\n          <button nz-button (click)='pretend()' nzType=\"primary\" nzSearch><i nz-icon nzType=\"search\"></i></button>\r\n        </ng-template>\r\n        \r\n          <button nz-button class=\"login-form-button\" [nzType]=\"'primary'\">登录\r\n            <br><br>\r\n        <img class='img' src=\"../assets//jaccount.png\">\r\n          </button>\r\n        </div>\r\n      <!-- \r\n    </nz-form-control>\r\n  </nz-form-item>\r\n</form>\r\n<ng-template #prefixUser><i nz-icon type=\"user\"></i></ng-template>\r\n<ng-template #prefixLock><i nz-icon type=\"lock\"></i></ng-template> -->"
 
 /***/ }),
 
@@ -118,7 +140,7 @@ module.exports = "<!-- \n<form nz-form [formGroup]=\"validateForm\" class=\"logi
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2>用户管理</h2>      \n<nz-input-number\n  [(ngModel)]=\"threshold\"\n  [nzMin]=\"1\"\n  [nzMax]=\"5\"\n  [nzStep]=\"0.1\"\n  [nzPlaceHolder]=\"'阈值'\"\n></nz-input-number>\n<button nz-button (click)=\"forbid()\" [nzType]=\"'primary'\">封禁所有信用评价低于{{threshold}}的人</button>\n\n<nz-input-group id='searchname' nzSearch [nzAddOnAfter]=\"suffixIconButton\">\n  <input type=\"text\" [(ngModel)]=\"searchName\" nz-input placeholder=\"输入用户名\" />\n</nz-input-group>\n<ng-template #suffixIconButton>\n  <button nz-button (click)='searchByName()' nzType=\"primary\" nzSearch><i nz-icon nzType=\"search\"></i></button>\n</ng-template>\n\n<nz-list [nzDataSource]=\"curusers\" [nzRenderItem]=\"user\" [nzGrid]=\"{gutter: 16, span: 6}\">\n    <ng-template #user let-user>\n      <nz-list-item [nzContent]=\"nzContent\">\n        <ng-template #nzContent>\n          <nz-card [nzTitle]=\"user.name\">\n      <div>\n        <div class='useritem'>\n              <span class=\"badge\">用户ID</span>{{user.id}}\n        </div>\n        <div class='useritem'>\n          <span class=\"badge\">用户名</span>{{user.name}}\n      </div>\n      <div class='useritem'>\n          <span class=\"badge\">封禁</span>{{user.forbid?'是':'否'}}\n      </div>\n      <div class='useritem'>\n          <span class=\"badge\">信用评价</span>{{user.score}}\n      </div>\n      <div class='useritem'>\n          <span class=\"badge\">活跃度</span>{{user.active}}\n      </div>\n      </div>\n              <a routerLink=\"/user/{{user.id}}\">\n              用户详情\n              <i nz-icon type=\"search\"></i>\n               </a>\n          <button class=\"delete\" title=\"delete book\" nz-button nzType=\"danger\" nzShape=\"circle\"  nzSize=\"small\"\n          (click)=\"delete(user)\"><i nz-icon type=\"delete\" theme=\"outline\"></i></button>\n          </nz-card>\n        </ng-template>\n      </nz-list-item>\n    </ng-template>\n  </nz-list>\n\n  \n  <nz-pagination\n  [(nzPageIndex)]=\"current\"\n  [(nzPageSize)]=\"size\"\n  [nzPageSizeOptions]=\"[4,8,12,16,20,24,28,32]\"\t\n  [nzTotal]=\"count\"\n  (nzPageIndexChange)\t=\"pageChange($event)\"\n  (nzPageSizeChange)= \"sizeChange($event)\"\n  nzShowSizeChanger\n></nz-pagination>"
+module.exports = "<h2>用户管理</h2>      \r\n<nz-input-number\r\n  [(ngModel)]=\"threshold\"\r\n  [nzMin]=\"1\"\r\n  [nzMax]=\"5\"\r\n  [nzStep]=\"0.1\"\r\n  [nzPlaceHolder]=\"'阈值'\"\r\n></nz-input-number>\r\n<button nz-button  [nzType]=\"'primary'\">封禁所有信用评价低于{{threshold}}的用户</button>\r\n\r\n<nz-input-group id='searchname' nzSearch [nzAddOnAfter]=\"suffixIconButton\">\r\n  <input type=\"text\" [(ngModel)]=\"searchName\" nz-input placeholder=\"输入用户名\" />\r\n</nz-input-group>\r\n<ng-template #suffixIconButton>\r\n  <button nz-button (click)='searchByName()' nzType=\"primary\" nzSearch><i nz-icon nzType=\"search\"></i></button>\r\n</ng-template>\r\n\r\n<nz-list *ngIf=\"users\" [nzDataSource]=\"users\" [nzRenderItem]=\"user\" [nzGrid]=\"{gutter: 16, span: 6}\">\r\n    <ng-template #user let-user>\r\n      <nz-list-item [nzContent]=\"nzContent\">\r\n        <ng-template #nzContent>\r\n          <nz-card>\r\n          <nz-card-meta [nzTitle]=\"user.userName\"\r\n          [nzAvatar]=\"avatarTemplate\"></nz-card-meta>\r\n      <div>\r\n        <ng-template #avatarTemplate>\r\n          <nz-avatar [nzSize]=\"'small'\" nzSrc=\"/api/file/{{user.avatarID}}\"></nz-avatar>\r\n        </ng-template>\r\n        <div class='useritem'>\r\n              <span class=\"badge\">用户ID</span>{{user.userID}}\r\n        </div>\r\n        <div class='useritem'>\r\n          <span class=\"badge\">用户名</span>{{user.userName.length>10?user.userName.substr(0,10)+'...':user.userName}}\r\n      </div>\r\n      <div class='useritem'>\r\n          <span class=\"badge\">封禁</span>{{user.status==2?'是':'否'}}\r\n      </div>\r\n      <div class='useritem'>\r\n          <span class=\"badge\">电话号码</span>{{user.telephone}}\r\n      </div>\r\n      <div class= 'useritem'>\r\n        <span class=\"badge\">权限</span>{{user.role==10?'管理':'用户'}}\r\n      </div>\r\n          <div class='useritem'>\r\n                <span class=\"badge\">信用评价</span>\r\n                <nz-rate [ngModel]=\"2\" nzDisabled></nz-rate>\r\n          </div>\r\n      </div>\r\n              <a routerLink=\"/user/{{user.userID}}\">\r\n              用户详情\r\n              <i nz-icon type=\"search\"></i>\r\n               </a>\r\n          </nz-card>\r\n        </ng-template>\r\n      </nz-list-item>\r\n    </ng-template>\r\n  </nz-list>\r\n\r\n  \r\n\r\n  <nz-pagination\r\n  [(nzPageIndex)]=\"current\"\r\n  [(nzPageSize)]=\"size\"\r\n  [nzTotal]=\"count\"\r\n  [nzPageSizeOptions]=\"[2,4,8,12,16,20,24,28,32]\"\t\r\n  (nzPageIndexChange)\t=\"onChange()\"\r\n  (nzPageSizeChange)= \"onChange()\"\r\n  nzShowSizeChanger      \r\n></nz-pagination>"
 
 /***/ }),
 
@@ -129,7 +151,7 @@ module.exports = "<h2>用户管理</h2>      \n<nz-input-number\n  [(ngModel)]=\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<nz-card *ngIf='user'  nzTitle=\"用户管理\">\n    <div nz-row [nzGutter]=\"8\">\n      <div nz-col [nzSpan]=\"8\">\n        <nz-card nzTitle=\"用户状态\">\n            <div class='useritem'>\n                  <span class=\"badge\">用户ID</span>{{user.id}}\n            </div>\n            <div class='useritem'>\n              <span class=\"badge\">用户名</span><input [(ngModel)]=\"user.name\" placeholder=\"name\"/>\n          </div>\n          <div class='useritem'>\n              <span class=\"badge\">封禁</span><label nz-checkbox [(ngModel)]=\"user.forbid\"></label>\n\n          </div>\n          <div class='useritem'>\n              <span class=\"badge\">信用评价</span>{{user.score}}\n          </div>\n          <div class='useritem'>\n              <span class=\"badge\">活跃度</span>{{user.active}}\n          </div>\n        </nz-card>\n        <nz-card nzType=\"inner\" nzTitle=\"用户简介\">     \n           <textarea nz-input placeholder=\"intro\" [(ngModel)]=\"user.intro\" nzAutosize></textarea>\n          </nz-card>\n  <button (click)=\"goBack()\" nz-button nzType=\"dashed\"><i nz-icon type=\"left-circle\" theme=\"outline\"></i>返回</button>\n  <button (click)=\"save()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>保存</button>\n      </div>\n      <div nz-col [nzSpan]=\"16\">\n        <nz-card nzType=\"inner\" nzTitle=\"用户活跃度\">            \n          <div echarts theme=\"dark\" [loading]=\"true\"  [options]=\"option\"></div>\n        </nz-card>\n      </div>\n    </div>\n</nz-card>"
+module.exports = "<nz-card *ngIf='user'  nzTitle=\"用户管理\">\r\n    <div nz-row [nzGutter]=\"8\">\r\n      <div nz-col [nzSpan]=\"8\">\r\n    \r\n        <nz-card>\r\n          <nz-card-meta\r\n            [nzTitle]=\"user.userID\"\r\n            [nzDescription]=\"user.telephone\"\r\n            [nzAvatar]=\"avatarTemplate\"\r\n          ></nz-card-meta>\r\n            <div class='useritem'>\r\n              <span class=\"badge\">用户名</span><input [(ngModel)]=\"userName\" placeholder=\"name\"/>\r\n          </div>\r\n          <div class='useritem'>\r\n              <span class=\"badge\">封禁</span><label nz-checkbox [(ngModel)]=\"forbid\"></label>\r\n          </div>\r\n          <div class='useritem'>\r\n              <span class=\"badge\">权限</span>\r\n              <nz-select\r\n              id='role'\r\n                nzShowSearch \r\n                nzPlaceHolder=\"Select a state\"\r\n                [(ngModel)]=\"user.role\"\r\n              >\r\n                <nz-option nzLabel=\"用户\" [nzValue]=\"1\" ></nz-option>\r\n                <nz-option nzLabel=\"管理\" [nzValue]=\"10\"></nz-option>\r\n              </nz-select>\r\n          </div>\r\n          <div class='useritem'>\r\n                <span class=\"badge\">信用评价</span>\r\n                <nz-rate [ngModel]=\"2\" nzDisabled></nz-rate>\r\n          </div>\r\n        </nz-card>\r\n\r\n        <ng-template #avatarTemplate>\r\n          <nz-avatar nzShape='square' [nzSize]=\"64\" nzSrc=\"/api/file/{{user.avatarID}}\"></nz-avatar>\r\n        </ng-template>\r\n\r\n\r\n  <button (click)=\"goBack()\" nz-button nzType=\"dashed\"><i nz-icon type=\"left-circle\" theme=\"outline\"></i>返回</button>\r\n  <button (click)=\"save()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>保存</button>\r\n\r\n      </div>\r\n      <div nz-col [nzSpan]=\"16\">\r\n        <nz-card nzType=\"inner\" nzTitle=\"交易历史\">    \r\n          <nz-table #headerTable [nzData]=\"infos\" [nzPageSize]=\"10\" [nzScroll]=\"{ y: '250px' }\">\r\n            <thead>\r\n              <tr>\r\n                <th nzWidth=\"200px\">交易名称</th>\r\n                <th nzWidth=\"200px\">发起时间</th>\r\n                <th nzWidth=\"200px\">状态</th>\r\n                <th>交易类型</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr *ngFor=\"let data of headerTable.data\">\r\n                <td>\r\n                   <a routerLink=\"/info/{{typeof(data)}}/{{data['sellInfoID']?data.sellInfoID:\r\n                   data['buyInfoID']?data.buyInfoID:''}}\">\r\n                    {{ data.goodName }}\r\n                    </a>\r\n                  </td>\r\n                <td>{{ stringToDate(data.releaseTime) }}</td>\r\n                <td>{{ getstate(data.status) }}</td>\r\n                <td>{{ typeof(data)=='sellInfo'?'出售':'求购'}}</td>\r\n              </tr>\r\n            </tbody>\r\n          </nz-table>        \r\n          <div echarts theme=\"dark\" [loading]=\"true\"  [options]=\"option\"></div>\r\n        </nz-card>\r\n      </div>\r\n    </div>\r\n    \r\n</nz-card>"
 
 /***/ }),
 
@@ -140,7 +162,116 @@ module.exports = "\n<nz-card *ngIf='user'  nzTitle=\"用户管理\">\n    <div n
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n          \n<form nz-form [formGroup]=\"validateForm\" class=\"login-form\" (ngSubmit)=\"submitForm()\">\n    <nz-form-item>\n      <nz-form-control>\n        <nz-input-group>\n          <input type=\"text\" nz-input formControlName=\"name\" placeholder=\"网站名\">\n        </nz-input-group>\n      </nz-form-control>\n    </nz-form-item>\n    <nz-form-item>\n      <nz-form-control>\n        <nz-input-group>\n          <input type=\"text\" nz-input formControlName=\"copyright\" placeholder=\"版权认证信息\">\n        </nz-input-group>\n      </nz-form-control>\n    </nz-form-item>\n    <nz-form-item>\n      <nz-form-control>\n        <label nz-checkbox formControlName=\"open\">\n          <span>Open to public</span>\n        </label>\n        <button nz-button class=\"login-form-button\" [nzType]=\"'primary'\">提交</button>\n      </nz-form-control>\n    </nz-form-item>\n  </form>"
+module.exports = "\r\n          \r\n<form nz-form [formGroup]=\"validateForm\" class=\"login-form\" (ngSubmit)=\"submitForm()\">\r\n    <nz-form-item>\r\n      <nz-form-control>\r\n        <nz-input-group>\r\n          <input type=\"text\" nz-input formControlName=\"name\" placeholder=\"网站名\">\r\n        </nz-input-group>\r\n      </nz-form-control>\r\n    </nz-form-item>\r\n    <nz-form-item>\r\n      <nz-form-control>\r\n        <nz-input-group [nzAddOnBefore]=\"addOnBeforeTemplate\">\r\n          <input type=\"text\" nz-input formControlName=\"copyright\" placeholder=\"版权认证信息\">\r\n          \r\n          <ng-template #addOnBeforeTemplate>\r\n            <i nz-icon nzType=\"copyright\" nzTheme=\"outline\"></i>\r\n          </ng-template>\r\n       \r\n        </nz-input-group>\r\n      </nz-form-control>\r\n    </nz-form-item>\r\n    <nz-form-item>\r\n      <nz-form-control>\r\n        <label nz-checkbox formControlName=\"status\">\r\n          <span>Open to public</span>\r\n        </label>\r\n        <button (click) = 'update()' nz-button class=\"login-form-button\" [nzType]=\"'primary'\">提交</button>\r\n      </nz-form-control>\r\n    </nz-form-item>\r\n  </form>"
+
+/***/ }),
+
+/***/ "./src/app/Formatter/format.ts":
+/*!*************************************!*\
+  !*** ./src/app/Formatter/format.ts ***!
+  \*************************************/
+/*! exports provided: Format */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Format", function() { return Format; });
+function Format(date, fmt) {
+    var o = {
+        "M+": date.getMonth() + 1,
+        "d+": date.getDate(),
+        "H+": date.getHours(),
+        "m+": date.getMinutes(),
+        "s+": date.getSeconds(),
+        "q+": Math.floor((date.getMonth() + 3) / 3),
+        "S": date.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt))
+        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
+
+/***/ }),
+
+/***/ "./src/app/activity.service.ts":
+/*!*************************************!*\
+  !*** ./src/app/activity.service.ts ***!
+  \*************************************/
+/*! exports provided: ActivityService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActivityService", function() { return ActivityService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
+
+
+
+
+
+const httpOptions = {
+    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'application/json' })
+};
+let ActivityService = class ActivityService {
+    constructor(http) {
+        this.http = http;
+        this.actUrl = 'api/activity';
+    }
+    /** GET info by id. Will 404 if id not found */
+    getAct(id) {
+        const url = `${this.actUrl}/${id}`;
+        return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`getWebsiteHistory`)));
+    }
+    /** GET info by id. Will 404 if id not found */
+    getActs() {
+        const url = `${this.actUrl}`;
+        return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`getWebsiteHistory`)));
+    }
+    deleteAct(item) {
+        const url = `${this.actUrl}/${item.id}`;
+        return this.http.delete(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`deleteWebsiteHistory`)));
+    }
+    updateAct(item) {
+        const url = `${this.actUrl}`;
+        return this.http.put(url, item, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`updateWebsiteHistory`)));
+    }
+    addAct(item) {
+        const url = `${this.actUrl}`;
+        return this.http.post(url, item, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`addWebsiteHistory`)));
+    }
+    /**
+     * Handle Http operation that failed.
+     * Let the app continue.
+     * @param operation - name of the operation that failed
+     * @param result - optional value to return as the observable result
+     */
+    handleError(operation, result) {
+        return (error) => {
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+            // Let the app keep running by returning an empty result.
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(result);
+        };
+    }
+};
+ActivityService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
+];
+ActivityService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    })
+], ActivityService);
+
+
 
 /***/ }),
 
@@ -167,17 +298,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActivityComponent", function() { return ActivityComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _activity_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../activity.service */ "./src/app/activity.service.ts");
+
 
 
 let ActivityComponent = class ActivityComponent {
-    constructor() { }
+    constructor(actService) {
+        this.actService = actService;
+    }
     ngOnInit() {
-        this.activitys = [{ id: 4396, intro: '高星信用尊享图标', state: '正在进行' },
-            { id: 396, intro: '毕业季', state: '正在进行' },
-            { id: 96, intro: '垃圾分类新时尚', state: '已结束' },
-            { id: 6, intro: '我们需要你输入的tag!', state: '未开始' }];
+        this.actService.getActs().subscribe(e => {
+            this.acts = e;
+            this.acts.forEach(e => e.validDate = new Date(e.validTime));
+            this.acts.forEach(e => e.releaseDate = new Date(e.releaseTime));
+        });
+    }
+    delete(item) {
+        this.actService.deleteAct(item).subscribe(e => this.acts = this.acts.filter(e => e.id != item.id));
+    }
+    add() {
+        const item = { id: this.ID, title: '',
+            description: '',
+            releaseTime: '150000', validTime: '150000', weight: 1,
+            pic: 0, isNew: false
+        };
+        this.actService.addAct(item).subscribe(a => this.actService.getActs().subscribe(e => {
+            this.acts = e;
+            this.acts.forEach(e => e.validDate = new Date(e.validTime));
+            this.acts.forEach(e => e.releaseDate = new Date(e.releaseTime));
+        }));
+    }
+    save(item) {
+        item.validTime = item.validDate.getTime();
+        item.releaseTime = item.releaseDate.getTime();
+        this.actService.updateAct(item).subscribe(a => this.actService.getActs().subscribe(e => {
+            this.acts = e;
+            this.acts.forEach(e => e.validDate = new Date(e.validTime));
+            this.acts.forEach(e => e.releaseDate = new Date(e.releaseTime));
+        }));
     }
 };
+ActivityComponent.ctorParameters = () => [
+    { type: _activity_service__WEBPACK_IMPORTED_MODULE_2__["ActivityService"] }
+];
 ActivityComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-activity',
@@ -216,79 +379,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let ActivitydetailComponent = class ActivitydetailComponent {
-    constructor() {
-        this.tsoption = {
-            backgroundColor: '#01193d',
-            title: {
-                text: 'Transaction Calendar'
-            },
-            tooltip: {
-                trigger: 'item'
-            },
-            grid: {
-                containLabel: true,
-            },
-            calendar: [{
-                    left: 80,
-                    range: ['2019'],
-                    splitLine: {
-                        show: true,
-                        lineStyle: {
-                            color: '#000',
-                            width: 2,
-                            type: 'solid'
-                        }
-                    },
-                    width: '80%',
-                    height: '80%',
-                    dayLabel: {
-                        textStyle: {
-                            color: '#fff'
-                        }
-                    },
-                    monthLabel: {
-                        textStyle: {
-                            color: '#fff'
-                        }
-                    },
-                    yearLabel: {
-                        formatter: '{start}',
-                        textStyle: {
-                            color: '#fff'
-                        }
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: '#323c48',
-                            borderWidth: 1,
-                            borderColor: '#111'
-                        }
-                    }
-                }],
-            series: [{
-                    type: 'effectScatter',
-                    coordinateSystem: 'calendar',
-                    symbolSize: (val) => {
-                        return val[1] / 40;
-                    },
-                    showEffectOn: 'render',
-                    rippleEffect: {
-                        brushType: 'stroke'
-                    },
-                    hoverAnimation: true,
-                    itemStyle: {
-                        color: '#f4e925',
-                        shadowBlur: 10,
-                        shadowColor: '#333'
-                    },
-                    data: [['2019-01-02', 900], ['2019-01-03', 877], ['2019-01-04', 699], ['2019-01-07', 200], ['2019-01-10', 100],
-                        ['2019-01-10', 430], ['2019-02-01', 250], ['2019-02-10', 430],
-                        ['2019-03-10', 430], ['2019-04-01', 250], ['2019-05-10', 430],
-                        ['2019-08-11', 430], ['2019-07-04', 250], ['2019-03-11', 430],
-                        ['2019-09-23', 430], ['2019-06-01', 250], ['2019-12-12', 430]]
-                }]
-        };
-    }
+    constructor() { }
     ngOnInit() {
     }
 };
@@ -351,7 +442,7 @@ const routes = [
     { path: 'user', component: _user_user_component__WEBPACK_IMPORTED_MODULE_5__["UserComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
     { path: 'login', component: _login_login_component__WEBPACK_IMPORTED_MODULE_6__["LoginComponent"] },
     { path: 'info', component: _info_info_component__WEBPACK_IMPORTED_MODULE_7__["InfoComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
-    { path: 'info/:id', component: _infodetail_infodetail_component__WEBPACK_IMPORTED_MODULE_8__["InfoDetailComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
+    { path: 'info/:type/:id', component: _infodetail_infodetail_component__WEBPACK_IMPORTED_MODULE_8__["InfoDetailComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
     { path: 'activity/:id', component: _activitydetail_activitydetail_component__WEBPACK_IMPORTED_MODULE_12__["ActivitydetailComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
     { path: 'statistic', component: _info_statistic_info_statistic_component__WEBPACK_IMPORTED_MODULE_11__["InfoStatisticComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
     { path: 'website', component: _website_website_component__WEBPACK_IMPORTED_MODULE_9__["WebsiteComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
@@ -473,6 +564,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _delon_auth__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @delon/auth */ "./node_modules/@delon/auth/fesm2015/auth.js");
 /* harmony import */ var _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @ant-design/icons-angular/icons */ "./node_modules/@ant-design/icons-angular/fesm2015/ant-design-icons-angular-icons.js");
 /* harmony import */ var _callback_callback_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./callback/callback.component */ "./src/app/callback/callback.component.ts");
+/* harmony import */ var _info_sell_info_sell_info_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./info/sell-info/sell-info.component */ "./src/app/info/sell-info/sell-info.component.ts");
+/* harmony import */ var _info_buy_info_buy_info_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./info/buy-info/buy-info.component */ "./src/app/info/buy-info/buy-info.component.ts");
+
+
 
 
 
@@ -501,7 +596,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const icons = [_ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["ControlOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["LeftCircleOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["SaveOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["DashboardOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["UserOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["ProfileOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["TransactionOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["ContactsOutline"],
-    _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["BulbOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["LoginOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["LockOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["KeyOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["DeleteOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["SearchOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["LogoutOutline"]];
+    _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["BulbOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["LoginOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["LockOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["KeyOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["DeleteOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["SearchOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["LogoutOutline"], _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__["CopyrightOutline"]];
 Object(_angular_common__WEBPACK_IMPORTED_MODULE_12__["registerLocaleData"])(_angular_common_locales_zh__WEBPACK_IMPORTED_MODULE_13___default.a);
 class DelonModule {
     static forRoot() {
@@ -529,22 +624,24 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _activity_activity_component__WEBPACK_IMPORTED_MODULE_21__["ActivityComponent"],
             _info_statistic_info_statistic_component__WEBPACK_IMPORTED_MODULE_22__["InfoStatisticComponent"],
             _activitydetail_activitydetail_component__WEBPACK_IMPORTED_MODULE_23__["ActivitydetailComponent"],
-            _callback_callback_component__WEBPACK_IMPORTED_MODULE_26__["CallbackComponent"]
+            _callback_callback_component__WEBPACK_IMPORTED_MODULE_26__["CallbackComponent"],
+            _info_sell_info_sell_info_component__WEBPACK_IMPORTED_MODULE_27__["SellInfoComponent"],
+            _info_buy_info_buy_info_component__WEBPACK_IMPORTED_MODULE_28__["BuyInfoComponent"]
         ],
         imports: [
             _delon_auth__WEBPACK_IMPORTED_MODULE_24__["DelonAuthModule"],
             _angular_forms__WEBPACK_IMPORTED_MODULE_8__["ReactiveFormsModule"],
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
             _app_routing_module__WEBPACK_IMPORTED_MODULE_5__["AppRoutingModule"],
-            ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__["NgZorroAntdModule"],
+            ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__["NgZorroAntdModule"].forRoot(),
             _angular_forms__WEBPACK_IMPORTED_MODULE_8__["FormsModule"],
             ngx_echarts__WEBPACK_IMPORTED_MODULE_10__["NgxEchartsModule"],
             _angular_common_http__WEBPACK_IMPORTED_MODULE_9__["HttpClientModule"],
-            angular_in_memory_web_api__WEBPACK_IMPORTED_MODULE_3__["HttpClientInMemoryWebApiModule"].forRoot(_inmemory_data_service__WEBPACK_IMPORTED_MODULE_4__["InMemoryDataService"], { dataEncapsulation: false }),
+            angular_in_memory_web_api__WEBPACK_IMPORTED_MODULE_3__["HttpClientInMemoryWebApiModule"].forRoot(_inmemory_data_service__WEBPACK_IMPORTED_MODULE_4__["InMemoryDataService"], { dataEncapsulation: false, passThruUnknownUrl: true }),
             _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_11__["BrowserAnimationsModule"]
         ],
         providers: [
-            { provide: ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__["NZ_I18N"], useValue: ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__["zh_CN"] }, { provide: ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__["NZ_ICONS"], useValue: icons }
+            { provide: ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__["NZ_I18N"], useValue: ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__["zh_CN"] }, { provide: ng_zorro_antd__WEBPACK_IMPORTED_MODULE_7__["NZ_ICONS"], useValue: icons }, { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_9__["HTTP_INTERCEPTORS"], useClass: _delon_auth__WEBPACK_IMPORTED_MODULE_24__["JWTInterceptor"], multi: true }
         ],
         bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_6__["AppComponent"]]
     })
@@ -579,13 +676,11 @@ let AuthService = class AuthService {
     }
     login(res) {
         //JWTTokenModely
-        //这里会自动补全payload
         this.tokenService.set(res);
         const jwt = this.tokenService.get(_delon_auth__WEBPACK_IMPORTED_MODULE_2__["JWTTokenModel"]);
-        console.log(jwt);
-        if (jwt.payload.role !== 1) {
+        if (jwt.payload.role !== 10) {
             this.logout();
-            console.log('not admin');
+            console.log('error! not admin');
         }
     }
     logout() {
@@ -665,7 +760,7 @@ CallbackComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2Rhc2hib2FyZC9kYXNoYm9hcmQuY29tcG9uZW50LmNzcyJ9 */"
+module.exports = ".input {\r\n    width: 10%;\r\n}\r\n\r\nnz-select{\r\n    width: 30%;\r\n}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvZGFzaGJvYXJkL2Rhc2hib2FyZC5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0lBQ0ksVUFBVTtBQUNkOztBQUVBO0lBQ0ksVUFBVTtBQUNkIiwiZmlsZSI6InNyYy9hcHAvZGFzaGJvYXJkL2Rhc2hib2FyZC5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmlucHV0IHtcclxuICAgIHdpZHRoOiAxMCU7XHJcbn1cclxuXHJcbm56LXNlbGVjdHtcclxuICAgIHdpZHRoOiAzMCU7XHJcbn0iXX0= */"
 
 /***/ }),
 
@@ -681,13 +776,73 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardComponent", function() { return DashboardComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _website_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../website.service */ "./src/app/website.service.ts");
+/* harmony import */ var _user_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../user.service */ "./src/app/user.service.ts");
+/* harmony import */ var _info_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../info.service */ "./src/app/info.service.ts");
+
+
+
 
 
 let DashboardComponent = class DashboardComponent {
-    constructor() { }
+    constructor(ifService, wbService, usService) {
+        this.ifService = ifService;
+        this.wbService = wbService;
+        this.usService = usService;
+    }
     ngOnInit() {
+        this.getHistory();
+        this.wbService.getSite().subscribe(s => this.site = s);
+        this.ifService.getAllBuyInfo();
+        this.ifService.getAllSellInfo();
+        this.infoNum = this.ifService.getInfoNum();
+        this.acInfoNum = this.ifService.getAcInfo();
+        this.rsInfoNum = this.ifService.getReserveInfoNum();
+        this.getInfo();
+    }
+    getInfo() {
+        setTimeout(() => {
+            this.infoNum = this.ifService.getInfoNum();
+            this.acInfoNum = this.ifService.getAcInfo();
+            this.rsInfoNum = this.ifService.getReserveInfoNum();
+            this.getInfo();
+        }, 10000);
+    }
+    getHistory() {
+        this.wbService.getSiteHistory().subscribe(s => this.hst = s.sort((a, b) => a.time - b.time));
+    }
+    add() {
+        const newitem = { id: '', time: '2019-01-01', description: 'init' };
+        const tmp = this.hst;
+        newitem.id = tmp.sort((a, b) => b.id - a.id)[0].id + 1;
+        this.hst.push(newitem);
+        this.hst = this.hst.sort((a, b) => a.time - b.time);
+        this.wbService.addSiteHistory(newitem).subscribe(_ => this.getHistory());
+    }
+    getColor(item) {
+        switch (item.type) {
+            case 1:
+                return 'green';
+            case -1:
+                return 'red';
+            default:
+                return 'blue';
+        }
+    }
+    save() {
+        this.hst.forEach(e => {
+            if (e.description.trim())
+                this.wbService.updateSiteHistory(e).subscribe(_ => this.getHistory());
+            else
+                this.wbService.deleteSiteHistory(e).subscribe(_ => this.getHistory());
+        });
     }
 };
+DashboardComponent.ctorParameters = () => [
+    { type: _info_service__WEBPACK_IMPORTED_MODULE_4__["InfoService"] },
+    { type: _website_service__WEBPACK_IMPORTED_MODULE_2__["WebsiteService"] },
+    { type: _user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"] }
+];
 DashboardComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-dashboard',
@@ -700,6 +855,67 @@ DashboardComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 /***/ }),
 
+/***/ "./src/app/file.service.ts":
+/*!*********************************!*\
+  !*** ./src/app/file.service.ts ***!
+  \*********************************/
+/*! exports provided: FileService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FileService", function() { return FileService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
+
+
+
+
+
+const httpOptions = {
+    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'application/json' })
+};
+let FileService = class FileService {
+    constructor(http) {
+        this.http = http;
+        this.contentUrl = 'api/content'; // URL to web api
+    }
+    /** GET info by id. Will 404 if id not found */
+    getContent(id) {
+        const url = `${this.contentUrl}/${id}`;
+        return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`getContent id=${id}`)));
+    }
+    /**
+     * Handle Http operation that failed.
+     * Let the app continue.
+     * @param operation - name of the operation that failed
+     * @param result - optional value to return as the observable result
+     */
+    handleError(operation, result) {
+        return (error) => {
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+            // Let the app keep running by returning an empty result.
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(result);
+        };
+    }
+};
+FileService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
+];
+FileService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    })
+], FileService);
+
+
+
+/***/ }),
+
 /***/ "./src/app/info-statistic/info-statistic.component.css":
 /*!*************************************************************!*\
   !*** ./src/app/info-statistic/info-statistic.component.css ***!
@@ -707,7 +923,7 @@ DashboardComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n.outer-div{\r\n\tborder-radius: 7px;\r\n\tborder: 2px solid rgb(199, 199, 199);\r\n\tbackground: #01193d;\r\n}\r\n\r\n#fdg{\r\n    position: absolute;\r\n\ttop: 0%;\r\n\tleft: 15%;\r\n\twidth: 35%;\r\n\theight: 59%;\t\r\n\tbackground: #01193d;\r\n}\r\n\r\n#good{\r\n    position: absolute;\r\n\ttop: 0%;\r\n\tleft: 51%;\r\n\twidth: 29%;\r\n\theight: 59%;\t\r\n\tbackground: #01193d;\r\n}\r\n\r\n.tpc {\r\n\theight: 420px;\r\n}\r\n\r\n.btc {\r\n\theight: 250px;\r\n}\r\n\r\n#cld{\r\n\tposition: absolute;\r\n\ttop: 0%;\r\n    right: 0%;\r\n\twidth: 19%;\r\n\theight: 59%;\t\r\n\tbackground: #01193d;\r\n}\r\n\r\n#ts{\r\n    position: absolute;\r\n\tleft: 15%;\r\n\tbottom: 0%;\r\n\twidth: 50%;\r\n\theight: 39%;\t\r\n\tbackground: #01193d;\r\n}\r\n\r\n#lq{\r\n    position: absolute;\r\n\tright: 0%;\r\n\twidth: 34%;\r\n\tbottom: 0%;\r\n\theight: 39%;\t\r\n\tbackground: #01193d;\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaW5mby1zdGF0aXN0aWMvaW5mby1zdGF0aXN0aWMuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQ0E7Q0FDQyxrQkFBa0I7Q0FDbEIsb0NBQW9DO0NBQ3BDLG1CQUFtQjtBQUNwQjs7QUFFQTtJQUNJLGtCQUFrQjtDQUNyQixPQUFPO0NBQ1AsU0FBUztDQUNULFVBQVU7Q0FDVixXQUFXO0NBQ1gsbUJBQW1CO0FBQ3BCOztBQUVBO0lBQ0ksa0JBQWtCO0NBQ3JCLE9BQU87Q0FDUCxTQUFTO0NBQ1QsVUFBVTtDQUNWLFdBQVc7Q0FDWCxtQkFBbUI7QUFDcEI7O0FBRUE7Q0FDQyxhQUFhO0FBQ2Q7O0FBRUE7Q0FDQyxhQUFhO0FBQ2Q7O0FBRUE7Q0FDQyxrQkFBa0I7Q0FDbEIsT0FBTztJQUNKLFNBQVM7Q0FDWixVQUFVO0NBQ1YsV0FBVztDQUNYLG1CQUFtQjtBQUNwQjs7QUFFQTtJQUNJLGtCQUFrQjtDQUNyQixTQUFTO0NBQ1QsVUFBVTtDQUNWLFVBQVU7Q0FDVixXQUFXO0NBQ1gsbUJBQW1CO0FBQ3BCOztBQUVBO0lBQ0ksa0JBQWtCO0NBQ3JCLFNBQVM7Q0FDVCxVQUFVO0NBQ1YsVUFBVTtDQUNWLFdBQVc7Q0FDWCxtQkFBbUI7QUFDcEIiLCJmaWxlIjoic3JjL2FwcC9pbmZvLXN0YXRpc3RpYy9pbmZvLXN0YXRpc3RpYy5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXHJcbi5vdXRlci1kaXZ7XHJcblx0Ym9yZGVyLXJhZGl1czogN3B4O1xyXG5cdGJvcmRlcjogMnB4IHNvbGlkIHJnYigxOTksIDE5OSwgMTk5KTtcclxuXHRiYWNrZ3JvdW5kOiAjMDExOTNkO1xyXG59XHJcblxyXG4jZmRne1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG5cdHRvcDogMCU7XHJcblx0bGVmdDogMTUlO1xyXG5cdHdpZHRoOiAzNSU7XHJcblx0aGVpZ2h0OiA1OSU7XHRcclxuXHRiYWNrZ3JvdW5kOiAjMDExOTNkO1xyXG59XHJcblxyXG4jZ29vZHtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuXHR0b3A6IDAlO1xyXG5cdGxlZnQ6IDUxJTtcclxuXHR3aWR0aDogMjklO1xyXG5cdGhlaWdodDogNTklO1x0XHJcblx0YmFja2dyb3VuZDogIzAxMTkzZDtcclxufVxyXG5cclxuLnRwYyB7XHJcblx0aGVpZ2h0OiA0MjBweDtcclxufVxyXG5cclxuLmJ0YyB7XHJcblx0aGVpZ2h0OiAyNTBweDtcclxufVxyXG5cclxuI2NsZHtcclxuXHRwb3NpdGlvbjogYWJzb2x1dGU7XHJcblx0dG9wOiAwJTtcclxuICAgIHJpZ2h0OiAwJTtcclxuXHR3aWR0aDogMTklO1xyXG5cdGhlaWdodDogNTklO1x0XHJcblx0YmFja2dyb3VuZDogIzAxMTkzZDtcclxufVxyXG5cclxuI3Rze1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG5cdGxlZnQ6IDE1JTtcclxuXHRib3R0b206IDAlO1xyXG5cdHdpZHRoOiA1MCU7XHJcblx0aGVpZ2h0OiAzOSU7XHRcclxuXHRiYWNrZ3JvdW5kOiAjMDExOTNkO1xyXG59XHJcblxyXG4jbHF7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcblx0cmlnaHQ6IDAlO1xyXG5cdHdpZHRoOiAzNCU7XHJcblx0Ym90dG9tOiAwJTtcclxuXHRoZWlnaHQ6IDM5JTtcdFxyXG5cdGJhY2tncm91bmQ6ICMwMTE5M2Q7XHJcbn1cclxuIl19 */"
+module.exports = "\r\n.outer-div{\r\n\tborder-radius: 7px;\r\n\tborder: 2px solid rgb(199, 199, 199);\r\n\tbackground: #01193d;\r\n}\r\n\r\n#fdg{\r\n    position: absolute;\r\n\ttop: 0%;\r\n\tleft: 15%;\r\n\twidth: 35%;\r\n\theight: 59%;\t\r\n\tbackground: #01193d;\r\n}\r\n\r\n#good{\r\n    position: absolute;\r\n\ttop: 0%;\r\n\tleft: 51%;\r\n\twidth: 29%;\r\n\theight: 59%;\t\r\n\tbackground: #01193d;\r\n}\r\n\r\n.tpc {\r\n\theight: 420px;\r\n}\r\n\r\n.btc {\r\n\theight: 250px;\r\n}\r\n\r\n#cld{\r\n\tposition: absolute;\r\n\ttop: 0%;\r\n    right: 0%;\r\n\twidth: 19%;\r\n\theight: 59%;\t\r\n\tbackground: #01193d;\r\n}\r\n\r\n#ts{\r\n    position: absolute;\r\n\tleft: 15%;\r\n\tbottom: 0%;\r\n\twidth: 50%;\r\n\theight: 39%;\t\r\n\tbackground: #01193d;\r\n}\r\n\r\n#lq{\r\n    position: absolute;\r\n\tright: 0%;\r\n\twidth: 34%;\r\n\tbottom: 0%;\r\n\theight: 39%;\t\r\n\tbackground: #01193d;\r\n}\r\n\r\n#pause{\r\n    position: absolute;\r\n\tright: 0%;\r\n\tbottom: 0%;\r\n}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaW5mby1zdGF0aXN0aWMvaW5mby1zdGF0aXN0aWMuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQ0E7Q0FDQyxrQkFBa0I7Q0FDbEIsb0NBQW9DO0NBQ3BDLG1CQUFtQjtBQUNwQjs7QUFFQTtJQUNJLGtCQUFrQjtDQUNyQixPQUFPO0NBQ1AsU0FBUztDQUNULFVBQVU7Q0FDVixXQUFXO0NBQ1gsbUJBQW1CO0FBQ3BCOztBQUVBO0lBQ0ksa0JBQWtCO0NBQ3JCLE9BQU87Q0FDUCxTQUFTO0NBQ1QsVUFBVTtDQUNWLFdBQVc7Q0FDWCxtQkFBbUI7QUFDcEI7O0FBRUE7Q0FDQyxhQUFhO0FBQ2Q7O0FBRUE7Q0FDQyxhQUFhO0FBQ2Q7O0FBRUE7Q0FDQyxrQkFBa0I7Q0FDbEIsT0FBTztJQUNKLFNBQVM7Q0FDWixVQUFVO0NBQ1YsV0FBVztDQUNYLG1CQUFtQjtBQUNwQjs7QUFFQTtJQUNJLGtCQUFrQjtDQUNyQixTQUFTO0NBQ1QsVUFBVTtDQUNWLFVBQVU7Q0FDVixXQUFXO0NBQ1gsbUJBQW1CO0FBQ3BCOztBQUVBO0lBQ0ksa0JBQWtCO0NBQ3JCLFNBQVM7Q0FDVCxVQUFVO0NBQ1YsVUFBVTtDQUNWLFdBQVc7Q0FDWCxtQkFBbUI7QUFDcEI7O0FBRUE7SUFDSSxrQkFBa0I7Q0FDckIsU0FBUztDQUNULFVBQVU7QUFDWCIsImZpbGUiOiJzcmMvYXBwL2luZm8tc3RhdGlzdGljL2luZm8tc3RhdGlzdGljLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyJcclxuLm91dGVyLWRpdntcclxuXHRib3JkZXItcmFkaXVzOiA3cHg7XHJcblx0Ym9yZGVyOiAycHggc29saWQgcmdiKDE5OSwgMTk5LCAxOTkpO1xyXG5cdGJhY2tncm91bmQ6ICMwMTE5M2Q7XHJcbn1cclxuXHJcbiNmZGd7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcblx0dG9wOiAwJTtcclxuXHRsZWZ0OiAxNSU7XHJcblx0d2lkdGg6IDM1JTtcclxuXHRoZWlnaHQ6IDU5JTtcdFxyXG5cdGJhY2tncm91bmQ6ICMwMTE5M2Q7XHJcbn1cclxuXHJcbiNnb29ke1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG5cdHRvcDogMCU7XHJcblx0bGVmdDogNTElO1xyXG5cdHdpZHRoOiAyOSU7XHJcblx0aGVpZ2h0OiA1OSU7XHRcclxuXHRiYWNrZ3JvdW5kOiAjMDExOTNkO1xyXG59XHJcblxyXG4udHBjIHtcclxuXHRoZWlnaHQ6IDQyMHB4O1xyXG59XHJcblxyXG4uYnRjIHtcclxuXHRoZWlnaHQ6IDI1MHB4O1xyXG59XHJcblxyXG4jY2xke1xyXG5cdHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuXHR0b3A6IDAlO1xyXG4gICAgcmlnaHQ6IDAlO1xyXG5cdHdpZHRoOiAxOSU7XHJcblx0aGVpZ2h0OiA1OSU7XHRcclxuXHRiYWNrZ3JvdW5kOiAjMDExOTNkO1xyXG59XHJcblxyXG4jdHN7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcblx0bGVmdDogMTUlO1xyXG5cdGJvdHRvbTogMCU7XHJcblx0d2lkdGg6IDUwJTtcclxuXHRoZWlnaHQ6IDM5JTtcdFxyXG5cdGJhY2tncm91bmQ6ICMwMTE5M2Q7XHJcbn1cclxuXHJcbiNscXtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuXHRyaWdodDogMCU7XHJcblx0d2lkdGg6IDM0JTtcclxuXHRib3R0b206IDAlO1xyXG5cdGhlaWdodDogMzklO1x0XHJcblx0YmFja2dyb3VuZDogIzAxMTkzZDtcclxufVxyXG5cclxuI3BhdXNle1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG5cdHJpZ2h0OiAwJTtcclxuXHRib3R0b206IDAlO1xyXG59Il19 */"
 
 /***/ }),
 
@@ -715,123 +931,277 @@ module.exports = "\r\n.outer-div{\r\n\tborder-radius: 7px;\r\n\tborder: 2px soli
 /*!************************************************************!*\
   !*** ./src/app/info-statistic/info-statistic.component.ts ***!
   \************************************************************/
-/*! exports provided: InfoStatisticComponent */
+/*! exports provided: fdgFormatter, InfoStatisticComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fdgFormatter", function() { return fdgFormatter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InfoStatisticComponent", function() { return InfoStatisticComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var echarts_lib_echarts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! echarts/lib/echarts */ "./node_modules/echarts/lib/echarts.js");
 /* harmony import */ var echarts_lib_echarts__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(echarts_lib_echarts__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _info_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../info.service */ "./src/app/info.service.ts");
+/* harmony import */ var _transaction_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../transaction.service */ "./src/app/transaction.service.ts");
+/* harmony import */ var _Formatter_format__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Formatter/format */ "./src/app/Formatter/format.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+/* harmony import */ var _file_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../file.service */ "./src/app/file.service.ts");
+
+
+
+
+
 
 
 
 const name = ['LJH', 'WXZ', 'ZWJ', 'KHQ', 'MZD', 'ZEL', 'JZM', 'HJT', 'TRUMP',
     'LJH2', 'WXZ2', 'ZWJ2', 'KHQ2', 'MZD2', 'ZEL2', 'JZM2', 'HJT2', 'TRUMP2',
     'LJH3', 'WXZ3', 'ZWJ3', 'KHQ3', 'MZD3', 'ZEL3', 'JZM3', 'HJT3', 'TRUMP3'];
+function fdgFormatter(p) {
+    if (p.dataType == 'node')
+        return p.data.name + ' has completed ' + p.data.value + ' transaction';
+    if (p.dataType == 'edge')
+        return p.data.source + ' has selled ' + p.data.value + ' goods to ' + p.data.target;
+}
 let InfoStatisticComponent = class InfoStatisticComponent {
-    constructor() { }
-    ngOnInit() {
-        this.cld();
-        this.fdg();
-        this.ts();
-        this.lq();
-        this.good();
+    constructor(router, trs, is, fileService) {
+        this.router = router;
+        this.trs = trs;
+        this.is = is;
+        this.fileService = fileService;
+        this.bi = [];
+        this.si = [];
+        this.tr = [];
+        this.pl = false;
     }
-    good() {
-        const jsdata1 = [['2019-01-01', 18.5, 3], ['2019-01-02', 12.5, 3], ['2019-01-01', 42.5, 5], ['2019-01-03', 65, 5],
-            ['2019-01-05', 23.5, 5], ['2019-01-04', 18, 5], ['2019-01-02', 18, 4]];
-        const jsdata2 = [['2019-01-01', 32.5, 2], ['2019-01-02', 122.5, 4], ['2019-01-01', 41.5, 5], ['2019-01-07', 75, 5],
-            ['2019-01-03', 21.5, 5], ['2019-01-04', 177, 5], ['2019-01-02', 66, 5]];
-        const jsdata3 = [['2019-01-01', 11], ['2019-01-06', 12.5, 4], ['2019-01-01', 4.5, 3], ['2019-01-03', 15, 3],
-            ['2019-01-03', 11.5, 5], ['2019-01-04', 17, 3], ['2019-01-02', 16, 5]];
-        const itemstyle = {
-            normal: {
-                opacity: 0.8,
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowOffsetY: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.3)'
-            }
-        };
+    ngOnInit() {
+        const now = new Date().getFullYear();
+        this.getAllInfo();
+        this.getAllTR(new Date(now, 1, 1).getTime() / 1000, new Date(now + 1, 1, 1).getTime() / 1000);
+        this.cloudGrpah();
+        this.forceGraph();
+        this.calenderGraph();
+        this.lineGraph();
+        this.prcGraph();
+    }
+    pauseLine() {
+        this.pl = !this.pl;
+    }
+    getComment() {
+        this.bi.forEach(info => {
+            this.fileService.getContent(info.contentID).subscribe(e => {
+                if (e) {
+                    info.tags = e.tags;
+                }
+            });
+        });
+        if (!this.pl) {
+            this.prcGraph();
+            this.cloudGrpah();
+        }
+    }
+    getAllTR(beg, end) {
+        this.tr = this.trs.getAllTR(6, beg, end);
+        if (!this.pl) {
+            this.calenderGraph();
+            this.forceGraph();
+        }
+        setTimeout(() => {
+            this.getAllTR(beg, end);
+        }, 10000);
+    }
+    getAllInfo() {
+        this.bi = this.is.getAllBuyInfo();
+        this.bi = this.bi.sort((a, b) => a.releaseTime - b.releaseTime);
+        this.si = this.is.getAllSellInfo();
+        this.si = this.si.sort((a, b) => a.releaseTime - b.releaseTime);
+        this.getComment();
+        if (!this.pl)
+            this.lineGraph();
+        setTimeout(() => {
+            this.getAllInfo();
+        }, 10000);
+    }
+    onBrushSelected(param) {
+        this.selectedInfo = param.batch[0].selected[0].dataIndex.map(i => this.prcdata[i]);
+    }
+    prcGraph() {
+        this.prcdata = [];
+        this.bi.forEach(e => {
+            if (e.tags && e.price)
+                e.tags.forEach(t => {
+                    this.prcdata.push([t, e.price, e.buyInfoID]);
+                });
+        });
         this.goodoption = {
+            backgroundColor: '#01193d',
+            title: [
+                {
+                    text: '交易价格分布',
+                    left: 'center',
+                }
+            ],
+            toolbox: {
+                brush: {
+                    outOfBrush: {
+                        color: '#abc'
+                    },
+                    brushStyle: {
+                        borderWidth: 2,
+                        color: 'rgba(0,0,0,0.2)',
+                        borderColor: 'rgba(0,0,0,0.5)',
+                    },
+                    seriesIndex: [0, 1],
+                    throttleType: 'debounce',
+                    throttleDelay: 300,
+                    geoIndex: 0
+                },
+            },
+            brush: {
+                outOfBrush: {
+                    color: '#abc'
+                },
+                brushStyle: {
+                    borderWidth: 2,
+                    color: 'rgba(0,0,0,0.2)',
+                    borderColor: 'rgba(0,0,0,0.5)',
+                },
+                seriesIndex: [0, 1],
+                throttleType: 'debounce',
+                throttleDelay: 300,
+                geoIndex: 'all'
+            },
+            tooltip: {
+                trigger: 'item',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
             dataZoom: [
                 {
                     show: true,
                     realtime: true,
-                    start: 65,
-                    end: 85
+                    start: 0,
+                    end: 40
                 },
                 {
                     type: 'inside',
                     realtime: true,
-                    start: 65,
-                    end: 85
+                    start: 0,
+                    end: 40
                 }
             ],
+            dataset: {
+                dimensions: ['tag', 'price', 'buyInfoID'],
+                source: this.prcdata
+            },
+            grid: {
+                left: '10%',
+                right: '10%',
+                bottom: '15%'
+            },
             xAxis: {
                 type: 'category',
-            },
-            backgroundColor: '#01193d',
-            title: {
-                text: 'Price Trend',
-            },
-            color: [
-                '#dd4444', '#fec42c', '#80F1BE'
-            ],
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    label: {
-                        show: true,
-                        backgroundColor: '#004E52'
-                    },
-                    type: 'cross'
-                }
-            },
-            legend: {
-                y: 'top',
-                data: ['Book', 'Shoe', 'Mouse'],
+                boundaryGap: true,
+                nameGap: 30
             },
             yAxis: {
                 type: 'value',
-                min: 0,
-                max: 'datamax',
-                name: 'Price',
-                splitLine: {
-                    show: true
-                }
+                name: 'yuan'
             },
-            series: [{
-                    name: 'Book',
-                    type: 'scatter',
-                    symbolSize: t => 3 * t[2],
-                    itemStyle: itemstyle,
-                    data: jsdata1
-                }, {
-                    name: 'Shoe',
-                    type: 'scatter',
-                    symbolSize: t => 3 * t[2],
-                    itemStyle: itemstyle,
-                    data: jsdata2
-                },
+            series: [
                 {
-                    name: 'Mouse',
+                    name: 'tag price',
                     type: 'scatter',
-                    symbolSize: t => 3 * t[2],
-                    itemStyle: itemstyle,
-                    data: jsdata3
+                    encode: {
+                        x: 'tag',
+                        y: 'price'
+                    }
                 }
             ]
         };
     }
-    ts() {
+    cloudGrpah() {
+        const fre = new Map();
+        this.bi.forEach(e => {
+            if (e.tags)
+                e.tags.forEach(t => {
+                    if (t in fre)
+                        fre[t] += 1;
+                    else
+                        fre[t] = 1;
+                });
+        });
+        const clddata = [];
+        for (const k in fre)
+            clddata.push({ name: k,
+                value: fre[k],
+                textStyle: {
+                    normal: {},
+                    emphasis: {}
+                }
+            });
+        this.cldoption = {
+            backgroundColor: '#01193d',
+            title: {
+                text: '标签热度',
+                left: 'center',
+            },
+            tooltip: {},
+            series: [{
+                    type: 'wordCloud',
+                    shape: 'circle',
+                    left: 'center',
+                    top: 'center',
+                    sizeRange: [12, 30],
+                    rotationRange: [-90, 90],
+                    rotationStep: 45,
+                    gridSize: 8,
+                    drawOutOfBound: false,
+                    textStyle: {
+                        normal: {
+                            fontFamily: 'sans-serif',
+                            fontWeight: 'bold',
+                            color: this.randamColor
+                        },
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowColor: '#333'
+                        }
+                    },
+                    data: clddata
+                }
+            ]
+        };
+    }
+    randamColor() {
+        return 'rgb(' + [
+            Math.round(Math.random() * 250),
+            Math.round(Math.random() * 250),
+            Math.round(Math.random() * 250)
+        ].join(',') + ')';
+    }
+    calenderGraph() {
+        let td = new Map();
+        this.tr.forEach(e => {
+            if (!e)
+                return;
+            const str = Object(_Formatter_format__WEBPACK_IMPORTED_MODULE_5__["Format"])(new Date(e.createTime * 1000), 'yyyy-MM-dd');
+            if (str in td)
+                td[str] += 1;
+            else
+                td[str] = 1;
+        });
+        let tdata = [];
+        for (let i in td) {
+            tdata.push([i, td[i]]);
+        }
         this.tsoption = {
             backgroundColor: '#01193d',
             title: {
-                text: 'Transaction Calendar'
+                text: '活跃度日历',
+                left: 'center'
             },
             tooltip: {
                 trigger: 'item'
@@ -879,98 +1249,104 @@ let InfoStatisticComponent = class InfoStatisticComponent {
             series: [{
                     type: 'effectScatter',
                     coordinateSystem: 'calendar',
-                    symbolSize: (val) => {
-                        return val[1] / 40;
-                    },
+                    symbolSize: this.cldsz,
                     showEffectOn: 'render',
                     rippleEffect: {
                         brushType: 'stroke'
                     },
                     hoverAnimation: true,
+                    tooltip: {
+                        formatter: this.cldfm,
+                    },
                     itemStyle: {
                         color: '#f4e925',
                         shadowBlur: 10,
                         shadowColor: '#333'
                     },
-                    data: [['2019-01-02', 900], ['2019-01-03', 877], ['2019-01-04', 699], ['2019-01-07', 200], ['2019-01-10', 100],
-                        ['2019-01-10', 430], ['2019-02-01', 250], ['2019-02-10', 430],
-                        ['2019-03-10', 430], ['2019-04-01', 250], ['2019-05-10', 430],
-                        ['2019-08-11', 430], ['2019-07-04', 250], ['2019-03-11', 430],
-                        ['2019-09-23', 430], ['2019-06-01', 250], ['2019-12-12', 430]]
+                    data: tdata
                 }]
         };
     }
-    cld() {
-        this.cldoption = {
-            backgroundColor: '#01193d',
-            title: {
-                text: 'Label WordCloud'
-            },
-            tooltip: {},
-            series: [{
-                    type: 'wordCloud',
-                    shape: 'circle',
-                    left: 'center',
-                    top: 'center',
-                    sizeRange: [12, 30],
-                    rotationRange: [-90, 90],
-                    rotationStep: 45,
-                    gridSize: 8,
-                    drawOutOfBound: false,
-                    textStyle: {
-                        normal: {
-                            fontFamily: 'sans-serif',
-                            fontWeight: 'bold',
-                            color: () => {
-                                // Random color
-                                return 'rgb(' + [
-                                    Math.round(Math.random() * 250),
-                                    Math.round(Math.random() * 250),
-                                    Math.round(Math.random() * 250)
-                                ].join(',') + ')';
-                            }
-                        },
-                        emphasis: {
-                            shadowBlur: 10,
-                            shadowColor: '#333'
-                        }
-                    },
-                    data: name.map(node => {
-                        return { name: node,
-                            value: Math.round(Math.random() * 1000),
-                            textStyle: {
-                                normal: {},
-                                emphasis: {}
-                            }
-                        };
-                    })
-                }]
-        };
+    cldsz(val) {
+        return val[1];
     }
-    fdg() {
-        const E = name.map(node => {
-            const e = Math.floor(Math.random() * 10);
-            return { source: node, target: name[Math.floor(Math.random() * 27)],
-                value: e, lineStyle: {
-                    width: e * 0.3
-                } };
-        }).filter(node => node.source !== node.target);
-        const V = name.map(node => {
-            const v = E.filter(n => n.source === node || n.target === node).reduce((total, currentValue, currentIndex, arr) => {
-                return total + currentValue.value;
-            }, 0);
-            return { name: node,
-                itemStyle: {
-                    color: v < 10 ? '#60acfc' : '#ff7c7c'
-                }, value: v, symbolSize: v,
-                draggable: true };
+    cldfm(param) {
+        return param.data[1] + ' completed transactions created in ' + param.data[0];
+    }
+    forceGraph() {
+        let td = new Map();
+        let join = [];
+        this.tr.forEach(e => {
+            if (!e)
+                return;
+            if (e && e.category == 2) {
+                const other = e.toUserID;
+                if (e.fromUserID in td)
+                    if (other in td[e.fromUserID])
+                        td[e.fromUserID][other] += 1;
+                    else
+                        td[e.fromUserID][other] = 1;
+                else {
+                    td[e.fromUserID] = new Map();
+                    td[e.fromUserID][other] = 1;
+                }
+            }
+            else if (e && e.category == 1) {
+                const other = e.toUserID;
+                if (other in td)
+                    if (e.fromUserID in td[other])
+                        td[other][e.fromUserID] += 1;
+                    else
+                        td[other][e.fromUserID] = 1;
+                else {
+                    td[other] = new Map();
+                    td[other][e.fromUserID] = 1;
+                }
+            }
         });
+        const VMAP = {};
+        const E = [];
+        const V = [];
+        for (let i in td) {
+            let sum = 0;
+            for (let j in td[i]) {
+                E.push({ source: i, target: j,
+                    value: td[i][j], lineStyle: {
+                        width: td[i][j]
+                    } });
+                sum += td[i][j];
+                if (j in VMAP)
+                    VMAP[j] += td[i][j];
+                else
+                    VMAP[j] = td[i][j];
+            }
+            if (i in VMAP)
+                VMAP[i] += sum;
+            else
+                VMAP[i] = sum;
+        }
+        for (let i in VMAP) {
+            V.push({ name: i, value: VMAP[i], symbolSize: VMAP[i] * 5,
+                draggable: true });
+        }
         this.fdgoption = {
             backgroundColor: '#01193d',
             title: {
-                text: 'Transaction Network'
+                text: '交易网络',
+                left: 'center',
             },
-            tooltip: {},
+            tooltip: {
+                formatter: fdgFormatter
+            },
+            visualMap: {
+                type: 'continuous',
+                min: 1,
+                max: 10,
+                text: ['Active', 'Lazy'],
+                realtime: false,
+                calculable: true,
+                color: ['orangered', 'yellow', 'lightskyblue']
+            },
             animationDurationUpdate: 1500,
             animationEasingUpdate: 'quinticInOut',
             series: [
@@ -994,7 +1370,7 @@ let InfoStatisticComponent = class InfoStatisticComponent {
                             color: 'source',
                             type: 'solid',
                             width: 0.5,
-                            curveness: 0,
+                            curveness: 0.2,
                             opacity: 0.7
                         }
                     }
@@ -1002,20 +1378,46 @@ let InfoStatisticComponent = class InfoStatisticComponent {
             ]
         };
     }
-    lq() {
-        const date = [
-            '2009/6/12 2:00', '2009/6/12 3:00', '2009/6/12 4:00', '2009/6/12 5:00', '2009/6/12 6:00',
-            '2009/6/12 7:00', '2009/6/12 8:00', '2009/6/12 9:00', '2009/6/12 10:00', '2009/6/12 11:00',
-            '2009/6/12 12:00', '2009/6/12 13:00', '2009/6/12 14:00', '2009/6/12 15:00', '2009/6/12 16:00',
-            '2009/6/12 17:00', '2009/6/12 18:00', '2009/6/12 19:00', '2009/6/12 20:00', '2009/6/12 21:00',
-            '2009/6/12 22:00', '2009/6/12 23:00'
-        ].map((str) => {
-            return str.replace(' ', '\n');
+    fmt(t) {
+        return [t.getFullYear(), t.getMonth() + 1, t.getDate()].join('/');
+    }
+    clickForce(param) {
+        if (param.dataType == 'node')
+            this.router.navigateByUrl('/user/' + param.data.name);
+    }
+    lineGraph() {
+        let bd = new Map();
+        this.bi.forEach(e => {
+            if (!e || e.releaseTime < 0)
+                return;
+            const str = this.fmt(new Date(e.releaseTime * 1000));
+            if (str in bd)
+                bd[str] += 1;
+            else
+                bd[str] = 1;
         });
+        let sd = new Map();
+        this.si.forEach(e => {
+            if (!e || e.releaseTime < 0)
+                return;
+            const str = this.fmt(new Date(e.releaseTime * 1000));
+            if (str in sd)
+                sd[str] += 1;
+            else
+                sd[str] = 1;
+        });
+        let bdata = [];
+        for (let i in bd) {
+            bdata.push([i, bd[i]]);
+        }
+        let sdata = [];
+        for (let i in sd) {
+            sdata.push([i, sd[i]]);
+        }
         this.lqoption = {
             backgroundColor: '#01193d',
             title: {
-                text: 'Transaction Trend',
+                text: '新增交易趋势',
                 x: 'center',
                 align: 'right'
             },
@@ -1040,110 +1442,100 @@ let InfoStatisticComponent = class InfoStatisticComponent {
                 {
                     show: true,
                     realtime: true,
-                    start: 65,
-                    end: 85
+                    start: 0,
+                    end: 100
                 },
                 {
                     type: 'inside',
                     realtime: true,
-                    start: 65,
-                    end: 85
+                    start: 0,
+                    end: 100
                 }
             ],
             xAxis: [
                 {
-                    type: 'category',
+                    type: 'time',
                     boundaryGap: false,
                     axisLine: { onZero: false },
-                    data: date
                 }
             ],
             yAxis: [
                 {
                     name: '新增购买信息',
                     type: 'value',
-                    max: 500
+                    max: (value) => value.max * 3 / 2
                 },
                 {
                     name: '新增出售信息',
                     nameLocation: 'start',
-                    max: 500,
                     type: 'value',
-                    inverse: true
+                    inverse: true,
+                    max: (value) => value.max * 3 / 2
                 }
             ],
             series: [
                 {
                     name: '购买',
+                    yAxisIndex: 0,
                     type: 'line',
-                    animation: false,
                     smooth: true,
-                    showAllSymbol: true,
                     symbol: 'circle',
-                    symbolSize: 6,
+                    symbolSize: 1,
+                    sampling: 'average',
+                    itemStyle: {
+                        normal: {
+                            color: '#d68262'
+                        }
+                    },
                     areaStyle: {
                         normal: {
                             color: new echarts_lib_echarts__WEBPACK_IMPORTED_MODULE_2__["graphic"].LinearGradient(0, 0, 0, 1, [{
                                     offset: 0,
-                                    color: 'rgba(137, 189, 27, 0.9)'
+                                    color: '#d68262'
                                 }, {
-                                    offset: 0.8,
-                                    color: 'rgba(137, 189, 27, 0)'
-                                }], false),
-                            shadowColor: 'rgba(0, 0, 0, 0.1)',
-                            shadowBlur: 10
+                                    offset: 1,
+                                    color: '#ffe'
+                                }])
                         }
                     },
-                    itemStyle: {
-                        normal: {
-                            color: 'rgb(137,189,27)',
-                            borderColor: 'rgba(137,189,2,0.27)',
-                            borderWidth: 12
-                        }
-                    },
-                    lineStyle: {
-                        width: 1
-                    },
-                    data: date.map(_ => Math.floor(Math.random() * 50))
+                    data: bdata
                 },
                 {
                     name: '出售',
                     type: 'line',
                     yAxisIndex: 1,
-                    animation: false,
+                    symbolSize: 5,
                     smooth: true,
-                    showAllSymbol: true,
                     symbol: 'circle',
-                    symbolSize: 6,
-                    areaStyle: {
-                        normal: {
-                            color: new echarts_lib_echarts__WEBPACK_IMPORTED_MODULE_2__["graphic"].LinearGradient(0, 1, 0, 0, [{
-                                    offset: 0,
-                                    color: 'rgba(219, 50, 51, 0.9)'
-                                }, {
-                                    offset: 0.8,
-                                    color: 'rgba(219, 50, 51, 0)'
-                                }], false),
-                            shadowColor: 'rgba(0, 0, 0, 0.1)',
-                            shadowBlur: 10
-                        }
-                    },
+                    sampling: 'average',
                     itemStyle: {
                         normal: {
-                            color: 'rgb(219,50,51)',
-                            borderColor: 'rgba(219,50,51,0.2)',
-                            borderWidth: 12
+                            color: '#8ec6ad'
                         }
                     },
-                    lineStyle: {
-                        width: 1
+                    areaStyle: {
+                        normal: {
+                            color: new echarts_lib_echarts__WEBPACK_IMPORTED_MODULE_2__["graphic"].LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: '#8ec6ad'
+                                }, {
+                                    offset: 1,
+                                    color: '#ffe'
+                                }])
+                        }
                     },
-                    data: date.map(_ => Math.floor(Math.random() * 50))
+                    data: sdata
                 }
             ]
         };
     }
 };
+InfoStatisticComponent.ctorParameters = () => [
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"] },
+    { type: _transaction_service__WEBPACK_IMPORTED_MODULE_4__["TransactionService"] },
+    { type: _info_service__WEBPACK_IMPORTED_MODULE_3__["InfoService"] },
+    { type: _file_service__WEBPACK_IMPORTED_MODULE_7__["FileService"] }
+];
 InfoStatisticComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-info-statistic',
@@ -1182,26 +1574,127 @@ const httpOptions = {
 let InfoService = class InfoService {
     constructor(http) {
         this.http = http;
-        this.infosUrl = 'api/infos'; // URL to web api
+        this.sellinfoUrl = 'api/sellInfo'; // URL to web api
+        this.buyinfoUrl = 'api/buyInfo';
+        this.bi = [];
+        this.si = [];
     }
-    /** GET infos from the server */
-    getInfos() {
-        return this.http.get(this.infosUrl)
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('getInfos', [])));
+    getAcInfo() {
+        return this.bi.filter(a => a.status < 3).length + this.si.filter(a => a.status < 3).length;
+    }
+    getInfoNum() {
+        return this.bi.length + this.si.length;
+    }
+    getReserveInfoNum() {
+        return this.bi.filter(a => a.status == 2).length + this.si.filter(a => a.status == 2).length;
+    }
+    getAllSellInfo() {
+        if (this.si.length == 0) {
+            this.getSellInfos().subscribe(e => {
+                this.si = e.sellInfo;
+                this.getMoreSell(100, false);
+            });
+        }
+        return this.si;
+    }
+    getAllBuyInfo() {
+        if (this.bi.length == 0) {
+            this.getBuyInfos().subscribe(e => {
+                this.bi = e.buyInfo;
+                this.getMoreBuy(100, false);
+            });
+        }
+        return this.bi;
+    }
+    getMoreBuy(offset, dynamic) {
+        if (!(this.bi.length % 100) && !dynamic)
+            this.getBuyInfos(null, null, null, null, offset).subscribe(e => {
+                if (e && Object.keys(e).length != 0) {
+                    this.bi = this.bi.concat(e.buyInfo);
+                    if (e.buyInfo.length != 100)
+                        dynamic = !dynamic;
+                }
+                this.getMoreBuy(offset + 100, dynamic);
+            });
+        else {
+            setTimeout(() => {
+                this.getBuyInfos(null, null, null, null, offset).subscribe(e => {
+                    if (e && Object.keys(e).length != 0)
+                        this.bi = this.bi.concat(e.buyInfo);
+                    this.getMoreBuy(this.bi.length - 1, true);
+                });
+            }, 5000);
+        }
+    }
+    getMoreSell(offset, dynamic) {
+        if (!(this.si.length % 100) && !dynamic)
+            this.getSellInfos(null, null, null, null, offset).subscribe(e => {
+                if (e && Object.keys(e).length != 0) {
+                    this.si = this.si.concat(e.sellInfo);
+                    if (e.sellInfo.length != 100)
+                        dynamic = !dynamic;
+                }
+                this.getMoreSell(offset + 100, dynamic);
+            });
+        else {
+            setTimeout(() => {
+                this.getSellInfos(null, null, null, null, offset).subscribe(e => {
+                    if (e && Object.keys(e).length != 0)
+                        this.si = this.si.concat(e.sellInfo);
+                    this.getMoreSell(this.si.length - 1, true);
+                });
+            }, 5000);
+        }
     }
     /** GET info by id. Will 404 if id not found */
-    getInfo(id) {
-        const url = `${this.infosUrl}/${id}`;
+    getSellInfo(id) {
+        const url = `${this.sellinfoUrl}/${id}`;
         return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`getInfo id=${id}`)));
     }
-    /** DELETE: delete the info from the server */
-    deleteInfo(id) {
-        const url = `${this.infosUrl}/${id}`;
-        return this.http.delete(url, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('deleteInfo')));
+    /** GET infos from the server */
+    getSellInfos(userID = null, status = null, goodName = null, limit = null, offset = null) {
+        let url = `${this.sellinfoUrl}?`;
+        if (userID && userID.trim())
+            url += `userID=${userID}&`;
+        if (status)
+            url += `status=${status}&`;
+        if (goodName && goodName.trim())
+            url += `goodName=${goodName}&`;
+        if (limit)
+            url += `limit=${limit}&`;
+        if (offset)
+            url += `offset=${offset}&`;
+        return this.http.get(url)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('getSellInfos')));
     }
     /** PUT: update the info on the server */
-    updateInfo(info) {
-        return this.http.put(this.infosUrl, info, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('updateInfo')));
+    updateSellInfo(info) {
+        return this.http.put(this.sellinfoUrl, info, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('updateSellInfo')));
+    }
+    /** GET infos from the server */
+    getBuyInfos(userID = null, status = null, goodName = null, limit = null, offset = null) {
+        let url = `${this.buyinfoUrl}?`;
+        if (userID && userID.trim())
+            url += `userID=${userID}&`;
+        if (status)
+            url += `status=${status}&`;
+        if (goodName && goodName.trim())
+            url += `goodName=${goodName}&`;
+        if (limit)
+            url += `limit=${limit}&`;
+        if (offset)
+            url += `offset=${offset}&`;
+        return this.http.get(url)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('getBuyInfos')));
+    }
+    /** GET info by id. Will 404 if id not found */
+    getBuyInfo(id) {
+        const url = `${this.buyinfoUrl}/${id}`;
+        return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`getBuy id=${id}`)));
+    }
+    /** PUT: update the info on the server */
+    updateBuyInfo(info) {
+        return this.http.put(this.buyinfoUrl, info, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('updateBuyInfo')));
     }
     /**
      * Handle Http operation that failed.
@@ -1231,6 +1724,119 @@ InfoService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 /***/ }),
 
+/***/ "./src/app/info/buy-info/buy-info.component.css":
+/*!******************************************************!*\
+  !*** ./src/app/info/buy-info/buy-info.component.css ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n .infoitem{\r\n    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;\r\n    position: relative;\r\n    cursor: pointer;\r\n    background-color: #EEE;\r\n    margin: .5em;\r\n    padding: .3em 0;\r\n    height: 3em;\r\n    border-radius: 4px;\r\n  }\r\n  \r\n   \r\n  .infoitem:hover {\r\n    color: #607D8B;\r\n    background-color: rgba(221, 221, 221, 0.548);\r\n    left: .1em;\r\n  }\r\n  \r\n   \r\n  .badge {\r\n   display: inline-block;\r\n   font-size: small;\r\n   color: white;\r\n   padding: 0.8em 0.7em 0 0.7em;\r\n   background-color: #c7594b;\r\n   line-height: 0.9em;\r\n   position: relative;\r\n   left: -1px;\r\n   top: -4px;\r\n   height: 3em;\r\n   min-width: 16px;\r\n   text-align: right;\r\n   margin-right: .8em;\r\n   border-radius: 4px 0 0 4px;\r\n }\r\n \r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaW5mby9idXktaW5mby9idXktaW5mby5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Q0FDQztJQUNHLDZFQUE2RTtJQUM3RSxrQkFBa0I7SUFDbEIsZUFBZTtJQUNmLHNCQUFzQjtJQUN0QixZQUFZO0lBQ1osZUFBZTtJQUNmLFdBQVc7SUFDWCxrQkFBa0I7RUFDcEI7OztFQUdBO0lBQ0UsY0FBYztJQUNkLDRDQUE0QztJQUM1QyxVQUFVO0VBQ1o7OztFQUlBO0dBQ0MscUJBQXFCO0dBQ3JCLGdCQUFnQjtHQUNoQixZQUFZO0dBQ1osNEJBQTRCO0dBQzVCLHlCQUF5QjtHQUN6QixrQkFBa0I7R0FDbEIsa0JBQWtCO0dBQ2xCLFVBQVU7R0FDVixTQUFTO0dBQ1QsV0FBVztHQUNYLGVBQWU7R0FDZixpQkFBaUI7R0FDakIsa0JBQWtCO0dBQ2xCLDBCQUEwQjtDQUM1QiIsImZpbGUiOiJzcmMvYXBwL2luZm8vYnV5LWluZm8vYnV5LWluZm8uY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIlxyXG4gLmluZm9pdGVte1xyXG4gICAgZm9udC1mYW1pbHk6ICdHaWxsIFNhbnMnLCAnR2lsbCBTYW5zIE1UJywgQ2FsaWJyaSwgJ1RyZWJ1Y2hldCBNUycsIHNhbnMtc2VyaWY7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRUVFO1xyXG4gICAgbWFyZ2luOiAuNWVtO1xyXG4gICAgcGFkZGluZzogLjNlbSAwO1xyXG4gICAgaGVpZ2h0OiAzZW07XHJcbiAgICBib3JkZXItcmFkaXVzOiA0cHg7XHJcbiAgfVxyXG4gIFxyXG4gICBcclxuICAuaW5mb2l0ZW06aG92ZXIge1xyXG4gICAgY29sb3I6ICM2MDdEOEI7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDIyMSwgMjIxLCAyMjEsIDAuNTQ4KTtcclxuICAgIGxlZnQ6IC4xZW07XHJcbiAgfVxyXG4gIFxyXG4gXHJcbiAgXHJcbiAgLmJhZGdlIHtcclxuICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xyXG4gICBmb250LXNpemU6IHNtYWxsO1xyXG4gICBjb2xvcjogd2hpdGU7XHJcbiAgIHBhZGRpbmc6IDAuOGVtIDAuN2VtIDAgMC43ZW07XHJcbiAgIGJhY2tncm91bmQtY29sb3I6ICNjNzU5NGI7XHJcbiAgIGxpbmUtaGVpZ2h0OiAwLjllbTtcclxuICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICBsZWZ0OiAtMXB4O1xyXG4gICB0b3A6IC00cHg7XHJcbiAgIGhlaWdodDogM2VtO1xyXG4gICBtaW4td2lkdGg6IDE2cHg7XHJcbiAgIHRleHQtYWxpZ246IHJpZ2h0O1xyXG4gICBtYXJnaW4tcmlnaHQ6IC44ZW07XHJcbiAgIGJvcmRlci1yYWRpdXM6IDRweCAwIDAgNHB4O1xyXG4gfVxyXG4gIl19 */"
+
+/***/ }),
+
+/***/ "./src/app/info/buy-info/buy-info.component.ts":
+/*!*****************************************************!*\
+  !*** ./src/app/info/buy-info/buy-info.component.ts ***!
+  \*****************************************************/
+/*! exports provided: BuyInfoComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BuyInfoComponent", function() { return BuyInfoComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _info_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../info.service */ "./src/app/info.service.ts");
+/* harmony import */ var src_app_Formatter_format__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/Formatter/format */ "./src/app/Formatter/format.ts");
+/* harmony import */ var _infocom_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../infocom.service */ "./src/app/info/infocom.service.ts");
+/* harmony import */ var _file_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../../file.service */ "./src/app/file.service.ts");
+
+
+
+
+
+
+let BuyInfoComponent = class BuyInfoComponent {
+    constructor(gs, infoService, fileService) {
+        this.gs = gs;
+        this.infoService = infoService;
+        this.fileService = fileService;
+        this.tags = ['测试', '数据'];
+        this.current = 1;
+        this.gridspan = 12;
+        this.size = 4;
+        this.searchTag = [];
+    }
+    ngOnInit() {
+        this.getinfos();
+        this.gridspan = this.gs.get();
+    }
+    getstate(statecode) {
+        switch (statecode) {
+            case 1:
+                return '待预约';
+            case 2:
+                return '预约';
+            case 3:
+                return '完成';
+            case 4:
+                return '失效';
+            case 5:
+                return '关闭';
+        }
+    }
+    stringToDate(params) {
+        const date = new Date(params * 1000);
+        return Object(src_app_Formatter_format__WEBPACK_IMPORTED_MODULE_3__["Format"])(date, 'yyyy-MM-dd HH:mm:ss');
+    }
+    checkcount() {
+        if (this.buyinfos && this.buyinfos.length === this.size)
+            this.count = (this.current + 1) * this.size;
+        else
+            this.count = this.current * this.size;
+    }
+    getinfos() {
+        const st = this.gs.unstorage();
+        this.searchUserID = st.u;
+        this.searchGoodName = st.g;
+        this.searchStatus = st.s;
+        this.infoService.getBuyInfos(this.searchUserID, this.searchStatus, this.searchGoodName, this.size, this.current * this.size - this.size)
+            .subscribe(infos => {
+            if (!infos)
+                return;
+            this.buyinfos = infos.buyInfo;
+            this.checkcount();
+            this.getcontent();
+        });
+    }
+    getcontent() {
+        this.buyinfos.forEach(info => {
+            this.fileService.getContent(info.contentID).subscribe(e => {
+                if (e) {
+                    info.tags = e.tags;
+                }
+            });
+        });
+    }
+};
+BuyInfoComponent.ctorParameters = () => [
+    { type: _infocom_service__WEBPACK_IMPORTED_MODULE_4__["InfoComService"] },
+    { type: _info_service__WEBPACK_IMPORTED_MODULE_2__["InfoService"] },
+    { type: _file_service__WEBPACK_IMPORTED_MODULE_5__["FileService"] }
+];
+BuyInfoComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: 'app-buy-info',
+        template: __webpack_require__(/*! raw-loader!./buy-info.component.html */ "./node_modules/raw-loader/index.js!./src/app/info/buy-info/buy-info.component.html"),
+        styles: [__webpack_require__(/*! ./buy-info.component.css */ "./src/app/info/buy-info/buy-info.component.css")]
+    })
+], BuyInfoComponent);
+
+
+
+/***/ }),
+
 /***/ "./src/app/info/info.component.css":
 /*!*****************************************!*\
   !*** ./src/app/info/info.component.css ***!
@@ -1238,7 +1844,7 @@ InfoService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "input{\r\n    color: black;\r\n}\r\n \r\n h2{\r\n   color: white;\r\n }\r\n \r\n .badge {\r\n  display: inline-block;\r\n  font-size: small;\r\n  color: white;\r\n  padding: 0.8em 0.7em 0 0.7em;\r\n  background-color: #607D8B;\r\n  line-height: 0.9em;\r\n  position: relative;\r\n  left: -1px;\r\n  top: -4px;\r\n  height: 3em;\r\n  min-width: 16px;\r\n  text-align: right;\r\n  margin-right: .8em;\r\n  border-radius: 4px 0 0 4px;\r\n}\r\n \r\n #type {\r\n  float:right;\r\n  width: 10%;\r\n}\r\n \r\n #tag {\r\n  float:right;\r\n  width: 10%;\r\n}\r\n \r\n .infoitem{\r\n   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;\r\n   position: relative;\r\n   cursor: pointer;\r\n   background-color: #EEE;\r\n   margin: .5em;\r\n   padding: .3em 0;\r\n   height: 3em;\r\n   border-radius: 4px;\r\n }\r\n \r\n .delete {\r\n  float: right;\r\n}\r\n \r\n .infoitem:hover {\r\n   color: #607D8B;\r\n   background-color: rgba(221, 221, 221, 0.548);\r\n   left: .1em;\r\n }\r\n \r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaW5mby9pbmZvLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxZQUFZO0FBQ2hCOztDQUVDO0dBQ0UsWUFBWTtDQUNkOztDQUdBO0VBQ0MscUJBQXFCO0VBQ3JCLGdCQUFnQjtFQUNoQixZQUFZO0VBQ1osNEJBQTRCO0VBQzVCLHlCQUF5QjtFQUN6QixrQkFBa0I7RUFDbEIsa0JBQWtCO0VBQ2xCLFVBQVU7RUFDVixTQUFTO0VBQ1QsV0FBVztFQUNYLGVBQWU7RUFDZixpQkFBaUI7RUFDakIsa0JBQWtCO0VBQ2xCLDBCQUEwQjtBQUM1Qjs7Q0FHQTtFQUNFLFdBQVc7RUFDWCxVQUFVO0FBQ1o7O0NBQ0E7RUFDRSxXQUFXO0VBQ1gsVUFBVTtBQUNaOztDQUNDO0dBQ0UsNkVBQTZFO0dBQzdFLGtCQUFrQjtHQUNsQixlQUFlO0dBQ2Ysc0JBQXNCO0dBQ3RCLFlBQVk7R0FDWixlQUFlO0dBQ2YsV0FBVztHQUNYLGtCQUFrQjtDQUNwQjs7Q0FHQTtFQUNDLFlBQVk7QUFDZDs7Q0FDQztHQUNFLGNBQWM7R0FDZCw0Q0FBNEM7R0FDNUMsVUFBVTtDQUNaIiwiZmlsZSI6InNyYy9hcHAvaW5mby9pbmZvLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyJpbnB1dHtcclxuICAgIGNvbG9yOiBibGFjaztcclxufVxyXG4gXHJcbiBoMntcclxuICAgY29sb3I6IHdoaXRlO1xyXG4gfVxyXG5cclxuIFxyXG4gLmJhZGdlIHtcclxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbiAgZm9udC1zaXplOiBzbWFsbDtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgcGFkZGluZzogMC44ZW0gMC43ZW0gMCAwLjdlbTtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNjA3RDhCO1xyXG4gIGxpbmUtaGVpZ2h0OiAwLjllbTtcclxuICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgbGVmdDogLTFweDtcclxuICB0b3A6IC00cHg7XHJcbiAgaGVpZ2h0OiAzZW07XHJcbiAgbWluLXdpZHRoOiAxNnB4O1xyXG4gIHRleHQtYWxpZ246IHJpZ2h0O1xyXG4gIG1hcmdpbi1yaWdodDogLjhlbTtcclxuICBib3JkZXItcmFkaXVzOiA0cHggMCAwIDRweDtcclxufVxyXG5cclxuXHJcbiN0eXBlIHtcclxuICBmbG9hdDpyaWdodDtcclxuICB3aWR0aDogMTAlO1xyXG59XHJcbiN0YWcge1xyXG4gIGZsb2F0OnJpZ2h0O1xyXG4gIHdpZHRoOiAxMCU7XHJcbn1cclxuIC5pbmZvaXRlbXtcclxuICAgZm9udC1mYW1pbHk6ICdHaWxsIFNhbnMnLCAnR2lsbCBTYW5zIE1UJywgQ2FsaWJyaSwgJ1RyZWJ1Y2hldCBNUycsIHNhbnMtc2VyaWY7XHJcbiAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICBiYWNrZ3JvdW5kLWNvbG9yOiAjRUVFO1xyXG4gICBtYXJnaW46IC41ZW07XHJcbiAgIHBhZGRpbmc6IC4zZW0gMDtcclxuICAgaGVpZ2h0OiAzZW07XHJcbiAgIGJvcmRlci1yYWRpdXM6IDRweDtcclxuIH1cclxuIFxyXG4gIFxyXG4gLmRlbGV0ZSB7XHJcbiAgZmxvYXQ6IHJpZ2h0O1xyXG59XHJcbiAuaW5mb2l0ZW06aG92ZXIge1xyXG4gICBjb2xvcjogIzYwN0Q4QjtcclxuICAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgyMjEsIDIyMSwgMjIxLCAwLjU0OCk7XHJcbiAgIGxlZnQ6IC4xZW07XHJcbiB9XHJcbiAiXX0= */"
+module.exports = "input{\r\n    color: black;\r\n}\r\n \r\n h2{\r\n   color: white;\r\n }\r\n \r\n #searchid {\r\n  float:right;\r\n  width: 40%;\r\n}\r\n \r\n #searchname {\r\n  float:right;\r\n  width: 40%;\r\n}\r\n \r\n #type {\r\n  float:left;\r\n  width: 30%;\r\n}\r\n \r\n #tag {\r\n  float:right;\r\n  width: 100%;\r\n}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaW5mby9pbmZvLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxZQUFZO0FBQ2hCOztDQUVDO0dBQ0UsWUFBWTtDQUNkOztDQUVEO0VBQ0UsV0FBVztFQUNYLFVBQVU7QUFDWjs7Q0FDQTtFQUNFLFdBQVc7RUFDWCxVQUFVO0FBQ1o7O0NBQ0E7RUFDRSxVQUFVO0VBQ1YsVUFBVTtBQUNaOztDQUNBO0VBQ0UsV0FBVztFQUNYLFdBQVc7QUFDYiIsImZpbGUiOiJzcmMvYXBwL2luZm8vaW5mby5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiaW5wdXR7XHJcbiAgICBjb2xvcjogYmxhY2s7XHJcbn1cclxuIFxyXG4gaDJ7XHJcbiAgIGNvbG9yOiB3aGl0ZTtcclxuIH1cclxuXHJcbiNzZWFyY2hpZCB7XHJcbiAgZmxvYXQ6cmlnaHQ7XHJcbiAgd2lkdGg6IDQwJTtcclxufVxyXG4jc2VhcmNobmFtZSB7XHJcbiAgZmxvYXQ6cmlnaHQ7XHJcbiAgd2lkdGg6IDQwJTtcclxufVxyXG4jdHlwZSB7XHJcbiAgZmxvYXQ6bGVmdDtcclxuICB3aWR0aDogMzAlO1xyXG59XHJcbiN0YWcge1xyXG4gIGZsb2F0OnJpZ2h0O1xyXG4gIHdpZHRoOiAxMDAlO1xyXG59Il19 */"
 
 /***/ }),
 
@@ -1254,96 +1860,60 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InfoComponent", function() { return InfoComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _info_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../info.service */ "./src/app/info.service.ts");
+/* harmony import */ var _sell_info_sell_info_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sell-info/sell-info.component */ "./src/app/info/sell-info/sell-info.component.ts");
+/* harmony import */ var _buy_info_buy_info_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./buy-info/buy-info.component */ "./src/app/info/buy-info/buy-info.component.ts");
+/* harmony import */ var _infocom_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./infocom.service */ "./src/app/info/infocom.service.ts");
+
+
 
 
 
 let InfoComponent = class InfoComponent {
-    constructor(infoService) {
-        this.infoService = infoService;
+    constructor(gs) {
+        this.gs = gs;
         this.searchTag = [];
-        this.current = 1;
-        this.size = 4;
-        this.selectedType = -1;
+        this.searchType = -1;
     }
     ngOnInit() {
-        this.getinfos();
+        this.gs.set(12);
     }
-    selectType(type) {
-        this.infoService.getInfos()
-            .subscribe(infos => {
-            this.infos = infos;
-            this.infos = this.infos.filter(ele => ele.type !== (1 - type));
-            this.searchTag.forEach(e => {
-                this.infos = this.infos.filter(arr => arr.tags.indexOf(e) >= 0);
-            });
-            this.count = this.infos.length;
-            this.current = 1;
-            this.switchPage(this.current, this.size);
-        });
+    ngAfterViewInit() {
+        setTimeout(() => this.selectType(-1), 0);
     }
-    selectTag(tags) {
-        this.infoService.getInfos()
-            .subscribe(infos => {
-            this.infos = infos;
-            this.infos = this.infos.filter(ele => ele.type !== (1 - this.selectedType));
-            tags.forEach(e => {
-                this.infos = this.infos.filter(arr => arr.tags.indexOf(e) >= 0);
-            });
-            this.count = this.infos.length;
-            this.current = 1;
-            this.switchPage(this.current, this.size);
-        });
-    }
-    getstate(statecode) {
-        switch (statecode) {
-            case 0:
-                return '可预约';
-            case 1:
-                return '预约中';
-            case 2:
-                return '已完成';
-            case 3:
-                return '待评价';
-            case 4:
-                return '强制结束';
+    search() {
+        this.gs.storage(this.searchUserID, this.searchStatus, this.searchGoodName);
+        if (this.searchType !== 0) {
+            this.bchild.getinfos();
+        }
+        if (this.searchType !== 1) {
+            this.schild.getinfos();
         }
     }
-    end() {
-        this.infos.filter(h => new Date().getTime() - new Date(h.time).getTime() / 1000 / 60 / 60 / 24 > this.Tthreshold && h.count < this.Ythreshold)
-            .map(h => { h.state = 4; return h; }).forEach(element => this.infoService.updateInfo(element).subscribe());
+    selectType(type) {
+        if (type === -1) {
+            this.gs.set(12);
+        }
+        else {
+            this.gs.set(6);
+        }
+        this.search();
     }
-    getinfos() {
-        this.infoService.getInfos()
-            .subscribe(infos => {
-            this.infos = infos;
-            this.count = this.infos.length;
-            this.switchPage(this.current, this.size);
-        });
-    }
-    switchPage(page, size) {
-        if (page * size < this.count)
-            this.curinfos = this.infos.slice((page - 1) * size, page * size);
-        else
-            this.curinfos = this.infos.slice((page - 1) * size);
-    }
-    pageChange(page) {
-        this.switchPage(page, this.size);
-    }
-    sizeChange(size) {
-        this.switchPage(this.current, size);
-    }
-    delete(info) {
-        this.infos = this.infos.filter(h => h !== info);
-        this.infoService.deleteInfo(info.id).subscribe(_ => {
-            this.count = this.infos.length;
-            this.switchPage(this.current, this.size);
-        });
+    selectTag(tag) {
+        if (this.searchType !== 0)
+            this.bchild.searchTag = tag;
+        if (this.searchType !== 1)
+            this.schild.searchTag = tag;
     }
 };
 InfoComponent.ctorParameters = () => [
-    { type: _info_service__WEBPACK_IMPORTED_MODULE_2__["InfoService"] }
+    { type: _infocom_service__WEBPACK_IMPORTED_MODULE_4__["InfoComService"] }
 ];
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_sell_info_sell_info_component__WEBPACK_IMPORTED_MODULE_2__["SellInfoComponent"], { static: false })
+], InfoComponent.prototype, "schild", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_buy_info_buy_info_component__WEBPACK_IMPORTED_MODULE_3__["BuyInfoComponent"], { static: false })
+], InfoComponent.prototype, "bchild", void 0);
 InfoComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-info',
@@ -1356,6 +1926,165 @@ InfoComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 /***/ }),
 
+/***/ "./src/app/info/infocom.service.ts":
+/*!*****************************************!*\
+  !*** ./src/app/info/infocom.service.ts ***!
+  \*****************************************/
+/*! exports provided: InfoComService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InfoComService", function() { return InfoComService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+
+
+let InfoComService = class InfoComService {
+    constructor() { }
+    set(gs) {
+        this.gridspan = gs;
+    }
+    get() {
+        {
+            return this.gridspan;
+        }
+    }
+    storage(u, s, g) {
+        this.searchUserID = u;
+        this.searchGoodName = g;
+        this.searchStatus = s;
+    }
+    unstorage() {
+        return {
+            u: this.searchUserID,
+            s: this.searchStatus,
+            g: this.searchGoodName
+        };
+    }
+};
+InfoComService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    })
+], InfoComService);
+
+
+
+/***/ }),
+
+/***/ "./src/app/info/sell-info/sell-info.component.css":
+/*!********************************************************!*\
+  !*** ./src/app/info/sell-info/sell-info.component.css ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n .infoitem{\r\n    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;\r\n    position: relative;\r\n    cursor: pointer;\r\n    background-color: #EEE;\r\n    margin: .5em;\r\n    padding: .3em 0;\r\n    height: 3em;\r\n    border-radius: 4px;\r\n  }\r\n  \r\n   \r\n  .infoitem:hover {\r\n    color: #607D8B;\r\n    background-color: rgba(221, 221, 221, 0.548);\r\n    left: .1em;\r\n  }\r\n  \r\n   \r\n  .badge {\r\n   display: inline-block;\r\n   font-size: small;\r\n   color: white;\r\n   padding: 0.8em 0.7em 0 0.7em;\r\n   background-color: #607D8B;\r\n   line-height: 0.9em;\r\n   position: relative;\r\n   left: -1px;\r\n   top: -4px;\r\n   height: 3em;\r\n   min-width: 16px;\r\n   text-align: right;\r\n   margin-right: .8em;\r\n   border-radius: 4px 0 0 4px;\r\n }\r\n \r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaW5mby9zZWxsLWluZm8vc2VsbC1pbmZvLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtDQUNDO0lBQ0csNkVBQTZFO0lBQzdFLGtCQUFrQjtJQUNsQixlQUFlO0lBQ2Ysc0JBQXNCO0lBQ3RCLFlBQVk7SUFDWixlQUFlO0lBQ2YsV0FBVztJQUNYLGtCQUFrQjtFQUNwQjs7O0VBR0E7SUFDRSxjQUFjO0lBQ2QsNENBQTRDO0lBQzVDLFVBQVU7RUFDWjs7O0VBSUE7R0FDQyxxQkFBcUI7R0FDckIsZ0JBQWdCO0dBQ2hCLFlBQVk7R0FDWiw0QkFBNEI7R0FDNUIseUJBQXlCO0dBQ3pCLGtCQUFrQjtHQUNsQixrQkFBa0I7R0FDbEIsVUFBVTtHQUNWLFNBQVM7R0FDVCxXQUFXO0dBQ1gsZUFBZTtHQUNmLGlCQUFpQjtHQUNqQixrQkFBa0I7R0FDbEIsMEJBQTBCO0NBQzVCIiwiZmlsZSI6InNyYy9hcHAvaW5mby9zZWxsLWluZm8vc2VsbC1pbmZvLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyJcclxuIC5pbmZvaXRlbXtcclxuICAgIGZvbnQtZmFtaWx5OiAnR2lsbCBTYW5zJywgJ0dpbGwgU2FucyBNVCcsIENhbGlicmksICdUcmVidWNoZXQgTVMnLCBzYW5zLXNlcmlmO1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogI0VFRTtcclxuICAgIG1hcmdpbjogLjVlbTtcclxuICAgIHBhZGRpbmc6IC4zZW0gMDtcclxuICAgIGhlaWdodDogM2VtO1xyXG4gICAgYm9yZGVyLXJhZGl1czogNHB4O1xyXG4gIH1cclxuICBcclxuICAgXHJcbiAgLmluZm9pdGVtOmhvdmVyIHtcclxuICAgIGNvbG9yOiAjNjA3RDhCO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgyMjEsIDIyMSwgMjIxLCAwLjU0OCk7XHJcbiAgICBsZWZ0OiAuMWVtO1xyXG4gIH1cclxuICBcclxuIFxyXG4gIFxyXG4gIC5iYWRnZSB7XHJcbiAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxuICAgZm9udC1zaXplOiBzbWFsbDtcclxuICAgY29sb3I6IHdoaXRlO1xyXG4gICBwYWRkaW5nOiAwLjhlbSAwLjdlbSAwIDAuN2VtO1xyXG4gICBiYWNrZ3JvdW5kLWNvbG9yOiAjNjA3RDhCO1xyXG4gICBsaW5lLWhlaWdodDogMC45ZW07XHJcbiAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgbGVmdDogLTFweDtcclxuICAgdG9wOiAtNHB4O1xyXG4gICBoZWlnaHQ6IDNlbTtcclxuICAgbWluLXdpZHRoOiAxNnB4O1xyXG4gICB0ZXh0LWFsaWduOiByaWdodDtcclxuICAgbWFyZ2luLXJpZ2h0OiAuOGVtO1xyXG4gICBib3JkZXItcmFkaXVzOiA0cHggMCAwIDRweDtcclxuIH1cclxuICJdfQ== */"
+
+/***/ }),
+
+/***/ "./src/app/info/sell-info/sell-info.component.ts":
+/*!*******************************************************!*\
+  !*** ./src/app/info/sell-info/sell-info.component.ts ***!
+  \*******************************************************/
+/*! exports provided: SellInfoComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SellInfoComponent", function() { return SellInfoComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _info_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../info.service */ "./src/app/info.service.ts");
+/* harmony import */ var src_app_Formatter_format__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/Formatter/format */ "./src/app/Formatter/format.ts");
+/* harmony import */ var _infocom_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../infocom.service */ "./src/app/info/infocom.service.ts");
+/* harmony import */ var _file_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../../file.service */ "./src/app/file.service.ts");
+
+
+
+
+
+
+let SellInfoComponent = class SellInfoComponent {
+    constructor(gs, infoService, fileService) {
+        this.gs = gs;
+        this.infoService = infoService;
+        this.fileService = fileService;
+        this.tags = ['测试', '数据'];
+        this.current = 1;
+        this.size = 4;
+        this.searchTag = [];
+    }
+    ngOnInit() {
+        this.getinfos();
+        this.gridspan = this.gs.get();
+    }
+    getstate(statecode) {
+        switch (statecode) {
+            case 1:
+                return '待预约';
+            case 2:
+                return '预约';
+            case 3:
+                return '完成';
+            case 4:
+                return '失效';
+            case 5:
+                return '关闭';
+        }
+    }
+    getinfos() {
+        const st = this.gs.unstorage();
+        this.searchUserID = st.u;
+        this.searchGoodName = st.g;
+        this.searchStatus = st.s;
+        this.infoService.getSellInfos(this.searchUserID, this.searchStatus, this.searchGoodName, this.size, this.current * this.size - this.size)
+            .subscribe(infos => {
+            if (!infos)
+                return;
+            this.sellinfos = infos.sellInfo;
+            this.checkcount();
+            this.getcontent();
+        });
+    }
+    stringToDate(params) {
+        const date = new Date(params * 1000);
+        return Object(src_app_Formatter_format__WEBPACK_IMPORTED_MODULE_3__["Format"])(date, 'yyyy-MM-dd HH:mm:ss');
+    }
+    checkcount() {
+        if (this.sellinfos && this.sellinfos.length === this.size)
+            this.count = (this.current + 1) * this.size;
+        else
+            this.count = this.current * this.size;
+    }
+    getcontent() {
+        this.sellinfos.forEach(info => {
+            this.fileService.getContent(info.contentID).subscribe(e => {
+                if (e) {
+                    info.tags = e.tags;
+                }
+            });
+        });
+    }
+};
+SellInfoComponent.ctorParameters = () => [
+    { type: _infocom_service__WEBPACK_IMPORTED_MODULE_4__["InfoComService"] },
+    { type: _info_service__WEBPACK_IMPORTED_MODULE_2__["InfoService"] },
+    { type: _file_service__WEBPACK_IMPORTED_MODULE_5__["FileService"] }
+];
+SellInfoComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: 'app-sell-info',
+        template: __webpack_require__(/*! raw-loader!./sell-info.component.html */ "./node_modules/raw-loader/index.js!./src/app/info/sell-info/sell-info.component.html"),
+        styles: [__webpack_require__(/*! ./sell-info.component.css */ "./src/app/info/sell-info/sell-info.component.css")]
+    })
+], SellInfoComponent);
+
+
+
+/***/ }),
+
 /***/ "./src/app/infodetail/infodetail.component.css":
 /*!*****************************************************!*\
   !*** ./src/app/infodetail/infodetail.component.css ***!
@@ -1363,7 +2092,7 @@ InfoComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n .badge {\r\n    display: inline-block;\r\n    font-size: small;\r\n    color: white;\r\n    padding: 0.8em 0.7em 0 0.7em;\r\n    background-color: #607D8B;\r\n    line-height: 0.9em;\r\n    position: relative;\r\n    left: -1px;\r\n    top: -4px;\r\n    height: 3em;\r\n    min-width: 16px;\r\n    text-align: right;\r\n    margin-right: .8em;\r\n    border-radius: 4px 0 0 4px;\r\n  }\r\n  #state{\r\n    width: 50%;\r\n  }\r\n  .infoitem{\r\n     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;\r\n     position: relative;\r\n     cursor: pointer;\r\n     background-color: #EEE;\r\n     margin: .5em;\r\n     padding: .3em 0;\r\n     height: 3em;\r\n     border-radius: 4px;\r\n   }\r\n  .infoitem:hover {\r\n     color: #607D8B;\r\n     background-color: rgba(221, 221, 221, 0.548);\r\n     left: .1em;\r\n   }\r\n   \r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaW5mb2RldGFpbC9pbmZvZGV0YWlsLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtDQUNDO0lBQ0cscUJBQXFCO0lBQ3JCLGdCQUFnQjtJQUNoQixZQUFZO0lBQ1osNEJBQTRCO0lBQzVCLHlCQUF5QjtJQUN6QixrQkFBa0I7SUFDbEIsa0JBQWtCO0lBQ2xCLFVBQVU7SUFDVixTQUFTO0lBQ1QsV0FBVztJQUNYLGVBQWU7SUFDZixpQkFBaUI7SUFDakIsa0JBQWtCO0lBQ2xCLDBCQUEwQjtFQUM1QjtFQUNBO0lBQ0UsVUFBVTtFQUNaO0VBQ0M7S0FDRSw2RUFBNkU7S0FDN0Usa0JBQWtCO0tBQ2xCLGVBQWU7S0FDZixzQkFBc0I7S0FDdEIsWUFBWTtLQUNaLGVBQWU7S0FDZixXQUFXO0tBQ1gsa0JBQWtCO0dBQ3BCO0VBRUE7S0FDRSxjQUFjO0tBQ2QsNENBQTRDO0tBQzVDLFVBQVU7R0FDWiIsImZpbGUiOiJzcmMvYXBwL2luZm9kZXRhaWwvaW5mb2RldGFpbC5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXHJcbiAuYmFkZ2Uge1xyXG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xyXG4gICAgZm9udC1zaXplOiBzbWFsbDtcclxuICAgIGNvbG9yOiB3aGl0ZTtcclxuICAgIHBhZGRpbmc6IDAuOGVtIDAuN2VtIDAgMC43ZW07XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjNjA3RDhCO1xyXG4gICAgbGluZS1oZWlnaHQ6IDAuOWVtO1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgbGVmdDogLTFweDtcclxuICAgIHRvcDogLTRweDtcclxuICAgIGhlaWdodDogM2VtO1xyXG4gICAgbWluLXdpZHRoOiAxNnB4O1xyXG4gICAgdGV4dC1hbGlnbjogcmlnaHQ7XHJcbiAgICBtYXJnaW4tcmlnaHQ6IC44ZW07XHJcbiAgICBib3JkZXItcmFkaXVzOiA0cHggMCAwIDRweDtcclxuICB9XHJcbiAgI3N0YXRle1xyXG4gICAgd2lkdGg6IDUwJTtcclxuICB9XHJcbiAgIC5pbmZvaXRlbXtcclxuICAgICBmb250LWZhbWlseTogJ0dpbGwgU2FucycsICdHaWxsIFNhbnMgTVQnLCBDYWxpYnJpLCAnVHJlYnVjaGV0IE1TJywgc2Fucy1zZXJpZjtcclxuICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgIGJhY2tncm91bmQtY29sb3I6ICNFRUU7XHJcbiAgICAgbWFyZ2luOiAuNWVtO1xyXG4gICAgIHBhZGRpbmc6IC4zZW0gMDtcclxuICAgICBoZWlnaHQ6IDNlbTtcclxuICAgICBib3JkZXItcmFkaXVzOiA0cHg7XHJcbiAgIH1cclxuICAgXHJcbiAgIC5pbmZvaXRlbTpob3ZlciB7XHJcbiAgICAgY29sb3I6ICM2MDdEOEI7XHJcbiAgICAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgyMjEsIDIyMSwgMjIxLCAwLjU0OCk7XHJcbiAgICAgbGVmdDogLjFlbTtcclxuICAgfVxyXG4gICAiXX0= */"
+module.exports = "\r\n .badge {\r\n    display: inline-block;\r\n    font-size: small;\r\n    color: white;\r\n    padding: 0.8em 0.7em 0 0.7em;\r\n    background-color: #607D8B;\r\n    line-height: 0.9em;\r\n    position: relative;\r\n    left: -1px;\r\n    top: -4px;\r\n    height: 3em;\r\n    min-width: 16px;\r\n    text-align: right;\r\n    margin-right: .8em;\r\n    border-radius: 4px 0 0 4px;\r\n  }\r\n  #state{\r\n    width: 50%;\r\n  }\r\n  .infoitem{\r\n     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;\r\n     position: relative;\r\n     cursor: pointer;\r\n     background-color: #EEE;\r\n     margin: .5em;\r\n     padding: .3em 0;\r\n     height: 3em;\r\n     border-radius: 4px;\r\n   }\r\n  .infoitem:hover {\r\n     color: #607D8B;\r\n     background-color: rgba(221, 221, 221, 0.548);\r\n     left: .1em;\r\n   }\r\n  #tag{\r\n     width: 50%;\r\n   }\r\n  #content{\r\n    width:100%;\r\n    height: 400px;\r\n   }\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaW5mb2RldGFpbC9pbmZvZGV0YWlsLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtDQUNDO0lBQ0cscUJBQXFCO0lBQ3JCLGdCQUFnQjtJQUNoQixZQUFZO0lBQ1osNEJBQTRCO0lBQzVCLHlCQUF5QjtJQUN6QixrQkFBa0I7SUFDbEIsa0JBQWtCO0lBQ2xCLFVBQVU7SUFDVixTQUFTO0lBQ1QsV0FBVztJQUNYLGVBQWU7SUFDZixpQkFBaUI7SUFDakIsa0JBQWtCO0lBQ2xCLDBCQUEwQjtFQUM1QjtFQUNBO0lBQ0UsVUFBVTtFQUNaO0VBQ0M7S0FDRSw2RUFBNkU7S0FDN0Usa0JBQWtCO0tBQ2xCLGVBQWU7S0FDZixzQkFBc0I7S0FDdEIsWUFBWTtLQUNaLGVBQWU7S0FDZixXQUFXO0tBQ1gsa0JBQWtCO0dBQ3BCO0VBRUE7S0FDRSxjQUFjO0tBQ2QsNENBQTRDO0tBQzVDLFVBQVU7R0FDWjtFQUVBO0tBQ0UsVUFBVTtHQUNaO0VBRUE7SUFDQyxVQUFVO0lBQ1YsYUFBYTtHQUNkIiwiZmlsZSI6InNyYy9hcHAvaW5mb2RldGFpbC9pbmZvZGV0YWlsLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyJcclxuIC5iYWRnZSB7XHJcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbiAgICBmb250LXNpemU6IHNtYWxsO1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gICAgcGFkZGluZzogMC44ZW0gMC43ZW0gMCAwLjdlbTtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICM2MDdEOEI7XHJcbiAgICBsaW5lLWhlaWdodDogMC45ZW07XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBsZWZ0OiAtMXB4O1xyXG4gICAgdG9wOiAtNHB4O1xyXG4gICAgaGVpZ2h0OiAzZW07XHJcbiAgICBtaW4td2lkdGg6IDE2cHg7XHJcbiAgICB0ZXh0LWFsaWduOiByaWdodDtcclxuICAgIG1hcmdpbi1yaWdodDogLjhlbTtcclxuICAgIGJvcmRlci1yYWRpdXM6IDRweCAwIDAgNHB4O1xyXG4gIH1cclxuICAjc3RhdGV7XHJcbiAgICB3aWR0aDogNTAlO1xyXG4gIH1cclxuICAgLmluZm9pdGVte1xyXG4gICAgIGZvbnQtZmFtaWx5OiAnR2lsbCBTYW5zJywgJ0dpbGwgU2FucyBNVCcsIENhbGlicmksICdUcmVidWNoZXQgTVMnLCBzYW5zLXNlcmlmO1xyXG4gICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgICAgYmFja2dyb3VuZC1jb2xvcjogI0VFRTtcclxuICAgICBtYXJnaW46IC41ZW07XHJcbiAgICAgcGFkZGluZzogLjNlbSAwO1xyXG4gICAgIGhlaWdodDogM2VtO1xyXG4gICAgIGJvcmRlci1yYWRpdXM6IDRweDtcclxuICAgfVxyXG4gICBcclxuICAgLmluZm9pdGVtOmhvdmVyIHtcclxuICAgICBjb2xvcjogIzYwN0Q4QjtcclxuICAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDIyMSwgMjIxLCAyMjEsIDAuNTQ4KTtcclxuICAgICBsZWZ0OiAuMWVtO1xyXG4gICB9XHJcblxyXG4gICAjdGFne1xyXG4gICAgIHdpZHRoOiA1MCU7XHJcbiAgIH1cclxuXHJcbiAgICNjb250ZW50e1xyXG4gICAgd2lkdGg6MTAwJTtcclxuICAgIGhlaWdodDogNDAwcHg7XHJcbiAgIH0iXX0= */"
 
 /***/ }),
 
@@ -1382,193 +2111,141 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm2015/common.js");
 /* harmony import */ var _info_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../info.service */ "./src/app/info.service.ts");
+/* harmony import */ var _Formatter_format__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Formatter/format */ "./src/app/Formatter/format.ts");
+/* harmony import */ var _file_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../file.service */ "./src/app/file.service.ts");
+
+
 
 
 
 
 
 let InfoDetailComponent = class InfoDetailComponent {
-    constructor(route, infoService, location) {
+    constructor(route, infoService, location, fileService) {
         this.route = route;
         this.infoService = infoService;
         this.location = location;
+        this.fileService = fileService;
         this.d = [];
         this.state = 0;
         this.now = new Date(1997, 9, 3);
         this.oneDay = 24 * 3600 * 1000;
         this.value = Math.random() * 1000;
     }
-    randomData() {
-        this.now = new Date(+this.now + this.oneDay);
-        this.value = this.value + Math.random() * 21 - 10;
-        return {
-            name: this.now.toString(),
-            value: [
-                [this.now.getFullYear(), this.now.getMonth() + 1, this.now.getDate()].join('/'),
-                Math.round(this.value)
-            ]
-        };
+    stringToDate(params) {
+        const date = new Date(params * 1000);
+        return Object(_Formatter_format__WEBPACK_IMPORTED_MODULE_5__["Format"])(date, 'yyyy-MM-dd HH:mm:ss');
     }
     ngOnInit() {
         this.graph();
+        this.type = this.route.snapshot.paramMap.get('type');
         this.getinfo();
+    }
+    getContent() {
+        this.fileService.getContent(this.info.contentID).subscribe(e => {
+            if (e) {
+                this.contents = e.files;
+                this.info.tags = e.tags;
+            }
+        });
     }
     goBack() {
         this.location.back();
     }
     getinfo() {
-        const id = this.route.snapshot.paramMap.get('id');
-        this.infoService.getInfo(id)
-            .subscribe(info => this.info = info);
+        const id = parseInt(this.route.snapshot.paramMap.get('id'));
+        if (this.type === 'sellInfo')
+            this.infoService.getSellInfo(id)
+                .subscribe(info => {
+                if (!info)
+                    return;
+                this.info = info;
+                this.deadLine = new Date(this.info.validTime * 1000);
+                this.getContent();
+            });
+        else if (this.type === 'buyInfo')
+            this.infoService.getBuyInfo(id)
+                .subscribe(info => {
+                if (!info)
+                    return;
+                this.info = info;
+                this.deadLine = new Date(this.info.validTime * 1000);
+                this.getContent();
+            });
     }
     save() {
-        this.infoService.updateInfo(this.info)
-            .subscribe(() => this.goBack());
+        if (!this.info)
+            return;
+        this.info.validTime = this.deadLine.getTime() / 1000;
+        if (this.type === 'sellInfo')
+            this.infoService.updateSellInfo(this.info)
+                .subscribe(() => this.goBack());
+        else if (this.type === 'buyInfo')
+            this.infoService.updateBuyInfo(this.info)
+                .subscribe(() => this.goBack());
     }
     graph() {
-        for (let i = 0; i < 1000; i++) {
-            this.d.push(this.randomData());
-        }
-        this.option = {
-            title: {
-                text: '价格波动曲线'
-            },
+        this.fnoption = {
+            title: {},
             tooltip: {
-                trigger: 'axis',
-                formatter: (params) => {
-                    params = params[0];
-                    const date = new Date(params.name);
-                    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
-                },
-                axisPointer: {
-                    animation: false
-                }
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c}'
             },
-            xAxis: {
-                type: 'time',
-                splitLine: {
-                    show: false
-                }
+            legend: {
+                data: ['展现', '点击', '申请', '预约', '完成']
             },
-            yAxis: {
-                type: 'value',
-                boundaryGap: [0, '100%'],
-                splitLine: {
-                    show: false
-                }
-            },
-            series: [{
-                    name: '模拟数据',
-                    type: 'line',
-                    showSymbol: false,
-                    hoverAnimation: false,
-                    data: this.d
-                }]
-        };
-        setInterval(() => {
-            for (let i = 0; i < 5; i++) {
-                this.d.shift();
-                this.d.push(this.randomData());
-            }
-            this.fnoption = {
-                title: {
-                    text: '流量跟踪漏斗图',
-                },
-                tooltip: {
-                    trigger: 'item',
-                    formatter: '{a} <br/>{b} : {c}'
-                },
-                legend: {
-                    data: ['展现', '点击', '申请', '预约', '完成']
-                },
-                calculable: true,
-                series: [
-                    {
-                        name: '漏斗图',
-                        type: 'funnel',
-                        left: '10%',
-                        top: 60,
-                        bottom: 60,
-                        width: '80%',
-                        min: 0,
-                        max: 100,
-                        minSize: '0%',
-                        maxSize: '100%',
-                        sort: 'descending',
-                        gap: 2,
-                        label: {
-                            show: true,
-                            position: 'inside'
-                        },
-                        labelLine: {
-                            length: 10,
-                            lineStyle: {
-                                width: 1,
-                                type: 'solid'
-                            }
-                        },
-                        itemStyle: {
-                            borderColor: '#fff',
-                            borderWidth: 1
-                        },
-                        emphasis: {
-                            label: {
-                                fontSize: 20
-                            }
-                        },
-                        data: [
-                            { value: 1, name: '完成' },
-                            { value: 2, name: '预约' },
-                            { value: 10, name: '申请' },
-                            { value: 100, name: '点击' },
-                            { value: 1000, name: '展现' }
-                        ]
-                    }
-                ]
-            };
-            this.option = {
-                title: {
-                    text: '价格波动曲线'
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    formatter: (params) => {
-                        params = params[0];
-                        const date = new Date(params.name);
-                        return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+            calculable: true,
+            series: [
+                {
+                    name: '漏斗图',
+                    type: 'funnel',
+                    left: '10%',
+                    top: 60,
+                    bottom: 60,
+                    width: '80%',
+                    min: 0,
+                    max: 100,
+                    minSize: '0%',
+                    maxSize: '100%',
+                    sort: 'descending',
+                    gap: 2,
+                    label: {
+                        show: true,
+                        position: 'inside'
                     },
-                    axisPointer: {
-                        animation: false
-                    }
-                },
-                xAxis: {
-                    type: 'time',
-                    splitLine: {
-                        show: false
-                    }
-                },
-                yAxis: {
-                    type: 'value',
-                    boundaryGap: [0, '100%'],
-                    splitLine: {
-                        show: false
-                    }
-                },
-                series: [{
-                        name: '模拟数据',
-                        type: 'line',
-                        showSymbol: false,
-                        hoverAnimation: false,
-                        data: this.d
-                    }]
-            };
-        }, 1000);
+                    labelLine: {
+                        length: 10,
+                        lineStyle: {
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    itemStyle: {
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    },
+                    emphasis: {
+                        label: {
+                            fontSize: 20
+                        }
+                    },
+                    data: [
+                        { value: 1, name: '完成' },
+                        { value: 2, name: '预约' },
+                        { value: 10, name: '申请' },
+                        { value: 100, name: '点击' },
+                        { value: 1000, name: '展现' }
+                    ]
+                }
+            ]
+        };
     }
 };
 InfoDetailComponent.ctorParameters = () => [
     { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"] },
     { type: _info_service__WEBPACK_IMPORTED_MODULE_4__["InfoService"] },
-    { type: _angular_common__WEBPACK_IMPORTED_MODULE_3__["Location"] }
+    { type: _angular_common__WEBPACK_IMPORTED_MODULE_3__["Location"] },
+    { type: _file_service__WEBPACK_IMPORTED_MODULE_6__["FileService"] }
 ];
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
@@ -1601,37 +2278,30 @@ __webpack_require__.r(__webpack_exports__);
 
 let InMemoryDataService = class InMemoryDataService {
     createDb() {
-        const users = [{ id: '4396', name: '4396', forbid: false, score: 5, active: 100, intro: '我是练习市场两年半的偶像练习生,我是练习市场两年半的偶像练习生，我喜欢唱跳rap和篮球' },
-            { id: '216', name: '王牌测试员', forbid: false, score: 4.2, active: 20, intro: '我是lboss的小粉丝,一生唯爱lboss，一见lboss误终生' },
-            { id: '426', name: '艾克', forbid: true, score: 4.396, active: 200, intro: 'cnmooc天下第二！jboss！我爱学习强国！' },
-            { id: '123', name: '垃圾分类小助手', forbid: true, score: 3, active: 10, intro: '你是什么垃圾？我是本群的垃圾分类小助手，帮助你回收你的垃圾' }];
-        const infos = [
-            { id: '4396', source: '4396', type: 0, price: 100, tags: ['黑色', '塑料', '垃圾桶'], time: '2019-01-01', state: 0, count: 2, intro: '黑色塑料分类垃圾桶' },
-            { id: '196', source: '123', type: 0, price: 35, tags: ['C++', '精装', '中文', '书籍'], time: '2019-07-01', state: 1, count: 10, intro: '深度探索C++对象模型中文精装本' },
-            { id: '42396', source: '1234', type: 1, price: 52, time: '2019-02-11', tags: ['不锈钢', '保温杯'], state: 2, count: 2, intro: '虎牌不锈钢保温杯' },
-            { id: '43396', source: '4396', type: 1, price: 200, time: '2019-05-10', tags: ['凤凰牌', '自行车'], state: 3, count: 0, intro: '凤凰牌使用1年的自行车' },
-            { id: '2396', source: '213', type: 0, price: 23, tags: ['塑料', '垃圾袋'], time: '2019-01-01', state: 0, count: 2, intro: '100抽塑料垃圾袋' },
-            { id: '195', source: '123', type: 0, price: 15, tags: ['C++', '中文', '书籍'], time: '2019-6-01', state: 1, count: 10, intro: 'Effective中文版' },
-            { id: '42296', source: '14', type: 1, price: 52, time: '2019-02-11', tags: ['黑色', '保温杯'], state: 2, count: 2, intro: '黑色保温杯' },
-            { id: '4196', source: '4', type: 1, price: 20, time: '2019-05-10', tags: ['小排量', '电动', '自行车'], state: 3, count: 0, intro: '小排量电动自行车' },
-            { id: '42396', source: '4396', type: 0, price: 100, tags: ['黑色', '塑料', '垃圾桶'], time: '2019-01-01', state: 0, count: 2, intro: '黑色塑料分类垃圾桶' },
-            { id: '1296', source: '123', type: 0, price: 35, tags: ['C++', '精装', '中文', '书籍'], time: '2019-07-01', state: 1, count: 10, intro: '深度探索C++对象模型中文精装本' },
-            { id: '4223396', source: '1234', type: 1, price: 52, time: '2019-02-11', tags: ['不锈钢', '保温杯'], state: 2, count: 2, intro: '虎牌不锈钢保温杯' },
-            { id: '42343396', source: '4396', type: 1, price: 200, time: '2019-05-10', tags: ['凤凰牌', '自行车'], state: 3, count: 0, intro: '凤凰牌使用1年的自行车' },
-            { id: '25396', source: '213', type: 0, price: 23, tags: ['塑料', '垃圾袋'], time: '2019-01-01', state: 0, count: 2, intro: '100抽塑料垃圾袋' },
-            { id: '1956', source: '123', type: 0, price: 15, tags: ['C++', '中文', '书籍'], time: '2019-6-01', state: 1, count: 10, intro: 'Effective中文版' },
-            { id: '424296', source: '14', type: 1, price: 52, time: '2019-02-11', tags: ['黑色', '保温杯'], state: 2, count: 2, intro: '黑色保温杯' },
-            { id: '41916', source: '4', type: 1, price: 20, time: '2019-05-10', tags: ['小排量', '电动', '自行车'], state: 3, count: 0, intro: '小排量电动自行车' },
-            { id: '4393216', source: '4396', type: 0, price: 100, tags: ['黑色', '塑料', '垃圾桶'], time: '2019-01-01', state: 0, count: 2, intro: '黑色塑料分类垃圾桶' },
-            { id: '14396', source: '123', type: 0, price: 35, tags: ['C++', '精装', '中文', '书籍'], time: '2019-07-01', state: 1, count: 10, intro: '深度探索C++对象模型中文精装本' },
-            { id: '42323496', source: '1234', type: 1, price: 52, time: '2019-02-11', tags: ['不锈钢', '保温杯'], state: 2, count: 2, intro: '虎牌不锈钢保温杯' },
-            { id: '43324396', source: '4396', type: 1, price: 200, time: '2019-05-10', tags: ['凤凰牌', '自行车'], state: 3, count: 0, intro: '凤凰牌使用1年的自行车' },
-            { id: '23396', source: '213', type: 0, price: 23, tags: ['塑料', '垃圾袋'], time: '2019-01-01', state: 0, count: 2, intro: '100抽塑料垃圾袋' },
-            { id: '19685', source: '123', type: 0, price: 15, tags: ['C++', '中文', '书籍'], time: '2019-6-01', state: 1, count: 10, intro: 'Effective中文版' },
-            { id: '4298296', source: '14', type: 1, price: 52, time: '2019-02-11', tags: ['黑色', '保温杯'], state: 2, count: 2, intro: '黑色保温杯' },
-            { id: '41096', source: '4', type: 1, price: 20, time: '2019-05-10', tags: ['小排量', '电动', '自行车'], state: 3, count: 0, intro: '小排量电动自行车' }
+        const site = [{ id: 0, name: 'jiaojiao', status: true, cp: '2019 jiaojiao' }];
+        const history = [{ id: 0, description: '项目启动', time: '2019-07-01', type: 0 },
+            { id: 1, description: '第一次迭代', time: '2019-07-12', type: 1 },
+            { id: 2, description: '第二次迭代', time: '2019-07-23', type: 1 },
+            { id: 3, description: '紧急维护', time: '', type: -1 }
         ];
-        return { users, infos };
+        const activity = [
+            { id: 0, title: '开学季大甩卖',
+                description: '出售信息满足开学季需求可进行申报,要求多媒体数>=3,获得优先加权推荐',
+                releaseTime: 1567957148885, validTime: 1567957148885, weight: 2,
+                pic: 3, isNew: false
+            },
+            { id: 1, title: '新人体验',
+                description: '用户首次发布交易信息可进行申报,要求多媒体数>=1,获得特别加权推荐',
+                releaseTime: 1567957148885, validTime: 1567957148885, weight: 3,
+                pic: 1, isNew: true
+            },
+            { id: 2, title: '互饮家乡水',
+                description: '商品属于土特产类可进行申报,要求多媒体数>=3,获得加权推荐',
+                releaseTime: 1567957148885, validTime: 1567957148885, weight: 1,
+                pic: 3, isNew: false
+            }
+        ];
+        return { site, history, activity };
     }
 };
 InMemoryDataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -1711,6 +2381,109 @@ LoginComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 /***/ }),
 
+/***/ "./src/app/transaction.service.ts":
+/*!****************************************!*\
+  !*** ./src/app/transaction.service.ts ***!
+  \****************************************/
+/*! exports provided: TransactionService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TransactionService", function() { return TransactionService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
+
+
+
+
+
+let TransactionService = class TransactionService {
+    constructor(http) {
+        this.http = http;
+        this.trUrl = 'api/transaction'; // URL to web api
+        this.tr = [];
+    }
+    getAllTR(status, lowCreateTime, highCreateTime) {
+        if (this.tr.length == 0) {
+            this.getTransactions(null, status, null, lowCreateTime, highCreateTime).subscribe(e => {
+                this.tr = e.transactions;
+                this.getMoreTransaction(100, false, status, lowCreateTime, highCreateTime);
+            });
+        }
+        return this.tr;
+    }
+    getMoreTransaction(offset, dynamic, status, lowCreateTime, highCreateTime) {
+        if (!(this.tr.length % 100) && !dynamic)
+            this.getTransactions(null, null, null, lowCreateTime, highCreateTime, null, offset).subscribe(e => {
+                if (e && Object.keys(e).length != 0) {
+                    this.tr = this.tr.concat(e.transactions);
+                    if (e.buyInfo.length != 100)
+                        dynamic = !dynamic;
+                }
+                this.getMoreTransaction(offset + 100, dynamic, status, lowCreateTime, highCreateTime);
+            });
+        else {
+            setTimeout(() => {
+                this.getTransactions(null, null, null, lowCreateTime, highCreateTime, null, offset).subscribe(e => {
+                    if (e && Object.keys(e).length != 0)
+                        this.tr = this.tr.concat(e.buyInfo);
+                    this.getMoreTransaction(this.tr.length - 1, true, status, lowCreateTime, highCreateTime);
+                });
+            }, 5000);
+        }
+    }
+    /** GET infos from the server */
+    getTransactions(userID = null, status = null, infoID = null, lowCreateTime = null, highCreateTime = null, limit = null, offset = null) {
+        let url = `${this.trUrl}?`;
+        if (userID && userID.trim())
+            url += `userID=${userID}&`;
+        if (status)
+            url += `status=${status}&`;
+        if (infoID)
+            url += `goodName=${infoID}&`;
+        if (limit)
+            url += `limit=${limit}&`;
+        if (lowCreateTime)
+            url += `lowCreateTime=${lowCreateTime}&`;
+        if (highCreateTime)
+            url += `highCreateTime=${highCreateTime}&`;
+        if (offset)
+            url += `offset=${offset}&`;
+        return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('getTransactions')));
+    }
+    /**
+     * Handle Http operation that failed.
+     * Let the app continue.
+     * @param operation - name of the operation that failed
+     * @param result - optional value to return as the observable result
+     *
+     */
+    handleError(operation, result) {
+        return (error) => {
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+            // Let the app keep running by returning an empty result.
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(result);
+        };
+    }
+};
+TransactionService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
+];
+TransactionService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    })
+], TransactionService);
+
+
+
+/***/ }),
+
 /***/ "./src/app/user.service.ts":
 /*!*********************************!*\
   !*** ./src/app/user.service.ts ***!
@@ -1737,12 +2510,19 @@ const httpOptions = {
 let UserService = class UserService {
     constructor(http) {
         this.http = http;
-        this.usersUrl = 'api/users'; // URL to web api
+        this.usersUrl = 'api/user'; // URL to web api
+    }
+    /** GET users from the server */
+    getPageUsers(limit, offset) {
+        const url = `${this.usersUrl}?limit=${limit}&offset=${offset}`;
+        return this.http.get(url, httpOptions)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('getUsers')));
     }
     /** GET users from the server */
     getUsers() {
-        return this.http.get(this.usersUrl)
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('getUsers', [])));
+        const url = `${this.usersUrl}?limit=100000`;
+        return this.http.get(url, httpOptions)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('getUsers')));
     }
     /** GET user by id. Will 404 if id not found */
     getUser(id) {
@@ -1750,17 +2530,9 @@ let UserService = class UserService {
         return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`getUser id=${id}`)));
     }
     /* GET users whose name contains search term */
-    searchUsers(term) {
-        if (!term.trim()) {
-            // if not search term, return empty user array.
-            return this.getUsers();
-        }
-        return this.http.get(`${this.usersUrl}/?name=${term}`).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('searchUsers', [])));
-    }
-    /** DELETE: delete the user from the server */
-    deleteUser(id) {
-        const url = `${this.usersUrl}/${id}`;
-        return this.http.delete(url, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('deleteUser')));
+    searchUsers(term, limit, offset) {
+        const url = `${this.usersUrl}?userName=${term}&limit=${limit}&offset=${offset}`;
+        return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('searchUsers')));
     }
     /** PUT: update the user on the server */
     updateUser(user) {
@@ -1799,7 +2571,7 @@ UserService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = " input{\r\n     color: black;\r\n }\r\n  .badge {\r\n    display: inline-block;\r\n    font-size: small;\r\n    color: white;\r\n    padding: 0.8em 0.7em 0 0.7em;\r\n    background-color: #607D8B;\r\n    line-height: 0.9em;\r\n    position: relative;\r\n    left: -1px;\r\n    top: -4px;\r\n    height: 3em;\r\n    min-width: 16px;\r\n    text-align: right;\r\n    margin-right: .8em;\r\n    border-radius: 4px 0 0 4px;\r\n  }\r\n  .delete {\r\n    float: right;\r\n  }\r\n  h2{\r\n  color: white;\r\n}\r\n  #searchname {\r\n  float:right;\r\n  width: 20%;\r\n}\r\n  .useritem{\r\n    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;\r\n    position: relative;\r\n    cursor: pointer;\r\n    background-color: #EEE;\r\n    margin: .5em;\r\n    padding: .3em 0;\r\n    height: 3em;\r\n    border-radius: 4px;\r\n  }\r\n  .useritem:hover {\r\n    color: #607D8B;\r\n    background-color: rgba(221, 221, 221, 0.548);\r\n    left: .1em;\r\n  }\r\n  \r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvdXNlci91c2VyLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkNBQUM7S0FDSSxZQUFZO0NBQ2hCO0VBQ0M7SUFDRSxxQkFBcUI7SUFDckIsZ0JBQWdCO0lBQ2hCLFlBQVk7SUFDWiw0QkFBNEI7SUFDNUIseUJBQXlCO0lBQ3pCLGtCQUFrQjtJQUNsQixrQkFBa0I7SUFDbEIsVUFBVTtJQUNWLFNBQVM7SUFDVCxXQUFXO0lBQ1gsZUFBZTtJQUNmLGlCQUFpQjtJQUNqQixrQkFBa0I7SUFDbEIsMEJBQTBCO0VBQzVCO0VBRUE7SUFDRSxZQUFZO0VBQ2Q7RUFFRDtFQUNDLFlBQVk7QUFDZDtFQUNBO0VBQ0UsV0FBVztFQUNYLFVBQVU7QUFDWjtFQUNFO0lBQ0UsNkVBQTZFO0lBQzdFLGtCQUFrQjtJQUNsQixlQUFlO0lBQ2Ysc0JBQXNCO0lBQ3RCLFlBQVk7SUFDWixlQUFlO0lBQ2YsV0FBVztJQUNYLGtCQUFrQjtFQUNwQjtFQUVBO0lBQ0UsY0FBYztJQUNkLDRDQUE0QztJQUM1QyxVQUFVO0VBQ1oiLCJmaWxlIjoic3JjL2FwcC91c2VyL3VzZXIuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIiBpbnB1dHtcclxuICAgICBjb2xvcjogYmxhY2s7XHJcbiB9XHJcbiAgLmJhZGdlIHtcclxuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxuICAgIGZvbnQtc2l6ZTogc21hbGw7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbiAgICBwYWRkaW5nOiAwLjhlbSAwLjdlbSAwIDAuN2VtO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzYwN0Q4QjtcclxuICAgIGxpbmUtaGVpZ2h0OiAwLjllbTtcclxuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgIGxlZnQ6IC0xcHg7XHJcbiAgICB0b3A6IC00cHg7XHJcbiAgICBoZWlnaHQ6IDNlbTtcclxuICAgIG1pbi13aWR0aDogMTZweDtcclxuICAgIHRleHQtYWxpZ246IHJpZ2h0O1xyXG4gICAgbWFyZ2luLXJpZ2h0OiAuOGVtO1xyXG4gICAgYm9yZGVyLXJhZGl1czogNHB4IDAgMCA0cHg7XHJcbiAgfVxyXG4gIFxyXG4gIC5kZWxldGUge1xyXG4gICAgZmxvYXQ6IHJpZ2h0O1xyXG4gIH1cclxuICBcclxuIGgye1xyXG4gIGNvbG9yOiB3aGl0ZTtcclxufVxyXG4jc2VhcmNobmFtZSB7XHJcbiAgZmxvYXQ6cmlnaHQ7XHJcbiAgd2lkdGg6IDIwJTtcclxufVxyXG4gIC51c2VyaXRlbXtcclxuICAgIGZvbnQtZmFtaWx5OiAnR2lsbCBTYW5zJywgJ0dpbGwgU2FucyBNVCcsIENhbGlicmksICdUcmVidWNoZXQgTVMnLCBzYW5zLXNlcmlmO1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogI0VFRTtcclxuICAgIG1hcmdpbjogLjVlbTtcclxuICAgIHBhZGRpbmc6IC4zZW0gMDtcclxuICAgIGhlaWdodDogM2VtO1xyXG4gICAgYm9yZGVyLXJhZGl1czogNHB4O1xyXG4gIH1cclxuICBcclxuICAudXNlcml0ZW06aG92ZXIge1xyXG4gICAgY29sb3I6ICM2MDdEOEI7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDIyMSwgMjIxLCAyMjEsIDAuNTQ4KTtcclxuICAgIGxlZnQ6IC4xZW07XHJcbiAgfVxyXG4gICJdfQ== */"
+module.exports = " input{\r\n     color: black;\r\n }\r\n  .badge {\r\n    display: inline-block;\r\n    font-size: small;\r\n    color: white;\r\n    padding: 0.8em 0.7em 0 0.7em;\r\n    background-color: #607D8B;\r\n    line-height: 0.9em;\r\n    position: relative;\r\n    left: -1px;\r\n    top: -4px;\r\n    height: 3em;\r\n    min-width: 16px;\r\n    text-align: right;\r\n    margin-right: .8em;\r\n    border-radius: 4px 0 0 4px;\r\n  }\r\n  h2{\r\n  color: white;\r\n}\r\n  #searchname {\r\n  float:right;\r\n  width: 20%;\r\n}\r\n  .useritem{\r\n    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;\r\n    position: relative;\r\n    cursor: pointer;\r\n    background-color: #EEE;\r\n    margin: .5em;\r\n    padding: .3em 0;\r\n    height: 3em;\r\n    border-radius: 4px;\r\n  }\r\n  .useritem:hover {\r\n    color: #607D8B;\r\n    background-color: rgba(221, 221, 221, 0.548);\r\n    left: .1em;\r\n  }\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvdXNlci91c2VyLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkNBQUM7S0FDSSxZQUFZO0NBQ2hCO0VBQ0M7SUFDRSxxQkFBcUI7SUFDckIsZ0JBQWdCO0lBQ2hCLFlBQVk7SUFDWiw0QkFBNEI7SUFDNUIseUJBQXlCO0lBQ3pCLGtCQUFrQjtJQUNsQixrQkFBa0I7SUFDbEIsVUFBVTtJQUNWLFNBQVM7SUFDVCxXQUFXO0lBQ1gsZUFBZTtJQUNmLGlCQUFpQjtJQUNqQixrQkFBa0I7SUFDbEIsMEJBQTBCO0VBQzVCO0VBR0Q7RUFDQyxZQUFZO0FBQ2Q7RUFDQTtFQUNFLFdBQVc7RUFDWCxVQUFVO0FBQ1o7RUFDRTtJQUNFLDZFQUE2RTtJQUM3RSxrQkFBa0I7SUFDbEIsZUFBZTtJQUNmLHNCQUFzQjtJQUN0QixZQUFZO0lBQ1osZUFBZTtJQUNmLFdBQVc7SUFDWCxrQkFBa0I7RUFDcEI7RUFFQTtJQUNFLGNBQWM7SUFDZCw0Q0FBNEM7SUFDNUMsVUFBVTtFQUNaIiwiZmlsZSI6InNyYy9hcHAvdXNlci91c2VyLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIgaW5wdXR7XHJcbiAgICAgY29sb3I6IGJsYWNrO1xyXG4gfVxyXG4gIC5iYWRnZSB7XHJcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbiAgICBmb250LXNpemU6IHNtYWxsO1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gICAgcGFkZGluZzogMC44ZW0gMC43ZW0gMCAwLjdlbTtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICM2MDdEOEI7XHJcbiAgICBsaW5lLWhlaWdodDogMC45ZW07XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBsZWZ0OiAtMXB4O1xyXG4gICAgdG9wOiAtNHB4O1xyXG4gICAgaGVpZ2h0OiAzZW07XHJcbiAgICBtaW4td2lkdGg6IDE2cHg7XHJcbiAgICB0ZXh0LWFsaWduOiByaWdodDtcclxuICAgIG1hcmdpbi1yaWdodDogLjhlbTtcclxuICAgIGJvcmRlci1yYWRpdXM6IDRweCAwIDAgNHB4O1xyXG4gIH1cclxuICBcclxuICBcclxuIGgye1xyXG4gIGNvbG9yOiB3aGl0ZTtcclxufVxyXG4jc2VhcmNobmFtZSB7XHJcbiAgZmxvYXQ6cmlnaHQ7XHJcbiAgd2lkdGg6IDIwJTtcclxufVxyXG4gIC51c2VyaXRlbXtcclxuICAgIGZvbnQtZmFtaWx5OiAnR2lsbCBTYW5zJywgJ0dpbGwgU2FucyBNVCcsIENhbGlicmksICdUcmVidWNoZXQgTVMnLCBzYW5zLXNlcmlmO1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogI0VFRTtcclxuICAgIG1hcmdpbjogLjVlbTtcclxuICAgIHBhZGRpbmc6IC4zZW0gMDtcclxuICAgIGhlaWdodDogM2VtO1xyXG4gICAgYm9yZGVyLXJhZGl1czogNHB4O1xyXG4gIH1cclxuICBcclxuICAudXNlcml0ZW06aG92ZXIge1xyXG4gICAgY29sb3I6ICM2MDdEOEI7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDIyMSwgMjIxLCAyMjEsIDAuNTQ4KTtcclxuICAgIGxlZnQ6IC4xZW07XHJcbiAgfSJdfQ== */"
 
 /***/ }),
 
@@ -1829,43 +2601,36 @@ let UserComponent = class UserComponent {
         this.getusers();
     }
     searchByName() {
-        this.userService.searchUsers(this.searchName)
+        if (!this.searchName || !this.searchName.trim()) {
+            this.getusers();
+            // if not search term, return all user array.
+            return;
+        }
+        this.userService.searchUsers(this.searchName, this.size, this.current * this.size - this.size)
             .subscribe(users => {
-            this.users = users;
-            this.count = this.users.length;
-            this.switchPage(this.current, this.size);
+            if (!users)
+                return;
+            this.users = users.user;
+            this.checkcount();
         });
+    }
+    checkcount() {
+        if (this.users && this.users.length === this.size)
+            this.count = (this.current + 1) * this.size;
+        else
+            this.count = this.current * this.size;
     }
     getusers() {
-        this.userService.getUsers()
+        this.userService.getPageUsers(this.size, this.current * this.size - this.size)
             .subscribe(users => {
-            this.users = users;
-            this.count = this.users.length;
-            this.switchPage(this.current, this.size);
+            if (!users)
+                return;
+            this.users = users.user;
+            this.checkcount();
         });
     }
-    switchPage(page, size) {
-        if (page * size < this.count)
-            this.curusers = this.users.slice((page - 1) * size, page * size);
-        else
-            this.curusers = this.users.slice((page - 1) * size);
-    }
-    pageChange(page) {
-        this.switchPage(page, this.size);
-    }
-    sizeChange(size) {
-        this.switchPage(this.current, size);
-    }
-    forbid() {
-        this.users.filter(m => m.score < this.threshold).map(m => { m.forbid = true; return m; }).forEach(element => this.userService.updateUser(element).subscribe());
-        this.users.filter(m => m.score >= this.threshold).map(m => { m.forbid = false; return m; }).forEach(element => this.userService.updateUser(element).subscribe());
-    }
-    delete(user) {
-        this.users = this.users.filter(h => h !== user);
-        this.userService.deleteUser(user.id).subscribe(_ => {
-            this.count = this.users.length;
-            this.switchPage(this.current, this.size);
-        });
+    onChange() {
+        this.searchByName();
     }
 };
 UserComponent.ctorParameters = () => [
@@ -1890,7 +2655,7 @@ UserComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n  .useritem{\r\n    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;\r\n    position: relative;\r\n    cursor: pointer;\r\n    background-color: #EEE;\r\n    margin: .5em;\r\n    padding: .3em 0;\r\n    height: 3em;\r\n    border-radius: 4px;\r\n  }\r\n  .useritem:hover {\r\n    color: #607D8B;\r\n    background-color: rgba(221, 221, 221, 0.548);\r\n    left: .1em;\r\n  }\r\n  .badge {\r\n    display: inline-block;\r\n    font-size: small;\r\n    color: white;\r\n    padding: 0.8em 0.7em 0 0.7em;\r\n    background-color: #607D8B;\r\n    line-height: 0.9em;\r\n    position: relative;\r\n    left: -1px;\r\n    top: -4px;\r\n    height: 3em;\r\n    min-width: 16px;\r\n    text-align: right;\r\n    margin-right: .8em;\r\n    border-radius: 4px 0 0 4px;\r\n  }\r\n  \r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvdXNlcmRldGFpbC91c2VyZGV0YWlsLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtFQUNFO0lBQ0UsNkVBQTZFO0lBQzdFLGtCQUFrQjtJQUNsQixlQUFlO0lBQ2Ysc0JBQXNCO0lBQ3RCLFlBQVk7SUFDWixlQUFlO0lBQ2YsV0FBVztJQUNYLGtCQUFrQjtFQUNwQjtFQUNBO0lBQ0UsY0FBYztJQUNkLDRDQUE0QztJQUM1QyxVQUFVO0VBQ1o7RUFDQTtJQUNFLHFCQUFxQjtJQUNyQixnQkFBZ0I7SUFDaEIsWUFBWTtJQUNaLDRCQUE0QjtJQUM1Qix5QkFBeUI7SUFDekIsa0JBQWtCO0lBQ2xCLGtCQUFrQjtJQUNsQixVQUFVO0lBQ1YsU0FBUztJQUNULFdBQVc7SUFDWCxlQUFlO0lBQ2YsaUJBQWlCO0lBQ2pCLGtCQUFrQjtJQUNsQiwwQkFBMEI7RUFDNUIiLCJmaWxlIjoic3JjL2FwcC91c2VyZGV0YWlsL3VzZXJkZXRhaWwuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIlxyXG4gIC51c2VyaXRlbXtcclxuICAgIGZvbnQtZmFtaWx5OiAnR2lsbCBTYW5zJywgJ0dpbGwgU2FucyBNVCcsIENhbGlicmksICdUcmVidWNoZXQgTVMnLCBzYW5zLXNlcmlmO1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogI0VFRTtcclxuICAgIG1hcmdpbjogLjVlbTtcclxuICAgIHBhZGRpbmc6IC4zZW0gMDtcclxuICAgIGhlaWdodDogM2VtO1xyXG4gICAgYm9yZGVyLXJhZGl1czogNHB4O1xyXG4gIH1cclxuICAudXNlcml0ZW06aG92ZXIge1xyXG4gICAgY29sb3I6ICM2MDdEOEI7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDIyMSwgMjIxLCAyMjEsIDAuNTQ4KTtcclxuICAgIGxlZnQ6IC4xZW07XHJcbiAgfVxyXG4gIC5iYWRnZSB7XHJcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbiAgICBmb250LXNpemU6IHNtYWxsO1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gICAgcGFkZGluZzogMC44ZW0gMC43ZW0gMCAwLjdlbTtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICM2MDdEOEI7XHJcbiAgICBsaW5lLWhlaWdodDogMC45ZW07XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBsZWZ0OiAtMXB4O1xyXG4gICAgdG9wOiAtNHB4O1xyXG4gICAgaGVpZ2h0OiAzZW07XHJcbiAgICBtaW4td2lkdGg6IDE2cHg7XHJcbiAgICB0ZXh0LWFsaWduOiByaWdodDtcclxuICAgIG1hcmdpbi1yaWdodDogLjhlbTtcclxuICAgIGJvcmRlci1yYWRpdXM6IDRweCAwIDAgNHB4O1xyXG4gIH1cclxuICAiXX0= */"
+module.exports = "\r\n  .useritem{\r\n    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;\r\n    position: relative;\r\n    cursor: pointer;\r\n    background-color: #EEE;\r\n    margin: .5em;\r\n    padding: .3em 0;\r\n    height: 3em;\r\n    border-radius: 4px;\r\n  }\r\n  .useritem:hover {\r\n    color: #607D8B;\r\n    background-color: rgba(221, 221, 221, 0.548);\r\n    left: .1em;\r\n  }\r\n  .badge {\r\n    display: inline-block;\r\n    font-size: small;\r\n    color: white;\r\n    padding: 0.8em 0.7em 0 0.7em;\r\n    background-color: #607D8B;\r\n    line-height: 0.9em;\r\n    position: relative;\r\n    left: -1px;\r\n    top: -4px;\r\n    height: 3em;\r\n    min-width: 16px;\r\n    text-align: right;\r\n    margin-right: .8em;\r\n    border-radius: 4px 0 0 4px;\r\n  }\r\n  #role{\r\n    width: 50%;\r\n  }\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvdXNlcmRldGFpbC91c2VyZGV0YWlsLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtFQUNFO0lBQ0UsNkVBQTZFO0lBQzdFLGtCQUFrQjtJQUNsQixlQUFlO0lBQ2Ysc0JBQXNCO0lBQ3RCLFlBQVk7SUFDWixlQUFlO0lBQ2YsV0FBVztJQUNYLGtCQUFrQjtFQUNwQjtFQUNBO0lBQ0UsY0FBYztJQUNkLDRDQUE0QztJQUM1QyxVQUFVO0VBQ1o7RUFDQTtJQUNFLHFCQUFxQjtJQUNyQixnQkFBZ0I7SUFDaEIsWUFBWTtJQUNaLDRCQUE0QjtJQUM1Qix5QkFBeUI7SUFDekIsa0JBQWtCO0lBQ2xCLGtCQUFrQjtJQUNsQixVQUFVO0lBQ1YsU0FBUztJQUNULFdBQVc7SUFDWCxlQUFlO0lBQ2YsaUJBQWlCO0lBQ2pCLGtCQUFrQjtJQUNsQiwwQkFBMEI7RUFDNUI7RUFFQTtJQUNFLFVBQVU7RUFDWiIsImZpbGUiOiJzcmMvYXBwL3VzZXJkZXRhaWwvdXNlcmRldGFpbC5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXHJcbiAgLnVzZXJpdGVte1xyXG4gICAgZm9udC1mYW1pbHk6ICdHaWxsIFNhbnMnLCAnR2lsbCBTYW5zIE1UJywgQ2FsaWJyaSwgJ1RyZWJ1Y2hldCBNUycsIHNhbnMtc2VyaWY7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRUVFO1xyXG4gICAgbWFyZ2luOiAuNWVtO1xyXG4gICAgcGFkZGluZzogLjNlbSAwO1xyXG4gICAgaGVpZ2h0OiAzZW07XHJcbiAgICBib3JkZXItcmFkaXVzOiA0cHg7XHJcbiAgfVxyXG4gIC51c2VyaXRlbTpob3ZlciB7XHJcbiAgICBjb2xvcjogIzYwN0Q4QjtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMjIxLCAyMjEsIDIyMSwgMC41NDgpO1xyXG4gICAgbGVmdDogLjFlbTtcclxuICB9XHJcbiAgLmJhZGdlIHtcclxuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxuICAgIGZvbnQtc2l6ZTogc21hbGw7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbiAgICBwYWRkaW5nOiAwLjhlbSAwLjdlbSAwIDAuN2VtO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzYwN0Q4QjtcclxuICAgIGxpbmUtaGVpZ2h0OiAwLjllbTtcclxuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgIGxlZnQ6IC0xcHg7XHJcbiAgICB0b3A6IC00cHg7XHJcbiAgICBoZWlnaHQ6IDNlbTtcclxuICAgIG1pbi13aWR0aDogMTZweDtcclxuICAgIHRleHQtYWxpZ246IHJpZ2h0O1xyXG4gICAgbWFyZ2luLXJpZ2h0OiAuOGVtO1xyXG4gICAgYm9yZGVyLXJhZGl1czogNHB4IDAgMCA0cHg7XHJcbiAgfVxyXG4gIFxyXG4gICNyb2xle1xyXG4gICAgd2lkdGg6IDUwJTtcclxuICB9Il19 */"
 
 /***/ }),
 
@@ -1898,31 +2663,50 @@ module.exports = "\r\n  .useritem{\r\n    font-family: 'Gill Sans', 'Gill Sans M
 /*!****************************************************!*\
   !*** ./src/app/userdetail/userdetail.component.ts ***!
   \****************************************************/
-/*! exports provided: UserDetailComponent */
+/*! exports provided: fFormatter, UserDetailComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fFormatter", function() { return fFormatter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserDetailComponent", function() { return UserDetailComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var _user_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../user.service */ "./src/app/user.service.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm2015/common.js");
+/* harmony import */ var _info_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../info.service */ "./src/app/info.service.ts");
+/* harmony import */ var _Formatter_format__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Formatter/format */ "./src/app/Formatter/format.ts");
 
 
 
 
 
+
+
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function fFormatter(params) {
+    return params.value + ' activities in ' + params.name;
+}
 let UserDetailComponent = class UserDetailComponent {
-    constructor(route, userService, location) {
+    constructor(route, userService, infoService, location) {
         this.route = route;
         this.userService = userService;
+        this.infoService = infoService;
         this.location = location;
+    }
+    stringToDate(params) {
+        const date = new Date(parseInt(params + '000'));
+        return Object(_Formatter_format__WEBPACK_IMPORTED_MODULE_6__["Format"])(date, 'yyyy-MM-dd HH:mm:ss');
     }
     ngOnInit() {
         this.getuser();
-        this.graph();
+    }
+    typeof(obj) {
+        if (obj['sellInfoID'])
+            return 'sellInfo';
+        if (obj['buyInfoID'])
+            return 'buyInfo';
     }
     goBack() {
         this.location.back();
@@ -1930,35 +2714,69 @@ let UserDetailComponent = class UserDetailComponent {
     getuser() {
         const id = this.route.snapshot.paramMap.get('id');
         this.userService.getUser(id)
-            .subscribe(user => this.user = user);
+            .subscribe(user => {
+            this.user = user;
+            this.forbid = this.user.status === 2;
+            this.userName = this.user.userName;
+            this.infoService.getSellInfos(id).subscribe(e => {
+                if (e.sellInfo) {
+                    this.infos = e.sellInfo;
+                }
+                this.infoService.getBuyInfos(id).subscribe(e => {
+                    if (e.buyInfo)
+                        this.infos = this.infos.concat(e.buyInfo);
+                    this.infos = this.infos.sort((a, b) => parseInt(a.releaseTime) -
+                        parseInt(b.releaseTime));
+                    this.graph();
+                });
+            });
+        });
     }
     save() {
-        this.userService.updateUser(this.user)
+        if (!this.user)
+            return;
+        const status = this.forbid ? 2 : 1;
+        this.userService.updateUser({ userID: this.user.userID, status: status, userName: this.userName, role: this.user.role })
             .subscribe(() => this.goBack());
     }
+    getstate(statecode) {
+        switch (statecode) {
+            case 1:
+                return '待预约';
+            case 2:
+                return '预约';
+            case 3:
+                return '完成';
+            case 4:
+                return '失效';
+            case 5:
+                return '关闭';
+        }
+    }
     graph() {
-        const hours = ['12a', '1a', '2a', '3a', '4a', '5a', '6a',
-            '7a', '8a', '9a', '10a', '11a',
-            '12p', '1p', '2p', '3p', '4p', '5p',
-            '6p', '7p', '8p', '9p', '10p', '11p'];
-        const days = ['Saturday', 'Friday', 'Thursday',
-            'Wednesday', 'Tuesday', 'Monday', 'Sunday'];
-        const d = [[0, 0, 5], [0, 1, 1], [0, 2, 0], [0, 3, 0], [0, 4, 0], [0, 5, 0], [0, 6, 0], [0, 7, 0], [0, 8, 0], [0, 9, 0], [0, 10, 0], [0, 11, 2], [0, 12, 4], [0, 13, 1], [0, 14, 1], [0, 15, 3], [0, 16, 4], [0, 17, 6], [0, 18, 4], [0, 19, 4], [0, 20, 3], [0, 21, 3], [0, 22, 2], [0, 23, 5], [1, 0, 7], [1, 1, 0], [1, 2, 0], [1, 3, 0], [1, 4, 0], [1, 5, 0], [1, 6, 0], [1, 7, 0], [1, 8, 0], [1, 9, 0], [1, 10, 5], [1, 11, 2], [1, 12, 2], [1, 13, 6], [1, 14, 9], [1, 15, 11], [1, 16, 6], [1, 17, 7], [1, 18, 8], [1, 19, 12], [1, 20, 5], [1, 21, 5], [1, 22, 7], [1, 23, 2], [2, 0, 1], [2, 1, 1], [2, 2, 0], [2, 3, 0], [2, 4, 0], [2, 5, 0], [2, 6, 0], [2, 7, 0], [2, 8, 0], [2, 9, 0], [2, 10, 3], [2, 11, 2], [2, 12, 1], [2, 13, 9], [2, 14, 8], [2, 15, 10], [2, 16, 6], [2, 17, 5], [2, 18, 5], [2, 19, 5], [2, 20, 7], [2, 21, 4], [2, 22, 2], [2, 23, 4], [3, 0, 7], [3, 1, 3], [3, 2, 0], [3, 3, 0], [3, 4, 0], [3, 5, 0], [3, 6, 0], [3, 7, 0], [3, 8, 1], [3, 9, 0], [3, 10, 5], [3, 11, 4], [3, 12, 7], [3, 13, 14], [3, 14, 13], [3, 15, 12], [3, 16, 9], [3, 17, 5], [3, 18, 5], [3, 19, 10], [3, 20, 6], [3, 21, 4], [3, 22, 4], [3, 23, 1], [4, 0, 1], [4, 1, 3], [4, 2, 0], [4, 3, 0], [4, 4, 0], [4, 5, 1], [4, 6, 0], [4, 7, 0], [4, 8, 0], [4, 9, 2], [4, 10, 4], [4, 11, 4], [4, 12, 2], [4, 13, 4], [4, 14, 4], [4, 15, 14], [4, 16, 12], [4, 17, 1], [4, 18, 8], [4, 19, 5], [4, 20, 3], [4, 21, 7], [4, 22, 3], [4, 23, 0], [5, 0, 2], [5, 1, 1], [5, 2, 0], [5, 3, 3], [5, 4, 0], [5, 5, 0], [5, 6, 0], [5, 7, 0], [5, 8, 2], [5, 9, 0], [5, 10, 4], [5, 11, 1], [5, 12, 5], [5, 13, 10], [5, 14, 5], [5, 15, 7], [5, 16, 11], [5, 17, 6], [5, 18, 0], [5, 19, 5], [5, 20, 3], [5, 21, 4], [5, 22, 2], [5, 23, 0], [6, 0, 1], [6, 1, 0], [6, 2, 0], [6, 3, 0], [6, 4, 0], [6, 5, 0], [6, 6, 0], [6, 7, 0], [6, 8, 0], [6, 9, 0], [6, 10, 1], [6, 11, 0], [6, 12, 2], [6, 13, 1], [6, 14, 3], [6, 15, 4], [6, 16, 0], [6, 17, 0], [6, 18, 0], [6, 19, 0], [6, 20, 1], [6, 21, 2], [6, 22, 2], [6, 23, 6]];
+        const sellData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const buyData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        this.infos.forEach(element => {
+            const y = new Date(element.releaseTime * 1000).getFullYear();
+            const m = new Date(element.releaseTime * 1000).getMonth() + 1;
+            //if((ynow == y + 1 && m > mnow) || (ynow == y && m <= mnow) )
+            if (this.typeof(element) == 'sellInfo')
+                sellData[m - 1] += 1;
+            else
+                buyData[m - 1] += 1;
+        });
         this.option = {
-            title: {
-                text: '交易历史',
-            },
+            title: {},
             legend: {
-                data: ['Purchase Record'],
-                left: 'right'
+                data: ['出售', '求购']
             },
             polar: {},
             tooltip: {
-                formatter: params => params.value[2] + ' commits in ' + hours[params.value[1]] + ' of ' + days[params.value[0]]
+                formatter: fFormatter
             },
             angleAxis: {
                 type: 'category',
-                data: hours,
+                data: months,
                 boundaryGap: false,
                 splitLine: {
                     show: true,
@@ -1972,26 +2790,20 @@ let UserDetailComponent = class UserDetailComponent {
                 }
             },
             radiusAxis: {
-                type: 'category',
-                data: days,
-                axisLine: {
-                    show: false
-                },
-                axisLabel: {
-                    rotate: 45
-                }
+                type: 'value',
+                minInterval: 1
             },
             series: [{
-                    name: 'Punch Card',
-                    type: 'scatter',
-                    coordinateSystem: 'polar',
-                    symbolSize: (val) => {
-                        return val[2] * 2;
-                    },
-                    data: d,
-                    animationDelay: (idx) => {
-                        return idx * 5;
-                    }
+                    name: 'Sell Record',
+                    type: 'bar',
+                    data: sellData,
+                    coordinateSystem: 'polar'
+                },
+                {
+                    name: 'Buy Record',
+                    type: 'bar',
+                    data: buyData,
+                    coordinateSystem: 'polar'
                 }]
         };
     }
@@ -1999,6 +2811,7 @@ let UserDetailComponent = class UserDetailComponent {
 UserDetailComponent.ctorParameters = () => [
     { type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"] },
     { type: _user_service__WEBPACK_IMPORTED_MODULE_2__["UserService"] },
+    { type: _info_service__WEBPACK_IMPORTED_MODULE_5__["InfoService"] },
     { type: _angular_common__WEBPACK_IMPORTED_MODULE_4__["Location"] }
 ];
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -2011,6 +2824,90 @@ UserDetailComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         styles: [__webpack_require__(/*! ./userdetail.component.css */ "./src/app/userdetail/userdetail.component.css")]
     })
 ], UserDetailComponent);
+
+
+
+/***/ }),
+
+/***/ "./src/app/website.service.ts":
+/*!************************************!*\
+  !*** ./src/app/website.service.ts ***!
+  \************************************/
+/*! exports provided: WebsiteService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WebsiteService", function() { return WebsiteService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
+
+
+
+
+
+const httpOptions = {
+    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'application/json' })
+};
+let WebsiteService = class WebsiteService {
+    constructor(http) {
+        this.http = http;
+        this.siteUrl = 'api/site'; // URL to web api
+        this.hstUrl = 'api/history';
+    }
+    /** GET info by id. Will 404 if id not found */
+    getSite() {
+        const url = `${this.siteUrl}/0`;
+        return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`getWebsite`)));
+    }
+    /** PUT: update the info on the server */
+    updateSite(site) {
+        const url = `${this.siteUrl}`;
+        return this.http.put(this.siteUrl, site, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('updateInfo')));
+    }
+    /** GET info by id. Will 404 if id not found */
+    getSiteHistory() {
+        const url = `${this.hstUrl}`;
+        return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`getWebsiteHistory`)));
+    }
+    deleteSiteHistory(item) {
+        const url = `${this.hstUrl}/${item.id}`;
+        return this.http.delete(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`deleteWebsiteHistory`)));
+    }
+    updateSiteHistory(item) {
+        const url = `${this.hstUrl}`;
+        return this.http.put(url, item, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`updateWebsiteHistory`)));
+    }
+    addSiteHistory(item) {
+        const url = `${this.hstUrl}`;
+        return this.http.post(url, item, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError(`addWebsiteHistory`)));
+    }
+    /**
+     * Handle Http operation that failed.
+     * Let the app continue.
+     * @param operation - name of the operation that failed
+     * @param result - optional value to return as the observable result
+     */
+    handleError(operation, result) {
+        return (error) => {
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+            // Let the app keep running by returning an empty result.
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(result);
+        };
+    }
+};
+WebsiteService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
+];
+WebsiteService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    })
+], WebsiteService);
 
 
 
@@ -2043,6 +2940,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm2015/forms.js");
 /* harmony import */ var ng_zorro_antd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ng-zorro-antd */ "./node_modules/ng-zorro-antd/fesm2015/ng-zorro-antd.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+/* harmony import */ var _website_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../website.service */ "./src/app/website.service.ts");
+
 
 
 
@@ -2050,7 +2949,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let WebsiteComponent = class WebsiteComponent {
-    constructor(location, router, fb, notification) {
+    constructor(service, location, router, fb, notification) {
+        this.service = service;
         this.location = location;
         this.router = router;
         this.fb = fb;
@@ -2064,15 +2964,25 @@ let WebsiteComponent = class WebsiteComponent {
             //}
         }
     }
+    update() {
+        this.service.getSite().subscribe(e => {
+            this.site = e;
+            this.site.name = this.validateForm.controls.name.valid ? this.validateForm.controls.name.value : this.site.name;
+            this.site.cp = this.validateForm.controls.copyright.valid ? this.validateForm.controls.copyright.value : this.site.cp;
+            this.site.status = this.validateForm.controls.status.valid ? this.validateForm.controls.status.value : this.site.status;
+            this.service.updateSite(this.site).subscribe();
+        });
+    }
     ngOnInit() {
         this.validateForm = this.fb.group({
             name: [null, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]],
             copyright: [null, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]],
-            open: [null, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]]
+            status: [null, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]]
         });
     }
 };
 WebsiteComponent.ctorParameters = () => [
+    { type: _website_service__WEBPACK_IMPORTED_MODULE_6__["WebsiteService"] },
     { type: _angular_common__WEBPACK_IMPORTED_MODULE_2__["Location"] },
     { type: _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"] },
     { type: _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"] },
@@ -2157,7 +3067,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\SJTU-jiaojiao\codes\Admin\jiaojiaoadmin\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! D:\SJTU-jiaojiao\admin-frontend\src\main.ts */"./src/main.ts");
 
 
 /***/ })

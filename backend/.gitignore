@@ -4,3 +4,4 @@ go.sum
 build/
 *.coverprofile
 __pycache__/
+srv/tag/data/

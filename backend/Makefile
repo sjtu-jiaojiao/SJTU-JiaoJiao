@@ -16,6 +16,8 @@ build:
 		echo Building srv-$$line...;	\
 		CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o $(OUTPUTDIR)/srv-$$line ./srv/$$line/main.go;	\
 	done < "$(SRVLIST)"
+	@echo Building api-tag...
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o $(OUTPUTDIR)/api-tag ./api/tag/main.go
 	@cp config.json $(OUTPUTDIR)
 	@echo Success
 
@@ -38,6 +40,7 @@ endif
 ## docker: Build docker images.
 docker: build
 	@sudo docker build . -t sjtujj
+	@sudo docker build ./api/tag -t sjtujj/api-tag
 	@while read -r line;do		\
 		sudo docker build ./api/$$line -t sjtujj/api-$$line;	\
 		sudo docker build ./srv/$$line -t sjtujj/srv-$$line;	\
@@ -46,6 +49,7 @@ docker: build
 ## deploy: Deploy to server.
 deploy:
 	@echo "$$DOCKER_PASSWORD" | docker login -u "$$DOCKER_USERNAME" --password-stdin
+	@sudo docker push sjtujj/api-tag
 	@while read -r line;do		\
 		sudo docker push sjtujj/api-$$line;	\
 		sudo docker push sjtujj/srv-$$line;	\

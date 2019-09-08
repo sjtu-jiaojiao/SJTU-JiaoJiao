@@ -3281,6 +3281,60 @@ define({ "api": [
     }
   },
   {
+    "type": "get",
+    "url": "/tag",
+    "title": "Get AI tag",
+    "version": "1.0.0",
+    "group": "Tag",
+    "permission": [
+      {
+        "name": "user"
+      }
+    ],
+    "name": "GetTag",
+    "description": "<p>Get AI tag</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "text",
+            "description": "<p>example text</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "list",
+            "optional": false,
+            "field": "tag",
+            "description": "<p>tag list</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 500": [
+          {
+            "group": "Error 500",
+            "optional": false,
+            "field": "TagServiceDown",
+            "description": "<p>Tag service down</p>"
+          }
+        ]
+      }
+    },
+    "filename": "api/tag/main.go",
+    "groupTitle": "Tag"
+  },
+  {
     "type": "post",
     "url": "/user",
     "title": "AddUser",
