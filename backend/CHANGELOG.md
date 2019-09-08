@@ -4,8 +4,8 @@
 1. `transaction` 模块被完全移除
 
 ###　新增
-1. `POST "/buyInfo/:buyInfoID"` 修改状态
-2. `POST "/sellInfo/:sellInfoID"` 修改状态
+1. `PUT "/buyInfo/:buyInfoID"` 修改状态
+2. `PUT "/sellInfo/:sellInfoID"` 修改状态
 
 ### BUG修复
 1. 修复message被错误标记为已读的问题

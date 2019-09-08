@@ -319,7 +319,7 @@ define({ "api": [
     }
   },
   {
-    "type": "post",
+    "type": "put",
     "url": "/buyInfo/:buyInfoID",
     "title": "UpdateBuyInfo",
     "version": "1.0.0",
@@ -1088,7 +1088,7 @@ define({ "api": [
     }
   },
   {
-    "type": "post",
+    "type": "put",
     "url": "/sellInfo/:sellInfoID",
     "title": "UpdateSellInfo",
     "version": "1.0.0",
