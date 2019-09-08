@@ -90,5 +90,6 @@ describe('BuyInfoComponent', () => {
     c.buyinfos= [new buyInfo];
     c.size = 1;
     c.checkcount();
+    c.getcontent();
   });
 });

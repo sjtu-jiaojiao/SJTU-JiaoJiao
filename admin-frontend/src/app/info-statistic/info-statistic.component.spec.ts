@@ -86,6 +86,7 @@ describe('InfoStatisticComponent', () => {
     expect(fdgFormatter({dataType: 'node',data:{name: '1', value: '2'}})).toEqual('1 has completed 2 transaction');   
     expect(fdgFormatter({dataType: 'edge',data:{source: '1', target: '2', value: '2'}})).
     toEqual('1 has selled 2 goods to 2');
+    component.onBrushSelected({batch:[{selected: [{dataIndex:[]}]}]});
     component.tr= [
        {transactionID: 2, infoID: 1, category: 2, fromUserID: 10003, toUserID: 3,createTime :1 ,status:6},
       {transactionID: 3, infoID: 1, category: 3, fromUserID: 10003, toUserID: 3,createTime :1 ,status:6},
@@ -97,6 +98,8 @@ describe('InfoStatisticComponent', () => {
        {transactionID: 9, infoID: 200003, category: 1, fromUserID: 1366, toUserID: 10003,createTime :1 ,status:6},
        {transactionID: 10, infoID: 16473, category: 1, fromUserID: 1366, toUserID: 9368,createTime :1 ,status:6}]
     component.forceGraph();
-
+    component.randamColor();
+    expect(component.cldsz([1,1])).toEqual(1);
+    expect(component.cldfm({data:[1,1]})).toEqual('1 completed transactions created in 1');
   });
 });

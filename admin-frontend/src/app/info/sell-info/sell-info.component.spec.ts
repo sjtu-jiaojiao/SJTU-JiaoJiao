@@ -89,6 +89,7 @@ describe('SellInfoComponent', () => {
     c.searchUserID = '';
     c.sellinfos= [new sellInfo];
     c.size = 1;
+    c.getcontent();
     c.checkcount();
   });
 });

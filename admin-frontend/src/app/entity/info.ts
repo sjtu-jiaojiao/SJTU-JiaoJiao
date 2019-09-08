@@ -8,7 +8,7 @@ export class sellInfo{
     public description: string;
     public contentID: string;
     public userID: number;
-    public tag: string [];
+    public tags: string [];
 }
 
 export class buyInfo{
@@ -21,7 +21,7 @@ export class buyInfo{
     public description: string;
     public contentID: string;
     public userID: number;
-    public tag: string [];
+    public tags: string [];
 }
 
 export class InfoResponse{

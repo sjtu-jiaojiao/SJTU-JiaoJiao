@@ -44,8 +44,10 @@ stringToDate(params) {
     getContent(): void {
     this.fileService.getContent(this.info.contentID).subscribe(
         e => {
-            if(e)
+            if(e){
             this.contents = e.files;
+            this.info.tags = e.tags;
+            }
         }
     )
     }
