@@ -3,7 +3,7 @@
 ### 移除
 1. `transaction` 模块被完全移除
 
-###　新增
+### 新增
 1. `PUT "/buyInfo/:buyInfoID"` 修改状态
 2. `PUT "/sellInfo/:sellInfoID"` 修改状态
 
