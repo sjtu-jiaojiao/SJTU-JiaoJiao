@@ -346,3 +346,21 @@ schema:
       type: after
       path: ../../
       output: true
+- name: api-tag
+  path: api/tag
+  args:
+    - --registry=consul
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+      - go
+    paths:
+      - /
+      - ../../utils
+    scripts:
+      - command: make doc
+        type: after
+        path: ../../
+        output: true
