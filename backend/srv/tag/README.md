@@ -1,8 +1,9 @@
-# TAG SERVE
-- data: 请下载 chinese_L-12_H-768_A-12.zip 和 sjtujj.zip 分别解压到 data/chinese_L-12_H-768_A-12 和 data/model/sjtujj 目录下
-- 启动服务： 请先确保启动consul，再运行`python serve.py`
-- 服务请求demo： 请先运行serve.py，再运行`python client.py`
-- 修改proto： 运行`proto/generate.bat`
+# TAG service
+## 数据集
+  [chinese_L-12_H-768_A-12.tar.gz](https://jbox.sjtu.edu.cn/l/aoMMkf) 和 [sjtujj.tar.gz](https://jbox.sjtu.edu.cn/l/lu8AJY) 解压到新建的data目录下
+
+## 使用
+- 启动服务： 运行`python serve.py 端口号`
 - 训练数据： 训练数据暂未上传
 - 可选模型：
     - train/54.53 & test/55.58_40w_categorical
