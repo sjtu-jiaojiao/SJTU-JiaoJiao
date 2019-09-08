@@ -58,13 +58,9 @@
         </div>
       </nz-card>
         <nz-card nzType="inner" nzTitle="交易简介">    
-                <nz-select id='tag'
-                  nzMode="tags"
-                  [nzTokenSeparators]="[',']"
-                  [(ngModel)]="info.tags"
-                  nzPlaceHolder="Tags">
-                  <nz-option *ngFor="let option of info.tags" [nzLabel]="option" [nzValue]="option"> </nz-option>
-                </nz-select>
+          <nz-tag *ngFor="let tag of info.tags">
+            {{tag}}
+          </nz-tag>
           <textarea nz-input placeholder="description" [(ngModel)]="info.description" nzAutosize></textarea>
         </nz-card>
           <button (click)="goBack()" nz-button nzType="dashed"><i nz-icon type="left-circle" theme="outline"></i>返回</button>

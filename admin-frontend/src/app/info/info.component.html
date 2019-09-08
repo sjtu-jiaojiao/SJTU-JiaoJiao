@@ -17,7 +17,7 @@
 -->
   
   <div nz-row [nzGutter]="8">
-    <div nz-col [nzSpan]="6">
+    <div nz-col [nzSpan]="8">
       <nz-select 
       id='type'
       [(ngModel)]="searchType"      
@@ -39,7 +39,7 @@
         <nz-option [nzValue]="null" nzLabel="All"></nz-option>
       </nz-select>      
     </div>
-    <div nz-col [nzSpan]="12">
+    <div nz-col [nzSpan]="16">
       <nz-input-group id='searchid' nzSearch [nzAddOnAfter]="suffixIconButton">
         <input type="text" [(ngModel)]="searchUserID" nz-input placeholder="输入用户ID" />
       </nz-input-group>
@@ -50,19 +50,6 @@
         <button nz-button (click)='search()' nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
       </ng-template>
       
-    </div>
-    <div nz-col [nzSpan]="6">
-      <nz-select
-      id = 'tag'
-      nzMode="tags"
-      [nzShowArrow]="false"
-      [nzOpen]="false"	
-      (ngModelChange)	="selectTag($event)"
-      [nzTokenSeparators]="[',']"
-      [(ngModel)]="searchTag"
-      nzPlaceHolder="TagFilter">
-      <nz-option *ngFor="let option of searchTag" [nzLabel]="option" [nzValue]="option"> </nz-option>
-      </nz-select>
     </div>
   </div>
 
