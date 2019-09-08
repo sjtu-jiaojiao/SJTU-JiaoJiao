@@ -73,6 +73,12 @@ func (a *mockSrv) Find(ctx context.Context, req *buyinfo.BuyInfoFindRequest, opt
 	return &rsp, nil
 }
 
+// Update is buyinfo update mock
+func (a *mockSrv) Update(ctx context.Context, req *buyinfo.BuyInfoUpdateRequest, opts ...client.CallOption) (*buyinfo.BuyInfoUpdateResponse, error) {
+	var rsp buyinfo.BuyInfoUpdateResponse
+	return &rsp, nil
+}
+
 // NewBuyInfoService is buyinfo service mock
 func NewBuyInfoService() buyinfo.BuyInfoService {
 	return new(mockSrv)

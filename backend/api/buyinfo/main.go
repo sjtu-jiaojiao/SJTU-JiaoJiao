@@ -14,6 +14,7 @@ import (
 func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
 	rg.GET("/buyInfo/:buyInfoID", getBuyInfo)
+	rg.POST("/buyInfo/:buyInfoID", updateBuyInfo)
 	rg.GET("/buyInfo", findBuyInfo)
 	rg.POST("/buyInfo", addBuyInfo)
 	return router
@@ -47,6 +48,68 @@ func getBuyInfo(c *gin.Context) {
 			func() interface{} { return mock.NewBuyInfoService() }).(buyinfo.BuyInfoService)
 		rsp, err := srv.Query(context.TODO(), &buyinfo.BuyInfoQueryRequest{
 			BuyInfoID: p.BuyInfoID,
+		})
+		if utils.LogContinue(err, utils.Error) {
+			c.JSON(500, err)
+			return
+		}
+		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+/**
+ * @api {post} /buyInfo/:buyInfoID UpdateBuyInfo
+ * @apiVersion 1.0.0
+ * @apiGroup BuyInfo
+ * @apiPermission self/admin
+ * @apiName UpdateBuyInfo
+ * @apiDescription Update buy info
+ *
+ * @apiParam {int32} status 1 for buying <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed
+ * @apiSuccess (Success 200) {Response} response see [BuyInfo Service](#api-Service-BuyInfo_Update)
+ * @apiUse InvalidParam
+ * @apiUse BuyInfoServiceDown
+ */
+func updateBuyInfo(c *gin.Context) {
+	type paramUri struct {
+		BuyInfoID int32 `uri:"buyInfoID" binding:"required,min=1"`
+	}
+	var pu paramUri
+
+	type param struct {
+		Status int32 `form:"status" binding:"required"`
+	}
+	var p param
+
+	if !utils.LogContinue(c.ShouldBindUri(&pu), utils.Warning) && !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+		srv := utils.CallMicroService("buyInfo", func(name string, c client.Client) interface{} { return buyinfo.NewBuyInfoService(name, c) },
+			func() interface{} { return mock.NewBuyInfoService() }).(buyinfo.BuyInfoService)
+		rsp2, err := srv.Query(context.TODO(), &buyinfo.BuyInfoQueryRequest{
+			BuyInfoID: pu.BuyInfoID,
+		})
+		if utils.LogContinue(err, utils.Error) {
+			c.JSON(500, err)
+			return
+		}
+		if rsp2.BuyInfoID == 0 {
+			c.JSON(200, &buyinfo.BuyInfoUpdateResponse{
+				Status: buyinfo.BuyInfoUpdateResponse_NOT_FOUND,
+			})
+			return
+		}
+
+		role := utils.GetRoleID(c, rsp2.UserID)
+
+		if !role.Self && !role.Admin {
+			c.AbortWithStatus(403)
+			return
+		}
+
+		rsp, err := srv.Update(context.TODO(), &buyinfo.BuyInfoUpdateRequest{
+			BuyInfoID: pu.BuyInfoID,
+			Status:    buyinfo.BuyStatus(utils.EnumConvert(p.Status, buyinfo.BuyStatus_name)),
 		})
 		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)
