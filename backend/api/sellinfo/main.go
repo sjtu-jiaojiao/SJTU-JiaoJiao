@@ -14,7 +14,7 @@ import (
 func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
 	rg.GET("/sellInfo/:sellInfoID", getSellInfo)
-	rg.POST("/sellInfo/:sellInfoID", updateSellInfo)
+	rg.PUT("/sellInfo/:sellInfoID", updateSellInfo)
 	rg.GET("/sellInfo", findSellInfo)
 	rg.POST("/sellInfo", addSellInfo)
 	return router
@@ -60,7 +60,7 @@ func getSellInfo(c *gin.Context) {
 }
 
 /**
- * @api {post} /sellInfo/:sellInfoID UpdateSellInfo
+ * @api {put} /sellInfo/:sellInfoID UpdateSellInfo
  * @apiVersion 1.0.0
  * @apiGroup SellInfo
  * @apiPermission self/admin
