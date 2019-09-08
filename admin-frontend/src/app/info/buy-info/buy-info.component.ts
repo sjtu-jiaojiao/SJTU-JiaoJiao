@@ -5,6 +5,7 @@ import { InfoService } from '../../info.service';
 import { filter } from 'rxjs/operators';
 import { Format } from 'src/app/Formatter/format';
 import { InfoComService } from '../infocom.service';
+import { FileService } from './../../file.service';
 @Component({
   selector: 'app-buy-info',
   templateUrl: './buy-info.component.html',
@@ -21,7 +22,7 @@ export class BuyInfoComponent implements OnInit {
   searchUserID: string;
   searchStatus: number;
   searchGoodName: string;
-  constructor(private gs: InfoComService, private infoService: InfoService) { }
+  constructor(private gs: InfoComService, private infoService: InfoService , private fileService: FileService) { }
 
   ngOnInit() {
     this.getinfos();
@@ -65,7 +66,21 @@ export class BuyInfoComponent implements OnInit {
       if(!infos) return;
       this.buyinfos = infos.buyInfo;
       this.checkcount();
+      this.getcontent();
     });
   }
 
+  getcontent(): void{
+      this.buyinfos.forEach(
+        info => {
+          this.fileService.getContent(info.contentID).subscribe(
+            e => {
+                if(e){
+                info.tags = e.tags;
+                }
+            }
+        )
+        }
+      )
+  }
 }
