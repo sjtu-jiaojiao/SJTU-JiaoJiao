@@ -4,7 +4,6 @@ package utils
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -83,7 +82,7 @@ func GetQueryFile(c *gin.Context, name string, maxsize int64) ([]byte, int, erro
 		if s != "" {
 			return []byte(s), 200, nil
 		} else {
-			return nil, 500, errors.New("")
+			return nil, 400, nil
 		}
 	}
 
@@ -105,7 +104,7 @@ func GetQueryFile(c *gin.Context, name string, maxsize int64) ([]byte, int, erro
 		}
 		return data, 200, nil
 	}
-	return nil, 500, err
+	return nil, 400, nil
 }
 
 // EnumConvert convert int32 to enum

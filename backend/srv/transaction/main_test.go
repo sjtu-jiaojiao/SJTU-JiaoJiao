@@ -23,6 +23,16 @@ func TestCreate(t *testing.T) {
 		if status == transaction.TransactionCreateResponse_SUCCESS {
 			So(db.Ormer.Delete(&db.Transaction{ID: rsp.TransactionID}).RowsAffected, ShouldEqual, 1)
 		}
+
+		So(s.Create(context.TODO(), &transaction.TransactionCreateRequest{
+			InfoID:     infoID,
+			Category:   transaction.Category_BUY,
+			FromUserID: fromUserID,
+		}, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, status)
+		if status == transaction.TransactionCreateResponse_SUCCESS {
+			So(db.Ormer.Delete(&db.Transaction{ID: rsp.TransactionID}).RowsAffected, ShouldEqual, 1)
+		}
 	}
 
 	Convey("Test Transaction Create", t, func() {
@@ -144,10 +154,10 @@ func TestFind(t *testing.T) {
 
 		tf(1215, 0, 0, 0, 0,
 			0, 0, 0, 0, transaction.TransactionFindResponse_NOT_FOUND)
-		tf(1210, 0, 0, 0, 0,
+		tf(1210, 0, 0, 0, 9999999999,
 			0, 0, 0, 2, transaction.TransactionFindResponse_SUCCESS)
 		tf(0, 1, 0, 0, 0,
-			0, 0, 0, 3, transaction.TransactionFindResponse_SUCCESS)
+			0, 101, 0, 3, transaction.TransactionFindResponse_SUCCESS)
 		tf(0, 1, 0, 200000000, 0,
 			0, 0, 0, 2, transaction.TransactionFindResponse_SUCCESS)
 		tf(0, 0, 0, 0, 0,

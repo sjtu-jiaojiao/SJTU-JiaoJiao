@@ -788,16 +788,17 @@
       }
     ],
     "name": "GetMessage",
-    "description": "<p>Get all new message about user</p>",
+    "description": "<p>Get all (new) message about user</p>",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "--",
+            "type": "bool",
             "optional": false,
-            "field": "Param",
-            "description": "<p>see <a href=\"#api-Service-Message_Query\">Message Service</a></p>"
+            "field": "oldMsg",
+            "defaultValue": "0",
+            "description": "<p>true to get all message, not only the new</p>"
           }
         ]
       }
@@ -2144,14 +2145,14 @@
             "type": "int32",
             "optional": false,
             "field": "fromUser",
-            "description": "<p>user who launch the chat at first time</p>"
+            "description": "<p>user who want to find</p>"
           },
           {
             "group": "Parameter",
             "type": "int32",
             "optional": false,
             "field": "toUser",
-            "description": "<p>user who accept the chat at first time</p>"
+            "description": "<p>user who chat with from user</p>"
           },
           {
             "group": "Parameter",
@@ -2290,6 +2291,14 @@
             "optional": false,
             "field": "userID",
             "description": "<p>user who wants to pull new message</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "bool",
+            "optional": false,
+            "field": "oldMsg",
+            "defaultValue": "0",
+            "description": "<p>true to get all message, not only the new</p>"
           }
         ]
       }
@@ -2302,7 +2311,7 @@
             "type": "int32",
             "optional": false,
             "field": "status",
-            "description": "<p>-1 for invalid param <br> 1 for success <br> 2 for not found</p>"
+            "description": "<p>-1 for invalid param <br> 1 for success</p>"
           },
           {
             "group": "Success 200",

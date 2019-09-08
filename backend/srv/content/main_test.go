@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	uuid "github.com/satori/go.uuid"
 	. "github.com/smartystreets/goconvey/convey"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -40,6 +41,9 @@ func TestContentCreate(t *testing.T) {
 		req.Content = []byte("valid_file")
 		tf(content.ContentCreateResponse_INVALID_PARAM, false)
 		req.Type = content.Type_PICTURE
+		req.Content = []byte("invalid_file")
+		tf(content.ContentCreateResponse_INVALID_TYPE, false)
+		req.Content = []byte("valid_file")
 		req.ContentID = "1234"
 		tf(content.ContentCreateResponse_INVALID_PARAM, false)
 		req.ContentID = ""
@@ -107,6 +111,12 @@ func TestCreateTag(t *testing.T) {
 		tf(content.ContentCreateTagResponse_INVALID_PARAM)
 
 		req.Tags = []string{"123", "456"}
+		req.ContentID = "123"
+		tf(content.ContentCreateTagResponse_INVALID_PARAM)
+		req.ContentToken = "456"
+		tf(content.ContentCreateTagResponse_INVALID_TOKEN)
+		req.ContentID = ""
+		req.ContentToken = ""
 		req.ContentID, req.ContentToken = tf(content.ContentCreateTagResponse_SUCCESS)
 		defer func() {
 			var res result
@@ -133,7 +143,45 @@ func TestContentQuery(t *testing.T) {
 }
 
 func TestContentCheck(t *testing.T) {
-	// TODO
+	tf := func(status content.ContentCheckResponse_Status, id string, token string) {
+		var s srv
+		var rsp content.ContentCheckResponse
+		So(s.Check(context.TODO(), &content.ContentCheckRequest{
+			ContentID:    id,
+			ContentToken: token,
+		}, &rsp), ShouldBeNil)
+		So(rsp.Status, ShouldEqual, status)
+	}
+
+	Convey("Test content check", t, func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		collection := db.MongoDatabase.Collection("content")
+		token := uuid.NewV4().String()
+		res, err := collection.InsertOne(ctx, bson.M{
+			"token": token,
+			"files": bson.A{
+				bson.M{
+					"fileID": "012345678901234567891234",
+					"type":   1,
+				}},
+		})
+		So(err, ShouldBeNil)
+		id := res.InsertedID.(primitive.ObjectID).Hex()
+		defer func() {
+			err = collection.FindOneAndDelete(ctx, bson.D{
+				{"_id", res.InsertedID.(primitive.ObjectID)},
+				{"token", token},
+			}).Decode(&res)
+			So(err, ShouldBeNil)
+		}()
+
+		tf(content.ContentCheckResponse_INVALID_PARAM, "", "")
+		tf(content.ContentCheckResponse_INVALID_PARAM, id, "")
+		tf(content.ContentCheckResponse_INVALID_PARAM, "", token)
+		tf(content.ContentCheckResponse_INVALID, id, "123123")
+		tf(content.ContentCheckResponse_VALID, id, token)
+	})
 }
 
 func TestMain(m *testing.M) {

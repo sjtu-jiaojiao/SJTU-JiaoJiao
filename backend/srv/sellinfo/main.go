@@ -143,6 +143,10 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 		if utils.LogContinue(err, utils.Error) {
 			return err
 		}
+		if microRsp.Status == content.ContentCreateTagResponse_INVALID_PARAM {
+			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_PARAM
+			return nil
+		}
 		if microRsp.Status != content.ContentCreateTagResponse_SUCCESS {
 			rsp.Status = sellinfo.SellInfoCreateResponse_INVALID_TOKEN
 			return nil
