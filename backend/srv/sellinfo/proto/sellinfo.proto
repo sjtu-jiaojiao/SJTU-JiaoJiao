@@ -4,6 +4,7 @@ service SellInfo {
     rpc Query (SellInfoQueryRequest) returns (SellInfoMsg);
     rpc Create (SellInfoCreateRequest) returns (SellInfoCreateResponse);
     rpc Find (SellInfoFindRequest) returns (SellInfoFindResponse);
+    rpc Update (SellInfoUpdateRequest) returns (SellInfoUpdateResponse);
 }
 
 enum SellStatus {
@@ -67,4 +68,19 @@ message SellInfoFindRequest {
 
 message SellInfoFindResponse {
     repeated SellInfoMsg sellInfo = 1;
+}
+
+message SellInfoUpdateRequest {
+    int32 sellInfoID = 1;
+    SellStatus status = 2;
+}
+
+message SellInfoUpdateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
 }

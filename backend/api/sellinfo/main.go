@@ -14,6 +14,7 @@ import (
 func setupRouter() *gin.Engine {
 	router, rg := utils.CreateAPIGroup()
 	rg.GET("/sellInfo/:sellInfoID", getSellInfo)
+	rg.POST("/sellInfo/:sellInfoID", updateSellInfo)
 	rg.GET("/sellInfo", findSellInfo)
 	rg.POST("/sellInfo", addSellInfo)
 	return router
@@ -47,6 +48,68 @@ func getSellInfo(c *gin.Context) {
 			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
 		rsp, err := srv.Query(context.TODO(), &sellinfo.SellInfoQueryRequest{
 			SellInfoID: p.SellInfoID,
+		})
+		if utils.LogContinue(err, utils.Error) {
+			c.JSON(500, err)
+			return
+		}
+		c.JSON(200, rsp)
+	} else {
+		c.AbortWithStatus(400)
+	}
+}
+
+/**
+ * @api {post} /sellInfo/:sellInfoID UpdateSellInfo
+ * @apiVersion 1.0.0
+ * @apiGroup SellInfo
+ * @apiPermission self/admin
+ * @apiName UpdateSellInfo
+ * @apiDescription Update sell info
+ *
+ * @apiParam {int32} status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed
+ * @apiSuccess (Success 200) {Response} response see [SellInfo Service](#api-Service-SellInfo_Update)
+ * @apiUse InvalidParam
+ * @apiUse SellInfoServiceDown
+ */
+func updateSellInfo(c *gin.Context) {
+	type paramUri struct {
+		SellInfoID int32 `uri:"sellInfoID" binding:"required,min=1"`
+	}
+	var pu paramUri
+
+	type param struct {
+		Status int32 `form:"status" binding:"required"`
+	}
+	var p param
+
+	if !utils.LogContinue(c.ShouldBindUri(&pu), utils.Warning) && !utils.LogContinue(c.ShouldBind(&p), utils.Warning) {
+		srv := utils.CallMicroService("sellInfo", func(name string, c client.Client) interface{} { return sellinfo.NewSellInfoService(name, c) },
+			func() interface{} { return mock.NewSellInfoService() }).(sellinfo.SellInfoService)
+		rsp2, err := srv.Query(context.TODO(), &sellinfo.SellInfoQueryRequest{
+			SellInfoID: pu.SellInfoID,
+		})
+		if utils.LogContinue(err, utils.Error) {
+			c.JSON(500, err)
+			return
+		}
+		if rsp2.SellInfoID == 0 {
+			c.JSON(200, &sellinfo.SellInfoUpdateResponse{
+				Status: sellinfo.SellInfoUpdateResponse_NOT_FOUND,
+			})
+			return
+		}
+
+		role := utils.GetRoleID(c, rsp2.UserID)
+
+		if !role.Self && !role.Admin {
+			c.AbortWithStatus(403)
+			return
+		}
+
+		rsp, err := srv.Update(context.TODO(), &sellinfo.SellInfoUpdateRequest{
+			SellInfoID: pu.SellInfoID,
+			Status:     sellinfo.SellStatus(utils.EnumConvert(p.Status, sellinfo.SellStatus_name)),
 		})
 		if utils.LogContinue(err, utils.Error) {
 			c.JSON(500, err)

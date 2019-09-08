@@ -37,6 +37,7 @@ type BuyInfoService interface {
 	Query(ctx context.Context, in *BuyInfoQueryRequest, opts ...client.CallOption) (*BuyInfoMsg, error)
 	Create(ctx context.Context, in *BuyInfoCreateRequest, opts ...client.CallOption) (*BuyInfoCreateResponse, error)
 	Find(ctx context.Context, in *BuyInfoFindRequest, opts ...client.CallOption) (*BuyInfoFindResponse, error)
+	Update(ctx context.Context, in *BuyInfoUpdateRequest, opts ...client.CallOption) (*BuyInfoUpdateResponse, error)
 }
 
 type buyInfoService struct {
@@ -87,12 +88,23 @@ func (c *buyInfoService) Find(ctx context.Context, in *BuyInfoFindRequest, opts 
 	return out, nil
 }
 
+func (c *buyInfoService) Update(ctx context.Context, in *BuyInfoUpdateRequest, opts ...client.CallOption) (*BuyInfoUpdateResponse, error) {
+	req := c.c.NewRequest(c.name, "BuyInfo.Update", in)
+	out := new(BuyInfoUpdateResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for BuyInfo service
 
 type BuyInfoHandler interface {
 	Query(context.Context, *BuyInfoQueryRequest, *BuyInfoMsg) error
 	Create(context.Context, *BuyInfoCreateRequest, *BuyInfoCreateResponse) error
 	Find(context.Context, *BuyInfoFindRequest, *BuyInfoFindResponse) error
+	Update(context.Context, *BuyInfoUpdateRequest, *BuyInfoUpdateResponse) error
 }
 
 func RegisterBuyInfoHandler(s server.Server, hdlr BuyInfoHandler, opts ...server.HandlerOption) error {
@@ -100,6 +112,7 @@ func RegisterBuyInfoHandler(s server.Server, hdlr BuyInfoHandler, opts ...server
 		Query(ctx context.Context, in *BuyInfoQueryRequest, out *BuyInfoMsg) error
 		Create(ctx context.Context, in *BuyInfoCreateRequest, out *BuyInfoCreateResponse) error
 		Find(ctx context.Context, in *BuyInfoFindRequest, out *BuyInfoFindResponse) error
+		Update(ctx context.Context, in *BuyInfoUpdateRequest, out *BuyInfoUpdateResponse) error
 	}
 	type BuyInfo struct {
 		buyInfo
@@ -122,4 +135,8 @@ func (h *buyInfoHandler) Create(ctx context.Context, in *BuyInfoCreateRequest, o
 
 func (h *buyInfoHandler) Find(ctx context.Context, in *BuyInfoFindRequest, out *BuyInfoFindResponse) error {
 	return h.BuyInfoHandler.Find(ctx, in, out)
+}
+
+func (h *buyInfoHandler) Update(ctx context.Context, in *BuyInfoUpdateRequest, out *BuyInfoUpdateResponse) error {
+	return h.BuyInfoHandler.Update(ctx, in, out)
 }

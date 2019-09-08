@@ -267,6 +267,45 @@ func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *
 	return nil
 }
 
+/**
+ * @api {rpc} /rpc SellInfo.Update
+ * @apiVersion 1.0.0
+ * @apiGroup Service
+ * @apiName SellInfo.Update
+ * @apiDescription Update sell info.
+ *
+ * @apiParam {int32} sellInfoID sellInfo id.
+ * @apiParam {int32} status 1 for selling <br> 2 for reserved <br> 3 for done <br> 4 for expired <br> 5 for closed
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for sell info not found
+ * @apiUse DBServerDown
+ */
+func (a *srv) Update(ctx context.Context, req *sellinfo.SellInfoUpdateRequest, rsp *sellinfo.SellInfoUpdateResponse) error {
+	if !utils.RequireParam(req.SellInfoID, req.Status) {
+		rsp.Status = sellinfo.SellInfoUpdateResponse_INVALID_PARAM
+		return nil
+	}
+
+	info := db.SellInfo{
+		ID: req.SellInfoID,
+	}
+	err := db.Ormer.First(&info).Error
+	if err == nil {
+		info.Status = int32(req.Status)
+		err := db.Ormer.Save(&info).Error
+		if utils.LogContinue(err, utils.Error) {
+			return err
+		}
+		rsp.Status = sellinfo.SellInfoUpdateResponse_SUCCESS
+	} else if gorm.IsRecordNotFoundError(err) {
+		rsp.Status = sellinfo.SellInfoUpdateResponse_NOT_FOUND
+		return nil
+	} else {
+		utils.Error(err)
+		return err
+	}
+	return nil
+}
+
 func main() {
 	db.InitORM("sellinfodb", new(db.SellInfo), new(db.Good))
 	defer db.CloseORM()
