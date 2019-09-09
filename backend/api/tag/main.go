@@ -16,10 +16,10 @@ func setupRouter() *gin.Engine {
 }
 
 /**
- * @api {get} /tag Get AI tag
+ * @api {get} /tag GetTag
  * @apiVersion 1.0.0
  * @apiGroup Tag
- * @apiPermission user
+ * @apiPermission user/admin
  * @apiName GetTag
  * @apiDescription Get AI tag
  *
@@ -35,7 +35,7 @@ func getTag(c *gin.Context) {
 	role := utils.GetRole(c)
 
 	if !utils.LogContinue(c.ShouldBindQuery(&p), utils.Warning) {
-		if !role.User {
+		if !role.User && !role.Admin {
 			c.AbortWithStatus(403)
 			return
 		}

@@ -3283,12 +3283,12 @@ define({ "api": [
   {
     "type": "get",
     "url": "/tag",
-    "title": "Get AI tag",
+    "title": "GetTag",
     "version": "1.0.0",
     "group": "Tag",
     "permission": [
       {
-        "name": "user"
+        "name": "user/admin"
       }
     ],
     "name": "GetTag",
