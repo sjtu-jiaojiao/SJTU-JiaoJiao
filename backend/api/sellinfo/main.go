@@ -2,9 +2,14 @@ package main
 
 import (
 	"context"
+	mockbuy "jiaojiao/srv/buyinfo/mock"
+	buyinfo "jiaojiao/srv/buyinfo/proto"
+	mockmsg "jiaojiao/srv/message/mock"
+	message "jiaojiao/srv/message/proto"
 	"jiaojiao/srv/sellinfo/mock"
 	sellinfo "jiaojiao/srv/sellinfo/proto"
 	"jiaojiao/utils"
+	"strconv"
 
 	"github.com/micro/go-micro/client"
 
@@ -174,6 +179,35 @@ func addSellInfo(c *gin.Context) {
 			c.JSON(500, err)
 			return
 		}
+
+		// Just for check
+		if len(p.Tags) >= 1 && len(p.Tags[0]) > 6 {
+			srv2 := utils.CallMicroService("buyInfo", func(name string, c client.Client) interface{} { return buyinfo.NewBuyInfoService(name, c) },
+				func() interface{} { return mockbuy.NewBuyInfoService() }).(buyinfo.BuyInfoService)
+			rsp2, err := srv2.Find(context.TODO(), &buyinfo.BuyInfoFindRequest{
+				GoodName: p.Tags[0][2:5],
+				Limit:    1,
+			})
+			if utils.LogContinue(err, utils.Error) {
+				c.JSON(500, err)
+				return
+			}
+			if rsp2.BuyInfo != nil {
+				srv3 := utils.CallMicroService("message", func(name string, c client.Client) interface{} { return message.NewMessageService(name, c) },
+					func() interface{} { return mockmsg.NewMessageService() }).(message.MessageService)
+				_, err := srv3.Create(context.TODO(), &message.MessageCreateRequest{
+					FromUser: 1,
+					ToUser:   p.UserID,
+					Type:     1,
+					Msg:      []byte(strconv.Itoa(int(rsp2.BuyInfo[0].BuyInfoID))),
+				})
+				if utils.LogContinue(err, utils.Error) {
+					c.JSON(500, err)
+					return
+				}
+			}
+		}
+
 		c.JSON(200, rsp)
 	} else {
 		c.AbortWithStatus(400)
