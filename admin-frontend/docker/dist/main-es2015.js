@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2>活动管理</h2>              \r\n<input [(ngModel)]=\"ID\" placeholder=\"id\"/>\r\n<button (click)=\"add()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>创建</button>\r\n\r\n<nz-list [nzDataSource]=\"acts\" [nzRenderItem]=\"act\" [nzGrid]=\"{gutter: 16, span: 8}\">\r\n  <ng-template #act let-act>\r\n    <nz-list-item [nzContent]=\"nzContent\">\r\n      <ng-template #nzContent>\r\n        <nz-card [nzTitle]=\"act.title\">\r\n          <div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动标题</span>              \r\n              <input [(ngModel)]=\"act.title\" placeholder=\"title\"/>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动ID</span>              \r\n              <input [(ngModel)]=\"act.id\" placeholder=\"id\"/>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动简介</span>              \r\n              <input [(ngModel)]=\"act.description\" placeholder=\"description\"/>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动开始时间 </span>\r\n              <nz-date-picker\r\n                nzShowTime\r\n                nzFormat=\"yyyy-MM-dd HH:mm:ss\"\r\n                nzPlaceHolder=\"开始时间\"\r\n                [(ngModel)]=\"act.releaseDate\"\r\n              ></nz-date-picker>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动截止时间 </span>\r\n                  <nz-date-picker\r\n                    nzShowTime\r\n                    nzFormat=\"yyyy-MM-dd HH:mm:ss\"\r\n                    nzPlaceHolder=\"截止时间\"\r\n                    [(ngModel)]=\"act.validDate\"\r\n                  ></nz-date-picker>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">权重 </span>\r\n              <nz-select style=\"width: 120px;\" [(ngModel)]=\"act.weight\">\r\n                <nz-option [nzValue]=\"1\" nzLabel=\"普通\"></nz-option>                \r\n                <nz-option [nzValue]=\"2\" nzLabel=\"优先\"></nz-option>\r\n                <nz-option [nzValue]=\"3\" nzLabel=\"特殊\"></nz-option>\r\n              </nz-select>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">多媒体需求 </span>\r\n              <nz-input-number\r\n                [(ngModel)]=\"act.pic\"\r\n                [nzMin]=\"0\"\r\n                [nzStep]=\"1\"\r\n                [nzPlaceHolder]=\"'数目'\"\r\n              ></nz-input-number>\r\n            </div>             \r\n            <div class='activityitem'>\r\n              <span class=\"badge\">新人专享 </span>\r\n              <label nz-checkbox [(ngModel)]=\"act.isNew\"></label>\r\n            </div>             \r\n             <button (click)=\"delete(act)\" nz-button ><i nz-icon type=\"delete\" theme=\"outline\"></i>删除</button>\r\n            <button (click)=\"save(act)\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>保存</button>\r\n          </div>\r\n        </nz-card>\r\n      </ng-template>\r\n    </nz-list-item>\r\n  </ng-template>\r\n</nz-list>"
+module.exports = "<h2>活动管理</h2>              \r\n<input [(ngModel)]=\"ID\" placeholder=\"id\"/>\r\n<button (click)=\"add()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>创建</button>\r\n\r\n<nz-list [nzDataSource]=\"acts\" [nzRenderItem]=\"act\" [nzGrid]=\"{gutter: 16, span: 8}\">\r\n  <ng-template #act let-act>\r\n    <nz-list-item [nzContent]=\"nzContent\">\r\n      <ng-template #nzContent>\r\n        <nz-card [nzTitle]=\"act.title\">\r\n          <div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动标题</span>              \r\n              <input [(ngModel)]=\"act.title\" placeholder=\"title\"/>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动ID</span>              \r\n              <input [(ngModel)]=\"act.id\" placeholder=\"id\"/>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动简介</span>              \r\n              <input [(ngModel)]=\"act.description\" placeholder=\"description\"/>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动开始时间 </span>\r\n              <nz-date-picker\r\n                nzShowTime\r\n                nzFormat=\"yyyy-MM-dd HH:mm:ss\"\r\n                nzPlaceHolder=\"开始时间\"\r\n                [(ngModel)]=\"act.releaseDate\"\r\n              ></nz-date-picker>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">活动截止时间 </span>\r\n                  <nz-date-picker\r\n                    nzShowTime\r\n                    nzFormat=\"yyyy-MM-dd HH:mm:ss\"\r\n                    nzPlaceHolder=\"截止时间\"\r\n                    [(ngModel)]=\"act.validDate\"\r\n                  ></nz-date-picker>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">权重 </span>\r\n              <nz-select style=\"width: 120px;\" [(ngModel)]=\"act.weight\">\r\n                <nz-option [nzValue]=\"1\" nzLabel=\"普通\"></nz-option>                \r\n                <nz-option [nzValue]=\"2\" nzLabel=\"优先\"></nz-option>\r\n                <nz-option [nzValue]=\"3\" nzLabel=\"特殊\"></nz-option>\r\n              </nz-select>\r\n            </div>\r\n            <div class='activityitem'>\r\n              <span class=\"badge\">多媒体需求 </span>\r\n              <nz-input-number\r\n                [(ngModel)]=\"act.pic\"\r\n                [nzMin]=\"0\"\r\n                [nzStep]=\"1\"\r\n                [nzPlaceHolder]=\"'数目'\"\r\n              ></nz-input-number>\r\n            </div>             \r\n            <div class='activityitem'>\r\n              <span class=\"badge\">新人专享 </span>\r\n              <label nz-checkbox [(ngModel)]=\"act.isNew\"></label>\r\n            </div>             \r\n             <button (click)=\"delete(act)\" nz-button ><i nz-icon type=\"delete\" theme=\"outline\"></i>删除</button>\r\n    <button (click)=\"save(act)\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>保存</button>\r\n\r\n            <a routerLink=\"/activity/{{act.id}}\">\r\n              活动详情\r\n              <i nz-icon type=\"search\"></i>\r\n               </a>\r\n          </div>\r\n        </nz-card>\r\n      </ng-template>\r\n    </nz-list-item>\r\n  </ng-template>\r\n</nz-list>"
 
 /***/ }),
 
@@ -41,7 +41,7 @@ module.exports = "<h2>活动管理</h2>              \r\n<input [(ngModel)]=\"ID
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nz-card nzTitle=\"活动管理\">\r\n  <div nz-row [nzGutter]=\"8\">\r\n    <div nz-col [nzSpan]=\"8\">\r\n      <nz-card nzTitle=\"活动状态\">\r\n        <nz-timeline nzMode=\"alternate\">\r\n          <nz-timeline-item>创建活动 2019-07-01</nz-timeline-item>\r\n          <nz-timeline-item nzColor=\"green\">开始活动(可修改) 2019-07-02</nz-timeline-item>\r\n          <nz-timeline-item [nzDot]=\"dotTemplate\">活动结束(可修改)</nz-timeline-item>\r\n        </nz-timeline>\r\n        <ng-template #dotTemplate>\r\n          <i nz-icon nzType=\"clock-circle-o\" style=\"font-size: 16px;\"></i>\r\n        </ng-template>\r\n      </nz-card>\r\n      <nz-card nzType=\"inner\" nzTitle=\"活动简介\">\r\n        <p>此地有图</p>\r\n        <p>本活动属管理员闲得无聊创建，如有看见请点差评</p>\r\n      </nz-card>\r\n    </div>\r\n    <div nz-col [nzSpan]=\"16\">\r\n      <nz-card nzType=\"inner\" nzTitle=\"活动热度\">\r\n        <div echarts theme=\"dark\" [loading]=\"true\" [options]=\"tsoption\"></div>\r\n      </nz-card>\r\n    </div>\r\n  </div>\r\n</nz-card>"
+module.exports = "<nz-card nzTitle=\"活动管理\">\r\n  <div nz-row [nzGutter]=\"8\">\r\n    <div nz-col [nzSpan]=\"8\">\r\n      <nz-card *ngIf=\"act\" [nzTitle]=\"act.title\">\r\n        <div>\r\n          <div class='activityitem'>\r\n            <span class=\"badge\">活动标题</span>              \r\n            <input [(ngModel)]=\"act.title\" placeholder=\"title\"/>\r\n          </div>\r\n          <div class='activityitem'>\r\n            <span class=\"badge\">活动ID</span>              \r\n            <input [(ngModel)]=\"act.id\" placeholder=\"id\"/>\r\n          </div>\r\n          <div class='activityitem'>\r\n            <span class=\"badge\">活动简介</span>              \r\n            <input [(ngModel)]=\"act.description\" placeholder=\"description\"/>\r\n          </div>\r\n          <div class='activityitem'>\r\n            <span class=\"badge\">活动开始时间 </span>\r\n            <nz-date-picker\r\n              nzShowTime\r\n              nzFormat=\"yyyy-MM-dd HH:mm:ss\"\r\n              nzPlaceHolder=\"开始时间\"\r\n              [(ngModel)]=\"act.releaseDate\"\r\n            ></nz-date-picker>\r\n          </div>\r\n          <div class='activityitem'>\r\n            <span class=\"badge\">活动截止时间 </span>\r\n                <nz-date-picker\r\n                  nzShowTime\r\n                  nzFormat=\"yyyy-MM-dd HH:mm:ss\"\r\n                  nzPlaceHolder=\"截止时间\"\r\n                  [(ngModel)]=\"act.validDate\"\r\n                ></nz-date-picker>\r\n          </div>\r\n          <div class='activityitem'>\r\n            <span class=\"badge\">权重 </span>\r\n            <nz-select style=\"width: 120px;\" [(ngModel)]=\"act.weight\">\r\n              <nz-option [nzValue]=\"1\" nzLabel=\"普通\"></nz-option>                \r\n              <nz-option [nzValue]=\"2\" nzLabel=\"优先\"></nz-option>\r\n              <nz-option [nzValue]=\"3\" nzLabel=\"特殊\"></nz-option>\r\n            </nz-select>\r\n          </div>\r\n          <div class='activityitem'>\r\n            <span class=\"badge\">多媒体需求 </span>\r\n            <nz-input-number\r\n              [(ngModel)]=\"act.pic\"\r\n              [nzMin]=\"0\"\r\n              [nzStep]=\"1\"\r\n              [nzPlaceHolder]=\"'数目'\"\r\n            ></nz-input-number>\r\n          </div>             \r\n          <div class='activityitem'>\r\n            <span class=\"badge\">新人专享 </span>\r\n            <label nz-checkbox [(ngModel)]=\"act.isNew\"></label>\r\n          </div>             \r\n           <button (click)=\"goBack()\" nz-button ><i nz-icon type=\"delete\" theme=\"outline\"></i>返回</button>\r\n          <button (click)=\"save()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>保存</button> \r\n        </div>\r\n      </nz-card>\r\n    </div>\r\n    <div nz-col [nzSpan]=\"16\">\r\n    </div>\r\n  </div>\r\n</nz-card>"
 
 /***/ }),
 
@@ -74,7 +74,7 @@ module.exports = "       <nz-card   nzTitle=\"系统状态\">\r\n               
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n        <div class='outer-div' id='fdg'>\r\n          <div echarts (chartDblClick)=\"clickForce($event)\"\ttheme=\"dark\"  class= 'tpc'[loading]=\"true\" [options]=\"fdgoption\"></div>\r\n      </div>\r\n      <div class='outer-div' id='good'>\r\n        <div echarts theme=\"dark\" \r\n        (chartBrushSelected)=\"onBrushSelected($event)\" class= 'tpc'[loading]=\"true\" [options]=\"goodoption\"></div>\r\n    </div>\r\n        <div class='outer-div' id='cld'>\r\n            <div *ngIf=\"!selectedInfo || selectedInfo.length==0\" echarts theme=\"dark\" class= 'tpc'[loading]=\"true\" [options]=\"cldoption\">\r\n            </div>            \r\n            <div *ngIf=\"selectedInfo && selectedInfo.length!=0\">\r\n          <nz-table #headerTable [nzData]=\"selectedInfo\" [nzPageSize]=\"10\" [nzScroll]=\"{ y: '500px' }\">\r\n            <thead>\r\n              <tr>\r\n                <th nzWidth=\"100px\" >交易ID</th>\r\n                <th nzWidth=\"100px\">标签名称</th>\r\n                <th>价格</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr *ngFor=\"let data of headerTable.data\">\r\n                <td>\r\n                   <a routerLink=\"/info/buyInfo/{{data[2]}}\">\r\n                    {{ data[2] }}\r\n                    </a>\r\n                  </td>\r\n                <td>{{ data[0] }}</td>\r\n                <td>{{ data[1] }}</td>\r\n              </tr>\r\n            </tbody>\r\n          </nz-table>    \r\n            </div>\r\n        </div>\r\n\r\n\r\n          <div class='outer-div' id='ts'>\r\n            <div echarts theme=\"dark\" class='btc' [loading]=\"true\"  [options]=\"tsoption\"></div>\r\n          </div>\r\n\r\n        \r\n        <div class='outer-div' id='lq'>    \r\n          <div echarts theme=\"dark\" class='btc' [loading]=\"true\" [options]=\"lqoption\">\r\n            </div>\r\n            <button id='pause' [nzSize]=\"'small'\" nz-button nzType=\"default\" (click) =\"pauseLine()\">\r\n              <i nz-icon *ngIf='!pl' nzType=\"pause\"></i>\r\n              <i nz-icon *ngIf='pl' nzType=\"caret-right\"></i>\r\n            </button>\r\n        </div>\r\n        "
+module.exports = "\r\n        <div class='outer-div' id='fdg'>\r\n          <div echarts (chartDblClick)=\"clickForce($event)\"\ttheme=\"dark\"  class= 'tpc'[loading]=\"true\" [options]=\"fdgoption\"></div>\r\n      </div>\r\n      <div class='outer-div' id='good'>\r\n        <div echarts theme=\"dark\" \r\n        (chartBrushSelected)=\"onBrushSelected($event)\" class= 'tpc'[loading]=\"true\" [options]=\"goodoption\"></div>\r\n    </div>\r\n        <div class='outer-div' id='cld'>\r\n            <div *ngIf=\"!selectedInfo || selectedInfo.length==0\" echarts theme=\"dark\" class= 'tpc'[loading]=\"true\" [options]=\"cldoption\">\r\n            </div>            \r\n            <div *ngIf=\"selectedInfo && selectedInfo.length!=0\">\r\n          <nz-table #headerTable [nzData]=\"selectedInfo\" [nzPageSize]=\"10\" [nzScroll]=\"{ y: '500px' }\">\r\n            <thead>\r\n              <tr>\r\n                <th nzWidth=\"100px\" >交易ID</th>\r\n                <th nzWidth=\"100px\">标签名称</th>\r\n                <th>价格</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr *ngFor=\"let data of headerTable.data\">\r\n                <td>\r\n                   <a routerLink=\"/info/{{data[3]}}/{{data[2]}}\">\r\n                    {{data[3]}}:{{ data[2] }}\r\n                    </a>\r\n                  </td>\r\n                <td>{{ data[0] }}</td>\r\n                <td>{{ data[1] }}</td>\r\n              </tr>\r\n            </tbody>\r\n          </nz-table>    \r\n            </div>\r\n        </div>\r\n\r\n\r\n          <div class='outer-div' id='ts'>\r\n            <div echarts theme=\"dark\" class='btc' [loading]=\"true\"  [options]=\"tsoption\"></div>\r\n          </div>\r\n\r\n        \r\n        <div class='outer-div' id='lq'>    \r\n          <div echarts theme=\"dark\" class='btc' [loading]=\"true\" [options]=\"lqoption\">\r\n            </div>\r\n            <button id='pause' [nzSize]=\"'small'\" nz-button nzType=\"default\" (click) =\"pauseLine()\">\r\n              <i nz-icon *ngIf='!pl' nzType=\"pause\"></i>\r\n              <i nz-icon *ngIf='pl' nzType=\"caret-right\"></i>\r\n            </button>\r\n        </div>\r\n        "
 
 /***/ }),
 
@@ -140,7 +140,7 @@ module.exports = "<!-- \r\n<form nz-form [formGroup]=\"validateForm\" class=\"lo
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2>用户管理</h2>      \r\n<nz-input-number\r\n  [(ngModel)]=\"threshold\"\r\n  [nzMin]=\"1\"\r\n  [nzMax]=\"5\"\r\n  [nzStep]=\"0.1\"\r\n  [nzPlaceHolder]=\"'阈值'\"\r\n></nz-input-number>\r\n<button nz-button  [nzType]=\"'primary'\">封禁所有信用评价低于{{threshold}}的用户</button>\r\n\r\n<nz-input-group id='searchname' nzSearch [nzAddOnAfter]=\"suffixIconButton\">\r\n  <input type=\"text\" [(ngModel)]=\"searchName\" nz-input placeholder=\"输入用户名\" />\r\n</nz-input-group>\r\n<ng-template #suffixIconButton>\r\n  <button nz-button (click)='searchByName()' nzType=\"primary\" nzSearch><i nz-icon nzType=\"search\"></i></button>\r\n</ng-template>\r\n\r\n<nz-list *ngIf=\"users\" [nzDataSource]=\"users\" [nzRenderItem]=\"user\" [nzGrid]=\"{gutter: 16, span: 6}\">\r\n    <ng-template #user let-user>\r\n      <nz-list-item [nzContent]=\"nzContent\">\r\n        <ng-template #nzContent>\r\n          <nz-card>\r\n          <nz-card-meta [nzTitle]=\"user.userName\"\r\n          [nzAvatar]=\"avatarTemplate\"></nz-card-meta>\r\n      <div>\r\n        <ng-template #avatarTemplate>\r\n          <nz-avatar [nzSize]=\"'small'\" nzSrc=\"/api/file/{{user.avatarID}}\"></nz-avatar>\r\n        </ng-template>\r\n        <div class='useritem'>\r\n              <span class=\"badge\">用户ID</span>{{user.userID}}\r\n        </div>\r\n        <div class='useritem'>\r\n          <span class=\"badge\">用户名</span>{{user.userName.length>10?user.userName.substr(0,10)+'...':user.userName}}\r\n      </div>\r\n      <div class='useritem'>\r\n          <span class=\"badge\">封禁</span>{{user.status==2?'是':'否'}}\r\n      </div>\r\n      <div class='useritem'>\r\n          <span class=\"badge\">电话号码</span>{{user.telephone}}\r\n      </div>\r\n      <div class= 'useritem'>\r\n        <span class=\"badge\">权限</span>{{user.role==10?'管理':'用户'}}\r\n      </div>\r\n          <div class='useritem'>\r\n                <span class=\"badge\">信用评价</span>\r\n                <nz-rate [ngModel]=\"2\" nzDisabled></nz-rate>\r\n          </div>\r\n      </div>\r\n              <a routerLink=\"/user/{{user.userID}}\">\r\n              用户详情\r\n              <i nz-icon type=\"search\"></i>\r\n               </a>\r\n          </nz-card>\r\n        </ng-template>\r\n      </nz-list-item>\r\n    </ng-template>\r\n  </nz-list>\r\n\r\n  \r\n\r\n  <nz-pagination\r\n  [(nzPageIndex)]=\"current\"\r\n  [(nzPageSize)]=\"size\"\r\n  [nzTotal]=\"count\"\r\n  [nzPageSizeOptions]=\"[2,4,8,12,16,20,24,28,32]\"\t\r\n  (nzPageIndexChange)\t=\"onChange()\"\r\n  (nzPageSizeChange)= \"onChange()\"\r\n  nzShowSizeChanger      \r\n></nz-pagination>"
+module.exports = "<h2>用户管理</h2>      \r\n<nz-input-number\r\n  [(ngModel)]=\"threshold\"\r\n  [nzMin]=\"1\"\r\n  [nzMax]=\"5\"\r\n  [nzStep]=\"0.1\"\r\n  [nzPlaceHolder]=\"'阈值'\"\r\n></nz-input-number>\r\n<button nz-button  [nzType]=\"'primary'\">封禁所有信用评价低于{{threshold}}的用户</button>\r\n\r\n<nz-input-group id='searchname' nzSearch [nzAddOnAfter]=\"suffixIconButton\">\r\n  <input type=\"text\" [(ngModel)]=\"searchName\" nz-input placeholder=\"输入用户名\" />\r\n</nz-input-group>\r\n<ng-template #suffixIconButton>\r\n  <button nz-button (click)='searchByName()' nzType=\"primary\" nzSearch><i nz-icon nzType=\"search\"></i></button>\r\n</ng-template>\r\n\r\n<nz-list *ngIf=\"users\" [nzDataSource]=\"users\" [nzRenderItem]=\"user\" [nzGrid]=\"{gutter: 16, span: 6}\">\r\n    <ng-template #user let-user>\r\n      <nz-list-item [nzContent]=\"nzContent\">\r\n        <ng-template #nzContent>\r\n          <nz-card>\r\n          <nz-card-meta [nzTitle]=\"user.userName\"\r\n          [nzAvatar]=\"avatarTemplate\"></nz-card-meta>\r\n      <div>\r\n        <ng-template #avatarTemplate>\r\n          <nz-avatar [nzSize]=\"'small'\" nzSrc=\"/api/file/{{user.avatarID}}\"></nz-avatar>\r\n        </ng-template>\r\n        <div class='useritem'>\r\n              <span class=\"badge\">用户ID</span>{{user.userID}}\r\n        </div>\r\n        <div class='useritem'>\r\n          <span class=\"badge\">用户名</span>{{user.userName.length>10?user.userName.substr(0,10)+'...':user.userName}}\r\n      </div>\r\n      <div class='useritem'>\r\n          <span class=\"badge\">封禁</span>{{user.status==2?'是':'否'}}\r\n      </div>\r\n      <div class='useritem'>\r\n          <span class=\"badge\">电话号码</span>{{user.telephone}}\r\n      </div>\r\n      <div class= 'useritem'>\r\n        <span class=\"badge\">权限</span>{{user.role==10?'管理':'用户'}}\r\n      </div>\r\n      </div>\r\n              <a routerLink=\"/user/{{user.userID}}\">\r\n              用户详情\r\n              <i nz-icon type=\"search\"></i>\r\n               </a>\r\n          </nz-card>\r\n        </ng-template>\r\n      </nz-list-item>\r\n    </ng-template>\r\n  </nz-list>\r\n\r\n  \r\n\r\n  <nz-pagination\r\n  [(nzPageIndex)]=\"current\"\r\n  [(nzPageSize)]=\"size\"\r\n  [nzTotal]=\"count\"\r\n  [nzPageSizeOptions]=\"[2,4,8,12,16,20,24,28,32]\"\t\r\n  (nzPageIndexChange)\t=\"onChange()\"\r\n  (nzPageSizeChange)= \"onChange()\"\r\n  nzShowSizeChanger      \r\n></nz-pagination>"
 
 /***/ }),
 
@@ -151,7 +151,7 @@ module.exports = "<h2>用户管理</h2>      \r\n<nz-input-number\r\n  [(ngModel
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nz-card *ngIf='user'  nzTitle=\"用户管理\">\r\n    <div nz-row [nzGutter]=\"8\">\r\n      <div nz-col [nzSpan]=\"8\">\r\n    \r\n        <nz-card>\r\n          <nz-card-meta\r\n            [nzTitle]=\"user.userID\"\r\n            [nzDescription]=\"user.telephone\"\r\n            [nzAvatar]=\"avatarTemplate\"\r\n          ></nz-card-meta>\r\n            <div class='useritem'>\r\n              <span class=\"badge\">用户名</span><input [(ngModel)]=\"userName\" placeholder=\"name\"/>\r\n          </div>\r\n          <div class='useritem'>\r\n              <span class=\"badge\">封禁</span><label nz-checkbox [(ngModel)]=\"forbid\"></label>\r\n          </div>\r\n          <div class='useritem'>\r\n              <span class=\"badge\">权限</span>\r\n              <nz-select\r\n              id='role'\r\n                nzShowSearch \r\n                nzPlaceHolder=\"Select a state\"\r\n                [(ngModel)]=\"user.role\"\r\n              >\r\n                <nz-option nzLabel=\"用户\" [nzValue]=\"1\" ></nz-option>\r\n                <nz-option nzLabel=\"管理\" [nzValue]=\"10\"></nz-option>\r\n              </nz-select>\r\n          </div>\r\n          <div class='useritem'>\r\n                <span class=\"badge\">信用评价</span>\r\n                <nz-rate [ngModel]=\"2\" nzDisabled></nz-rate>\r\n          </div>\r\n        </nz-card>\r\n\r\n        <ng-template #avatarTemplate>\r\n          <nz-avatar nzShape='square' [nzSize]=\"64\" nzSrc=\"/api/file/{{user.avatarID}}\"></nz-avatar>\r\n        </ng-template>\r\n\r\n\r\n  <button (click)=\"goBack()\" nz-button nzType=\"dashed\"><i nz-icon type=\"left-circle\" theme=\"outline\"></i>返回</button>\r\n  <button (click)=\"save()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>保存</button>\r\n\r\n      </div>\r\n      <div nz-col [nzSpan]=\"16\">\r\n        <nz-card nzType=\"inner\" nzTitle=\"交易历史\">    \r\n          <nz-table #headerTable [nzData]=\"infos\" [nzPageSize]=\"10\" [nzScroll]=\"{ y: '250px' }\">\r\n            <thead>\r\n              <tr>\r\n                <th nzWidth=\"200px\">交易名称</th>\r\n                <th nzWidth=\"200px\">发起时间</th>\r\n                <th nzWidth=\"200px\">状态</th>\r\n                <th>交易类型</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr *ngFor=\"let data of headerTable.data\">\r\n                <td>\r\n                   <a routerLink=\"/info/{{typeof(data)}}/{{data['sellInfoID']?data.sellInfoID:\r\n                   data['buyInfoID']?data.buyInfoID:''}}\">\r\n                    {{ data.goodName }}\r\n                    </a>\r\n                  </td>\r\n                <td>{{ stringToDate(data.releaseTime) }}</td>\r\n                <td>{{ getstate(data.status) }}</td>\r\n                <td>{{ typeof(data)=='sellInfo'?'出售':'求购'}}</td>\r\n              </tr>\r\n            </tbody>\r\n          </nz-table>        \r\n          <div echarts theme=\"dark\" [loading]=\"true\"  [options]=\"option\"></div>\r\n        </nz-card>\r\n      </div>\r\n    </div>\r\n    \r\n</nz-card>"
+module.exports = "<nz-card *ngIf='user'  nzTitle=\"用户管理\">\r\n    <div nz-row [nzGutter]=\"8\">\r\n      <div nz-col [nzSpan]=\"8\">\r\n    \r\n        <nz-card>\r\n          <nz-card-meta\r\n            [nzTitle]=\"user.userID\"\r\n            [nzDescription]=\"user.telephone\"\r\n            [nzAvatar]=\"avatarTemplate\"\r\n          ></nz-card-meta>\r\n            <div class='useritem'>\r\n              <span class=\"badge\">用户名</span><input [(ngModel)]=\"userName\" placeholder=\"name\"/>\r\n          </div>\r\n          <div class='useritem'>\r\n              <span class=\"badge\">封禁</span><label nz-checkbox [(ngModel)]=\"forbid\"></label>\r\n          </div>\r\n          <div class='useritem'>\r\n              <span class=\"badge\">权限</span>\r\n              <nz-select\r\n              id='role'\r\n                nzShowSearch \r\n                nzPlaceHolder=\"Select a state\"\r\n                [(ngModel)]=\"user.role\"\r\n              >\r\n                <nz-option nzLabel=\"用户\" [nzValue]=\"1\" ></nz-option>\r\n                <nz-option nzLabel=\"管理\" [nzValue]=\"10\"></nz-option>\r\n              </nz-select>\r\n          </div>\r\n        </nz-card>\r\n\r\n        <ng-template #avatarTemplate>\r\n          <nz-avatar nzShape='square' [nzSize]=\"64\" nzSrc=\"/api/file/{{user.avatarID}}\"></nz-avatar>\r\n        </ng-template>\r\n\r\n\r\n  <button (click)=\"goBack()\" nz-button nzType=\"dashed\"><i nz-icon type=\"left-circle\" theme=\"outline\"></i>返回</button>\r\n  <button (click)=\"save()\" nz-button nzType=\"primary\"><i nz-icon type=\"save\" theme=\"outline\"></i>保存</button>\r\n\r\n      </div>\r\n      <div nz-col [nzSpan]=\"16\">\r\n        <nz-card nzType=\"inner\" nzTitle=\"交易历史\">    \r\n          <nz-table #headerTable [nzData]=\"infos\" [nzPageSize]=\"10\" [nzScroll]=\"{ y: '250px' }\">\r\n            <thead>\r\n              <tr>\r\n                <th nzWidth=\"200px\">交易名称</th>\r\n                <th nzWidth=\"200px\">发起时间</th>\r\n                <th nzWidth=\"200px\">状态</th>\r\n                <th>交易类型</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr *ngFor=\"let data of headerTable.data\">\r\n                <td>\r\n                   <a routerLink=\"/info/{{typeof(data)}}/{{data['sellInfoID']?data.sellInfoID:\r\n                   data['buyInfoID']?data.buyInfoID:''}}\">\r\n                    {{ data.goodName }}\r\n                    </a>\r\n                  </td>\r\n                <td>{{ stringToDate(data.releaseTime) }}</td>\r\n                <td>{{ getstate(data.status) }}</td>\r\n                <td>{{ typeof(data)=='sellInfo'?'出售':'求购'}}</td>\r\n              </tr>\r\n            </tbody>\r\n          </nz-table>        \r\n          <div echarts theme=\"dark\" [loading]=\"true\"  [options]=\"option\"></div>\r\n        </nz-card>\r\n      </div>\r\n    </div>\r\n    \r\n</nz-card>"
 
 /***/ }),
 
@@ -307,14 +307,15 @@ let ActivityComponent = class ActivityComponent {
         this.actService = actService;
     }
     ngOnInit() {
-        this.actService.getActs().subscribe(e => {
-            this.acts = e;
-            this.acts.forEach(e => e.validDate = new Date(e.validTime));
-            this.acts.forEach(e => e.releaseDate = new Date(e.releaseTime));
-        });
+        this.actService.getActs().subscribe(e => this.refresh(e));
     }
     delete(item) {
         this.actService.deleteAct(item).subscribe(e => this.acts = this.acts.filter(e => e.id != item.id));
+    }
+    refresh(e) {
+        this.acts = e;
+        this.acts.forEach(e => e.validDate = new Date(e.validTime));
+        this.acts.forEach(e => e.releaseDate = new Date(e.releaseTime));
     }
     add() {
         const item = { id: this.ID, title: '',
@@ -322,20 +323,12 @@ let ActivityComponent = class ActivityComponent {
             releaseTime: '150000', validTime: '150000', weight: 1,
             pic: 0, isNew: false
         };
-        this.actService.addAct(item).subscribe(a => this.actService.getActs().subscribe(e => {
-            this.acts = e;
-            this.acts.forEach(e => e.validDate = new Date(e.validTime));
-            this.acts.forEach(e => e.releaseDate = new Date(e.releaseTime));
-        }));
+        this.actService.addAct(item).subscribe(a => this.actService.getActs().subscribe(e => this.refresh(e)));
     }
     save(item) {
         item.validTime = item.validDate.getTime();
         item.releaseTime = item.releaseDate.getTime();
-        this.actService.updateAct(item).subscribe(a => this.actService.getActs().subscribe(e => {
-            this.acts = e;
-            this.acts.forEach(e => e.validDate = new Date(e.validTime));
-            this.acts.forEach(e => e.releaseDate = new Date(e.releaseTime));
-        }));
+        this.actService.updateAct(item).subscribe(a => this.actService.getActs().subscribe(e => this.refresh(e)));
     }
 };
 ActivityComponent.ctorParameters = () => [
@@ -360,7 +353,7 @@ ActivityComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2FjdGl2aXR5ZGV0YWlsL2FjdGl2aXR5ZGV0YWlsLmNvbXBvbmVudC5jc3MifQ== */"
+module.exports = "input {\r\n    color: black;\r\n  }\r\n  \r\n  h2 {\r\n    color: white;\r\n  }\r\n  \r\n  .badge {\r\n    display: inline-block;\r\n    font-size: small;\r\n    color: white;\r\n    padding: 0.8em 0.7em 0 0.7em;\r\n    background-color: #607d8b;\r\n    line-height: 0.9em;\r\n    position: relative;\r\n    left: -1px;\r\n    top: -4px;\r\n    height: 3em;\r\n    min-width: 16px;\r\n    text-align: right;\r\n    margin-right: 0.8em;\r\n    border-radius: 4px 0 0 4px;\r\n  }\r\n  \r\n  .activityitem {\r\n    font-family: \"Gill Sans\", \"Gill Sans MT\", \"Calibri\", \"Trebuchet MS\",\r\n      sans-serif;\r\n    position: relative;\r\n    cursor: pointer;\r\n    background-color: #eee;\r\n    margin: 0.5em;\r\n    padding: 0.3em 0;\r\n    height: 3em;\r\n    border-radius: 4px;\r\n  }\r\n  \r\n  .activityitem:hover {\r\n    color: #607d8b;\r\n    background-color: rgba(221, 221, 221, 0.548);\r\n    left: 0.1em;\r\n  }\r\n  \r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvYWN0aXZpdHlkZXRhaWwvYWN0aXZpdHlkZXRhaWwuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLFlBQVk7RUFDZDs7RUFFQTtJQUNFLFlBQVk7RUFDZDs7RUFFQTtJQUNFLHFCQUFxQjtJQUNyQixnQkFBZ0I7SUFDaEIsWUFBWTtJQUNaLDRCQUE0QjtJQUM1Qix5QkFBeUI7SUFDekIsa0JBQWtCO0lBQ2xCLGtCQUFrQjtJQUNsQixVQUFVO0lBQ1YsU0FBUztJQUNULFdBQVc7SUFDWCxlQUFlO0lBQ2YsaUJBQWlCO0lBQ2pCLG1CQUFtQjtJQUNuQiwwQkFBMEI7RUFDNUI7O0VBRUE7SUFDRTtnQkFDWTtJQUNaLGtCQUFrQjtJQUNsQixlQUFlO0lBQ2Ysc0JBQXNCO0lBQ3RCLGFBQWE7SUFDYixnQkFBZ0I7SUFDaEIsV0FBVztJQUNYLGtCQUFrQjtFQUNwQjs7RUFFQTtJQUNFLGNBQWM7SUFDZCw0Q0FBNEM7SUFDNUMsV0FBVztFQUNiIiwiZmlsZSI6InNyYy9hcHAvYWN0aXZpdHlkZXRhaWwvYWN0aXZpdHlkZXRhaWwuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbImlucHV0IHtcclxuICAgIGNvbG9yOiBibGFjaztcclxuICB9XHJcbiAgXHJcbiAgaDIge1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gIH1cclxuICBcclxuICAuYmFkZ2Uge1xyXG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xyXG4gICAgZm9udC1zaXplOiBzbWFsbDtcclxuICAgIGNvbG9yOiB3aGl0ZTtcclxuICAgIHBhZGRpbmc6IDAuOGVtIDAuN2VtIDAgMC43ZW07XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjNjA3ZDhiO1xyXG4gICAgbGluZS1oZWlnaHQ6IDAuOWVtO1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgbGVmdDogLTFweDtcclxuICAgIHRvcDogLTRweDtcclxuICAgIGhlaWdodDogM2VtO1xyXG4gICAgbWluLXdpZHRoOiAxNnB4O1xyXG4gICAgdGV4dC1hbGlnbjogcmlnaHQ7XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDAuOGVtO1xyXG4gICAgYm9yZGVyLXJhZGl1czogNHB4IDAgMCA0cHg7XHJcbiAgfVxyXG4gIFxyXG4gIC5hY3Rpdml0eWl0ZW0ge1xyXG4gICAgZm9udC1mYW1pbHk6IFwiR2lsbCBTYW5zXCIsIFwiR2lsbCBTYW5zIE1UXCIsIFwiQ2FsaWJyaVwiLCBcIlRyZWJ1Y2hldCBNU1wiLFxyXG4gICAgICBzYW5zLXNlcmlmO1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogI2VlZTtcclxuICAgIG1hcmdpbjogMC41ZW07XHJcbiAgICBwYWRkaW5nOiAwLjNlbSAwO1xyXG4gICAgaGVpZ2h0OiAzZW07XHJcbiAgICBib3JkZXItcmFkaXVzOiA0cHg7XHJcbiAgfVxyXG4gIFxyXG4gIC5hY3Rpdml0eWl0ZW06aG92ZXIge1xyXG4gICAgY29sb3I6ICM2MDdkOGI7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDIyMSwgMjIxLCAyMjEsIDAuNTQ4KTtcclxuICAgIGxlZnQ6IDAuMWVtO1xyXG4gIH1cclxuICAiXX0= */"
 
 /***/ }),
 
@@ -376,13 +369,45 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActivitydetailComponent", function() { return ActivitydetailComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _activity_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../activity.service */ "./src/app/activity.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm2015/common.js");
+
+
+
 
 
 let ActivitydetailComponent = class ActivitydetailComponent {
-    constructor() { }
+    constructor(route, actService, location) {
+        this.route = route;
+        this.actService = actService;
+        this.location = location;
+    }
     ngOnInit() {
+        this.getAct();
+    }
+    getAct() {
+        const id = this.route.snapshot.paramMap.get('id');
+        this.actService.getAct(id).subscribe(e => {
+            this.act = e;
+            this.act.validDate = new Date(e.validTime);
+            this.act.releaseDate = new Date(e.releaseTime);
+        });
+    }
+    goBack() {
+        this.location.back();
+    }
+    save() {
+        this.act.validTime = this.act.validDate.getTime();
+        this.act.releaseTime = this.act.releaseDate.getTime();
+        this.actService.updateAct(this.act).subscribe();
     }
 };
+ActivitydetailComponent.ctorParameters = () => [
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"] },
+    { type: _activity_service__WEBPACK_IMPORTED_MODULE_2__["ActivityService"] },
+    { type: _angular_common__WEBPACK_IMPORTED_MODULE_4__["Location"] }
+];
 ActivitydetailComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-activitydetail',
@@ -418,9 +443,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _activity_activity_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./activity/activity.component */ "./src/app/activity/activity.component.ts");
 /* harmony import */ var _info_statistic_info_statistic_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./info-statistic/info-statistic.component */ "./src/app/info-statistic/info-statistic.component.ts");
 /* harmony import */ var _activitydetail_activitydetail_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./activitydetail/activitydetail.component */ "./src/app/activitydetail/activitydetail.component.ts");
-/* harmony import */ var _callback_callback_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./callback/callback.component */ "./src/app/callback/callback.component.ts");
-/* harmony import */ var _delon_auth__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @delon/auth */ "./node_modules/@delon/auth/fesm2015/auth.js");
-
+/* harmony import */ var _delon_auth__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @delon/auth */ "./node_modules/@delon/auth/fesm2015/auth.js");
 
 
 
@@ -436,18 +459,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const routes = [
-    { path: 'dashboard', component: _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_3__["DashboardComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
-    { path: '', redirectTo: '/dashboard', pathMatch: 'full', canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
-    { path: 'user/:id', component: _userdetail_userdetail_component__WEBPACK_IMPORTED_MODULE_4__["UserDetailComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
-    { path: 'user', component: _user_user_component__WEBPACK_IMPORTED_MODULE_5__["UserComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
+    { path: 'dashboard', component: _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_3__["DashboardComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_13__["JWTGuard"]] },
+    { path: '', redirectTo: '/dashboard', pathMatch: 'full', canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_13__["JWTGuard"]] },
+    { path: 'user/:id', component: _userdetail_userdetail_component__WEBPACK_IMPORTED_MODULE_4__["UserDetailComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_13__["JWTGuard"]] },
+    { path: 'user', component: _user_user_component__WEBPACK_IMPORTED_MODULE_5__["UserComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_13__["JWTGuard"]] },
     { path: 'login', component: _login_login_component__WEBPACK_IMPORTED_MODULE_6__["LoginComponent"] },
-    { path: 'info', component: _info_info_component__WEBPACK_IMPORTED_MODULE_7__["InfoComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
-    { path: 'info/:type/:id', component: _infodetail_infodetail_component__WEBPACK_IMPORTED_MODULE_8__["InfoDetailComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
-    { path: 'activity/:id', component: _activitydetail_activitydetail_component__WEBPACK_IMPORTED_MODULE_12__["ActivitydetailComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
-    { path: 'statistic', component: _info_statistic_info_statistic_component__WEBPACK_IMPORTED_MODULE_11__["InfoStatisticComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
-    { path: 'website', component: _website_website_component__WEBPACK_IMPORTED_MODULE_9__["WebsiteComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
-    { path: 'activity', component: _activity_activity_component__WEBPACK_IMPORTED_MODULE_10__["ActivityComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_14__["JWTGuard"]] },
-    { path: 'callback/:token', component: _callback_callback_component__WEBPACK_IMPORTED_MODULE_13__["CallbackComponent"] }
+    { path: 'info', component: _info_info_component__WEBPACK_IMPORTED_MODULE_7__["InfoComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_13__["JWTGuard"]] },
+    { path: 'info/:type/:id', component: _infodetail_infodetail_component__WEBPACK_IMPORTED_MODULE_8__["InfoDetailComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_13__["JWTGuard"]] },
+    { path: 'activity/:id', component: _activitydetail_activitydetail_component__WEBPACK_IMPORTED_MODULE_12__["ActivitydetailComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_13__["JWTGuard"]] },
+    { path: 'statistic', component: _info_statistic_info_statistic_component__WEBPACK_IMPORTED_MODULE_11__["InfoStatisticComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_13__["JWTGuard"]] },
+    { path: 'website', component: _website_website_component__WEBPACK_IMPORTED_MODULE_9__["WebsiteComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_13__["JWTGuard"]] },
+    { path: 'activity', component: _activity_activity_component__WEBPACK_IMPORTED_MODULE_10__["ActivityComponent"], canActivate: [_delon_auth__WEBPACK_IMPORTED_MODULE_13__["JWTGuard"]] },
 ];
 let AppRoutingModule = class AppRoutingModule {
 };
@@ -563,10 +585,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _activitydetail_activitydetail_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./activitydetail/activitydetail.component */ "./src/app/activitydetail/activitydetail.component.ts");
 /* harmony import */ var _delon_auth__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @delon/auth */ "./node_modules/@delon/auth/fesm2015/auth.js");
 /* harmony import */ var _ant_design_icons_angular_icons__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @ant-design/icons-angular/icons */ "./node_modules/@ant-design/icons-angular/fesm2015/ant-design-icons-angular-icons.js");
-/* harmony import */ var _callback_callback_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./callback/callback.component */ "./src/app/callback/callback.component.ts");
-/* harmony import */ var _info_sell_info_sell_info_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./info/sell-info/sell-info.component */ "./src/app/info/sell-info/sell-info.component.ts");
-/* harmony import */ var _info_buy_info_buy_info_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./info/buy-info/buy-info.component */ "./src/app/info/buy-info/buy-info.component.ts");
-
+/* harmony import */ var _info_sell_info_sell_info_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./info/sell-info/sell-info.component */ "./src/app/info/sell-info/sell-info.component.ts");
+/* harmony import */ var _info_buy_info_buy_info_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./info/buy-info/buy-info.component */ "./src/app/info/buy-info/buy-info.component.ts");
 
 
 
@@ -624,9 +644,8 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _activity_activity_component__WEBPACK_IMPORTED_MODULE_21__["ActivityComponent"],
             _info_statistic_info_statistic_component__WEBPACK_IMPORTED_MODULE_22__["InfoStatisticComponent"],
             _activitydetail_activitydetail_component__WEBPACK_IMPORTED_MODULE_23__["ActivitydetailComponent"],
-            _callback_callback_component__WEBPACK_IMPORTED_MODULE_26__["CallbackComponent"],
-            _info_sell_info_sell_info_component__WEBPACK_IMPORTED_MODULE_27__["SellInfoComponent"],
-            _info_buy_info_buy_info_component__WEBPACK_IMPORTED_MODULE_28__["BuyInfoComponent"]
+            _info_sell_info_sell_info_component__WEBPACK_IMPORTED_MODULE_26__["SellInfoComponent"],
+            _info_buy_info_buy_info_component__WEBPACK_IMPORTED_MODULE_27__["BuyInfoComponent"]
         ],
         imports: [
             _delon_auth__WEBPACK_IMPORTED_MODULE_24__["DelonAuthModule"],
@@ -697,57 +716,6 @@ AuthService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     }),
     tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_delon_auth__WEBPACK_IMPORTED_MODULE_2__["DA_SERVICE_TOKEN"]))
 ], AuthService);
-
-
-
-/***/ }),
-
-/***/ "./src/app/callback/callback.component.ts":
-/*!************************************************!*\
-  !*** ./src/app/callback/callback.component.ts ***!
-  \************************************************/
-/*! exports provided: CallbackComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CallbackComponent", function() { return CallbackComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
-/* harmony import */ var _delon_auth__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @delon/auth */ "./node_modules/@delon/auth/fesm2015/auth.js");
-
-
-
-
-let CallbackComponent = class CallbackComponent {
-    constructor(socialService, route) {
-        this.socialService = socialService;
-        this.route = route;
-    }
-    ngOnInit() {
-        const token = this.route.snapshot.paramMap.get('token');
-        this.mockModel(token);
-    }
-    mockModel(token) {
-        const info = {
-            token: token
-        };
-        if (typeof (token) === 'string')
-            this.socialService.callback(info);
-    }
-};
-CallbackComponent.ctorParameters = () => [
-    { type: _delon_auth__WEBPACK_IMPORTED_MODULE_3__["SocialService"] },
-    { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"] }
-];
-CallbackComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-        selector: 'app-callback',
-        template: ``,
-        providers: [_delon_auth__WEBPACK_IMPORTED_MODULE_3__["SocialService"]],
-    })
-], CallbackComponent);
 
 
 
@@ -955,9 +923,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const name = ['LJH', 'WXZ', 'ZWJ', 'KHQ', 'MZD', 'ZEL', 'JZM', 'HJT', 'TRUMP',
-    'LJH2', 'WXZ2', 'ZWJ2', 'KHQ2', 'MZD2', 'ZEL2', 'JZM2', 'HJT2', 'TRUMP2',
-    'LJH3', 'WXZ3', 'ZWJ3', 'KHQ3', 'MZD3', 'ZEL3', 'JZM3', 'HJT3', 'TRUMP3'];
 function fdgFormatter(p) {
     if (p.dataType == 'node')
         return p.data.name + ' has completed ' + p.data.value + ' transaction';
@@ -978,7 +943,7 @@ let InfoStatisticComponent = class InfoStatisticComponent {
     ngOnInit() {
         const now = new Date().getFullYear();
         this.getAllInfo();
-        this.getAllTR(new Date(now, 1, 1).getTime() / 1000, new Date(now + 1, 1, 1).getTime() / 1000);
+        //this.getAllTR(new Date(now,1,1).getTime()/1000, new Date(now+1,1,1).getTime()/1000);
         this.cloudGrpah();
         this.forceGraph();
         this.calenderGraph();
@@ -990,6 +955,13 @@ let InfoStatisticComponent = class InfoStatisticComponent {
     }
     getComment() {
         this.bi.forEach(info => {
+            this.fileService.getContent(info.contentID).subscribe(e => {
+                if (e) {
+                    info.tags = e.tags;
+                }
+            });
+        });
+        this.si.forEach(info => {
             this.fileService.getContent(info.contentID).subscribe(e => {
                 if (e) {
                     info.tags = e.tags;
@@ -1031,7 +1003,14 @@ let InfoStatisticComponent = class InfoStatisticComponent {
         this.bi.forEach(e => {
             if (e.tags && e.price)
                 e.tags.forEach(t => {
-                    this.prcdata.push([t, e.price, e.buyInfoID]);
+                    this.prcdata.push([t, e.price, e.buyInfoID, 'buyInfo']);
+                });
+        });
+        console.log(this.si);
+        this.si.forEach(e => {
+            if (e.tags && e.price)
+                e.tags.forEach(t => {
+                    this.prcdata.push([t, e.price, e.sellInfoID, 'sellInfo']);
                 });
         });
         this.goodoption = {
@@ -1093,7 +1072,7 @@ let InfoStatisticComponent = class InfoStatisticComponent {
                 }
             ],
             dataset: {
-                dimensions: ['tag', 'price', 'buyInfoID'],
+                dimensions: ['tag', 'price', 'InfoID', 'type'],
                 source: this.prcdata
             },
             grid: {
@@ -1125,6 +1104,15 @@ let InfoStatisticComponent = class InfoStatisticComponent {
     cloudGrpah() {
         const fre = new Map();
         this.bi.forEach(e => {
+            if (e.tags)
+                e.tags.forEach(t => {
+                    if (t in fre)
+                        fre[t] += 1;
+                    else
+                        fre[t] = 1;
+                });
+        });
+        this.si.forEach(e => {
             if (e.tags)
                 e.tags.forEach(t => {
                     if (t in fre)
@@ -1386,6 +1374,7 @@ let InfoStatisticComponent = class InfoStatisticComponent {
             this.router.navigateByUrl('/user/' + param.data.name);
     }
     lineGraph() {
+        console.log(this.bi);
         let bd = new Map();
         this.bi.forEach(e => {
             if (!e || e.releaseTime < 0)
@@ -1480,7 +1469,7 @@ let InfoStatisticComponent = class InfoStatisticComponent {
                     type: 'line',
                     smooth: true,
                     symbol: 'circle',
-                    symbolSize: 1,
+                    symbolSize: 5,
                     sampling: 'average',
                     itemStyle: {
                         normal: {
@@ -1621,7 +1610,7 @@ let InfoService = class InfoService {
                 this.getBuyInfos(null, null, null, null, offset).subscribe(e => {
                     if (e && Object.keys(e).length != 0)
                         this.bi = this.bi.concat(e.buyInfo);
-                    this.getMoreBuy(this.bi.length - 1, true);
+                    this.getMoreBuy(this.bi.length, true);
                 });
             }, 5000);
         }
@@ -1641,7 +1630,7 @@ let InfoService = class InfoService {
                 this.getSellInfos(null, null, null, null, offset).subscribe(e => {
                     if (e && Object.keys(e).length != 0)
                         this.si = this.si.concat(e.sellInfo);
-                    this.getMoreSell(this.si.length - 1, true);
+                    this.getMoreSell(this.si.length, true);
                 });
             }, 5000);
         }
