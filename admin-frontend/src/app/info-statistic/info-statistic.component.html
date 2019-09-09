@@ -21,8 +21,8 @@
             <tbody>
               <tr *ngFor="let data of headerTable.data">
                 <td>
-                   <a routerLink="/info/buyInfo/{{data[2]}}">
-                    {{ data[2] }}
+                   <a routerLink="/info/{{data[3]}}/{{data[2]}}">
+                    {{data[3]}}:{{ data[2] }}
                     </a>
                   </td>
                 <td>{{ data[0] }}</td>

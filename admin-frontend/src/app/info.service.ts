@@ -72,7 +72,7 @@ export class InfoService {
                   e => {
                       if(e&&Object.keys(e).length!=0)
                       this.bi=this.bi.concat(e.buyInfo);
-                      this.getMoreBuy(this.bi.length-1, true);
+                      this.getMoreBuy(this.bi.length, true);
           }
       );}, 5000 );
       }
@@ -96,7 +96,7 @@ getMoreSell(offset, dynamic){
               e => {
                   if(e&&Object.keys(e).length!=0)
                   this.si=this.si.concat(e.sellInfo);
-                  this.getMoreSell(this.si.length-1,true);
+                  this.getMoreSell(this.si.length,true);
       }
   );}, 5000 );
   }
