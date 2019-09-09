@@ -264,7 +264,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 							"as":    "item",
 							"cond": bson.M{
 								"$and": bson.A{
-									bson.M{"$eq": bson.A{"$$item.forward", req.FromUser != rsp.FromUser}},
+									bson.M{"$eq": bson.A{"$$item.forward", req.FromUser == rsp.FromUser}},
 									bson.M{"$eq": bson.A{"$$item.unread", true}},
 								},
 							},
@@ -287,7 +287,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 		_, err = collection.UpdateMany(ctx, bson.M{
 			"fromUser":      rsp.FromUser,
 			"toUser":        rsp.ToUser,
-			"infos.forward": req.FromUser != rsp.FromUser,
+			"infos.forward": req.FromUser == rsp.FromUser,
 			"infos.unread":  true,
 		}, bson.M{
 			"$set": bson.M{
