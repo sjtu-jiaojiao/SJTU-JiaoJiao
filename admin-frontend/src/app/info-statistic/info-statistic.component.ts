@@ -37,19 +37,29 @@ export class InfoStatisticComponent implements OnInit {
   ngOnInit() {
     const now = new Date().getFullYear();
     this.getAllInfo();
-    this.getAllTR(new Date(now,1,1).getTime()/1000, new Date(now+1,1,1).getTime()/1000);
+    //this.getAllTR(new Date(now,1,1).getTime()/1000, new Date(now+1,1,1).getTime()/1000);
     this.cloudGrpah();
     this.forceGraph();
     this.calenderGraph();
     this.lineGraph();
     this.prcGraph();    
-                
   }
   pauseLine(){
       this.pl=!this.pl;
   }
   getComment(){
     this.bi.forEach(
+      info => {
+        this.fileService.getContent(info.contentID).subscribe(
+          e => {
+              if(e){
+              info.tags = e.tags;
+              }
+          }
+      )
+      }
+    );
+    this.si.forEach(
       info => {
         this.fileService.getContent(info.contentID).subscribe(
           e => {
@@ -101,7 +111,18 @@ export class InfoStatisticComponent implements OnInit {
             if(e.tags && e.price)
         e.tags.forEach(
             t => {
-                this.prcdata.push([t, e.price, e.buyInfoID]);
+                this.prcdata.push([t, e.price, e.buyInfoID,'buyInfo']);
+            }
+        )
+        }
+    );
+    console.log(this.si);
+    this.si.forEach( e => 
+        {
+            if(e.tags && e.price)
+        e.tags.forEach(
+            t => {
+                this.prcdata.push([t, e.price, e.sellInfoID,'sellInfo']);
             }
         )
         }
@@ -165,7 +186,7 @@ this.goodoption = {
         }
     ],    
     dataset: {
-        dimensions: ['tag','price','buyInfoID'],
+        dimensions: ['tag','price','InfoID','type'],
         source: this.prcdata
     },
     grid: {
@@ -197,6 +218,17 @@ this.goodoption = {
   cloudGrpah() {
     const fre = new Map();
     this.bi.forEach( e => 
+        {
+            if(e.tags)
+        e.tags.forEach(
+            t => {
+                if(t in fre)fre[t] +=1;
+                else fre[t]=1;
+            }
+        )
+        }
+    )
+    this.si.forEach( e => 
         {
             if(e.tags)
         e.tags.forEach(
@@ -459,6 +491,7 @@ backgroundColor: '#01193d',
       this.router.navigateByUrl('/user/'+param.data.name);
   }
   lineGraph() {
+    console.log(this.bi);
     let bd =new Map();
     this.bi.forEach( e => {
         if(!e||e.releaseTime<0)return;
@@ -551,7 +584,7 @@ backgroundColor: '#01193d',
             type:'line',
             smooth:true,
             symbol: 'circle',
-            symbolSize: 1,
+            symbolSize: 5,
             sampling: 'average',
             itemStyle: {
                 normal: {

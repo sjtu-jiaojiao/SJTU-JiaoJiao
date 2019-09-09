@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+/e2e
 /docker/dist
 # Only exists if Bazel was run
 /bazel-out
