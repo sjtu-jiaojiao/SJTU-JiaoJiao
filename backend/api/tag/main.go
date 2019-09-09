@@ -54,6 +54,11 @@ func getTag(c *gin.Context) {
 			c.JSON(500, err)
 			return
 		}
+		if resp.StatusCode != http.StatusOK {
+			c.AbortWithStatus(resp.StatusCode)
+			return
+		}
+		defer resp.Body.Close()
 
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
