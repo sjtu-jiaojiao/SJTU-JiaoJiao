@@ -7,6 +7,7 @@ define({
   "order": [
     "Auth",
     "User",
+    "Tag",
     "SellInfo",
     "BuyInfo",
     "Content",
@@ -21,7 +22,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-09-08T18:52:41.653Z",
+    "time": "2019-09-09T09:26:14.124Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }
