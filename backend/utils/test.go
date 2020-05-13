@@ -22,7 +22,9 @@ func check(actual interface{}, expect interface{}) {
 	case map[string]interface{}:
 		t := expect.(map[string]interface{})
 		for k, v := range actual {
-			check(v, t[k])
+			if k != "_error" {
+				check(v, t[k])
+			}
 		}
 	case []interface{}:
 		t := expect.([]interface{})
@@ -66,7 +68,12 @@ func Test(t *testing.T, file string, data func(param interface{}),
 
 		for _, v := range fileMap["case"] {
 			ret := parse(v["input"])
-			check(ret, v["output"])
+			err, ok := v["output"].(map[string]interface{})["_error"]
+			if ok && err.(bool) {
+				So(ret["_error"], ShouldNotBeNil)
+			} else {
+				check(ret, v["output"])
+			}
 			if tmp, ok := v["verify"]; ok {
 				switch tmp := tmp.(type) {
 				case []interface{}:

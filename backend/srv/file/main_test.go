@@ -16,14 +16,13 @@ import (
 
 func ParseCreate(param interface{}) map[string]interface{} {
 	input := param.(map[string]interface{})
-
 	var s srv
 	var rsp file.FileCreateResponse
-	So(s.Create(context.TODO(), &file.FileCreateRequest{
-		File: []byte(input["file"].(string)),
-	}, &rsp), ShouldBeNil)
-
 	ret := make(map[string]interface{})
+
+	ret["_error"] = s.Create(context.TODO(), &file.FileCreateRequest{
+		File: []byte(input["file"].(string)),
+	}, &rsp)
 	ret["status"] = rsp.Status.String()
 	ret["fileID"] = rsp.FileID
 	return ret
@@ -54,11 +53,11 @@ func ParseQuery(param interface{}) map[string]interface{} {
 
 	var s srv
 	var rsp file.FileQueryResponse
-	So(s.Query(context.TODO(), &file.FileRequest{
-		FileID: input["fileID"].(string),
-	}, &rsp), ShouldBeNil)
-
 	ret := make(map[string]interface{})
+
+	ret["_error"] = s.Query(context.TODO(), &file.FileRequest{
+		FileID: input["fileID"].(string),
+	}, &rsp)
 	ret["status"] = rsp.Status.String()
 	ret["file"] = string(rsp.File)
 	ret["size"] = rsp.Size
@@ -80,11 +79,11 @@ func ParseDelete(param interface{}) map[string]interface{} {
 
 	var s srv
 	var rsp file.FileDeleteResponse
-	So(s.Delete(context.TODO(), &file.FileRequest{
-		FileID: input["fileID"].(string),
-	}, &rsp), ShouldBeNil)
-
 	ret := make(map[string]interface{})
+
+	ret["_error"] = s.Delete(context.TODO(), &file.FileRequest{
+		FileID: input["fileID"].(string),
+	}, &rsp)
 	ret["status"] = rsp.Status.String()
 	return ret
 }
