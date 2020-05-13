@@ -91,3 +91,177 @@ token存在三个字段：
   - 1：用户
   - 10：系统管理员
 - `exp`：过期时间，默认30分钟
+
+## Test
+测试json，一个创建文件的例子：
+```
+{
+    "case": [
+        {
+            "input": {
+                "file": ""
+            },
+            "output": {
+                "status": "INVALID_PARAM",
+                "fileID": ""
+            }
+        },
+        {
+            "input": {
+                "file": "valid"
+            },
+            "output": {
+                "status": "SUCCESS",
+                "fileID": "#NOTEMPTY#"
+            },
+            "verify": {
+                "fileID": "#fileID#",
+                "file": "valid"
+            }
+        }
+    ]
+}
+```
+一个查询文件的例子：
+```
+{
+    "data": [
+        {
+            "fileID": "012345678901234567891234",
+            "file": "valid"
+        }
+    ],
+    "case": [
+        {
+            "input": {
+                "fileID": ""
+            },
+            "output": {
+                "status": "INVALID_PARAM",
+                "file": "",
+                "size": 0
+            }
+        },
+        {
+            "input": {
+                "fileID": "invalid"
+            },
+            "output": {
+                "status": "INVALID_PARAM",
+                "file": "",
+                "size": 0
+            }
+        },
+        {
+            "input": {
+                "fileID": "987654321098765432109876"
+            },
+            "output": {
+                "status": "NOT_FOUND",
+                "file": "",
+                "size": 0
+            }
+        },
+        {
+            "input": {
+                "fileID": "012345678901234567891234"
+            },
+            "output": {
+                "status": "SUCCESS",
+                "file": "valid",
+                "size": 5
+            }
+        }
+    ]
+}
+```
+一个删除文件的例子：
+```
+{
+    "data": [
+        {
+            "fileID": "000000000000000000000001",
+            "file": "valid1"
+        },
+        {
+            "fileID": "000000000000000000000002",
+            "file": "valid2"
+        }
+    ],
+    "case": [
+        {
+            "input": {
+                "fileID": ""
+            },
+            "output": {
+                "status": "INVALID_PARAM"
+            }
+        },
+        {
+            "input": {
+                "fileID": "invalid"
+            },
+            "output": {
+                "status": "INVALID_PARAM"
+            }
+        },
+        {
+            "input": {
+                "fileID": "100000000000000000000000"
+            },
+            "output": {
+                "status": "NOT_FOUND"
+            }
+        },
+        {
+            "input": {
+                "fileID": "000000000000000000000001"
+            },
+            "output": {
+                "status": "SUCCESS"
+            },
+            "verify": [
+                {
+                    "fileID": "000000000000000000000001",
+                    "file": "valid1",
+                    "_exist": false
+                },
+                {
+                    "fileID": "000000000000000000000002",
+                    "file": "valid2",
+                    "_exist": true
+                }
+            ]
+        },
+        {
+            "input": {
+                "fileID": "000000000000000000000002"
+            },
+            "output": {
+                "status": "SUCCESS"
+            },
+            "verify": [
+                {
+                    "fileID": "000000000000000000000001",
+                    "file": "valid1",
+                    "_exist": false
+                },
+                {
+                    "fileID": "000000000000000000000002",
+                    "file": "valid2",
+                    "_exist": false
+                }
+            ]
+        }
+    ]
+}
+```
+- `data` 内为预存数据
+- `case` 内为测试用例，每个测试用例参数如下：
+  - `input`：必须，测试输入
+  - `output`：必须，期望输出，不允许省略，特殊参数如下
+    - `#NOTEMPTY#`：字符串非空
+    - `#NOTZERO#`：数字非0
+  - `verify`:可选，验证数据库中是否存在/不存在指定值，特殊参数如下
+    - `#var#`：使用`output`中的`var`的值代替
+    - `_exist`：可选，默认值为`true`，为`false`则为判断不存在

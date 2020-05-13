@@ -112,7 +112,7 @@ func (a *srv) Delete(ctx context.Context, req *file.FileRequest, rsp *file.FileD
 
 	fid, err := primitive.ObjectIDFromHex(req.FileID)
 	if utils.LogContinue(err, utils.Warning) {
-		rsp.Status = file.FileDeleteResponse_NOT_FOUND
+		rsp.Status = file.FileDeleteResponse_INVALID_PARAM
 		return nil
 	}
 	err = bucket.Delete(fid)

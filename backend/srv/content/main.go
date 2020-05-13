@@ -158,7 +158,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
  * @apiParam {string} [contentID] 24 bytes content id, left empty for first upload
  * @apiParam {string} [contentToken] content token, left empty for first upload
  * @apiParam {list} tags {string} tag
- * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token <br> 3 for invalid type
+ * @apiSuccess {int32} status -1 for invalid param <br> 1 for success <br> 2 for invalid token
  * @apiSuccess {string} contentID 24 bytes contentID
  * @apiSuccess {string} contentToken random uuid content token
  * @apiUse DBServerDown
