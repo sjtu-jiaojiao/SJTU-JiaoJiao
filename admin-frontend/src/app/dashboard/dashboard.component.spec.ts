@@ -20,7 +20,6 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from '../inmemory-data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard.component';
-import { CallbackComponent } from '../callback/callback.component';
 import { AuthService } from '../auth.service';
 import { SellInfoComponent } from '../info/sell-info/sell-info.component';
 import { BuyInfoComponent } from '../info/buy-info/buy-info.component';
@@ -35,7 +34,6 @@ describe('DashboardComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
-        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
         LoginComponent,

@@ -24,7 +24,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserDetailComponent } from './userdetail/userdetail.component';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
-import { CallbackComponent } from './callback/callback.component';
 import { SellInfoComponent } from './info/sell-info/sell-info.component';
 import { BuyInfoComponent } from './info/buy-info/buy-info.component';
 describe('AppComponent', () => {  
@@ -34,7 +33,6 @@ describe('AppComponent', () => {
         AppComponent,
         UserDetailComponent,
         UserComponent,
-        CallbackComponent,
         InfoComponent,
         InfoDetailComponent,
         LoginComponent,

@@ -4,6 +4,7 @@ service BuyInfo {
     rpc Query (BuyInfoQueryRequest) returns (BuyInfoMsg);
     rpc Create (BuyInfoCreateRequest) returns (BuyInfoCreateResponse);
     rpc Find (BuyInfoFindRequest) returns (BuyInfoFindResponse);
+    rpc Update (BuyInfoUpdateRequest) returns (BuyInfoUpdateResponse);
 }
 
 enum BuyStatus {
@@ -67,4 +68,19 @@ message BuyInfoFindRequest {
 
 message BuyInfoFindResponse {
     repeated BuyInfoMsg buyInfo = 1;
+}
+
+message BuyInfoUpdateRequest {
+    int32 buyInfoID = 1;
+    BuyStatus status = 2;
+}
+
+message BuyInfoUpdateResponse {
+    enum Status {
+        UNKNOWN = 0;
+        INVALID_PARAM = -1;
+        SUCCESS = 1;
+        NOT_FOUND = 2;
+    }
+    Status status = 1;
 }

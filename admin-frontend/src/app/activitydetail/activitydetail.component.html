@@ -1,28 +1,65 @@
-
-<nz-card   nzTitle="活动管理">
-        <div nz-row [nzGutter]="8">
-          <div nz-col [nzSpan]="8">
-            <nz-card nzTitle="活动状态">
-            <nz-timeline nzMode="alternate">
-                    <nz-timeline-item>创建活动 2019-07-01</nz-timeline-item>
-                    <nz-timeline-item nzColor="green">开始活动(可修改) 2019-07-02</nz-timeline-item>
-                    <nz-timeline-item [nzDot]="dotTemplate"
-                      >活动结束(可修改)</nz-timeline-item
-                    >
-                  </nz-timeline>
-                  <ng-template #dotTemplate>
-                    <i nz-icon nzType="clock-circle-o" style="font-size: 16px;"></i>
-            </ng-template>
-            </nz-card>
-            <nz-card nzType="inner" nzTitle="活动简介">
-                <p>此地有图</p>
-                <p>本活动属管理员闲得无聊创建，如有看见请点差评</p>
-              </nz-card>
+<nz-card nzTitle="活动管理">
+  <div nz-row [nzGutter]="8">
+    <div nz-col [nzSpan]="8">
+      <nz-card *ngIf="act" [nzTitle]="act.title">
+        <div>
+          <div class='activityitem'>
+            <span class="badge">活动标题</span>              
+            <input [(ngModel)]="act.title" placeholder="title"/>
           </div>
-          <div nz-col [nzSpan]="16">
-            <nz-card nzType="inner" nzTitle="活动热度">            
-              <div echarts theme="dark" [loading]="true"  [options]="tsoption"></div>
-            </nz-card>
+          <div class='activityitem'>
+            <span class="badge">活动ID</span>              
+            <input [(ngModel)]="act.id" placeholder="id"/>
           </div>
+          <div class='activityitem'>
+            <span class="badge">活动简介</span>              
+            <input [(ngModel)]="act.description" placeholder="description"/>
+          </div>
+          <div class='activityitem'>
+            <span class="badge">活动开始时间 </span>
+            <nz-date-picker
+              nzShowTime
+              nzFormat="yyyy-MM-dd HH:mm:ss"
+              nzPlaceHolder="开始时间"
+              [(ngModel)]="act.releaseDate"
+            ></nz-date-picker>
+          </div>
+          <div class='activityitem'>
+            <span class="badge">活动截止时间 </span>
+                <nz-date-picker
+                  nzShowTime
+                  nzFormat="yyyy-MM-dd HH:mm:ss"
+                  nzPlaceHolder="截止时间"
+                  [(ngModel)]="act.validDate"
+                ></nz-date-picker>
+          </div>
+          <div class='activityitem'>
+            <span class="badge">权重 </span>
+            <nz-select style="width: 120px;" [(ngModel)]="act.weight">
+              <nz-option [nzValue]="1" nzLabel="普通"></nz-option>                
+              <nz-option [nzValue]="2" nzLabel="优先"></nz-option>
+              <nz-option [nzValue]="3" nzLabel="特殊"></nz-option>
+            </nz-select>
+          </div>
+          <div class='activityitem'>
+            <span class="badge">多媒体需求 </span>
+            <nz-input-number
+              [(ngModel)]="act.pic"
+              [nzMin]="0"
+              [nzStep]="1"
+              [nzPlaceHolder]="'数目'"
+            ></nz-input-number>
+          </div>             
+          <div class='activityitem'>
+            <span class="badge">新人专享 </span>
+            <label nz-checkbox [(ngModel)]="act.isNew"></label>
+          </div>             
+           <button (click)="goBack()" nz-button ><i nz-icon type="delete" theme="outline"></i>返回</button>
+          <button (click)="save()" nz-button nzType="primary"><i nz-icon type="save" theme="outline"></i>保存</button> 
         </div>
+      </nz-card>
+    </div>
+    <div nz-col [nzSpan]="16">
+    </div>
+  </div>
 </nz-card>

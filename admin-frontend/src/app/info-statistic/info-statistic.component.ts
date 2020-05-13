@@ -2,16 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { EChartOption} from 'echarts';
 import * as echarts from 'echarts/lib/echarts';
 import { InfoService } from '../info.service';
-import { buyInfo, sellInfo } from 'src/app/entity/info';
+import { buyInfo, sellInfo } from '../entity/info';
 import {prepareBoxplotData} from 'echarts/extension/dataTool';
 import { Transaction } from '../entity/transaction';
 import { TransactionService } from '../transaction.service';
 import { Format } from '../Formatter/format';
 import { Router } from '@angular/router';
 import { FileService } from '../file.service';
-const name = ['LJH', 'WXZ', 'ZWJ', 'KHQ', 'MZD', 'ZEL', 'JZM', 'HJT', 'TRUMP',
-'LJH2', 'WXZ2', 'ZWJ2', 'KHQ2', 'MZD2', 'ZEL2', 'JZM2', 'HJT2', 'TRUMP2',
-'LJH3', 'WXZ3', 'ZWJ3', 'KHQ3', 'MZD3', 'ZEL3', 'JZM3', 'HJT3', 'TRUMP3'];
 export function fdgFormatter 
     (p) {
         if(p.dataType=='node')
@@ -52,10 +49,6 @@ export class InfoStatisticComponent implements OnInit {
       this.pl=!this.pl;
   }
   getComment(){
-    if(!this.pl){
-    this.prcGraph();
-    this.cloudGrpah();
-    }
     this.bi.forEach(
       info => {
         this.fileService.getContent(info.contentID).subscribe(
@@ -67,6 +60,10 @@ export class InfoStatisticComponent implements OnInit {
       )
       }
     );
+    if(!this.pl){
+    this.prcGraph();
+    this.cloudGrpah();
+    }
   }
   getAllTR(beg, end){
     this.tr = this.trs.getAllTR(6,beg,end);

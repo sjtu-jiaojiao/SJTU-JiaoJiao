@@ -1,4 +1,30 @@
 # 后端API更新日志
+## v0.4.1
+### BUG修复
+1. `GET /tag` 权限错误修复
+
+## v0.4.0
+### 新增
+1. `GET /tag` 获取AI tag
+
+## v0.3.3 2019-09-09
+### 移除
+1. `transaction` 模块被完全移除
+
+### 新增
+1. `PUT "/buyInfo/:buyInfoID"` 修改状态
+2. `PUT "/sellInfo/:sellInfoID"` 修改状态
+
+### BUG修复
+1. 修复message被错误标记为已读的问题
+
+## v0.3.2 2019-09-08
+### 新增
+1. `GET /message/userID` 增加获取旧消息的功能
+
+### BUG修复
+1. `GET /message` 修复`offset`和`limit`失效问题
+
 ## v0.3.1 2019-09-06
 ### BUG修复
 1. 修复文件上传相关检测

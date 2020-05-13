@@ -37,6 +37,7 @@ type SellInfoService interface {
 	Query(ctx context.Context, in *SellInfoQueryRequest, opts ...client.CallOption) (*SellInfoMsg, error)
 	Create(ctx context.Context, in *SellInfoCreateRequest, opts ...client.CallOption) (*SellInfoCreateResponse, error)
 	Find(ctx context.Context, in *SellInfoFindRequest, opts ...client.CallOption) (*SellInfoFindResponse, error)
+	Update(ctx context.Context, in *SellInfoUpdateRequest, opts ...client.CallOption) (*SellInfoUpdateResponse, error)
 }
 
 type sellInfoService struct {
@@ -87,12 +88,23 @@ func (c *sellInfoService) Find(ctx context.Context, in *SellInfoFindRequest, opt
 	return out, nil
 }
 
+func (c *sellInfoService) Update(ctx context.Context, in *SellInfoUpdateRequest, opts ...client.CallOption) (*SellInfoUpdateResponse, error) {
+	req := c.c.NewRequest(c.name, "SellInfo.Update", in)
+	out := new(SellInfoUpdateResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for SellInfo service
 
 type SellInfoHandler interface {
 	Query(context.Context, *SellInfoQueryRequest, *SellInfoMsg) error
 	Create(context.Context, *SellInfoCreateRequest, *SellInfoCreateResponse) error
 	Find(context.Context, *SellInfoFindRequest, *SellInfoFindResponse) error
+	Update(context.Context, *SellInfoUpdateRequest, *SellInfoUpdateResponse) error
 }
 
 func RegisterSellInfoHandler(s server.Server, hdlr SellInfoHandler, opts ...server.HandlerOption) error {
@@ -100,6 +112,7 @@ func RegisterSellInfoHandler(s server.Server, hdlr SellInfoHandler, opts ...serv
 		Query(ctx context.Context, in *SellInfoQueryRequest, out *SellInfoMsg) error
 		Create(ctx context.Context, in *SellInfoCreateRequest, out *SellInfoCreateResponse) error
 		Find(ctx context.Context, in *SellInfoFindRequest, out *SellInfoFindResponse) error
+		Update(ctx context.Context, in *SellInfoUpdateRequest, out *SellInfoUpdateResponse) error
 	}
 	type SellInfo struct {
 		sellInfo
@@ -122,4 +135,8 @@ func (h *sellInfoHandler) Create(ctx context.Context, in *SellInfoCreateRequest,
 
 func (h *sellInfoHandler) Find(ctx context.Context, in *SellInfoFindRequest, out *SellInfoFindResponse) error {
 	return h.SellInfoHandler.Find(ctx, in, out)
+}
+
+func (h *sellInfoHandler) Update(ctx context.Context, in *SellInfoUpdateRequest, out *SellInfoUpdateResponse) error {
+	return h.SellInfoHandler.Update(ctx, in, out)
 }
