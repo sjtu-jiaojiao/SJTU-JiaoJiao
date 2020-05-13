@@ -1,0 +1,26 @@
+{
+    "case": [
+        {
+            "input": {
+                "file": ""
+            },
+            "output": {
+                "status": "INVALID_PARAM",
+                "fileID": ""
+            }
+        },
+        {
+            "input": {
+                "file": "valid"
+            },
+            "output": {
+                "status": "SUCCESS",
+                "fileID": "#NOTEMPTY#"
+            },
+            "verify": {
+                "fileID": "#fileID#",
+                "file": "valid"
+            }
+        }
+    ]
+}

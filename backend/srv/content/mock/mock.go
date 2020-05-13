@@ -33,13 +33,13 @@ func (a *mockSrv) Check(ctx context.Context, req *content.ContentCheckRequest, o
 		return &rsp, nil
 	}
 
-	if req.ContentID == "012345678901234567890123" {
+	if req.ContentID == "000000000000000000000001" {
 		if req.ContentToken == "valid_token" {
 			rsp.Status = content.ContentCheckResponse_VALID
 		} else {
 			rsp.Status = content.ContentCheckResponse_INVALID
 		}
-	} else if req.ContentID == "987654321098765432109876" {
+	} else if req.ContentID == "100000000000000000000000" {
 		return nil, errors.New("")
 	} else {
 		rsp.Status = content.ContentCheckResponse_INVALID
@@ -81,13 +81,13 @@ func (a *mockSrv) Delete(ctx context.Context, req *content.ContentDeleteRequest,
 		return &rsp, nil
 	}
 
-	if req.ContentID == "012345678901234567890123" {
+	if req.ContentID == "000000000000000000000001" {
 		if req.ContentToken == "valid_token" {
 			rsp.Status = content.ContentDeleteResponse_SUCCESS
 		} else {
 			rsp.Status = content.ContentDeleteResponse_INVALID_TOKEN
 		}
-	} else if req.ContentID == "987654321098765432109876" {
+	} else if req.ContentID == "100000000000000000000000" {
 		return nil, errors.New("")
 	} else {
 		rsp.Status = content.ContentDeleteResponse_INVALID_TOKEN
@@ -104,7 +104,7 @@ func (a *mockSrv) CreateTag(ctx context.Context, req *content.ContentCreateTagRe
 	}
 
 	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) { // create new
-		rsp.ContentID = "1234567890abcdef12345678"
+		rsp.ContentID = "000000000000000000000001"
 		rsp.ContentToken = "valid_token"
 		rsp.Status = content.ContentCreateTagResponse_SUCCESS
 	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) { // add exist one
@@ -113,7 +113,7 @@ func (a *mockSrv) CreateTag(ctx context.Context, req *content.ContentCreateTagRe
 			return &rsp, nil
 		}
 
-		rsp.ContentID = "012345678901234567890123"
+		rsp.ContentID = "000000000000000000000001"
 		rsp.ContentToken = "valid_token"
 		rsp.Status = content.ContentCreateTagResponse_SUCCESS
 	} else {

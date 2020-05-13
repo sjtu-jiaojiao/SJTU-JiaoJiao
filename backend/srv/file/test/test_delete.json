@@ -1,0 +1,78 @@
+{
+    "data": [
+        {
+            "fileID": "000000000000000000000001",
+            "file": "valid1"
+        },
+        {
+            "fileID": "000000000000000000000002",
+            "file": "valid2"
+        }
+    ],
+    "case": [
+        {
+            "input": {
+                "fileID": ""
+            },
+            "output": {
+                "status": "INVALID_PARAM"
+            }
+        },
+        {
+            "input": {
+                "fileID": "invalid"
+            },
+            "output": {
+                "status": "INVALID_PARAM"
+            }
+        },
+        {
+            "input": {
+                "fileID": "100000000000000000000000"
+            },
+            "output": {
+                "status": "NOT_FOUND"
+            }
+        },
+        {
+            "input": {
+                "fileID": "000000000000000000000001"
+            },
+            "output": {
+                "status": "SUCCESS"
+            },
+            "verify": [
+                {
+                    "fileID": "000000000000000000000001",
+                    "file": "valid1",
+                    "_exist": false
+                },
+                {
+                    "fileID": "000000000000000000000002",
+                    "file": "valid2",
+                    "_exist": true
+                }
+            ]
+        },
+        {
+            "input": {
+                "fileID": "000000000000000000000002"
+            },
+            "output": {
+                "status": "SUCCESS"
+            },
+            "verify": [
+                {
+                    "fileID": "000000000000000000000001",
+                    "file": "valid1",
+                    "_exist": false
+                },
+                {
+                    "fileID": "000000000000000000000002",
+                    "file": "valid2",
+                    "_exist": false
+                }
+            ]
+        }
+    ]
+}

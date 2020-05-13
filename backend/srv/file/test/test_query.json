@@ -1,0 +1,50 @@
+{
+    "data": [
+        {
+            "fileID": "000000000000000000000001",
+            "file": "valid"
+        }
+    ],
+    "case": [
+        {
+            "input": {
+                "fileID": ""
+            },
+            "output": {
+                "status": "INVALID_PARAM",
+                "file": "",
+                "size": 0
+            }
+        },
+        {
+            "input": {
+                "fileID": "invalid"
+            },
+            "output": {
+                "status": "INVALID_PARAM",
+                "file": "",
+                "size": 0
+            }
+        },
+        {
+            "input": {
+                "fileID": "100000000000000000000000"
+            },
+            "output": {
+                "status": "NOT_FOUND",
+                "file": "",
+                "size": 0
+            }
+        },
+        {
+            "input": {
+                "fileID": "000000000000000000000001"
+            },
+            "output": {
+                "status": "SUCCESS",
+                "file": "valid",
+                "size": 5
+            }
+        }
+    ]
+}

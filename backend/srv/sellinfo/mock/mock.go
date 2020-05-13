@@ -47,7 +47,7 @@ func (a *mockSrv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest,
 			rsp.GoodName = "good"
 			rsp.ValidTime = 1234567890
 			rsp.Description = "very good!"
-			rsp.ContentID = "012345678901234567890123"
+			rsp.ContentID = "000000000000000000000001"
 			rsp.UserID = 1000
 		} else if req.SellInfoID == 3000 {
 			return nil, errors.New("")
