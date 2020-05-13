@@ -54,7 +54,7 @@ func (a *mockUserSrv) Query(ctx context.Context, req *user.UserQueryRequest, opt
 		if req.UserID == 1000 {
 			rsp.UserID = 1000
 			rsp.UserName = "test"
-			rsp.AvatarID = "012345678901234567890123"
+			rsp.AvatarID = "000000000000000000000001"
 			rsp.Telephone = "12345678901"
 			rsp.StudentID = "10000"
 			rsp.StudentName = "jiang"
@@ -71,7 +71,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 	user1 := user.UserInfo{
 		UserID:      1000,
 		UserName:    "test1",
-		AvatarID:    "012345678901234567890123",
+		AvatarID:    "000000000000000000000001",
 		Telephone:   "12345678901",
 		StudentID:   "10000",
 		StudentName: "user1",
@@ -80,7 +80,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 	user2 := user.UserInfo{
 		UserID:      1001,
 		UserName:    "test2",
-		AvatarID:    "012345678901234567890123",
+		AvatarID:    "000000000000000000000001",
 		Telephone:   "12345678901",
 		StudentID:   "10001",
 		StudentName: "user2",
@@ -89,7 +89,7 @@ func (a *mockUserSrv) Find(ctx context.Context, req *user.UserFindRequest, opts 
 	user3 := user.UserInfo{
 		UserID:      1002,
 		UserName:    "test3",
-		AvatarID:    "012345678901234567890123",
+		AvatarID:    "000000000000000000000001",
 		Telephone:   "12345678901",
 		StudentID:   "10002",
 		StudentName: "user3",

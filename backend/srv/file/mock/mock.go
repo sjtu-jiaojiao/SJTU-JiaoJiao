@@ -24,7 +24,7 @@ func (a *mockFileSrv) Create(ctx context.Context, req *file.FileCreateRequest, o
 	}
 
 	rsp.Status = file.FileCreateResponse_SUCCESS
-	rsp.FileID = "012345678901234567891234"
+	rsp.FileID = "000000000000000000000001"
 	return &rsp, nil
 }
 
@@ -62,10 +62,8 @@ func (a *mockFileSrv) Delete(ctx context.Context, req *file.FileRequest, opts ..
 		return &rsp, nil
 	}
 
-	if req.FileID == "012345678901234567891234" {
+	if req.FileID == "000000000000000000000001" {
 		rsp.Status = file.FileDeleteResponse_SUCCESS
-	} else if req.FileID == "987654321098765432109876" {
-		return nil, errors.New("")
 	} else {
 		rsp.Status = file.FileDeleteResponse_NOT_FOUND
 	}

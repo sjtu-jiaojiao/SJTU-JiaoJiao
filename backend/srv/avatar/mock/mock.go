@@ -24,7 +24,7 @@ func (a *mockSrv) Create(ctx context.Context, req *avatar.AvatarCreateRequest, o
 		rsp.Status = avatar.AvatarCreateResponse_INVALID_TYPE
 	case "valid":
 		rsp.Status = avatar.AvatarCreateResponse_SUCCESS
-		rsp.AvatarID = "012345678901234567890123"
+		rsp.AvatarID = "000000000000000000000001"
 	case "error":
 		return nil, errors.New("")
 	}
