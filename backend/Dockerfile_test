@@ -1,0 +1,73 @@
+FROM centos:7 AS build
+WORKDIR /root/
+
+RUN sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+        -e 's|^#baseurl=http://mirror.centos.org/centos|baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos|g' \
+        -i.bak \
+        /etc/yum.repos.d/CentOS-Base.repo
+
+RUN yum makecache && yum update && \
+    rpm --import https://mirror.go-repo.io/centos/RPM-GPG-KEY-GO-REPO && \
+    curl -s https://mirror.go-repo.io/centos/go-repo.repo | tee /etc/yum.repos.d/go-repo.repo
+RUN yum install git golang wget unzip -y
+ENV GO111MODULE on
+ENV GOPROXY https://goproxy.cn
+RUN go get github.com/smartystreets/goconvey
+
+RUN wget ftp://imwxz2017:public@public.sjtu.edu.cn/consul_1.7.1_linux_amd64.zip && \
+    unzip consul_1.7.1_linux_amd64.zip && \
+    rm -rf consul_1.7.1_linux_amd64.zip
+RUN mv ./consul /usr/bin
+RUN echo "#!/bin/bash" >> start.sh
+RUN echo "nohup consul agent -ui -bind=127.0.0.1 -dev >/dev/null 2>&1 &" >> start.sh
+
+RUN yum install mariadb-server -y
+RUN mysql_install_db --user=mysql --basedir=/usr/ --ldata=/var/lib/mysql/
+RUN echo "nohup mysqld_safe --basedir=/usr/ --datadir=/var/lib/mysql/ >/dev/null 2>&1 &" >> start.sh
+
+RUN echo 'root:123456' | chpasswd
+RUN yum install openssh-server -y
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config &&\
+    ssh-keygen -A
+RUN echo "nohup /usr/sbin/sshd -D >/dev/null 2>&1 &" >> start.sh
+
+RUN echo "[mongodb-org]" >> /etc/yum.repos.d/mongodb.repo && \
+    echo "name=MongoDB Repository" >> /etc/yum.repos.d/mongodb.repo && \
+    echo "baseurl=https://mirrors.tuna.tsinghua.edu.cn/mongodb/yum/el7/" >> /etc/yum.repos.d/mongodb.repo && \
+    echo "gpgcheck=0" >> /etc/yum.repos.d/mongodb.repo && \
+    echo "enabled=1" >> /etc/yum.repos.d/mongodb.repo
+RUN yum install mongodb-org -y
+RUN echo "security:" >> /etc/mongod.conf && \
+    echo "  authorization: enabled" >> /etc/mongod.conf
+RUN echo "nohup mongod --quiet --config /etc/mongod.conf >/dev/null 2>&1 &" >> start.sh
+
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/go/bin
+RUN go get github.com/micro/micro@v1.7.0
+RUN echo "cd backend && go mod download && cd .." >> start.sh
+
+ENV JJ_MARIADBUSER root
+ENV JJ_MARIADBPWD 123456
+ENV JJ_MONGODBUSER root
+ENV JJ_MONGODBPWD 123456
+
+RUN echo "echo Sleep 10s... && sleep 10" >> start.sh
+
+RUN echo "mysql -u root <<-EOF" >> start.sh && \
+    echo "UPDATE mysql.user SET Password=PASSWORD('123456') WHERE User='root';" >> start.sh && \
+    echo "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');" >> start.sh && \
+    echo "DELETE FROM mysql.user WHERE User='';" >> start.sh && \
+    echo "DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';" >> start.sh && \
+    echo "FLUSH PRIVILEGES;" >> start.sh && \
+    echo "EOF" >> start.sh
+RUN echo "mysql -u root -p123456 -e \"create database sjtujj;\"" >> start.sh
+RUN echo "mongo admin --eval 'db.createUser({user: \"root\", pwd: \"123456\", roles:[{ role: \"root\", db: \"admin\"}]})'" >> start.sh
+
+RUN chmod +x ./start.sh
+
+RUN echo "nohup micro --registry=consul api --handler=http >/dev/null 2>&1 &" >> start.sh
+RUN echo "consul kv import @backend/consul.json" >> start.sh
+RUN echo "cd backend && goconvey -host 0.0.0.0 -port 80 -launchBrowser=false -poll=5s" >> start.sh
+
+EXPOSE 80
+EXPOSE 21
+ENTRYPOINT ["/root/start.sh"]
