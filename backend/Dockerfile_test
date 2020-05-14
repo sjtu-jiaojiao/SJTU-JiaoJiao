@@ -25,7 +25,7 @@ RUN yum install mariadb-server -y
 RUN mysql_install_db --user=mysql --basedir=/usr/ --ldata=/var/lib/mysql/
 RUN echo "nohup mysqld_safe --basedir=/usr/ --datadir=/var/lib/mysql/ >/dev/null 2>&1 &" >> start.sh
 
-RUN echo 'root:123456' | chpasswd
+RUN echo 'root:sjtujj123123' | chpasswd
 RUN yum install openssh-server -y
 RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config &&\
     ssh-keygen -A
