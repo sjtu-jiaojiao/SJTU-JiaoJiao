@@ -68,6 +68,7 @@ RUN echo "nohup micro --registry=consul api --handler=http >/dev/null 2>&1 &" >>
 RUN echo "consul kv import @backend/consul.json" >> start.sh
 RUN echo "cd backend && goconvey -host 0.0.0.0 -port 80 -launchBrowser=false -poll=5s" >> start.sh
 
+RUN yum clean all
 EXPOSE 80
 EXPOSE 21
 ENTRYPOINT ["/root/start.sh"]
