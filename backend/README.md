@@ -5,7 +5,7 @@
 
 或者使用预编译环境（自行修改***为正确值）
 
-    sudo docker run -d -p 10000:21 -p 10001:80 -v $(pwd):/root/backend -e JJ_CLIENTID=*** -e JJ_CLIENTSECRET=*** -e JJ_JWTSECRET=*** sjtujj/test
+    sudo docker run -d -p 10000:22 -p 10001:80 -v $(pwd):/root/backend -e JJ_CLIENTID=*** -e JJ_CLIENTSECRET=*** -e JJ_JWTSECRET=*** sjtujj/test
 
 注意在linux环境挂载后本目录权限可能会变成`root:root`，请预先备份
 

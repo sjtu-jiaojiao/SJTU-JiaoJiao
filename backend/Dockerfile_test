@@ -70,5 +70,5 @@ RUN echo "cd backend && goconvey -host 0.0.0.0 -port 80 -launchBrowser=false -po
 
 RUN yum clean all
 EXPOSE 80
-EXPOSE 21
+EXPOSE 22
 ENTRYPOINT ["/root/start.sh"]
