@@ -30,7 +30,7 @@ func Test_getBuyInfo(t *testing.T) {
 		}, "GET", "/buyInfo/1000", nil), ShouldBeZeroValue)
 
 		tf(400, "0", "")
-		tf(200, "1000", "012345678901234567890123")
+		tf(200, "1000", "000000000000000000000001")
 		tf(500, "3000", "")
 	})
 }
