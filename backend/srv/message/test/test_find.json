@@ -1,0 +1,91 @@
+{
+    "data": [
+        {
+            "fromUser": 1000,
+            "toUser": 1001,
+            "badge": 1,
+            "infos": [
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "test_text1",
+                    "unread": true
+                },
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "test_text2",
+                    "unread": false
+                }
+            ]
+        },
+        {
+            "fromUser": 1000,
+            "toUser": 1002,
+            "badge": 1,
+            "infos": [
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "test_text3",
+                    "unread": true
+                }
+            ]
+        }
+    ],
+    "case": [
+        {
+            "input": {
+                "fromUser": 0,
+                "toUser": 0,
+                "way": 0,
+                "limit": 0,
+                "offset": 0
+            },
+            "output": {
+                "status": -1,
+                "fromUser": 0,
+                "toUser": 0,
+                "badge": 0,
+                "infos": []
+            }
+        },
+        {
+            "input": {
+                "fromUser": 1001,
+                "toUser": 1000,
+                "way": 1,
+                "limit": 0,
+                "offset": 0
+            },
+            "output": {
+                "status": 1,
+                "fromUser": 1000,
+                "toUser": 1001,
+                "badge": 1,
+                "infos": [
+                    "test_text1"
+                ]
+            },
+            "verify": {
+                "fromUser": 1000,
+                "toUser": 1001,
+                "badge": 0,
+                "infos": [
+                    {
+                        "forward": false,
+                        "type": 1,
+                        "msg": "test_text1",
+                        "unread": false
+                    },
+                    {
+                        "forward": false,
+                        "type": 1,
+                        "msg": "test_text2",
+                        "unread": false
+                    }
+                ]
+            }
+        }
+    ]
+}

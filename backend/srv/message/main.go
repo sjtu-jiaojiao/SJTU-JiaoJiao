@@ -176,7 +176,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
  * @apiParam {int32} fromUser user who want to find
  * @apiParam {int32} toUser user who chat with from user
  * @apiParam {int32} way 1 for read message <br> 2 for query history message <br> Note: only 1 will set unread to false
- * @apiParam {uint32{0-20}} limit=20 limit of return message infos, only for history query
+ * @apiParam {uint32{1-20}} limit=20 limit of return message infos, only for history query
  * @apiParam {uint32} offset=0 offset from the latest message info, only for history query
  * @apiSuccess {int32} fromUser user who launch the chat at first time
  * @apiSuccess {int32} toUser user who accept the chat at first time
@@ -186,7 +186,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
  * @apiSuccess (MessageInfo) {int64} time message create time
  * @apiSuccess (MessageInfo) {bool} forward false for chat from toUser to fromUser <br> true for chat from fromUser to toUser
  * @apiSuccess (MessageInfo) {int32} type 1 for text <br> 2 for picture <br> 3 for video
- * @apiSuccess (MessageInfo) {bytes} text plain message text if type is text <br> fileID if type is picture or video
+ * @apiSuccess (MessageInfo) {bytes} msg plain message text if type is text <br> fileID if type is picture or video
  * @apiSuccess (MessageInfo) {bool} unread false for having read <br> true for not having read
  * @apiUse DBServerDown
  */
@@ -345,7 +345,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
  * @apiSuccess (MessageInfo) {int64} time message create time
  * @apiSuccess (MessageInfo) {bool} forward false for chat from toUser to fromUser <br> true for chat from fromUser to toUser
  * @apiSuccess (MessageInfo) {int32} type 1 for text <br> 2 for picture <br> 3 for video
- * @apiSuccess (MessageInfo) {string} text plain message text if type is text <br> fileID if type is picture or video
+ * @apiSuccess (MessageInfo) {string} msg plain message text if type is text <br> fileID if type is picture or video
  * @apiSuccess (MessageInfo) {bool} unread always true
  * @apiUse DBServerDown
  */

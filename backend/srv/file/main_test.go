@@ -14,77 +14,69 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
 )
 
-func ParseCreate(param interface{}) map[string]interface{} {
-	input := param.(map[string]interface{})
+func ParseCreate(input utils.StringMap) utils.StringMap {
 	var s srv
 	var rsp file.FileCreateResponse
-	ret := make(map[string]interface{})
+	ret := make(utils.StringMap)
 
 	ret["_error"] = s.Create(context.TODO(), &file.FileCreateRequest{
-		File: []byte(input["file"].(string)),
+		File: utils.TestByte(input["file"]),
 	}, &rsp)
-	ret["status"] = rsp.Status.String()
+	ret["status"] = int32(rsp.Status)
 	ret["fileID"] = rsp.FileID
 	return ret
 }
 
-func VerifyData(param interface{}, output interface{}) {
-	verify := param.(map[string]interface{})
-	variable := output.(map[string]interface{})
+func VerifyData(verify utils.StringMap, output utils.StringMap) {
 
 	bucket, err := gridfs.NewBucket(db.MongoDatabase)
 	So(err, ShouldBeNil)
 
-	fid, err := primitive.ObjectIDFromHex(utils.TransVar("fileID", verify, variable).(string))
+	fid, err := primitive.ObjectIDFromHex(utils.TransVarString("fileID", verify, output))
 	So(err, ShouldBeNil)
 
 	var buf bytes.Buffer
 	_, err = bucket.DownloadToStream(fid, &buf)
 	if exist, ok := verify["_exist"]; !ok || exist.(bool) {
 		So(err, ShouldBeNil)
-		So(buf.String(), ShouldEqual, verify["file"].(string))
+		So(buf.String(), ShouldEqual, utils.TestString(verify["file"]))
 	} else {
 		So(err, ShouldNotBeNil)
 	}
 }
 
-func ParseQuery(param interface{}) map[string]interface{} {
-	input := param.(map[string]interface{})
-
+func ParseQuery(input utils.StringMap) utils.StringMap {
 	var s srv
 	var rsp file.FileQueryResponse
-	ret := make(map[string]interface{})
+	ret := make(utils.StringMap)
 
 	ret["_error"] = s.Query(context.TODO(), &file.FileRequest{
-		FileID: input["fileID"].(string),
+		FileID: utils.TestString(input["fileID"]),
 	}, &rsp)
-	ret["status"] = rsp.Status.String()
+	ret["status"] = int32(rsp.Status)
 	ret["file"] = string(rsp.File)
 	ret["size"] = rsp.Size
 	return ret
 }
 
-func InsertData(param interface{}) {
-	data := param.(map[string]interface{})
+func InsertData(data utils.StringMap) {
 	bucket, err := gridfs.NewBucket(db.MongoDatabase)
 	So(err, ShouldBeNil)
-	fid, err := primitive.ObjectIDFromHex(data["fileID"].(string))
+	fid, err := primitive.ObjectIDFromHex(utils.TestString(data["fileID"]))
 	So(err, ShouldBeNil)
-	err = bucket.UploadFromStreamWithID(fid, "", bytes.NewReader([]byte(data["file"].(string))))
+	err = bucket.UploadFromStreamWithID(fid, "", bytes.NewReader(utils.TestByte(data["file"])))
 	So(err, ShouldBeNil)
 }
 
-func ParseDelete(param interface{}) map[string]interface{} {
-	input := param.(map[string]interface{})
-
+func ParseDelete(input utils.StringMap) utils.StringMap {
 	var s srv
 	var rsp file.FileDeleteResponse
-	ret := make(map[string]interface{})
+	ret := make(utils.StringMap)
 
 	ret["_error"] = s.Delete(context.TODO(), &file.FileRequest{
-		FileID: input["fileID"].(string),
+		FileID: utils.TestString(input["fileID"]),
 	}, &rsp)
-	ret["status"] = rsp.Status.String()
+	ret["status"] = int32(rsp.Status)
 	return ret
 }
 
@@ -97,11 +89,11 @@ func cleanup() {
 
 func TestAll(t *testing.T) {
 	cleanup()
-	utils.Test(t, "test/test_create.json", nil, ParseCreate, VerifyData)
+	utils.Test(t, "test/test_create.json", nil, ParseCreate, VerifyData, nil)
 	cleanup()
-	utils.Test(t, "test/test_query.json", InsertData, ParseQuery, nil)
+	utils.Test(t, "test/test_query.json", InsertData, ParseQuery, nil, nil)
 	cleanup()
-	utils.Test(t, "test/test_delete.json", InsertData, ParseDelete, VerifyData)
+	utils.Test(t, "test/test_delete.json", InsertData, ParseDelete, VerifyData, nil)
 	cleanup()
 }
 

@@ -156,7 +156,7 @@ func (a *srv) Update(ctx context.Context, req *user.UserInfo, rsp *user.UserUpda
  * @apiDescription Find user(fuzzy).
  *
  * @apiParam {string} [userName] username
- * @apiParam {uint32{0-100}} limit=100 row limit
+ * @apiParam {uint32{1-100}} limit=100 row limit
  * @apiParam {uint32} offset=0 row offset
  * @apiSuccess {array} user see [User Service](#api-Service-User_Query)
  * @apiUse DBServerDown

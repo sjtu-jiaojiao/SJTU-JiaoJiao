@@ -10,6 +10,8 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+type StringMap = map[string]interface{}
+
 func check(actual interface{}, expect interface{}) {
 	switch actual := actual.(type) {
 	case string:
@@ -17,7 +19,7 @@ func check(actual interface{}, expect interface{}) {
 		if t == "#NOTEMPTY#" {
 			So(actual, ShouldNotBeEmpty)
 		} else {
-			So(t, ShouldEqual, actual)
+			So(actual, ShouldEqual, t)
 		}
 	case map[string]interface{}:
 		t := expect.(map[string]interface{})
@@ -36,14 +38,16 @@ func check(actual interface{}, expect interface{}) {
 		case string:
 			if expect == "#NOTZERO#" {
 				So(actual, ShouldNotBeZeroValue)
+			} else {
+				LogPanic("Output type differ")
 			}
 		default:
-			So(expect.(float64), ShouldEqual, actual)
+			So(actual, ShouldEqual, expect.(float64))
 		}
 	}
 }
 
-func TransVar(s string, verify map[string]interface{}, variable map[string]interface{}) interface{} {
+func TransVar(s string, verify StringMap, variable StringMap) interface{} {
 	v := verify[s].(string)
 	if string(v[0]) == "#" && string(v[len(v)-1]) == "#" {
 		return variable[v[1:len(v)-1]]
@@ -51,37 +55,72 @@ func TransVar(s string, verify map[string]interface{}, variable map[string]inter
 	return verify[s]
 }
 
-func Test(t *testing.T, file string, data func(param interface{}),
-	parse func(param interface{}) map[string]interface{},
-	verify func(param interface{}, output interface{})) {
+func TransVarInt(s string, verify StringMap, variable StringMap) int32 {
+	return TestInt(TransVar(s, verify, variable))
+}
+
+func TransVarString(s string, verify StringMap, variable StringMap) string {
+	return TestString(TransVar(s, verify, variable))
+}
+
+func TestInt(d interface{}) int32 {
+	return int32(d.(float64))
+}
+
+func TestUint(d interface{}) uint32 {
+	return uint32(d.(float64))
+}
+
+func TestString(d interface{}) string {
+	return d.(string)
+}
+
+func TestByte(d interface{}) []byte {
+	return []byte(d.(string))
+}
+
+func TestBool(d interface{}) bool {
+	return d.(bool)
+}
+
+func Test(t *testing.T, file string,
+	insert func(data StringMap),
+	parse func(input StringMap) StringMap,
+	verify func(verify StringMap, output StringMap),
+	checker func(actual StringMap, expect StringMap)) {
 	Convey("Test "+file, t, func() {
 		fileData, err := ioutil.ReadFile(file)
 		So(err, ShouldBeNil)
 
 		var fileMap map[string][]map[string]interface{}
 		So(json.Unmarshal(fileData, &fileMap), ShouldBeNil)
-		if data != nil {
+		if insert != nil {
 			for _, v := range fileMap["data"] {
-				data(v)
+				insert(v)
 			}
 		}
 
 		for _, v := range fileMap["case"] {
-			ret := parse(v["input"])
+			ret := parse(v["input"].(StringMap))
 			err, ok := v["output"].(map[string]interface{})["_error"]
 			if ok && err.(bool) {
 				So(ret["_error"], ShouldNotBeNil)
 			} else {
-				check(ret, v["output"])
+				So(ret["_error"], ShouldBeNil)
+				if checker != nil {
+					checker(ret, v["output"].(StringMap))
+				} else {
+					check(ret, v["output"])
+				}
 			}
 			if tmp, ok := v["verify"]; ok {
 				switch tmp := tmp.(type) {
 				case []interface{}:
 					for _, vtmp := range tmp {
-						verify(vtmp, ret)
+						verify(vtmp.(StringMap), ret)
 					}
 				default:
-					verify(v["verify"], ret)
+					verify(v["verify"].(StringMap), ret)
 				}
 			}
 		}

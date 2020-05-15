@@ -197,7 +197,7 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
  * @apiParam {string} [goodName] good name(fuzzy)
  * @apiParam {double} lowPrice=0 low bound of price
  * @apiParam {double} highPrice=inf high bound of price
- * @apiParam {uint32{0-100}} limit=100 row limit
+ * @apiParam {uint32{1-100}} limit=100 row limit
  * @apiParam {uint32} offset=0 row offset
  * @apiSuccess {list} sellInfo see [SellInfo Service](#api-Service-sellinfo_SellInfo_Query)
  * @apiUse DBServerDown

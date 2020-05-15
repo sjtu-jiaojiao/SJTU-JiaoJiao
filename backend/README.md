@@ -121,7 +121,7 @@ token存在三个字段：
                 "file": ""
             },
             "output": {
-                "status": "INVALID_PARAM",
+                "status": -1,
                 "fileID": ""
             }
         },
@@ -130,7 +130,7 @@ token存在三个字段：
                 "file": "valid"
             },
             "output": {
-                "status": "SUCCESS",
+                "status": 1,
                 "fileID": "#NOTEMPTY#"
             },
             "verify": {
@@ -146,7 +146,7 @@ token存在三个字段：
 {
     "data": [
         {
-            "fileID": "012345678901234567891234",
+            "fileID": "000000000000000000000001",
             "file": "valid"
         }
     ],
@@ -156,7 +156,7 @@ token存在三个字段：
                 "fileID": ""
             },
             "output": {
-                "status": "INVALID_PARAM",
+                "status": -1,
                 "file": "",
                 "size": 0
             }
@@ -166,27 +166,27 @@ token存在三个字段：
                 "fileID": "invalid"
             },
             "output": {
-                "status": "INVALID_PARAM",
+                "status": -1,
                 "file": "",
                 "size": 0
             }
         },
         {
             "input": {
-                "fileID": "987654321098765432109876"
+                "fileID": "100000000000000000000000"
             },
             "output": {
-                "status": "NOT_FOUND",
+                "status": 2,
                 "file": "",
                 "size": 0
             }
         },
         {
             "input": {
-                "fileID": "012345678901234567891234"
+                "fileID": "000000000000000000000001"
             },
             "output": {
-                "status": "SUCCESS",
+                "status": 1,
                 "file": "valid",
                 "size": 5
             }
@@ -213,7 +213,7 @@ token存在三个字段：
                 "fileID": ""
             },
             "output": {
-                "status": "INVALID_PARAM"
+                "status": -1
             }
         },
         {
@@ -221,7 +221,7 @@ token存在三个字段：
                 "fileID": "invalid"
             },
             "output": {
-                "status": "INVALID_PARAM"
+                "status": -1
             }
         },
         {
@@ -229,7 +229,7 @@ token存在三个字段：
                 "fileID": "100000000000000000000000"
             },
             "output": {
-                "status": "NOT_FOUND"
+                "status": 2
             }
         },
         {
@@ -237,7 +237,7 @@ token存在三个字段：
                 "fileID": "000000000000000000000001"
             },
             "output": {
-                "status": "SUCCESS"
+                "status": 1
             },
             "verify": [
                 {
@@ -257,7 +257,7 @@ token存在三个字段：
                 "fileID": "000000000000000000000002"
             },
             "output": {
-                "status": "SUCCESS"
+                "status": 1
             },
             "verify": [
                 {

@@ -1,0 +1,39 @@
+{
+    "case": [
+        {
+            "input": {
+                "fromUser": 0,
+                "toUser": 0,
+                "type": 0,
+                "msg": ""
+            },
+            "output": {
+                "status": -1
+            }
+        },
+        {
+            "input": {
+                "fromUser": 1000,
+                "toUser": 1001,
+                "type": 1,
+                "msg": "test_text"
+            },
+            "output": {
+                "status": 1
+            },
+            "verify": {
+                "fromUser": 1000,
+                "toUser": 1001,
+                "badge": 1,
+                "infos": [
+                    {
+                        "forward": true,
+                        "type": 1,
+                        "msg": "test_text",
+                        "unread": true
+                    }
+                ]
+            }
+        }
+    ]
+}

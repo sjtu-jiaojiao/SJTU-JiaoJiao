@@ -1,0 +1,71 @@
+{
+    "data": [
+        {
+            "fromUser": 1000,
+            "toUser": 1001,
+            "badge": 1,
+            "infos": [
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "test_text1",
+                    "unread": true
+                },
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "test_text2",
+                    "unread": false
+                }
+            ]
+        },
+        {
+            "fromUser": 1000,
+            "toUser": 1002,
+            "badge": 1,
+            "infos": [
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "test_text3",
+                    "unread": true
+                }
+            ]
+        }
+    ],
+    "case": [
+        {
+            "input": {
+                "userID": 0,
+                "oldMsg": false
+            },
+            "output": {
+                "status": -1,
+                "news": []
+            }
+        },
+        {
+            "input": {
+                "userID": 1000,
+                "oldMsg": false
+            },
+            "output": {
+                "status": 1,
+                "news": [
+                    {
+                        "fromUser": 1000,
+                        "toUser": 1001,
+                        "badge": 1,
+                        "msg": "test_text1"
+                    },
+                    {
+                        "fromUser": 1000,
+                        "toUser": 1002,
+                        "badge": 1,
+                        "msg": "test_text3"
+                    }
+                ]
+            }
+        }
+    ]
+}

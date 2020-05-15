@@ -15,7 +15,7 @@
                 "fileID": ""
             },
             "output": {
-                "status": "INVALID_PARAM"
+                "status": -1
             }
         },
         {
@@ -23,7 +23,7 @@
                 "fileID": "invalid"
             },
             "output": {
-                "status": "INVALID_PARAM"
+                "status": -1
             }
         },
         {
@@ -31,7 +31,7 @@
                 "fileID": "100000000000000000000000"
             },
             "output": {
-                "status": "NOT_FOUND"
+                "status": 2
             }
         },
         {
@@ -39,7 +39,7 @@
                 "fileID": "000000000000000000000001"
             },
             "output": {
-                "status": "SUCCESS"
+                "status": 1
             },
             "verify": [
                 {
@@ -59,7 +59,7 @@
                 "fileID": "000000000000000000000002"
             },
             "output": {
-                "status": "SUCCESS"
+                "status": 1
             },
             "verify": [
                 {
