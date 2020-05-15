@@ -1,0 +1,46 @@
+{
+    "case": [
+        {
+            "input": {
+                "userID": 0,
+                "validTime": 0,
+                "goodName": "",
+                "description": "",
+                "price": 0,
+                "contentID": "",
+                "contentToken": "",
+                "tags": []
+            },
+            "output": {
+                "status": -1,
+                "sellInfoID": 0
+            }
+        },
+        {
+            "input": {
+                "userID": 1000,
+                "validTime": 100000000,
+                "goodName": "test_good",
+                "description": "test_desp",
+                "price": 123.456,
+                "contentID": "",
+                "contentToken": "",
+                "tags": []
+            },
+            "output": {
+                "status": 1,
+                "sellInfoID": "#NOTZERO#"
+            },
+            "verify": {
+                "sellInfoID": "#sellInfoID#",
+                "status": 1,
+                "userID": 1000,
+                "validTime": 100000000,
+                "goodName": "test_good",
+                "description": "test_desp",
+                "contentID": "",
+                "price": 123.456
+            }
+        }
+    ]
+}

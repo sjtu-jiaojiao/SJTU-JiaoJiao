@@ -1,0 +1,64 @@
+{
+    "data": [
+        {
+            "contentID": "000000000000000000000001",
+            "contentToken": "valid_token",
+            "tags": [
+                "tag1",
+                "tag2"
+            ],
+            "files": [
+                {
+                    "fileID": "000000000000000000000001",
+                    "type": 1
+                }
+            ]
+        }
+    ],
+    "case": [
+        {
+            "input": {
+                "contentID": "",
+                "contentToken": "",
+                "fileID": ""
+            },
+            "output": {
+                "status": -1
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
+                "fileID": "000000000000000000000001"
+            },
+            "output": {
+                "status": 1
+            },
+            "verify": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
+                "tags": [
+                    "tag1",
+                    "tag2"
+                ],
+                "files": []
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
+                "fileID": ""
+            },
+            "output": {
+                "status": 1
+            },
+            "verify": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
+                "_exist": false
+            }
+        }
+    ]
+}

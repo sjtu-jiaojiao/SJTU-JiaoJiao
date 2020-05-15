@@ -14,113 +14,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-//
-//func TestFind(t *testing.T) {
-//	var s srv
-//	var req message.MessageFindRequest
-//	var rsp message.MessageFindResponse
-//	filter := primitive.M{
-//		"fromUser": 2000,
-//		"toUser":   2001,
-//	}
-//	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-//	defer cancel()
-//	collection := db.MongoDatabase.Collection("message")
-//
-//	prepareData := func() {
-//		_, err := collection.InsertOne(ctx, bson.M{
-//			"fromUser": 2000,
-//			"toUser":   2001,
-//			"badge":    3,
-//			"infos": bson.A{bson.M{
-//				"time":    time.Now(),
-//				"forward": true,
-//				"type":    message.Type_TEXT,
-//				"msg":     "你好，我是小明1(⊙﹏⊙)，🔺",
-//				"unread":  false,
-//			}, bson.M{
-//				"time":    time.Now(),
-//				"forward": false,
-//				"type":    message.Type_TEXT,
-//				"msg":     "你好，我是小明2(⊙﹏⊙)，🔺",
-//				"unread":  false,
-//			}, bson.M{
-//				"time":    time.Now(),
-//				"forward": true,
-//				"type":    message.Type_TEXT,
-//				"msg":     "你好，我是小明3(⊙﹏⊙)，🔺",
-//				"unread":  true,
-//			}, bson.M{
-//				"time":    time.Now(),
-//				"forward": false,
-//				"type":    message.Type_TEXT,
-//				"msg":     "你好，我是小明4(⊙﹏⊙)，🔺",
-//				"unread":  true,
-//			}, bson.M{
-//				"time":    time.Now(),
-//				"forward": true,
-//				"type":    message.Type_PICTURE,
-//				"msg":     "012345678901234567890123",
-//				"unread":  true,
-//			}},
-//		})
-//		So(err, ShouldBeNil)
-//	}
-//
-//	testBase := func(infoLen int, badge int, status message.MessageFindResponse_Status) {
-//		rsp.Reset()
-//		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-//		So(rsp.Status, ShouldEqual, status)
-//		So(rsp.Badge, ShouldEqual, badge)
-//		So(len(rsp.Infos), ShouldEqual, infoLen)
-//	}
-//	Convey("Test Find Message", t, func() {
-//		prepareData()
-//		defer func() {
-//			_, err := collection.DeleteOne(ctx, filter)
-//			So(err, ShouldBeNil)
-//		}()
-//
-//		req.FromUser = 2000
-//		req.ToUser = 2001
-//		So(s.Find(context.TODO(), &req, &rsp), ShouldBeNil)
-//		So(rsp.Status, ShouldEqual, message.MessageFindResponse_INVALID_PARAM)
-//
-//		req.Way = message.MessageFindRequest_READ_MESSAGE
-//		testBase(2, 3, message.MessageFindResponse_SUCCESS)
-//		So(rsp.Infos[1].Msg, ShouldEqual, "012345678901234567890123")
-//
-//		testBase(0, 0, message.MessageFindResponse_SUCCESS)
-//
-//		req.Way = message.MessageFindRequest_HISTORY
-//		testBase(5, 0, message.MessageFindResponse_SUCCESS)
-//
-//		req.Limit = 3
-//		testBase(3, 0, message.MessageFindResponse_SUCCESS)
-//		rsp.Infos[0].Msg = "你好，我是小明1(⊙﹏⊙)，🔺"
-//
-//		req.Offset = 1
-//		testBase(3, 0, message.MessageFindResponse_SUCCESS)
-//		rsp.Infos[0].Msg = "你好，我是小明2(⊙﹏⊙)，🔺"
-//
-//		req.FromUser = 2001
-//		req.ToUser = 2000
-//		req.Way = message.MessageFindRequest_HISTORY
-//		testBase(3, 0, message.MessageFindResponse_SUCCESS)
-//
-//		req.Way = message.MessageFindRequest_READ_MESSAGE
-//		testBase(1, 0, message.MessageFindResponse_SUCCESS)
-//
-//		req.FromUser = 2011
-//		req.ToUser = 2010
-//		req.Limit = 100
-//		req.Way = message.MessageFindRequest_HISTORY
-//		testBase(0, 0, message.MessageFindResponse_SUCCESS)
-//	})
-//
-//}
-//
-
 func ParseCreate(input utils.StringMap) utils.StringMap {
 	var s srv
 	var rsp message.MessageCreateResponse
@@ -179,16 +72,16 @@ func ParseQuery(input utils.StringMap) utils.StringMap {
 }
 
 func CheckQuery(actual utils.StringMap, expect utils.StringMap) {
-	So(actual["status"], ShouldEqual, expect["status"])
+	utils.TestCheck(actual["status"], expect["status"])
 	rspNews := actual["news"].([]*message.NewMessage)
 	outNews := expect["news"].([]interface{})
 	So(len(rspNews), ShouldEqual, len(outNews))
 	for k, v := range rspNews {
 		outData := outNews[k].(utils.StringMap)
-		So(v.FromUser, ShouldEqual, outData["fromUser"])
-		So(v.ToUser, ShouldEqual, outData["toUser"])
-		So(v.Badge, ShouldEqual, outData["badge"])
-		So(v.Info.Msg, ShouldEqual, outData["msg"])
+		utils.TestCheck(v.FromUser, outData["fromUser"])
+		utils.TestCheck(v.ToUser, outData["toUser"])
+		utils.TestCheck(v.Badge, outData["badge"])
+		utils.TestCheck(v.Info.Msg, outData["msg"])
 	}
 }
 
@@ -239,15 +132,15 @@ func ParseFind(input utils.StringMap) utils.StringMap {
 }
 
 func CheckFind(actual utils.StringMap, expect utils.StringMap) {
-	So(actual["status"], ShouldEqual, expect["status"])
-	So(actual["fromUser"], ShouldEqual, expect["fromUser"])
-	So(actual["toUser"], ShouldEqual, expect["toUser"])
-	So(actual["badge"], ShouldEqual, expect["badge"])
+	utils.TestCheck(actual["status"], expect["status"])
+	utils.TestCheck(actual["fromUser"], expect["fromUser"])
+	utils.TestCheck(actual["toUser"], expect["toUser"])
+	utils.TestCheck(actual["badge"], expect["badge"])
 	rspMsg := actual["infos"].([]*message.MessageInfo)
 	outMsg := expect["infos"].([]interface{})
 	So(len(rspMsg), ShouldEqual, len(outMsg))
 	for k, v := range rspMsg {
-		So(v.Msg, ShouldEqual, outMsg[k])
+		utils.TestCheck(v.Msg, outMsg[k])
 	}
 }
 

@@ -1155,7 +1155,7 @@
     "title": "Auth.Auth",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Auth.Auth",
+    "name": "Auth_Auth",
     "description": "<p>Check OAuth code.</p>",
     "parameter": {
       "fields": {
@@ -1211,7 +1211,7 @@
     "title": "Avatar.Create",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Avatar.Create",
+    "name": "Avatar_Create",
     "description": "<p>Create avatar and return avatarID.</p>",
     "parameter": {
       "fields": {
@@ -1274,7 +1274,7 @@
     "title": "BuyInfo.Create",
     "version": "1.0.0",
     "group": "Service",
-    "name": "BuyInfo.Create",
+    "name": "BuyInfo_Create",
     "description": "<p>Create buy info</p>",
     "parameter": {
       "fields": {
@@ -1379,7 +1379,7 @@
     "title": "BuyInfo.Find",
     "version": "1.0.0",
     "group": "Service",
-    "name": "BuyInfo.Find",
+    "name": "BuyInfo_Find",
     "description": "<p>Find BuyInfo.</p>",
     "parameter": {
       "fields": {
@@ -1475,7 +1475,7 @@
     "title": "BuyInfo.Query",
     "version": "1.0.0",
     "group": "Service",
-    "name": "BuyInfo.Query",
+    "name": "BuyInfo_Query",
     "description": "<p>Query buy info</p>",
     "parameter": {
       "fields": {
@@ -1580,7 +1580,7 @@
     "title": "BuyInfo.Update",
     "version": "1.0.0",
     "group": "Service",
-    "name": "BuyInfo.Update",
+    "name": "BuyInfo_Update",
     "description": "<p>Update buy info.</p>",
     "parameter": {
       "fields": {
@@ -1636,7 +1636,7 @@
     "title": "Content.Check",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Content.Check",
+    "name": "Content_Check",
     "description": "<p>check sell info content</p>",
     "parameter": {
       "fields": {
@@ -1692,7 +1692,7 @@
     "title": "Content.Create",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Content.Create",
+    "name": "Content_Create",
     "description": "<p>create sell info content</p>",
     "parameter": {
       "fields": {
@@ -1783,7 +1783,7 @@
     "title": "Content.CreateTag",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Content.CreateTag",
+    "name": "Content_CreateTag",
     "description": "<p>create tags</p>",
     "parameter": {
       "fields": {
@@ -1860,7 +1860,7 @@
     "title": "Content.Delete",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Content.Delete",
+    "name": "Content_Delete",
     "description": "<p>delete sell info content</p>",
     "parameter": {
       "fields": {
@@ -1923,7 +1923,7 @@
     "title": "Content.Query",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Content.Query",
+    "name": "Content_Query",
     "description": "<p>query sell info content</p>",
     "parameter": {
       "fields": {
@@ -1993,7 +1993,7 @@
     "title": "Content.Update",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Content.Update",
+    "name": "Content_Update",
     "description": "<p>update sell info content</p>",
     "parameter": {
       "fields": {
@@ -2077,7 +2077,7 @@
     "title": "File.Create",
     "version": "1.0.0",
     "group": "Service",
-    "name": "File.Create",
+    "name": "File_Create",
     "description": "<p>Create file</p>",
     "parameter": {
       "fields": {
@@ -2133,7 +2133,7 @@
     "title": "File.Delete",
     "version": "1.0.0",
     "group": "Service",
-    "name": "File.Delete",
+    "name": "File_Delete",
     "description": "<p>Delete file</p>",
     "parameter": {
       "fields": {
@@ -2182,7 +2182,7 @@
     "title": "File.Query",
     "version": "1.0.0",
     "group": "Service",
-    "name": "File.Query",
+    "name": "File_Query",
     "description": "<p>Query file stream</p>",
     "parameter": {
       "fields": {
@@ -2245,7 +2245,7 @@
     "title": "Message.Create",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Message.Create",
+    "name": "Message_Create",
     "description": "<p>Create Message</p>",
     "parameter": {
       "fields": {
@@ -2315,7 +2315,7 @@
     "title": "Message.Find",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Message.Find",
+    "name": "Message_Find",
     "description": "<p>Find Message</p>",
     "parameter": {
       "fields": {
@@ -2460,7 +2460,7 @@
     "title": "Message.Query",
     "version": "1.0.0",
     "group": "Service",
-    "name": "Message.Query",
+    "name": "Message_Query",
     "description": "<p>Query New Message, do NOT set read</p>",
     "parameter": {
       "fields": {
@@ -2591,7 +2591,7 @@
     "title": "SellInfo.Create",
     "version": "1.0.0",
     "group": "Service",
-    "name": "SellInfo.Create",
+    "name": "SellInfo_Create",
     "description": "<p>create sell info</p>",
     "parameter": {
       "fields": {
@@ -2696,7 +2696,7 @@
     "title": "SellInfo.Find",
     "version": "1.0.0",
     "group": "Service",
-    "name": "SellInfo.Find",
+    "name": "SellInfo_Find",
     "description": "<p>Find SellInfo.</p>",
     "parameter": {
       "fields": {
@@ -2766,7 +2766,7 @@
             "type": "list",
             "optional": false,
             "field": "sellInfo",
-            "description": "<p>see <a href=\"#api-Service-sellinfo_SellInfo_Query\">SellInfo Service</a></p>"
+            "description": "<p>see <a href=\"#api-Service-SellInfo_Query\">SellInfo Service</a></p>"
           }
         ]
       }
@@ -2792,7 +2792,7 @@
     "title": "SellInfo.Query",
     "version": "1.0.0",
     "group": "Service",
-    "name": "SellInfo.Query",
+    "name": "SellInfo_Query",
     "description": "<p>Query sell info</p>",
     "parameter": {
       "fields": {
@@ -2897,7 +2897,7 @@
     "title": "SellInfo.Update",
     "version": "1.0.0",
     "group": "Service",
-    "name": "SellInfo.Update",
+    "name": "SellInfo_Update",
     "description": "<p>Update sell info.</p>",
     "parameter": {
       "fields": {
@@ -2953,7 +2953,7 @@
     "title": "User.Create",
     "version": "1.0.0",
     "group": "Service",
-    "name": "User.Create",
+    "name": "User_Create",
     "description": "<p>Create new user.</p>",
     "parameter": {
       "fields": {
@@ -3016,7 +3016,7 @@
     "title": "User.Find",
     "version": "1.0.0",
     "group": "Service",
-    "name": "User.Find",
+    "name": "User_Find",
     "description": "<p>Find user(fuzzy).</p>",
     "parameter": {
       "fields": {
@@ -3082,7 +3082,7 @@
     "title": "User.Query",
     "version": "1.0.0",
     "group": "Service",
-    "name": "User.Query",
+    "name": "User_Query",
     "description": "<p>Query user info.</p>",
     "parameter": {
       "fields": {
@@ -3180,7 +3180,7 @@
     "title": "User.Update",
     "version": "1.0.0",
     "group": "Service",
-    "name": "User.Update",
+    "name": "User_Update",
     "description": "<p>Update user info, only update provided field. If clearEmpty=1 and param support allow clear, clear the field when not provided.</p>",
     "parameter": {
       "fields": {

@@ -1,0 +1,38 @@
+{
+    "case": [
+        {
+            "input": {
+                "contentID": "",
+                "contentToken": "",
+                "tags": []
+            },
+            "output": {
+                "status": -1,
+                "contentID": "",
+                "contentToken": ""
+            }
+        },
+        {
+            "input": {
+                "contentID": "",
+                "contentToken": "",
+                "tags": [
+                    "tag1"
+                ]
+            },
+            "output": {
+                "status": 1,
+                "contentID": "#NOTEMPTY#",
+                "contentToken": "#NOTEMPTY#"
+            },
+            "verify": {
+                "contentID": "#contentID#",
+                "contentToken": "#contentToken#",
+                "tags": [
+                    "tag1"
+                ],
+                "files": []
+            }
+        }
+    ]
+}

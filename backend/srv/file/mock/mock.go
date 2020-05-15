@@ -28,7 +28,11 @@ func (a *mockFileSrv) Create(ctx context.Context, req *file.FileCreateRequest, o
 		rsp.FileID = ""
 	} else {
 		rsp.Status = file.FileCreateResponse_SUCCESS
-		rsp.FileID = "000000000000000000000001"
+		if string(req.File) == "valid_file_2" {
+			rsp.FileID = "000000000000000000000002"
+		} else {
+			rsp.FileID = "000000000000000000000001"
+		}
 	}
 	return &rsp, nil
 }

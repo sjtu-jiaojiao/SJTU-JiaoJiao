@@ -1,180 +1,217 @@
 package main
 
 import (
+	"context"
+	db "jiaojiao/database"
+	content "jiaojiao/srv/content/proto"
+	"jiaojiao/utils"
 	"testing"
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
-//
-//func TestContentCreate(t *testing.T) {
-//	var req content.ContentCreateRequest
-//
-//	tf := func(status content.ContentCreateResponse_Status, success bool) (string, string) {
-//		var s srv
-//		var rsp content.ContentCreateResponse
-//		So(s.Create(context.TODO(), &req, &rsp), ShouldBeNil)
-//		So(rsp.Status, ShouldEqual, status)
-//		if success {
-//			So(rsp.ContentID, ShouldNotBeBlank)
-//			So(rsp.ContentToken, ShouldNotBeBlank)
-//		} else {
-//			So(rsp.ContentID, ShouldBeBlank)
-//			So(rsp.ContentToken, ShouldBeBlank)
-//		}
-//		return rsp.ContentID, rsp.ContentToken
-//	}
-//
-//	Convey("Test content create", t, func() {
-//		req.Content = []byte{0}
-//		tf(content.ContentCreateResponse_INVALID_PARAM, false)
-//
-//		req.Type = content.Type_PICTURE
-//		tf(content.ContentCreateResponse_INVALID_PARAM, false)
-//		req.Type = 0
-//		req.Content = []byte("valid_file")
-//		tf(content.ContentCreateResponse_INVALID_PARAM, false)
-//		req.Type = content.Type_PICTURE
-//		req.Content = []byte("invalid_file")
-//		tf(content.ContentCreateResponse_INVALID_TYPE, false)
-//		req.Content = []byte("valid_file")
-//		req.ContentID = "1234"
-//		tf(content.ContentCreateResponse_INVALID_PARAM, false)
-//		req.ContentID = ""
-//		req.ContentToken = "12463-25897fsfs-5232"
-//		tf(content.ContentCreateResponse_INVALID_PARAM, false)
-//
-//		req.ContentID = "1234"
-//		tf(content.ContentCreateResponse_INVALID_TOKEN, false)
-//
-//		req.ContentID = ""
-//		req.ContentToken = ""
-//		id, token := tf(content.ContentCreateResponse_SUCCESS, true)
-//
-//		req.ContentID = id
-//		req.ContentToken = token
-//		defer func() {
-//			var sc srv
-//			var rspc content.ContentDeleteResponse
-//			err := sc.Delete(context.TODO(), &content.ContentDeleteRequest{
-//				ContentID:    id,
-//				ContentToken: token,
-//			}, &rspc)
-//			So(err, ShouldBeNil)
-//		}()
-//		tf(content.ContentCreateResponse_SUCCESS, true)
-//		tf(content.ContentCreateResponse_SUCCESS, true)
-//
-//		req.ContentToken = "12463-25897fsfs-5232"
-//		tf(content.ContentCreateResponse_INVALID_TOKEN, false)
-//	})
-//}
-//
-//func TestCreateTag(t *testing.T) {
-//	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-//	defer cancel()
-//	collection := db.MongoDatabase.Collection("content")
-//
-//	var req content.ContentCreateTagRequest
-//
-//	tf := func(status content.ContentCreateTagResponse_Status) (string, string) {
-//		var s srv
-//		var rsp content.ContentCreateTagResponse
-//		So(s.CreateTag(context.TODO(), &req, &rsp), ShouldBeNil)
-//		So(rsp.Status, ShouldEqual, status)
-//		if rsp.Status == content.ContentCreateTagResponse_SUCCESS {
-//			So(rsp.ContentID, ShouldNotBeBlank)
-//			So(rsp.ContentToken, ShouldNotBeBlank)
-//
-//			cid, err := primitive.ObjectIDFromHex(rsp.ContentID)
-//			So(err, ShouldBeNil)
-//			var res result
-//			err = collection.FindOne(ctx, bson.D{
-//				{"_id", cid},
-//			}).Decode(&res)
-//			So(err, ShouldBeNil)
-//			So(res.Tags, ShouldResemble, req.Tags)
-//		} else {
-//			So(rsp.ContentID, ShouldBeBlank)
-//			So(rsp.ContentToken, ShouldBeBlank)
-//		}
-//		return rsp.ContentID, rsp.ContentToken
-//	}
-//
-//	Convey("Test content create tag", t, func() {
-//		tf(content.ContentCreateTagResponse_INVALID_PARAM)
-//
-//		req.Tags = []string{"123", "456"}
-//		req.ContentID = "123"
-//		tf(content.ContentCreateTagResponse_INVALID_PARAM)
-//		req.ContentToken = "456"
-//		tf(content.ContentCreateTagResponse_INVALID_TOKEN)
-//		req.ContentID = ""
-//		req.ContentToken = ""
-//		req.ContentID, req.ContentToken = tf(content.ContentCreateTagResponse_SUCCESS)
-//		defer func() {
-//			var res result
-//			cid, err := primitive.ObjectIDFromHex(req.ContentID)
-//			So(err, ShouldBeNil)
-//			err = collection.FindOneAndDelete(ctx, bson.D{
-//				{"_id", cid},
-//				{"token", req.ContentToken},
-//			}).Decode(&res)
-//			So(err, ShouldBeNil)
-//		}()
-//
-//		req.Tags = []string{"789"}
-//		tf(content.ContentCreateTagResponse_SUCCESS)
-//	})
-//}
-//
-//func TestContentDelete(t *testing.T) {
-//	// TODO
-//}
-//
-//func TestContentQuery(t *testing.T) {
-//	// TODO
-//}
-//
-//func TestContentCheck(t *testing.T) {
-//	tf := func(status content.ContentCheckResponse_Status, id string, token string) {
-//		var s srv
-//		var rsp content.ContentCheckResponse
-//		So(s.Check(context.TODO(), &content.ContentCheckRequest{
-//			ContentID:    id,
-//			ContentToken: token,
-//		}, &rsp), ShouldBeNil)
-//		So(rsp.Status, ShouldEqual, status)
-//	}
-//
-//	Convey("Test content check", t, func() {
-//		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-//		defer cancel()
-//		collection := db.MongoDatabase.Collection("content")
-//		token := uuid.NewV4().String()
-//		res, err := collection.InsertOne(ctx, bson.M{
-//			"token": token,
-//			"files": bson.A{
-//				bson.M{
-//					"fileID": "012345678901234567891234",
-//					"type":   1,
-//				}},
-//		})
-//		So(err, ShouldBeNil)
-//		id := res.InsertedID.(primitive.ObjectID).Hex()
-//		defer func() {
-//			err = collection.FindOneAndDelete(ctx, bson.D{
-//				{"_id", res.InsertedID.(primitive.ObjectID)},
-//				{"token", token},
-//			}).Decode(&res)
-//			So(err, ShouldBeNil)
-//		}()
-//
-//		tf(content.ContentCheckResponse_INVALID_PARAM, "", "")
-//		tf(content.ContentCheckResponse_INVALID_PARAM, id, "")
-//		tf(content.ContentCheckResponse_INVALID_PARAM, "", token)
-//		tf(content.ContentCheckResponse_INVALID, id, "123123")
-//		tf(content.ContentCheckResponse_VALID, id, token)
-//	})
-//}
+func ParseCreate(input utils.StringMap) utils.StringMap {
+	var s srv
+	var rsp content.ContentCreateResponse
+	ret := make(utils.StringMap)
+
+	ret["_error"] = s.Create(context.TODO(), &content.ContentCreateRequest{
+		ContentID:    utils.TestString(input["contentID"]),
+		ContentToken: utils.TestString(input["contentToken"]),
+		Content:      utils.TestByte(input["content"]),
+		Type:         content.Type(utils.EnumConvert(utils.TestInt(input["type"]), content.Type_name)),
+	}, &rsp)
+	ret["status"] = int32(rsp.Status)
+	ret["contentID"] = rsp.ContentID
+	ret["contentToken"] = rsp.ContentToken
+	ret["fileID"] = rsp.FileID
+	return ret
+}
+
+func ParseCreateTag(input utils.StringMap) utils.StringMap {
+	var s srv
+	var rsp content.ContentCreateTagResponse
+	ret := make(utils.StringMap)
+	var tags []string
+	for _, v := range input["tags"].([]interface{}) {
+		tags = append(tags, utils.TestString(v))
+	}
+
+	ret["_error"] = s.CreateTag(context.TODO(), &content.ContentCreateTagRequest{
+		ContentID:    utils.TestString(input["contentID"]),
+		ContentToken: utils.TestString(input["contentToken"]),
+		Tags:         tags,
+	}, &rsp)
+	ret["status"] = int32(rsp.Status)
+	ret["contentID"] = rsp.ContentID
+	ret["contentToken"] = rsp.ContentToken
+	return ret
+}
+
+func ParseQuery(input utils.StringMap) utils.StringMap {
+	var s srv
+	var rsp content.ContentQueryResponse
+	ret := make(utils.StringMap)
+
+	ret["_error"] = s.Query(context.TODO(), &content.ContentQueryRequest{
+		ContentID: utils.TestString(input["contentID"]),
+	}, &rsp)
+	ret["status"] = int32(rsp.Status)
+	ret["contentToken"] = rsp.ContentToken
+	ret["files"] = rsp.Files
+	ret["tags"] = rsp.Tags
+	return ret
+}
+
+func ParseCheck(input utils.StringMap) utils.StringMap {
+	var s srv
+	var rsp content.ContentCheckResponse
+	ret := make(utils.StringMap)
+
+	ret["_error"] = s.Check(context.TODO(), &content.ContentCheckRequest{
+		ContentID:    utils.TestString(input["contentID"]),
+		ContentToken: utils.TestString(input["contentToken"]),
+	}, &rsp)
+	ret["status"] = int32(rsp.Status)
+	return ret
+}
+
+func ParseDelete(input utils.StringMap) utils.StringMap {
+	var s srv
+	var rsp content.ContentDeleteResponse
+	ret := make(utils.StringMap)
+
+	ret["_error"] = s.Delete(context.TODO(), &content.ContentDeleteRequest{
+		ContentID:    utils.TestString(input["contentID"]),
+		ContentToken: utils.TestString(input["contentToken"]),
+		FileID:       utils.TestString(input["fileID"]),
+	}, &rsp)
+	ret["status"] = int32(rsp.Status)
+	return ret
+}
+func ParseUpdate(input utils.StringMap) utils.StringMap {
+	var s srv
+	var rsp content.ContentUpdateResponse
+	ret := make(utils.StringMap)
+
+	ret["_error"] = s.Update(context.TODO(), &content.ContentUpdateRequest{
+		ContentID:    utils.TestString(input["contentID"]),
+		ContentToken: utils.TestString(input["contentToken"]),
+		FileID:       utils.TestString(input["fileID"]),
+		Content:      utils.TestByte(input["content"]),
+		Type:         content.Type(utils.EnumConvert(utils.TestInt(input["type"]), content.Type_name)),
+	}, &rsp)
+	ret["status"] = int32(rsp.Status)
+	ret["fileID"] = rsp.FileID
+	return ret
+}
+
+func CheckQuery(actual utils.StringMap, expect utils.StringMap) {
+	utils.TestCheck(actual["status"], expect["status"])
+	utils.TestCheck(actual["contentToken"], expect["contentToken"])
+	rspTags := actual["tags"].([]string)
+	outTags := expect["tags"].([]interface{})
+	utils.TestCheck(len(rspTags), len(outTags))
+	for k, v := range rspTags {
+		So(v, ShouldEqual, outTags[k])
+	}
+	rspFiles := actual["files"].([]*content.FileMsg)
+	outFiles := expect["files"].([]interface{})
+	utils.TestCheck(len(rspFiles), len(outFiles))
+	for k, v := range rspFiles {
+		outData := outFiles[k].(utils.StringMap)
+		utils.TestCheck(v.FileID, outData["fileID"])
+		utils.TestCheck(v.Type, outData["type"])
+	}
+}
+
+func InsertData(data utils.StringMap) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	collection := db.MongoDatabase.Collection("content")
+	id, err := primitive.ObjectIDFromHex(utils.TestString(data["contentID"]))
+	So(err, ShouldBeNil)
+
+	var files bson.A
+	for _, v := range data["files"].([]interface{}) {
+		t := v.(utils.StringMap)
+		fid, err := primitive.ObjectIDFromHex(utils.TestString(t["fileID"]))
+		So(err, ShouldBeNil)
+		files = append(files, bson.M{
+			"fileID": fid,
+			"type":   t["type"],
+		})
+	}
+	_, err = collection.InsertOne(ctx,
+		bson.M{
+			"_id":   id,
+			"token": data["contentToken"],
+			"tags":  data["tags"],
+			"files": files,
+		})
+	So(err, ShouldBeNil)
+}
+
+func VerifyData(verify utils.StringMap, output utils.StringMap) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	collection := db.MongoDatabase.Collection("content")
+	id, err := primitive.ObjectIDFromHex(utils.TransVarString("contentID", verify, output))
+	So(err, ShouldBeNil)
+	filter := primitive.M{
+		"_id":   id,
+		"token": utils.TransVarString("contentToken", verify, output),
+	}
+	var res result
+
+	if exist, ok := verify["_exist"]; !ok || exist.(bool) {
+		So(collection.FindOne(ctx, filter).Decode(&res), ShouldBeNil)
+
+		verifyFile := verify["files"].([]interface{})
+		So(len(res.Files), ShouldEqual, len(verifyFile))
+		for k, v := range res.Files {
+			verifyData := verifyFile[k].(utils.StringMap)
+			So(v.FileID.Hex(), ShouldEqual, utils.TransVarString("fileID", verifyData, output))
+			So(v.Type, ShouldEqual, verifyData["type"])
+		}
+		verifyTags := verify["tags"].([]interface{})
+		So(len(res.Tags), ShouldEqual, len(verifyTags))
+		for k, v := range res.Tags {
+			So(v, ShouldEqual, verifyTags[k])
+		}
+	} else {
+		So(collection.FindOne(ctx, filter).Decode(&res), ShouldNotBeNil)
+	}
+}
+
+func cleanup() {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	collection := db.MongoDatabase.Collection("content")
+	err := collection.Drop(ctx)
+	utils.LogPanic(err)
+}
+
+func TestAll(t *testing.T) {
+	cleanup()
+	utils.Test(t, "test/test_create.json", nil, ParseCreate, VerifyData, nil)
+	cleanup()
+	utils.Test(t, "test/test_createtag.json", nil, ParseCreateTag, VerifyData, nil)
+	cleanup()
+	utils.Test(t, "test/test_query.json", InsertData, ParseQuery, nil, CheckQuery)
+	cleanup()
+	utils.Test(t, "test/test_check.json", InsertData, ParseCheck, nil, nil)
+	cleanup()
+	utils.Test(t, "test/test_delete.json", InsertData, ParseDelete, VerifyData, nil)
+	cleanup()
+	utils.Test(t, "test/test_update.json", InsertData, ParseUpdate, VerifyData, nil)
+	cleanup()
+}
 
 func TestMain(m *testing.M) {
 	main()

@@ -1,0 +1,50 @@
+{
+    "data": [
+        {
+            "contentID": "000000000000000000000001",
+            "contentToken": "valid_token",
+            "tags": [
+                "tag1",
+                "tag2"
+            ],
+            "files": [
+                {
+                    "fileID": "000000000000000000000011",
+                    "type": 1
+                }
+            ]
+        }
+    ],
+    "case": [
+        {
+            "input": {
+                "contentID": ""
+            },
+            "output": {
+                "status": -1,
+                "contentToken": "",
+                "files": [],
+                "tags": []
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000001"
+            },
+            "output": {
+                "status": 1,
+                "contentToken": "valid_token",
+                "files": [
+                    {
+                        "fileID": "000000000000000000000011",
+                        "type": 1
+                    }
+                ],
+                "tags": [
+                    "tag1",
+                    "tag2"
+                ]
+            }
+        }
+    ]
+}

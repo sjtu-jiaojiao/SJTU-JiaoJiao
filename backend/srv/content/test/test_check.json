@@ -1,0 +1,57 @@
+{
+    "data": [
+        {
+            "contentID": "000000000000000000000001",
+            "contentToken": "valid_token",
+            "tags": [],
+            "files": []
+        }
+    ],
+    "case": [
+        {
+            "input": {
+                "contentID": "",
+                "contentToken": ""
+            },
+            "output": {
+                "status": -1
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token"
+            },
+            "output": {
+                "status": 1
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "invalid_token"
+            },
+            "output": {
+                "status": 2
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000002",
+                "contentToken": "valid_token"
+            },
+            "output": {
+                "status": 2
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000002",
+                "contentToken": "invalid_token"
+            },
+            "output": {
+                "status": 2
+            }
+        }
+    ]
+}
