@@ -118,7 +118,7 @@ func EnumConvert(v int32, n map[int32]string) int32 {
 // CheckFile check if file valid
 func CheckFile(file []byte, f ...func(buf []byte) bool) bool {
 	if CheckInTest() {
-		return string(file) == "valid_file"
+		return string(file) == "valid_file" || string(file) == "error"
 	}
 	for _, v := range f {
 		if v(file) {
