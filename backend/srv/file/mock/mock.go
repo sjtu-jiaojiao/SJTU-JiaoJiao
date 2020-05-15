@@ -19,7 +19,7 @@ func (a *mockFileSrv) Create(ctx context.Context, req *file.FileCreateRequest, o
 		return &rsp, nil
 	}
 
-	if string(req.File) == "error" {
+	if string(req.File) == "valid_file_error" {
 		return nil, errors.New("")
 	}
 
