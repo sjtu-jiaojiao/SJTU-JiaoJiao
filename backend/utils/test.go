@@ -103,7 +103,7 @@ func Test(t *testing.T, file string,
 		}
 
 		for i, v := range fileMap["case"] {
-			t.Logf("Test case %d...", i)
+			t.Logf("Testing case %d...", i)
 			ret := parse(v["input"].(StringMap))
 			err, ok := v["output"].(map[string]interface{})["_error"]
 			if ok && err.(bool) {
@@ -126,6 +126,7 @@ func Test(t *testing.T, file string,
 					verify(v["verify"].(StringMap), ret)
 				}
 			}
+			t.Logf("Case %d OK", i)
 		}
 	})
 }

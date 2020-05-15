@@ -132,7 +132,7 @@ func ParseCreate(input utils.StringMap) utils.StringMap {
 		Type:     message.Type(utils.EnumConvert(utils.TestInt(input["type"]), message.Type_name)),
 		Msg:      utils.TestByte(input["msg"]),
 	}, &rsp)
-	ret["status"] = rsp.Status
+	ret["status"] = int32(rsp.Status)
 	return ret
 }
 
