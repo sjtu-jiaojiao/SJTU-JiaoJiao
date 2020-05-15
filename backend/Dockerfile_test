@@ -12,6 +12,8 @@ RUN yum makecache && yum update && \
 RUN yum install git golang wget unzip -y
 ENV GO111MODULE on
 ENV GOPROXY https://goproxy.cn
+RUN echo "export GO111MODULE=on" >> ".bash_profile" && \
+    echo "export GOPROXY=https://goproxy.cn" >> ".bash_profile"
 RUN go get github.com/smartystreets/goconvey
 
 RUN wget ftp://imwxz2017:public@public.sjtu.edu.cn/consul_1.7.1_linux_amd64.zip && \
@@ -42,6 +44,7 @@ RUN echo "security:" >> /etc/mongod.conf && \
 RUN echo "nohup mongod --quiet --config /etc/mongod.conf >/dev/null 2>&1 &" >> start.sh
 
 ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/go/bin
+RUN echo "export PATH=\$PATH:/root/go/bin" >> ".bash_profile"
 RUN go get github.com/micro/micro@v1.7.0
 RUN echo "cd backend && go mod download && cd .." >> start.sh
 
@@ -49,6 +52,10 @@ ENV JJ_MARIADBUSER root
 ENV JJ_MARIADBPWD 123456
 ENV JJ_MONGODBUSER root
 ENV JJ_MONGODBPWD 123456
+RUN echo "export JJ_MARIADBUSER=root" >> ".bash_profile" && \
+    echo "export JJ_MARIADBPWD=123456" >> ".bash_profile" && \
+    echo "export JJ_MONGODBUSER=root" >> ".bash_profile" && \
+    echo "export JJ_MONGODBPWD=123456" >> ".bash_profile"
 
 RUN echo "echo Sleep 10s... && sleep 10" >> start.sh
 

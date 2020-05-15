@@ -89,9 +89,11 @@ func Test(t *testing.T, file string,
 	verify func(verify StringMap, output StringMap),
 	checker func(actual StringMap, expect StringMap)) {
 	Convey("Test "+file, t, func() {
+		t.Logf("Reading file %s...", file)
 		fileData, err := ioutil.ReadFile(file)
 		So(err, ShouldBeNil)
 
+		t.Log("Init data...")
 		var fileMap map[string][]map[string]interface{}
 		So(json.Unmarshal(fileData, &fileMap), ShouldBeNil)
 		if insert != nil {
@@ -100,7 +102,8 @@ func Test(t *testing.T, file string,
 			}
 		}
 
-		for _, v := range fileMap["case"] {
+		for i, v := range fileMap["case"] {
+			t.Logf("Test case %d...", i)
 			ret := parse(v["input"].(StringMap))
 			err, ok := v["output"].(map[string]interface{})["_error"]
 			if ok && err.(bool) {
