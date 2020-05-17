@@ -1,6 +1,15 @@
 {
     "data": [
         {
+            "contentID": "000000000000000000000000",
+            "contentToken": "valid_token",
+            "tags": [
+                "tag1",
+                "tag2"
+            ],
+            "files": []
+        },
+        {
             "contentID": "000000000000000000000001",
             "contentToken": "valid_token",
             "tags": [
@@ -13,18 +22,39 @@
                     "type": 1
                 }
             ]
+        },
+        {
+            "contentID": "000000000000000000000002",
+            "contentToken": "valid_token",
+            "tags": [
+                "tag1",
+                "tag2"
+            ],
+            "files": [
+                {
+                    "fileID": "000000000000000000000011",
+                    "type": 1
+                },
+                {
+                    "fileID": "000000000000000000000012",
+                    "type": 1
+                }
+            ]
         }
     ],
     "case": [
         {
             "input": {
-                "contentID": ""
+                "contentID": "000000000000000000000000"
             },
             "output": {
-                "status": -1,
-                "contentToken": "",
+                "status": 1,
+                "contentToken": "valid_token",
                 "files": [],
-                "tags": []
+                "tags": [
+                    "tag1",
+                    "tag2"
+                ]
             }
         },
         {
@@ -44,6 +74,62 @@
                     "tag1",
                     "tag2"
                 ]
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000002"
+            },
+            "output": {
+                "status": 1,
+                "contentToken": "valid_token",
+                "files": [
+                    {
+                        "fileID": "000000000000000000000011",
+                        "type": 1
+                    },
+                    {
+                        "fileID": "000000000000000000000012",
+                        "type": 1
+                    }
+                ],
+                "tags": [
+                    "tag1",
+                    "tag2"
+                ]
+            }
+        },
+        {
+            "input": {
+                "contentID": ""
+            },
+            "output": {
+                "status": -1,
+                "contentToken": "",
+                "files": [],
+                "tags": []
+            }
+        },
+        {
+            "input": {
+                "contentID": "3"
+            },
+            "output": {
+                "status": -1,
+                "contentToken": "",
+                "files": [],
+                "tags": []
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000003"
+            },
+            "output": {
+                "status": 2,
+                "contentToken": "",
+                "files": [],
+                "tags": []
             }
         }
     ]

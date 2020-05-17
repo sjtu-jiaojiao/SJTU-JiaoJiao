@@ -64,10 +64,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 			return primitive.ObjectID{}, errors.New(s)
 		}
 
-		fid, err := primitive.ObjectIDFromHex(rsp.FileID)
-		if err != nil {
-			return primitive.ObjectID{}, err
-		}
+		fid, _ := primitive.ObjectIDFromHex(rsp.FileID)
 
 		return fid, nil
 	}
@@ -93,7 +90,7 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		collection := db.MongoDatabase.Collection("content")
-		res, err := collection.InsertOne(ctx, bson.M{
+		res, _ := collection.InsertOne(ctx, bson.M{
 			"token": token,
 			"files": bson.A{
 				bson.M{
@@ -101,9 +98,6 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 					"type":   req.Type,
 				}},
 		})
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
 
 		rsp.ContentID = res.InsertedID.(primitive.ObjectID).Hex()
 		rsp.ContentToken = token
@@ -135,9 +129,6 @@ func (a *srv) Create(ctx context.Context, req *content.ContentCreateRequest, rsp
 						{"type", req.Type},
 					}},
 				}}})
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
 		rsp.ContentID = req.ContentID
 		rsp.ContentToken = req.ContentToken
 		rsp.FileID = objID.Hex()
@@ -175,13 +166,10 @@ func (a *srv) CreateTag(ctx context.Context, req *content.ContentCreateTagReques
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		collection := db.MongoDatabase.Collection("content")
-		res, err := collection.InsertOne(ctx, bson.M{
+		res, _ := collection.InsertOne(ctx, bson.M{
 			"token": token,
 			"tags":  req.Tags,
 		})
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
 
 		rsp.ContentID = res.InsertedID.(primitive.ObjectID).Hex()
 		rsp.ContentToken = token
@@ -195,12 +183,9 @@ func (a *srv) CreateTag(ctx context.Context, req *content.ContentCreateTagReques
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 		collection := db.MongoDatabase.Collection("content")
-		rid, err := primitive.ObjectIDFromHex(req.ContentID)
-		if utils.LogContinue(err, utils.Warning) {
-			rsp.Status = content.ContentCreateTagResponse_INVALID_TOKEN
-			return nil
-		}
-		_, err = collection.UpdateOne(ctx, bson.D{
+		rid, _ := primitive.ObjectIDFromHex(req.ContentID)
+
+		_, _ = collection.UpdateOne(ctx, bson.D{
 			{"_id", rid},
 			{"token", req.ContentToken},
 		},
@@ -209,9 +194,6 @@ func (a *srv) CreateTag(ctx context.Context, req *content.ContentCreateTagReques
 					{"tags", req.Tags},
 				}},
 			})
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
 		rsp.ContentID = req.ContentID
 		rsp.ContentToken = req.ContentToken
 		rsp.Status = content.ContentCreateTagResponse_SUCCESS
@@ -275,9 +257,6 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 		return errors.New(s)
 	}
 	fid, err := primitive.ObjectIDFromHex(microCreateRsp.FileID)
-	if utils.LogContinue(err, utils.Error) {
-		return err
-	}
 
 	_, err = collection.UpdateOne(ctx, bson.D{
 		{"_id", rid},
@@ -289,21 +268,11 @@ func (a *srv) Update(ctx context.Context, req *content.ContentUpdateRequest, rsp
 			{"files.$.type", req.Type},
 		}},
 	})
-	if utils.LogContinue(err, utils.Error) {
-		return err
-	}
 
 	// delete old file
-	microDeleteRsp, err := srv.Delete(context.TODO(), &file.FileRequest{
+	_, _ = srv.Delete(context.TODO(), &file.FileRequest{
 		FileID: req.FileID,
 	})
-	if utils.LogContinue(err, utils.Error) {
-		return err
-	}
-	if microDeleteRsp.Status != file.FileDeleteResponse_SUCCESS {
-		_, s := utils.LogContinueS("File delete return "+microDeleteRsp.Status.String(), utils.Error)
-		return errors.New(s)
-	}
 
 	rsp.FileID = microCreateRsp.FileID
 	rsp.Status = content.ContentUpdateResponse_SUCCESS
@@ -357,24 +326,14 @@ func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp
 				}},
 			}},
 		})
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
 		if res.ModifiedCount == 0 {
 			rsp.Status = content.ContentDeleteResponse_NOT_FOUND
 			return nil
 		}
 
-		microRsp, err := srv.Delete(context.TODO(), &file.FileRequest{
+		_, _ = srv.Delete(context.TODO(), &file.FileRequest{
 			FileID: req.FileID,
 		})
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
-		if microRsp.Status != file.FileDeleteResponse_SUCCESS {
-			_, s := utils.LogContinueS("File delete return "+microRsp.Status.String(), utils.Error)
-			return errors.New(s)
-		}
 	} else {
 		var res result
 		err = collection.FindOneAndDelete(ctx, bson.D{
@@ -389,16 +348,9 @@ func (a *srv) Delete(ctx context.Context, req *content.ContentDeleteRequest, rsp
 		srv := utils.CallMicroService("file", func(name string, c client.Client) interface{} { return file.NewFileService(name, c) },
 			func() interface{} { return mock.NewFileService() }).(file.FileService)
 		for _, v := range res.Files {
-			microRsp, err := srv.Delete(context.TODO(), &file.FileRequest{
+			_, _ = srv.Delete(context.TODO(), &file.FileRequest{
 				FileID: v.FileID.Hex(),
 			})
-			if utils.LogContinue(err, utils.Error) {
-				return err
-			}
-			if microRsp.Status != file.FileDeleteResponse_SUCCESS {
-				_, s := utils.LogContinueS("File delete return "+microRsp.Status.String(), utils.Error)
-				return errors.New(s)
-			}
 		}
 	}
 	rsp.Status = content.ContentDeleteResponse_SUCCESS
@@ -481,10 +433,6 @@ func (a *srv) Check(ctx context.Context, req *content.ContentCheckRequest, rsp *
 }
 
 func validCheck(contentID string, contentToken string) bool {
-	if !utils.RequireParam(contentID, contentToken) {
-		return false
-	}
-
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	collection := db.MongoDatabase.Collection("content")

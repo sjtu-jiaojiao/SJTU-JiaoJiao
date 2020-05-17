@@ -1,17 +1,13 @@
 {
-    "case": [
+    "data": [
         {
-            "input": {
-                "contentID": "",
-                "contentToken": "",
-                "tags": []
-            },
-            "output": {
-                "status": -1,
-                "contentID": "",
-                "contentToken": ""
-            }
-        },
+            "contentID": "000000000000000000000001",
+            "contentToken": "valid_token",
+            "tags": [],
+            "files": []
+        }
+    ],
+    "case": [
         {
             "input": {
                 "contentID": "",
@@ -32,6 +28,82 @@
                     "tag1"
                 ],
                 "files": []
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
+                "tags": [
+                    "tag1"
+                ]
+            },
+            "output": {
+                "status": 1,
+                "contentID": "#NOTEMPTY#",
+                "contentToken": "#NOTEMPTY#"
+            },
+            "verify": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
+                "tags": [
+                    "tag1"
+                ],
+                "files": []
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "invalid_token",
+                "tags": [
+                    "tag1"
+                ]
+            },
+            "output": {
+                "status": 2,
+                "contentID": "",
+                "contentToken": ""
+            }
+        },
+        {
+            "input": {
+                "contentID": "",
+                "contentToken": "valid_token",
+                "tags": [
+                    "tag1"
+                ]
+            },
+            "output": {
+                "status": -1,
+                "contentID": "",
+                "contentToken": ""
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
+                "tags": []
+            },
+            "output": {
+                "status": -1,
+                "contentID": "",
+                "contentToken": ""
+            }
+        },
+        {
+            "input": {
+                "contentID": "2",
+                "contentToken": "000000000000000000000001",
+                "tags": [
+                    "tag1"
+                ]
+            },
+            "output": {
+                "status": 2,
+                "contentID": "",
+                "contentToken": ""
             }
         }
     ]

@@ -108,6 +108,9 @@ func (a *mockSrv) CreateTag(ctx context.Context, req *content.ContentCreateTagRe
 		rsp.ContentToken = "valid_token"
 		rsp.Status = content.ContentCreateTagResponse_SUCCESS
 	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) { // add exist one
+		if req.ContentToken == "error_token" {
+			return nil, errors.New("")
+		}
 		if req.ContentToken != "valid_token" {
 			rsp.Status = content.ContentCreateTagResponse_INVALID_TOKEN
 			return &rsp, nil

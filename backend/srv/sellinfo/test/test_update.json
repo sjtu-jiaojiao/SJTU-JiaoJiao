@@ -40,6 +40,15 @@
                 "contentID": "000000000000000000000001",
                 "userID": 1000
             }
+        },
+        {
+            "input": {
+                "sellInfoID": 200,
+                "status": 2
+            },
+            "output": {
+                "status": 2
+            }
         }
     ]
 }

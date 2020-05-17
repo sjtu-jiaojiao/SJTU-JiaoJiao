@@ -1,34 +1,59 @@
 {
     "data": [
         {
-            "fromUser": 1000,
-            "toUser": 1001,
+            "fromUser": 1,
+            "toUser": 2,
             "badge": 1,
             "infos": [
                 {
-                    "forward": false,
+                    "forward": true,
                     "type": 1,
-                    "msg": "test_text1",
-                    "unread": true
+                    "msg": "text",
+                    "unread": false
                 },
                 {
                     "forward": false,
                     "type": 1,
-                    "msg": "test_text2",
+                    "msg": "text",
                     "unread": false
                 }
             ]
         },
         {
-            "fromUser": 1000,
-            "toUser": 1002,
+            "fromUser": 4,
+            "toUser": 3,
             "badge": 1,
             "infos": [
                 {
+                    "forward": true,
+                    "type": 1,
+                    "msg": "text",
+                    "unread": false
+                },
+                {
                     "forward": false,
                     "type": 1,
-                    "msg": "test_text3",
-                    "unread": true
+                    "msg": "text",
+                    "unread": false
+                }
+            ]
+        },
+        {
+            "fromUser": 3,
+            "toUser": 4,
+            "badge": 1,
+            "infos": [
+                {
+                    "forward": true,
+                    "type": 1,
+                    "msg": "text",
+                    "unread": false
+                },
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "text",
+                    "unread": false
                 }
             ]
         }
@@ -36,10 +61,92 @@
     "case": [
         {
             "input": {
+                "fromUser": 1,
+                "toUser": 2,
+                "way": 2,
+                "limit": 10,
+                "offset": 0
+            },
+            "output": {
+                "status": 1,
+                "fromUser": 1,
+                "toUser": 2,
+                "badge": 1,
+                "infos": [
+                    "text",
+                    "text"
+                ]
+            }
+        },
+        {
+            "input": {
+                "fromUser": 1,
+                "toUser": 2,
+                "way": 1,
+                "limit": 10,
+                "offset": 0
+            },
+            "output": {
+                "status": 1,
+                "fromUser": 1,
+                "toUser": 2,
+                "badge": 1,
+                "infos": []
+            }
+        },
+        {
+            "input": {
+                "fromUser": 2,
+                "toUser": 1,
+                "way": 2,
+                "limit": 10,
+                "offset": 0
+            },
+            "output": {
+                "status": 1,
+                "fromUser": 1,
+                "toUser": 2,
+                "badge": 1,
+                "infos": [
+                    "text",
+                    "text"
+                ]
+            }
+        },
+        {
+            "input": {
+                "fromUser": 3,
+                "toUser": 4,
+                "way": 1,
+                "limit": 10,
+                "offset": 0
+            },
+            "output": {
+                "_error": true
+            }
+        },
+        {
+            "input": {
+                "fromUser": 5,
+                "toUser": 6,
+                "way": 1,
+                "limit": 10,
+                "offset": 0
+            },
+            "output": {
+                "status": 1,
                 "fromUser": 0,
                 "toUser": 0,
-                "way": 0,
-                "limit": 0,
+                "badge": 0,
+                "infos": []
+            }
+        },
+        {
+            "input": {
+                "fromUser": 1,
+                "toUser": 1,
+                "way": 1,
+                "limit": 10,
                 "offset": 0
             },
             "output": {
@@ -52,38 +159,39 @@
         },
         {
             "input": {
-                "fromUser": 1001,
-                "toUser": 1000,
-                "way": 1,
+                "fromUser": 1,
+                "toUser": 2,
+                "way": 2,
                 "limit": 0,
                 "offset": 0
             },
             "output": {
                 "status": 1,
-                "fromUser": 1000,
-                "toUser": 1001,
+                "fromUser": 1,
+                "toUser": 2,
                 "badge": 1,
                 "infos": [
-                    "test_text1"
+                    "text",
+                    "text"
                 ]
+            }
+        },
+        {
+            "input": {
+                "fromUser": 1,
+                "toUser": 2,
+                "way": 2,
+                "limit": 21,
+                "offset": 0
             },
-            "verify": {
-                "fromUser": 1000,
-                "toUser": 1001,
-                "badge": 0,
+            "output": {
+                "status": 1,
+                "fromUser": 1,
+                "toUser": 2,
+                "badge": 1,
                 "infos": [
-                    {
-                        "forward": false,
-                        "type": 1,
-                        "msg": "test_text1",
-                        "unread": false
-                    },
-                    {
-                        "forward": false,
-                        "type": 1,
-                        "msg": "test_text2",
-                        "unread": false
-                    }
+                    "text",
+                    "text"
                 ]
             }
         }

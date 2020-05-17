@@ -1,23 +1,47 @@
 {
+    "data": [
+        {
+            "contentID": "000000000000000000000001",
+            "contentToken": "valid_token",
+            "tags": [],
+            "files": [
+                {
+                    "fileID": "000000000000000000000002",
+                    "type": 1
+                }
+            ]
+        }
+    ],
     "case": [
         {
             "input": {
                 "contentID": "",
                 "contentToken": "",
-                "content": "",
-                "type": 0
+                "content": "valid_file",
+                "type": 2
             },
             "output": {
-                "status": -1,
-                "contentID": "",
-                "contentToken": "",
-                "fileID": ""
+                "status": 1,
+                "contentID": "#NOTEMPTY#",
+                "contentToken": "#NOTEMPTY#",
+                "fileID": "#NOTEMPTY#"
+            },
+            "verify": {
+                "contentID": "#contentID#",
+                "contentToken": "#contentToken#",
+                "tags": [],
+                "files": [
+                    {
+                        "fileID": "#fileID#",
+                        "type": 2
+                    }
+                ]
             }
         },
         {
             "input": {
-                "contentID": "",
-                "contentToken": "",
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
                 "content": "valid_file",
                 "type": 1
             },
@@ -33,10 +57,103 @@
                 "tags": [],
                 "files": [
                     {
+                        "fileID": "000000000000000000000002",
+                        "type": 1
+                    },
+                    {
                         "fileID": "#fileID#",
                         "type": 1
                     }
                 ]
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000002",
+                "contentToken": "",
+                "content": "invalid_file",
+                "type": 1
+            },
+            "output": {
+                "status": 3,
+                "contentID": "",
+                "contentToken": "",
+                "fileID": ""
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000002",
+                "contentToken": "",
+                "content": "valid_file",
+                "type": 1
+            },
+            "output": {
+                "status": -1,
+                "contentID": "",
+                "contentToken": "",
+                "fileID": ""
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000002",
+                "contentToken": "000000000000000000000002",
+                "content": "",
+                "type": 1
+            },
+            "output": {
+                "status": -1,
+                "contentID": "",
+                "contentToken": "",
+                "fileID": ""
+            }
+        },
+        {
+            "input": {
+                "contentID": "",
+                "contentToken": "",
+                "content": "valid_file_error",
+                "type": 1
+            },
+            "output": {
+                "_error": true
+            }
+        },
+        {
+            "input": {
+                "contentID": "",
+                "contentToken": "",
+                "content": "valid_file_unknown",
+                "type": 1
+            },
+            "output": {
+                "_error": true
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000002",
+                "contentToken": "invalid_token",
+                "content": "valid_file",
+                "type": 1
+            },
+            "output": {
+                "status": 2,
+                "contentID": "",
+                "contentToken": "",
+                "fileID": ""
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
+                "content": "valid_file_error",
+                "type": 1
+            },
+            "output": {
+                "_error": true
             }
         }
     ]

@@ -105,7 +105,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 
 	// new chat
 	if err1 != nil && err2 != nil {
-		_, err := collection.InsertOne(ctx, bson.M{
+		_, _ = collection.InsertOne(ctx, bson.M{
 			"fromUser": req.FromUser,
 			"toUser":   req.ToUser,
 			"badge":    1,
@@ -117,9 +117,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 				"unread":  true,
 			}},
 		})
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
+
 		rsp.Status = message.MessageCreateResponse_SUCCESS
 		return nil
 	}
@@ -136,7 +134,7 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 		res = res2
 	}
 
-	_, err := collection.UpdateOne(ctx, bson.M{
+	_, _ = collection.UpdateOne(ctx, bson.M{
 		"fromUser": from,
 		"toUser":   to,
 	}, bson.M{
@@ -158,9 +156,6 @@ func (a *srv) Create(ctx context.Context, req *message.MessageCreateRequest, rsp
 			"badge": res.Badge + 1,
 		},
 	})
-	if utils.LogContinue(err, utils.Error) {
-		return err
-	}
 
 	rsp.Status = message.MessageCreateResponse_SUCCESS
 	return nil
@@ -246,7 +241,7 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 
 	if req.Way == message.MessageFindRequest_READ_MESSAGE {
 		var res chatLog
-		cur, err := collection.Aggregate(ctx, bson.A{
+		cur, _ := collection.Aggregate(ctx, bson.A{
 			bson.M{
 				"$match": bson.M{
 					"fromUser": rsp.FromUser,
@@ -273,18 +268,12 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 				},
 			},
 		})
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
 		cur.Next(ctx)
-		err = cur.Decode(&res)
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
+		cur.Decode(&res)
 
 		decodeRes(&res, rsp)
 
-		_, err = collection.UpdateMany(ctx, bson.M{
+		_, _ = collection.UpdateMany(ctx, bson.M{
 			"fromUser":      rsp.FromUser,
 			"toUser":        rsp.ToUser,
 			"infos.forward": req.FromUser == rsp.FromUser,
@@ -302,12 +291,9 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 				}},
 			},
 		})
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
 	} else {
 		var res chatLog
-		err := collection.FindOne(ctx, bson.M{
+		_ = collection.FindOne(ctx, bson.M{
 			"fromUser": rsp.FromUser,
 			"toUser":   rsp.ToUser,
 		}, &options.FindOneOptions{
@@ -317,9 +303,6 @@ func (a *srv) Find(ctx context.Context, req *message.MessageFindRequest, rsp *me
 				},
 			},
 		}).Decode(&res)
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
 
 		decodeRes(&res, rsp)
 	}
@@ -407,24 +390,18 @@ func (a *srv) Query(ctx context.Context, req *message.MessageQueryRequest, rsp *
 		}
 	}
 
-	cur, err := collection.Find(ctx, bson.M{
+	cur, _ := collection.Find(ctx, bson.M{
 		"$or": cond,
 	}, &options.FindOptions{Projection: bson.M{
 		"infos": bson.M{
 			"$slice": 1,
 		},
 	}})
-	if utils.LogContinue(err, utils.Error) {
-		return err
-	}
 
 	for cur.Next(ctx) {
 		var res chatLog
 		var newMessage message.NewMessage
-		err = cur.Decode(&res)
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
+		_ = cur.Decode(&res)
 
 		decodeRes(&res, &newMessage)
 		rsp.News = append(rsp.News, &newMessage)

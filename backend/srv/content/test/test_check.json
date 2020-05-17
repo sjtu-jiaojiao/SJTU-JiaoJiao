@@ -10,15 +10,6 @@
     "case": [
         {
             "input": {
-                "contentID": "",
-                "contentToken": ""
-            },
-            "output": {
-                "status": -1
-            }
-        },
-        {
-            "input": {
                 "contentID": "000000000000000000000001",
                 "contentToken": "valid_token"
             },
@@ -28,16 +19,34 @@
         },
         {
             "input": {
-                "contentID": "000000000000000000000001",
-                "contentToken": "invalid_token"
+                "contentID": "",
+                "contentToken": "valid_token"
             },
             "output": {
-                "status": 2
+                "status": -1
             }
         },
         {
             "input": {
-                "contentID": "000000000000000000000002",
+                "contentID": "000000000000000000000001",
+                "contentToken": ""
+            },
+            "output": {
+                "status": -1
+            }
+        },
+        {
+            "input": {
+                "contentID": "",
+                "contentToken": ""
+            },
+            "output": {
+                "status": -1
+            }
+        },
+        {
+            "input": {
+                "contentID": "2",
                 "contentToken": "valid_token"
             },
             "output": {
@@ -46,7 +55,7 @@
         },
         {
             "input": {
-                "contentID": "000000000000000000000002",
+                "contentID": "000000000000000000000001",
                 "contentToken": "invalid_token"
             },
             "output": {

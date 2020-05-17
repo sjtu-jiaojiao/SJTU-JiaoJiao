@@ -73,6 +73,8 @@ func (a *mockFileSrv) Delete(ctx context.Context, req *file.FileRequest, opts ..
 
 	if req.FileID == "000000000000000000000001" {
 		rsp.Status = file.FileDeleteResponse_SUCCESS
+	} else if req.FileID == "100000000000000000000000" {
+		return nil, errors.New("")
 	} else {
 		rsp.Status = file.FileDeleteResponse_NOT_FOUND
 	}

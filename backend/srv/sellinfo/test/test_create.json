@@ -1,4 +1,17 @@
 {
+    "data": [
+        {
+            "sellInfoID": 1,
+            "status": 1,
+            "userID": 1000,
+            "validTime": 100000000,
+            "goodID": 1,
+            "goodName": "test_good",
+            "description": "test_desp",
+            "price": 123.456,
+            "contentID": "000000000000000000000001"
+        }
+    ],
     "case": [
         {
             "input": {
@@ -10,6 +23,59 @@
                 "contentID": "",
                 "contentToken": "",
                 "tags": []
+            },
+            "output": {
+                "status": -1,
+                "sellInfoID": 0
+            }
+        },
+        {
+            "input": {
+                "userID": 1000,
+                "validTime": 100000000,
+                "goodName": "test_good",
+                "description": "",
+                "price": 0,
+                "contentID": "000000000000000000000001",
+                "contentToken": "error_token",
+                "tags": [
+                    "test"
+                ]
+            },
+            "output": {
+                "_error": true
+            }
+        },
+        {
+            "input": {
+                "userID": 1000,
+                "validTime": 100000000,
+                "goodName": "test_good",
+                "description": "",
+                "price": 0,
+                "contentID": "000000000000000000000001",
+                "contentToken": "invalid_token",
+                "tags": [
+                    "test"
+                ]
+            },
+            "output": {
+                "status": 2,
+                "sellInfoID": 0
+            }
+        },
+        {
+            "input": {
+                "userID": 1000,
+                "validTime": 100000000,
+                "goodName": "test_good",
+                "description": "",
+                "price": 0,
+                "contentID": "",
+                "contentToken": "valid_token",
+                "tags": [
+                    "test"
+                ]
             },
             "output": {
                 "status": -1,
@@ -40,6 +106,92 @@
                 "description": "test_desp",
                 "contentID": "",
                 "price": 123.456
+            }
+        },
+        {
+            "input": {
+                "userID": 1000,
+                "validTime": 100000000,
+                "goodName": "test_good",
+                "description": "test_desp",
+                "price": 123.456,
+                "contentID": "",
+                "contentToken": "",
+                "tags": [
+                    "tagone"
+                ]
+            },
+            "output": {
+                "status": 1,
+                "sellInfoID": "#NOTZERO#"
+            },
+            "verify": {
+                "sellInfoID": "#sellInfoID#",
+                "status": 1,
+                "userID": 1000,
+                "validTime": 100000000,
+                "goodName": "test_good",
+                "description": "test_desp",
+                "contentID": "000000000000000000000001",
+                "price": 123.456
+            }
+        },
+        {
+            "input": {
+                "userID": 1000,
+                "validTime": 100000000,
+                "goodName": "test_good",
+                "description": "test_desp",
+                "price": 123.456,
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
+                "tags": []
+            },
+            "output": {
+                "status": 1,
+                "sellInfoID": "#NOTZERO#"
+            },
+            "verify": {
+                "sellInfoID": "#sellInfoID#",
+                "status": 1,
+                "userID": 1000,
+                "validTime": 100000000,
+                "goodName": "test_good",
+                "description": "test_desp",
+                "contentID": "000000000000000000000001",
+                "price": 123.456
+            }
+        },
+        {
+            "input": {
+                "userID": 1000,
+                "validTime": 100000000,
+                "goodName": "test_good",
+                "description": "test_desp",
+                "price": 123.456,
+                "contentID": "000000000000000000000001",
+                "contentToken": "invalid_token",
+                "tags": []
+            },
+            "output": {
+                "status": 2,
+                "sellInfoID": 0
+            }
+        },
+        {
+            "input": {
+                "userID": 1000,
+                "validTime": 100000000,
+                "goodName": "test_good",
+                "description": "test_desp",
+                "price": 123.456,
+                "contentID": "000000000000000000000001",
+                "contentToken": "",
+                "tags": []
+            },
+            "output": {
+                "status": -1,
+                "sellInfoID": 0
             }
         }
     ]

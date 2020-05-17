@@ -1,38 +1,218 @@
 {
+    "data": [
+        {
+            "fromUser": 1,
+            "toUser": 2,
+            "badge": 3,
+            "infos": [
+                {
+                    "forward": true,
+                    "type": 1,
+                    "msg": "你好，我是小明1(⊙﹏⊙)，🔺",
+                    "unread": false
+                },
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "你好，我是小明2(⊙﹏⊙)，🔺",
+                    "unread": false
+                }
+            ]
+        },
+        {
+            "fromUser": 4,
+            "toUser": 3,
+            "badge": 3,
+            "infos": [
+                {
+                    "forward": true,
+                    "type": 1,
+                    "msg": "你好，我是小明1(⊙﹏⊙)，🔺",
+                    "unread": false
+                },
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "你好，我是小明2(⊙﹏⊙)，🔺",
+                    "unread": false
+                }
+            ]
+        },
+        {
+            "fromUser": 7,
+            "toUser": 8,
+            "badge": 3,
+            "infos": [
+                {
+                    "forward": true,
+                    "type": 1,
+                    "msg": "你好，我是小明1(⊙﹏⊙)，🔺",
+                    "unread": false
+                },
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "你好，我是小明2(⊙﹏⊙)，🔺",
+                    "unread": false
+                }
+            ]
+        },
+        {
+            "fromUser": 8,
+            "toUser": 7,
+            "badge": 3,
+            "infos": [
+                {
+                    "forward": true,
+                    "type": 1,
+                    "msg": "你好，我是小明1(⊙﹏⊙)，🔺",
+                    "unread": false
+                },
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "你好，我是小明2(⊙﹏⊙)，🔺",
+                    "unread": false
+                }
+            ]
+        },
+        {
+            "fromUser": 10,
+            "toUser": 9,
+            "badge": 3,
+            "infos": [
+                {
+                    "forward": true,
+                    "type": 1,
+                    "msg": "你好，我是小明1(⊙﹏⊙)，🔺",
+                    "unread": false
+                },
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "你好，我是小明2(⊙﹏⊙)，🔺",
+                    "unread": false
+                }
+            ]
+        },
+        {
+            "fromUser": 9,
+            "toUser": 10,
+            "badge": 3,
+            "infos": [
+                {
+                    "forward": true,
+                    "type": 1,
+                    "msg": "你好，我是小明1(⊙﹏⊙)，🔺",
+                    "unread": false
+                },
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "你好，我是小明2(⊙﹏⊙)，🔺",
+                    "unread": false
+                }
+            ]
+        }
+    ],
     "case": [
         {
             "input": {
-                "fromUser": 0,
-                "toUser": 0,
-                "type": 0,
-                "msg": ""
+                "fromUser": 2,
+                "toUser": 1,
+                "type": 1,
+                "msg": "你好，我是小明1(⊙﹏⊙)，🔺"
             },
             "output": {
-                "status": -1
+                "status": 1
             }
         },
         {
             "input": {
-                "fromUser": 1000,
-                "toUser": 1001,
+                "fromUser": 10,
+                "toUser": 11,
+                "type": 2,
+                "msg": "valid_file_error"
+            },
+            "output": {
+                "_error": true
+            }
+        },
+        {
+            "input": {
+                "fromUser": 10,
+                "toUser": 11,
+                "type": 2,
+                "msg": "valid_file_unknown"
+            },
+            "output": {
+                "_error": true
+            }
+        },
+        {
+            "input": {
+                "fromUser": 3,
+                "toUser": 4,
                 "type": 1,
-                "msg": "test_text"
+                "msg": "你好，我是小明2(⊙﹏⊙)，🔺"
             },
             "output": {
                 "status": 1
+            }
+        },
+        {
+            "input": {
+                "fromUser": 5,
+                "toUser": 6,
+                "type": 1,
+                "msg": "你好，我是小明2(⊙﹏⊙)，🔺"
             },
-            "verify": {
-                "fromUser": 1000,
-                "toUser": 1001,
-                "badge": 1,
-                "infos": [
-                    {
-                        "forward": true,
-                        "type": 1,
-                        "msg": "test_text",
-                        "unread": true
-                    }
-                ]
+            "output": {
+                "status": 1
+            }
+        },
+        {
+            "input": {
+                "fromUser": 7,
+                "toUser": 8,
+                "type": 1,
+                "msg": "1"
+            },
+            "output": {
+                "_error": true
+            }
+        },
+        {
+            "input": {
+                "fromUser": 9,
+                "toUser": 10,
+                "type": 2,
+                "msg": "valid_file"
+            },
+            "output": {
+                "_error": true
+            }
+        },
+        {
+            "input": {
+                "fromUser": 1,
+                "toUser": 2,
+                "type": 2,
+                "msg": "invalid_file"
+            },
+            "output": {
+                "status": 2
+            }
+        },
+        {
+            "input": {
+                "fromUser": 1,
+                "toUser": 1,
+                "type": 1,
+                "msg": ""
+            },
+            "output": {
+                "status": -1
             }
         }
     ]

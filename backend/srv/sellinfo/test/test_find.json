@@ -38,6 +38,58 @@
                     }
                 ]
             }
+        },
+        {
+            "input": {
+                "userID": 1000,
+                "status": 1,
+                "goodName": "test_good",
+                "lowPrice": -20,
+                "highPrice": -10,
+                "limit": 1000,
+                "offset": 0
+            },
+            "output": {
+                "sellInfo": [
+                    {
+                        "status": 1,
+                        "sellInfoID": 1,
+                        "releaseTime": "#NOTZERO#",
+                        "validTime": 100000000,
+                        "goodName": "test_good",
+                        "description": "test_desp",
+                        "price": 123.456,
+                        "contentID": "000000000000000000000001",
+                        "userID": 1000
+                    }
+                ]
+            }
+        },
+        {
+            "input": {
+                "userID": 1000,
+                "status": 1,
+                "goodName": "test_good",
+                "lowPrice": 20,
+                "highPrice": 1000,
+                "limit": 1000,
+                "offset": 0
+            },
+            "output": {
+                "sellInfo": [
+                    {
+                        "status": 1,
+                        "sellInfoID": 1,
+                        "releaseTime": "#NOTZERO#",
+                        "validTime": 100000000,
+                        "goodName": "test_good",
+                        "description": "test_desp",
+                        "price": 123.456,
+                        "contentID": "000000000000000000000001",
+                        "userID": 1000
+                    }
+                ]
+            }
         }
     ]
 }

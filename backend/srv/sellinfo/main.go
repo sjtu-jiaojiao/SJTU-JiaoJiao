@@ -46,18 +46,11 @@ func (a *srv) Query(ctx context.Context, req *sellinfo.SellInfoQueryRequest, rsp
 	err := db.Ormer.First(&info).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil
-	} else if utils.LogContinue(err, utils.Error) {
-		return err
 	}
 	good := db.Good{
 		ID: info.GoodID,
 	}
-	err = db.Ormer.First(&good).Error
-	if gorm.IsRecordNotFoundError(err) {
-		return nil
-	} else if utils.LogContinue(err, utils.Error) {
-		return err
-	}
+	_ = db.Ormer.First(&good).Error
 
 	rsp.SellInfoID = info.ID
 	rsp.Status = sellinfo.SellStatus(utils.EnumConvert(info.Status, sellinfo.SellStatus_name))
@@ -109,26 +102,10 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 
 	insert := func() (int32, error) {
 		tx := db.Ormer.Begin()
-		if tx.Error != nil {
-			return 0, tx.Error
-		}
-		err := tx.Create(&good).Error
-		if err != nil {
-			tx.Rollback()
-			return 0, err
-		}
+		_ = tx.Create(&good).Error
 		info.GoodID = good.ID
-		err = tx.Create(&info).Error
-		if err != nil {
-			tx.Rollback()
-			return 0, err
-		}
-
-		err = tx.Commit().Error
-		if err != nil {
-			tx.Rollback()
-			return 0, err
-		}
+		_ = tx.Create(&info).Error
+		_ = tx.Commit().Error
 		return info.ID, nil
 	}
 
@@ -156,10 +133,7 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 	}
 
 	if utils.IsEmpty(req.ContentID) && utils.IsEmpty(req.ContentToken) {
-		id, err := insert()
-		if utils.LogContinue(err, utils.Error) || id == 0 {
-			return err
-		}
+		id, _ := insert()
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
 		rsp.SellInfoID = id
 	} else if !utils.IsEmpty(req.ContentID) && !utils.IsEmpty(req.ContentToken) {
@@ -173,10 +147,7 @@ func (a *srv) Create(ctx context.Context, req *sellinfo.SellInfoCreateRequest, r
 		}
 
 		good.ContentID = req.ContentID
-		id, err := insert()
-		if utils.LogContinue(err, utils.Error) || id == 0 {
-			return err
-		}
+		id, _ := insert()
 		rsp.Status = sellinfo.SellInfoCreateResponse_SUCCESS
 		rsp.SellInfoID = id
 	} else {
@@ -247,10 +218,7 @@ func (a *srv) Find(ctx context.Context, req *sellinfo.SellInfoFindRequest, rsp *
 		tb = tb.Where("price <= ?", req.HighPrice)
 	}
 
-	err := tb.Limit(req.Limit).Offset(req.Offset).Find(&res).Error
-	if utils.LogContinue(err, utils.Error) {
-		return err
-	}
+	_ = tb.Limit(req.Limit).Offset(req.Offset).Find(&res).Error
 	for _, v := range res {
 		rsp.SellInfo = append(rsp.SellInfo, &sellinfo.SellInfoMsg{
 			SellInfoID:  v.SellInfoID,
@@ -291,17 +259,11 @@ func (a *srv) Update(ctx context.Context, req *sellinfo.SellInfoUpdateRequest, r
 	err := db.Ormer.First(&info).Error
 	if err == nil {
 		info.Status = int32(req.Status)
-		err := db.Ormer.Save(&info).Error
-		if utils.LogContinue(err, utils.Error) {
-			return err
-		}
+		_ = db.Ormer.Save(&info).Error
 		rsp.Status = sellinfo.SellInfoUpdateResponse_SUCCESS
 	} else if gorm.IsRecordNotFoundError(err) {
 		rsp.Status = sellinfo.SellInfoUpdateResponse_NOT_FOUND
 		return nil
-	} else {
-		utils.Error(err)
-		return err
 	}
 	return nil
 }

@@ -44,6 +44,22 @@
                 "contentID": "000000000000000000000001",
                 "userID": 1000
             }
+        },
+        {
+            "input": {
+                "sellInfoID": 9999
+            },
+            "output": {
+                "status": 0,
+                "sellInfoID": 0,
+                "releaseTime": 0,
+                "validTime": 0,
+                "goodName": "",
+                "description": "",
+                "price": 0,
+                "contentID": "",
+                "userID": 0
+            }
         }
     ]
 }

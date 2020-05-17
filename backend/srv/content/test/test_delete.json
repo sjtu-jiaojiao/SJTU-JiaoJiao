@@ -1,6 +1,15 @@
 {
     "data": [
         {
+            "contentID": "000000000000000000000000",
+            "contentToken": "valid_token",
+            "tags": [
+                "tag1",
+                "tag2"
+            ],
+            "files": []
+        },
+        {
             "contentID": "000000000000000000000001",
             "contentToken": "valid_token",
             "tags": [
@@ -13,17 +22,89 @@
                     "type": 1
                 }
             ]
+        },
+        {
+            "contentID": "000000000000000000000002",
+            "contentToken": "valid_token",
+            "tags": [
+                "tag1",
+                "tag2"
+            ],
+            "files": [
+                {
+                    "fileID": "000000000000000000000001",
+                    "type": 1
+                },
+                {
+                    "fileID": "000000000000000000000001",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "contentID": "000000000000000000000003",
+            "contentToken": "valid_token",
+            "tags": [
+                "tag1",
+                "tag2"
+            ],
+            "files": [
+                {
+                    "fileID": "000000000000000000000001",
+                    "type": 1
+                },
+                {
+                    "fileID": "000000000000000000000001",
+                    "type": 1
+                },
+                {
+                    "fileID": "000000000000000000000001",
+                    "type": 1
+                },
+                {
+                    "fileID": "000000000000000000000001",
+                    "type": 1
+                },
+                {
+                    "fileID": "000000000000000000000001",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "contentID": "000000000000000000000004",
+            "contentToken": "valid_token",
+            "tags": [
+                "tag1",
+                "tag2"
+            ],
+            "files": [
+                {
+                    "fileID": "000000000000000000000002",
+                    "type": 1
+                }
+            ]
         }
     ],
     "case": [
         {
             "input": {
-                "contentID": "",
-                "contentToken": "",
-                "fileID": ""
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
+                "fileID": "1"
             },
             "output": {
-                "status": -1
+                "status": 3
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "valid_token",
+                "fileID": "000000000000000000000002"
+            },
+            "output": {
+                "status": 3
             }
         },
         {
@@ -47,6 +128,21 @@
         },
         {
             "input": {
+                "contentID": "000000000000000000000000",
+                "contentToken": "valid_token",
+                "fileID": ""
+            },
+            "output": {
+                "status": 1
+            },
+            "verify": {
+                "contentID": "000000000000000000000000",
+                "contentToken": "valid_token",
+                "_exist": false
+            }
+        },
+        {
+            "input": {
                 "contentID": "000000000000000000000001",
                 "contentToken": "valid_token",
                 "fileID": ""
@@ -58,6 +154,76 @@
                 "contentID": "000000000000000000000001",
                 "contentToken": "valid_token",
                 "_exist": false
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000002",
+                "contentToken": "valid_token",
+                "fileID": ""
+            },
+            "output": {
+                "status": 1
+            },
+            "verify": {
+                "contentID": "000000000000000000000002",
+                "contentToken": "valid_token",
+                "_exist": false
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000003",
+                "contentToken": "valid_token",
+                "fileID": ""
+            },
+            "output": {
+                "status": 1
+            },
+            "verify": {
+                "contentID": "000000000000000000000003",
+                "contentToken": "valid_token",
+                "_exist": false
+            }
+        },
+        {
+            "input": {
+                "contentID": "",
+                "contentToken": "valid_token",
+                "fileID": "000000000000000000000001"
+            },
+            "output": {
+                "status": -1
+            }
+        },
+        {
+            "input": {
+                "contentID": "4",
+                "contentToken": "valid_token",
+                "fileID": "000000000000000000000001"
+            },
+            "output": {
+                "status": 2
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000001",
+                "contentToken": "000000000000000000000001",
+                "fileID": "000000000000000000000002"
+            },
+            "output": {
+                "status": 3
+            }
+        },
+        {
+            "input": {
+                "contentID": "000000000000000000000004",
+                "contentToken": "invalid_token",
+                "fileID": ""
+            },
+            "output": {
+                "status": 2
             }
         }
     ]

@@ -1,34 +1,78 @@
 {
     "data": [
         {
-            "fromUser": 1000,
-            "toUser": 1001,
-            "badge": 1,
+            "fromUser": 1,
+            "toUser": 2,
+            "badge": 3,
             "infos": [
                 {
-                    "forward": false,
+                    "forward": true,
                     "type": 1,
-                    "msg": "test_text1",
-                    "unread": true
+                    "msg": "test",
+                    "unread": false
                 },
                 {
                     "forward": false,
                     "type": 1,
-                    "msg": "test_text2",
+                    "msg": "test",
                     "unread": false
                 }
             ]
         },
         {
-            "fromUser": 1000,
-            "toUser": 1002,
-            "badge": 1,
+            "fromUser": 2,
+            "toUser": 1,
+            "badge": 3,
             "infos": [
+                {
+                    "forward": true,
+                    "type": 1,
+                    "msg": "test",
+                    "unread": false
+                },
                 {
                     "forward": false,
                     "type": 1,
-                    "msg": "test_text3",
-                    "unread": true
+                    "msg": "test",
+                    "unread": false
+                }
+            ]
+        },
+        {
+            "fromUser": 3,
+            "toUser": 1,
+            "badge": 3,
+            "infos": [
+                {
+                    "forward": true,
+                    "type": 1,
+                    "msg": "test",
+                    "unread": false
+                },
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "test",
+                    "unread": false
+                }
+            ]
+        },
+        {
+            "fromUser": 1,
+            "toUser": 3,
+            "badge": 3,
+            "infos": [
+                {
+                    "forward": true,
+                    "type": 1,
+                    "msg": "test",
+                    "unread": false
+                },
+                {
+                    "forward": false,
+                    "type": 1,
+                    "msg": "test",
+                    "unread": false
                 }
             ]
         }
@@ -36,35 +80,67 @@
     "case": [
         {
             "input": {
-                "userID": 0,
-                "oldMsg": false
-            },
-            "output": {
-                "status": -1,
-                "news": []
-            }
-        },
-        {
-            "input": {
-                "userID": 1000,
-                "oldMsg": false
+                "userID": 1,
+                "oldMsg": true
             },
             "output": {
                 "status": 1,
                 "news": [
                     {
-                        "fromUser": 1000,
-                        "toUser": 1001,
-                        "badge": 1,
-                        "msg": "test_text1"
+                        "fromUser": 1,
+                        "toUser": 2,
+                        "badge": 3,
+                        "msg": "test"
                     },
                     {
-                        "fromUser": 1000,
-                        "toUser": 1002,
-                        "badge": 1,
-                        "msg": "test_text3"
+                        "fromUser": 2,
+                        "toUser": 1,
+                        "badge": 3,
+                        "msg": "test"
+                    },
+                    {
+                        "fromUser": 3,
+                        "toUser": 1,
+                        "badge": 3,
+                        "msg": "test"
+                    },
+                    {
+                        "fromUser": 1,
+                        "toUser": 3,
+                        "badge": 3,
+                        "msg": "test"
                     }
                 ]
+            }
+        },
+        {
+            "input": {
+                "userID": 4,
+                "oldMsg": false
+            },
+            "output": {
+                "status": 1,
+                "news": []
+            }
+        },
+        {
+            "input": {
+                "userID": 3,
+                "oldMsg": false
+            },
+            "output": {
+                "status": 1,
+                "news": []
+            }
+        },
+        {
+            "input": {
+                "userID": 0,
+                "oldMsg": true
+            },
+            "output": {
+                "status": -1,
+                "news": []
             }
         }
     ]
