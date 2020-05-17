@@ -199,7 +199,7 @@ func cleanup() {
 
 func TestAll(t *testing.T) {
 	cleanup()
-	utils.Test(t, "test/test_create.json", nil, ParseCreate, VerifyData, nil)
+	utils.Test(t, "test/test_create.json", InsertData, ParseCreate, VerifyData, nil)
 	cleanup()
 	utils.Test(t, "test/test_createtag.json", nil, ParseCreateTag, VerifyData, nil)
 	cleanup()
